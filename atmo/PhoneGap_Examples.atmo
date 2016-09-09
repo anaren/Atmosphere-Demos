@@ -1,0 +1,2621 @@
+{
+  "header": {
+    "data": {
+      "order": [
+        "Globals",
+        "Interval",
+        "Connected",
+        "Disconnected",
+        "Setup"
+      ],
+      "Globals": {
+        "name": "Globals",
+        "func": "#include \"callbacks.h\"",
+        "code": "",
+        "close": "//END"
+      },
+      "Interval": {
+        "name": "Interval",
+        "func": "\nvoid interval() {",
+        "code": "",
+        "close": "}"
+      },
+      "Connected": {
+        "name": "Connected",
+        "func": "\nvoid connected() {",
+        "code": "",
+        "close": "}"
+      },
+      "Disconnected": {
+        "name": "Disconnected",
+        "func": "\nvoid disconnected() {",
+        "code": "",
+        "close": "}"
+      },
+      "Setup": {
+        "name": "Setup",
+        "func": "\nvoid setup() {",
+        "code": "\tAIR_GPIO_Init();\n\tAIR_POWER_Init();\n\tAIR_UART_Init();\n\tAIR_I2C_Init();\n\tAIR_SPI_Init();\n\tBUZZER_Init();\n\tAIR_POWER_SetMode(AIR_POWER_NOSLEEP);",
+        "close": "}"
+      }
+    },
+    "boardConfiguration": {
+      "ble": {
+        "name": "Bluetooth Low Energy",
+        "file": "ble_config.h",
+        "values": {
+          "localName": {
+            "name": "Local Name",
+            "input": "TextField",
+            "prefix": "#define BLE_LOCAL_NAME \"",
+            "value": "pg_test",
+            "suffix": "\"",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "version": {
+            "name": "Version",
+            "input": "TextField",
+            "prefix": "#define BLE_VERSION \"",
+            "value": "1.5.0",
+            "suffix": "\"",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "ota": {
+            "name": "Over the Air Updating",
+            "input": "Combo",
+            "prefix": "#define BLE_",
+            "options": [
+              "OTA",
+              "NO_OTA"
+            ],
+            "value": "OTA",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "pairing": {
+            "name": "Pairing",
+            "input": "Combo",
+            "prefix": "#define ",
+            "options": [
+              "BLE_PAIRING_NONE",
+              "BLE_PAIRING_PASSKEY",
+              "BLE_PAIRING_OOB"
+            ],
+            "value": "BLE_PAIRING_NONE",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "txPowerLevel": {
+            "name": "TX Power Level (dbm)",
+            "input": "TextField",
+            "prefix": "#define BLE_TX_POWER_LEVEL ",
+            "value": "4",
+            "regex": "^-?[0-9]d{0,2}(.d*)?$"
+          },
+          "intervalFineTimer": {
+            "name": "Interval Timer Length (ms)",
+            "input": "TextField",
+            "prefix": "#define BLE_INTERVAL_FINE_TIMER ",
+            "value": "1000",
+            "regex": "^[0-9]*$"
+          },
+          "minInterval": {
+            "name": "BLE Min Interval (ms)",
+            "input": "TextField",
+            "prefix": "#define BLE_INTERVAL_MIN ",
+            "value": "20",
+            "regex": "^[0-9]*$"
+          },
+          "maxInterval": {
+            "name": "BLE Max Interval (ms)",
+            "input": "TextField",
+            "prefix": "#define BLE_INTERVAL_MAX ",
+            "value": "40",
+            "regex": "^[0-9]*$"
+          },
+          "slaveLatency": {
+            "name": "BLE Slave Latency (ms)",
+            "input": "TextField",
+            "prefix": "#define BLE_SLAVE_LATENCY ",
+            "value": "0",
+            "regex": "^[0-9]*$"
+          },
+          "timeout": {
+            "name": "BLE Connection Timeout (ms)",
+            "input": "TextField",
+            "prefix": "#define BLE_CONNECTION_TIMEOUT ",
+            "value": "700",
+            "regex": "^[0-9]*$"
+          }
+        }
+      },
+      "power": {
+        "name": "Power Driver",
+        "file": "power_config.h",
+        "values": {
+          "external_osc": {
+            "name": "External Oscillator",
+            "input": "Combo",
+            "prefix": "#define AIR_POWER_",
+            "options": [
+              "EXTERNAL_32KHZ_OSC",
+              "INTERNAL_OSC"
+            ],
+            "value": "INTERNAL_OSC",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          }
+        }
+      },
+      "gpio": {
+        "name": "GPIO Driver",
+        "file": "gpio_config.h",
+        "values": {
+          "buad": {
+            "name": "ADC Sample Frequency",
+            "input": "Combo",
+            "prefix": "#define AIR_ADC_SAMPLE_FREQUENCY ",
+            "options": [
+              "ADC_SAMPLE_FREQUENCY_LOW",
+              "ADC_SAMPLE_FREQUENCY_MEDIUM_LOW",
+              "ADC_SAMPLE_FREQUENCY_MEDIUM",
+              "ADC_SAMPLE_FREQUENCY_MEDIUM_HIGH",
+              "ADC_SAMPLE_FREQUENCY_HIGH"
+            ],
+            "value": "ADC_SAMPLE_FREQUENCY_LOW",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "pwmClockSource": {
+            "name": "PWM Clock Source",
+            "input": "Combo",
+            "prefix": "#define AIR_PWM_CLOCK_SOURCE ",
+            "options": [
+              "PMU_CLK",
+              "LHL_CLK"
+            ],
+            "value": "LHL_CLK",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          }
+        }
+      },
+      "uart": {
+        "name": "AIR UART Driver",
+        "file": "uart_config.h",
+        "values": {
+          "rxBuffer": {
+            "name": "RX Circular Buffer size",
+            "input": "TextField",
+            "prefix": "#define AIR_UART_RX_CIRCULAR_BUFFER_SIZE ",
+            "value": "128",
+            "regex": "^[0-9]*$"
+          },
+          "txBuffer": {
+            "name": "TX Circular Buffer size",
+            "input": "TextField",
+            "prefix": "#define AIR_UART_TX_CIRCULAR_BUFFER_SIZE ",
+            "value": "128",
+            "regex": "^[0-9]*$"
+          },
+          "buad": {
+            "name": "Baudrate",
+            "input": "Combo",
+            "prefix": "#define ",
+            "options": [
+              "AIR_UART_BAUD_460800",
+              "AIR_UART_BAUD_230400",
+              "AIR_UART_BAUD_115200",
+              "AIR_UART_BAUD_57600",
+              "AIR_UART_BAUD_38400",
+              "AIR_UART_BAUD_19200",
+              "AIR_UART_BAUD_9600"
+            ],
+            "value": "AIR_UART_BAUD_115200",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "txPin": {
+            "name": "TX Pin",
+            "input": "Combo",
+            "prefix": "#define AIR_UART_TX_PIN ",
+            "options": [
+              "32"
+            ],
+            "value": "32",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "rxPin": {
+            "name": "RX Pin",
+            "input": "Combo",
+            "prefix": "#define AIR_UART_RX_PIN ",
+            "options": [
+              "33"
+            ],
+            "value": "33",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "rtsPin": {
+            "name": "RTS Pin",
+            "input": "Combo",
+            "prefix": "#define AIR_UART_RTS_PIN ",
+            "options": [
+              "1"
+            ],
+            "value": "1",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "ctsPin": {
+            "name": "CTS Pin",
+            "input": "Combo",
+            "prefix": "#define AIR_UART_CTS_PIN ",
+            "options": [
+              "3"
+            ],
+            "value": "3",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          }
+        }
+      },
+      "spi": {
+        "name": "AIR SPI Driver",
+        "file": "spi_config.h",
+        "values": {
+          "rxBuffer": {
+            "name": "SPI Speed",
+            "input": "Combo",
+            "prefix": "#define AIR_SPI_SPEED ",
+            "options": [
+              "1000000",
+              "500000"
+            ],
+            "value": "1000000",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "speed": {
+            "name": "SPI Speed",
+            "input": "Combo",
+            "prefix": "#define AIR_SPI_SPEED ",
+            "options": [
+              "1000000",
+              "500000"
+            ],
+            "value": "1000000",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "mode": {
+            "name": "SPI Mode",
+            "input": "Combo",
+            "prefix": "#define AIR_SPI_MODE ",
+            "options": [
+              "SPI_MODE_0",
+              "SPI_MODE_1",
+              "SPI_MODE_2",
+              "SPI_MODE_3"
+            ],
+            "value": "SPI_MODE_3",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          }
+        }
+      },
+      "buzzer": {
+        "name": "Buzzer Driver",
+        "file": "buzzer_config.h",
+        "values": {
+          "pin": {
+            "name": "Buzzer Pin",
+            "input": "Combo",
+            "prefix": "#define BUZZER_PWM_PIN ",
+            "options": [
+              "13",
+              "14",
+              "26",
+              "27"
+            ],
+            "value": "14",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          }
+        }
+      }
+    },
+    "meta": {
+      "version": "1.5.0",
+      "layoutGrid": true,
+      "layoutSnapping": true,
+      "layoutSnappingSize": 40,
+      "cloudLayoutGrid": false,
+      "cloudLayoutSnapping": false,
+      "cloudLayoutSnappingSize": 10,
+      "language": "en",
+      "enableTooltips": true,
+      "enableAutoSave": true,
+      "enableBuildSave": false,
+      "description": "An example application to demonstrate some of \nthe PhoneGap plugin capabilities added in \nAtmosphere 1.5.0",
+      "project_uuid": null,
+      "tokensEnabled": false,
+      "codeAssist": false,
+      "highlightLine": false,
+      "editorTheme": "Default",
+      "editorFontSize": 12,
+      "customEmbeddedElementLibraries": {},
+      "theme": {
+        "bg1": "#e9f3fb",
+        "bg2": "#DCEBF9"
+      },
+      "projectType": "bcm20737",
+      "name": "PhoneGap_Examples"
+    },
+    "type": "Header",
+    "currentLayoutName": "Default"
+  },
+  "layouts": {
+    "Default": {
+      "name": "Default (768x1024)",
+      "width": 768,
+      "height": 1024,
+      "orientation": "portrait",
+      "devicename": ".*",
+      "platform": "",
+      "version": ".*",
+      "elements": {
+        "Background": {
+          "x": -3,
+          "y": -37,
+          "width": 521,
+          "height": 1066
+        },
+        "ConfirmButton": {
+          "x": 52,
+          "y": 232,
+          "width": 121,
+          "height": 31
+        },
+        "ConfirmText": {
+          "x": 322,
+          "y": 232,
+          "width": 166,
+          "height": 31
+        },
+        "PromptButton": {
+          "x": 52,
+          "y": 322,
+          "width": 121,
+          "height": 31
+        },
+        "ValueText": {
+          "x": 322,
+          "y": 322,
+          "width": 166,
+          "height": 31
+        },
+        "NetworkText": {
+          "x": 187,
+          "y": 52,
+          "width": 166,
+          "height": 31
+        },
+        "ButtonPressed": {
+          "x": 322,
+          "y": 367,
+          "width": 166,
+          "height": 31
+        },
+        "ConType": {
+          "x": 52,
+          "y": 52,
+          "width": 121,
+          "height": 31
+        },
+        "ConfirmLabel": {
+          "x": 187,
+          "y": 232,
+          "width": 121,
+          "height": 31
+        },
+        "PromptVal": {
+          "x": 187,
+          "y": 322,
+          "width": 121,
+          "height": 31
+        },
+        "PromptReturn": {
+          "x": 187,
+          "y": 367,
+          "width": 121,
+          "height": 31
+        },
+        "Vibrate": {
+          "x": 52,
+          "y": 457,
+          "width": 121,
+          "height": 31
+        },
+        "VibeTime": {
+          "x": 322,
+          "y": 457,
+          "width": 166,
+          "height": 31
+        },
+        "VibeTimeLabel": {
+          "x": 187,
+          "y": 457,
+          "width": 121,
+          "height": 31
+        },
+        "DeviceInfoLabel": {
+          "x": 52,
+          "y": 97,
+          "width": 121,
+          "height": 31
+        },
+        "DeviceInfo": {
+          "x": 187,
+          "y": 97,
+          "width": 301,
+          "height": 121
+        },
+        "TestBeep": {
+          "x": 52,
+          "y": 547,
+          "width": 121,
+          "height": 31
+        },
+        "BeepTimesLabel": {
+          "x": 187,
+          "y": 547,
+          "width": 121,
+          "height": 31
+        },
+        "BeepTimes": {
+          "x": 322,
+          "y": 547,
+          "width": 166,
+          "height": 31
+        },
+        "TestBrowser": {
+          "x": 52,
+          "y": 727,
+          "width": 121,
+          "height": 31
+        },
+        "UrlLabel": {
+          "x": 187,
+          "y": 727,
+          "width": 121,
+          "height": 31
+        },
+        "UrlField": {
+          "x": 322,
+          "y": 727,
+          "width": 166,
+          "height": 31
+        },
+        "LEDTest": {
+          "x": 547,
+          "y": 232,
+          "width": 166,
+          "height": 31
+        },
+        "TestGeo": {
+          "x": 52,
+          "y": 637,
+          "width": 121,
+          "height": 31
+        },
+        "LatLon": {
+          "x": 322,
+          "y": 637,
+          "width": 166,
+          "height": 31
+        },
+        "GeoLabel": {
+          "x": 187,
+          "y": 637,
+          "width": 121,
+          "height": 31
+        },
+        "LEDInfo": {
+          "x": 547,
+          "y": 142,
+          "width": 166,
+          "height": 76
+        },
+        "BuzzerTest": {
+          "x": 547,
+          "y": 412,
+          "width": 166,
+          "height": 31
+        },
+        "BuzzerInfo": {
+          "x": 547,
+          "y": 322,
+          "width": 166,
+          "height": 76
+        },
+        "AndroidLogo": {
+          "x": 547,
+          "y": 36,
+          "width": 76,
+          "height": 76
+        },
+        "iOSLogo": {
+          "x": 547,
+          "y": 37,
+          "width": 76,
+          "height": 76
+        },
+        "BLEEnabled": {
+          "x": 637,
+          "y": 37,
+          "width": 76,
+          "height": 76
+        }
+      }
+    },
+    "Nexus7": {
+      "name": "Nexus 7 (2013)",
+      "width": 600,
+      "height": 912,
+      "orientation": "portrait",
+      "devicename": ".*",
+      "platform": "Android",
+      "version": ".*",
+      "elements": {
+        "Background": {
+          "x": -174,
+          "y": -175,
+          "width": 570,
+          "height": 1111
+        },
+        "ConfirmButton": {
+          "x": 47,
+          "y": 207,
+          "width": 106,
+          "height": 26
+        },
+        "ConfirmText": {
+          "x": 167,
+          "y": 247,
+          "width": 186,
+          "height": 26
+        },
+        "PromptButton": {
+          "x": 47,
+          "y": 287,
+          "width": 106,
+          "height": 26
+        },
+        "ValueText": {
+          "x": 167,
+          "y": 327,
+          "width": 186,
+          "height": 26
+        },
+        "NetworkText": {
+          "x": 207,
+          "y": 47,
+          "width": 146,
+          "height": 26
+        },
+        "ButtonPressed": {
+          "x": 167,
+          "y": 367,
+          "width": 186,
+          "height": 26
+        },
+        "ConType": {
+          "x": 47,
+          "y": 47,
+          "width": 106,
+          "height": 26
+        },
+        "ConfirmLabel": {
+          "x": 47,
+          "y": 247,
+          "width": 106,
+          "height": 26
+        },
+        "PromptVal": {
+          "x": 47,
+          "y": 327,
+          "width": 106,
+          "height": 26
+        },
+        "PromptReturn": {
+          "x": 47,
+          "y": 367,
+          "width": 106,
+          "height": 26
+        },
+        "Vibrate": {
+          "x": 47,
+          "y": 407,
+          "width": 106,
+          "height": 26
+        },
+        "VibeTime": {
+          "x": 167,
+          "y": 447,
+          "width": 186,
+          "height": 26
+        },
+        "VibeTimeLabel": {
+          "x": 47,
+          "y": 447,
+          "width": 106,
+          "height": 26
+        },
+        "DeviceInfoLabel": {
+          "x": 47,
+          "y": 87,
+          "width": 106,
+          "height": 26
+        },
+        "DeviceInfo": {
+          "x": 167,
+          "y": 87,
+          "width": 226,
+          "height": 106
+        },
+        "TestBeep": {
+          "x": 47,
+          "y": 487,
+          "width": 106,
+          "height": 26
+        },
+        "BeepTimesLabel": {
+          "x": 47,
+          "y": 527,
+          "width": 106,
+          "height": 26
+        },
+        "BeepTimes": {
+          "x": 167,
+          "y": 527,
+          "width": 186,
+          "height": 26
+        },
+        "TestBrowser": {
+          "x": 47,
+          "y": 647,
+          "width": 106,
+          "height": 26
+        },
+        "UrlLabel": {
+          "x": 47,
+          "y": 687,
+          "width": 106,
+          "height": 26
+        },
+        "UrlField": {
+          "x": 167,
+          "y": 687,
+          "width": 186,
+          "height": 26
+        },
+        "LEDTest": {
+          "x": 407,
+          "y": 247,
+          "width": 186,
+          "height": 26
+        },
+        "TestGeo": {
+          "x": 47,
+          "y": 567,
+          "width": 106,
+          "height": 26
+        },
+        "LatLon": {
+          "x": 167,
+          "y": 607,
+          "width": 186,
+          "height": 26
+        },
+        "GeoLabel": {
+          "x": 47,
+          "y": 607,
+          "width": 106,
+          "height": 26
+        },
+        "LEDInfo": {
+          "x": 407,
+          "y": 167,
+          "width": 186,
+          "height": 66
+        },
+        "BuzzerTest": {
+          "x": 407,
+          "y": 367,
+          "width": 186,
+          "height": 26
+        },
+        "BuzzerInfo": {
+          "x": 407,
+          "y": 287,
+          "width": 186,
+          "height": 66
+        },
+        "AndroidLogo": {
+          "x": 415,
+          "y": 52,
+          "width": 66,
+          "height": 66
+        },
+        "iOSLogo": {
+          "x": 415,
+          "y": 52,
+          "width": 66,
+          "height": 66
+        },
+        "BLEEnabled": {
+          "x": 507,
+          "y": 53,
+          "width": 65,
+          "height": 65
+        }
+      }
+    },
+    "Nexus600x960": {
+      "name": "Nexus is actually 600x960 ",
+      "width": 600,
+      "height": 960,
+      "elements": {
+        "Background": {
+          "x": -194,
+          "y": -194,
+          "width": 586,
+          "height": 1153
+        },
+        "ConfirmButton": {
+          "x": 47,
+          "y": 207,
+          "width": 106,
+          "height": 26
+        },
+        "ConfirmText": {
+          "x": 167,
+          "y": 247,
+          "width": 186,
+          "height": 26
+        },
+        "PromptButton": {
+          "x": 47,
+          "y": 287,
+          "width": 106,
+          "height": 26
+        },
+        "ValueText": {
+          "x": 167,
+          "y": 327,
+          "width": 186,
+          "height": 26
+        },
+        "NetworkText": {
+          "x": 207,
+          "y": 47,
+          "width": 146,
+          "height": 26
+        },
+        "ButtonPressed": {
+          "x": 167,
+          "y": 367,
+          "width": 186,
+          "height": 26
+        },
+        "ConType": {
+          "x": 47,
+          "y": 47,
+          "width": 106,
+          "height": 26
+        },
+        "ConfirmLabel": {
+          "x": 47,
+          "y": 247,
+          "width": 106,
+          "height": 26
+        },
+        "PromptVal": {
+          "x": 47,
+          "y": 327,
+          "width": 106,
+          "height": 26
+        },
+        "PromptReturn": {
+          "x": 47,
+          "y": 367,
+          "width": 106,
+          "height": 26
+        },
+        "Vibrate": {
+          "x": 47,
+          "y": 407,
+          "width": 106,
+          "height": 26
+        },
+        "VibeTime": {
+          "x": 167,
+          "y": 447,
+          "width": 186,
+          "height": 26
+        },
+        "VibeTimeLabel": {
+          "x": 47,
+          "y": 447,
+          "width": 106,
+          "height": 26
+        },
+        "DeviceInfoLabel": {
+          "x": 47,
+          "y": 87,
+          "width": 106,
+          "height": 26
+        },
+        "DeviceInfo": {
+          "x": 167,
+          "y": 87,
+          "width": 226,
+          "height": 106
+        },
+        "TestBeep": {
+          "x": 47,
+          "y": 487,
+          "width": 106,
+          "height": 26
+        },
+        "BeepTimesLabel": {
+          "x": 47,
+          "y": 527,
+          "width": 106,
+          "height": 26
+        },
+        "BeepTimes": {
+          "x": 167,
+          "y": 527,
+          "width": 186,
+          "height": 26
+        },
+        "TestBrowser": {
+          "x": 47,
+          "y": 647,
+          "width": 106,
+          "height": 26
+        },
+        "UrlLabel": {
+          "x": 47,
+          "y": 687,
+          "width": 106,
+          "height": 26
+        },
+        "UrlField": {
+          "x": 167,
+          "y": 687,
+          "width": 186,
+          "height": 26
+        },
+        "LEDTest": {
+          "x": 400,
+          "y": 247,
+          "width": 186,
+          "height": 26
+        },
+        "TestGeo": {
+          "x": 47,
+          "y": 567,
+          "width": 106,
+          "height": 26
+        },
+        "LatLon": {
+          "x": 167,
+          "y": 607,
+          "width": 186,
+          "height": 26
+        },
+        "GeoLabel": {
+          "x": 47,
+          "y": 607,
+          "width": 106,
+          "height": 26
+        },
+        "LEDInfo": {
+          "x": 400,
+          "y": 167,
+          "width": 186,
+          "height": 66
+        },
+        "BuzzerTest": {
+          "x": 400,
+          "y": 367,
+          "width": 186,
+          "height": 26
+        },
+        "BuzzerInfo": {
+          "x": 400,
+          "y": 287,
+          "width": 186,
+          "height": 66
+        },
+        "AndroidLogo": {
+          "x": 420,
+          "y": 47,
+          "width": 66,
+          "height": 66
+        },
+        "iOSLogo": {
+          "x": 420,
+          "y": 47,
+          "width": 66,
+          "height": 66
+        },
+        "BLEEnabled": {
+          "x": 500,
+          "y": 47,
+          "width": 67,
+          "height": 67
+        }
+      }
+    },
+    "iPhone5": {
+      "name": "iPhone 5/5C/5S & iPod Touch",
+      "width": 320,
+      "height": 568,
+      "orientation": "portrait",
+      "devicename": ".*",
+      "platform": "iOS",
+      "version": ".*",
+      "elements": {
+        "Background": {
+          "x": -214,
+          "y": -587,
+          "width": 586,
+          "height": 1158
+        },
+        "ConfirmButton": {
+          "x": 7,
+          "y": 87,
+          "width": 106,
+          "height": 26
+        },
+        "ConfirmText": {
+          "x": 127,
+          "y": 127,
+          "width": 146,
+          "height": 26
+        },
+        "PromptButton": {
+          "x": 7,
+          "y": 167,
+          "width": 106,
+          "height": 26
+        },
+        "ValueText": {
+          "x": 127,
+          "y": 167,
+          "width": 146,
+          "height": 26
+        },
+        "NetworkText": {
+          "x": 127,
+          "y": 7,
+          "width": 146,
+          "height": 26
+        },
+        "ButtonPressed": {
+          "x": 127,
+          "y": 207,
+          "width": 146,
+          "height": 26
+        },
+        "ConType": {
+          "x": 6,
+          "y": 13,
+          "width": 109,
+          "height": 26
+        },
+        "ConfirmLabel": {
+          "x": 7,
+          "y": 127,
+          "width": 106,
+          "height": 26
+        },
+        "PromptVal": {
+          "x": -113,
+          "y": 207,
+          "width": 106,
+          "height": 26
+        },
+        "PromptReturn": {
+          "x": 7,
+          "y": 207,
+          "width": 106,
+          "height": 26
+        },
+        "Vibrate": {
+          "x": 7,
+          "y": 247,
+          "width": 106,
+          "height": 26
+        },
+        "VibeTime": {
+          "x": 127,
+          "y": 247,
+          "width": 146,
+          "height": 26
+        },
+        "VibeTimeLabel": {
+          "x": -153,
+          "y": 287,
+          "width": 106,
+          "height": 26
+        },
+        "DeviceInfoLabel": {
+          "x": 8,
+          "y": 47,
+          "width": 107,
+          "height": 30
+        },
+        "DeviceInfo": {
+          "x": 127,
+          "y": 47,
+          "width": 186,
+          "height": 66
+        },
+        "TestBeep": {
+          "x": 7,
+          "y": 287,
+          "width": 106,
+          "height": 26
+        },
+        "BeepTimesLabel": {
+          "x": -153,
+          "y": 287,
+          "width": 106,
+          "height": 26
+        },
+        "BeepTimes": {
+          "x": 127,
+          "y": 287,
+          "width": 146,
+          "height": 26
+        },
+        "TestBrowser": {
+          "x": 7,
+          "y": 407,
+          "width": 106,
+          "height": 26
+        },
+        "UrlLabel": {
+          "x": 7,
+          "y": 447,
+          "width": 106,
+          "height": 26
+        },
+        "UrlField": {
+          "x": 127,
+          "y": 447,
+          "width": 146,
+          "height": 26
+        },
+        "LEDTest": {
+          "x": 87,
+          "y": 487,
+          "width": 146,
+          "height": 26
+        },
+        "TestGeo": {
+          "x": 7,
+          "y": 327,
+          "width": 106,
+          "height": 26
+        },
+        "LatLon": {
+          "x": 127,
+          "y": 367,
+          "width": 146,
+          "height": 26
+        },
+        "GeoLabel": {
+          "x": 7,
+          "y": 367,
+          "width": 106,
+          "height": 26
+        },
+        "LEDInfo": {
+          "x": 367,
+          "y": 87,
+          "width": 186,
+          "height": 66
+        },
+        "BuzzerTest": {
+          "x": 87,
+          "y": 527,
+          "width": 146,
+          "height": 26
+        },
+        "BuzzerInfo": {
+          "x": 453,
+          "y": 287,
+          "width": 186,
+          "height": 66
+        },
+        "AndroidLogo": {
+          "x": 247,
+          "y": 487,
+          "width": 66,
+          "height": 66
+        },
+        "iOSLogo": {
+          "x": 247,
+          "y": 487,
+          "width": 66,
+          "height": 66
+        },
+        "BLEEnabled": {
+          "x": 7,
+          "y": 487,
+          "width": 66,
+          "height": 66
+        }
+      }
+    }
+  },
+  "cloudLayouts": {},
+  "elements": {
+    "Background": {
+      "type": "ImagePan",
+      "properties": {
+        "image": "data:image/jpeg;base64,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",
+        "aspectLock": false,
+        "enabled": true,
+        "visible": true,
+        "rotation": "0",
+        "background": "transparent",
+        "elementType": "element"
+      },
+      "triggers": {},
+      "zindex": 1,
+      "designer": {
+        "x": 698,
+        "y": 62
+      }
+    },
+    "ConfirmButton": {
+      "type": "Button",
+      "properties": {
+        "label": "Test Confirm",
+        "enabled": true,
+        "visible": true,
+        "border": "plain",
+        "topColor": "rgb(250, 250, 250)",
+        "bottomColor": "rgb(234, 234, 234)",
+        "pressedTopColor": "rgb(255, 255, 255)",
+        "pressedBottomColor": "rgb(255, 255, 255)",
+        "overTopColor": "rgb(234, 234, 234)",
+        "overBottomColor": "rgb(214, 214, 214)",
+        "disabledTopColor": "rgb(211, 211, 211)",
+        "disabledBottomColor": "rgb(211, 211, 211)",
+        "elementType": "element"
+      },
+      "triggers": {
+        "mousePressed": [
+          {
+            "sourceTrigger": "mousePressed",
+            "sourceValue": "Static",
+            "targetValue": "alert",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "title": "",
+                "message": "",
+                "buttonArray": ""
+              },
+              "targetOrder": [
+                "message",
+                "title",
+                "buttonArray"
+              ],
+              "sourceOrder": []
+            },
+            "targetName": "ConfirmTest"
+          }
+        ]
+      },
+      "zindex": 2,
+      "designer": {
+        "x": 30,
+        "y": 208
+      }
+    },
+    "ConfirmText": {
+      "type": "TextField",
+      "properties": {
+        "label": "New TextField",
+        "value": "",
+        "enabled": true,
+        "visible": true,
+        "elementType": "element"
+      },
+      "triggers": {},
+      "zindex": 3,
+      "designer": {
+        "x": 340,
+        "y": 202
+      }
+    },
+    "PromptButton": {
+      "type": "Button",
+      "properties": {
+        "label": "Test Prompt",
+        "enabled": true,
+        "visible": true,
+        "border": "plain",
+        "topColor": "rgb(250, 250, 250)",
+        "bottomColor": "rgb(234, 234, 234)",
+        "pressedTopColor": "rgb(255, 255, 255)",
+        "pressedBottomColor": "rgb(255, 255, 255)",
+        "overTopColor": "rgb(234, 234, 234)",
+        "overBottomColor": "rgb(214, 214, 214)",
+        "disabledTopColor": "rgb(211, 211, 211)",
+        "disabledBottomColor": "rgb(211, 211, 211)",
+        "elementType": "element"
+      },
+      "triggers": {
+        "mousePressed": [
+          {
+            "sourceTrigger": "mousePressed",
+            "sourceValue": "Static",
+            "targetValue": "alert",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "title": "",
+                "message": "",
+                "buttonArray": ""
+              },
+              "targetOrder": [
+                "value",
+                "message",
+                "title",
+                "buttonArray"
+              ],
+              "sourceOrder": []
+            },
+            "targetName": "PromptTest"
+          }
+        ]
+      },
+      "zindex": 4,
+      "designer": {
+        "x": 30,
+        "y": 311
+      }
+    },
+    "ValueText": {
+      "type": "TextField",
+      "properties": {
+        "label": "New TextField",
+        "value": "",
+        "enabled": true,
+        "visible": true,
+        "elementType": "element"
+      },
+      "triggers": {},
+      "zindex": 5,
+      "designer": {
+        "x": 340,
+        "y": 293
+      }
+    },
+    "ConfirmTest": {
+      "type": "MobileConfirm",
+      "properties": {
+        "message": "Alert!",
+        "title": "Alert",
+        "buttonArray": [
+          "Yes",
+          "No"
+        ],
+        "elementType": "element"
+      },
+      "triggers": {
+        "confirmed": [
+          {
+            "sourceTrigger": "confirmed",
+            "sourceValue": "getPressedButton",
+            "targetValue": "setValue",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "value"
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": [
+                "value"
+              ]
+            },
+            "targetName": "ConfirmText"
+          }
+        ]
+      },
+      "zindex": 6,
+      "designer": {
+        "x": 193,
+        "y": 208
+      }
+    },
+    "PromptTest": {
+      "type": "MobilePrompt",
+      "properties": {
+        "message": "Enter Text:",
+        "title": "Prompt",
+        "value": "",
+        "buttonArray": [
+          "Ok",
+          "Cancel"
+        ],
+        "elementType": "element"
+      },
+      "triggers": {
+        "responded": [
+          {
+            "sourceTrigger": "responded",
+            "sourceValue": "getValue",
+            "targetValue": "setValue",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "value"
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": [
+                "value"
+              ]
+            },
+            "targetName": "ValueText"
+          },
+          {
+            "sourceTrigger": "responded",
+            "sourceValue": "getPressedButton",
+            "targetValue": "setValue",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "value"
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": [
+                "value"
+              ]
+            },
+            "targetName": "ButtonPressed"
+          }
+        ]
+      },
+      "zindex": 7,
+      "designer": {
+        "x": 179,
+        "y": 315
+      }
+    },
+    "NetworkInfo": {
+      "type": "MobileNetwork",
+      "properties": {
+        "elementType": "element"
+      },
+      "triggers": {
+        "goesOnline": [
+          {
+            "sourceTrigger": "goesOnline",
+            "sourceValue": "getConnectionType",
+            "targetValue": "setValue",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "value"
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": [
+                "value"
+              ]
+            },
+            "targetName": "NetworkText"
+          }
+        ],
+        "goesOffline": [
+          {
+            "sourceTrigger": "goesOffline",
+            "sourceValue": "getConnectionType",
+            "targetValue": "setValue",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "value"
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": [
+                "value"
+              ]
+            },
+            "targetName": "NetworkText"
+          }
+        ],
+        "onTrigger": [
+          {
+            "sourceTrigger": "onTrigger",
+            "sourceValue": "getConnectionType",
+            "targetValue": "setValue",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "value"
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": [
+                "value"
+              ]
+            },
+            "targetName": "NetworkText"
+          }
+        ]
+      },
+      "zindex": 8,
+      "designer": {
+        "x": 197,
+        "y": 50
+      }
+    },
+    "NetworkText": {
+      "type": "TextField",
+      "properties": {
+        "label": "New TextField",
+        "value": "",
+        "enabled": true,
+        "visible": true,
+        "elementType": "element"
+      },
+      "triggers": {},
+      "zindex": 9,
+      "designer": {
+        "x": 340,
+        "y": 47
+      }
+    },
+    "ButtonPressed": {
+      "type": "TextField",
+      "properties": {
+        "label": "New TextField",
+        "value": "",
+        "enabled": true,
+        "visible": true,
+        "elementType": "element"
+      },
+      "triggers": {},
+      "zindex": 10,
+      "designer": {
+        "x": 335,
+        "y": 368
+      }
+    },
+    "InitTask": {
+      "type": "Task",
+      "properties": {
+        "runOnStart": true,
+        "runIn": "2000",
+        "runEvery": "2000",
+        "elementType": "element"
+      },
+      "triggers": {
+        "task": [
+          {
+            "sourceTrigger": "task",
+            "sourceValue": "Static",
+            "targetValue": "trigger",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {},
+              "targetOrder": [],
+              "sourceOrder": []
+            },
+            "targetName": "NetworkInfo"
+          },
+          {
+            "sourceTrigger": "task",
+            "sourceValue": "Static",
+            "targetValue": "pause",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {},
+              "targetOrder": [],
+              "sourceOrder": []
+            },
+            "targetName": "InitTask"
+          },
+          {
+            "sourceTrigger": "task",
+            "sourceValue": "Static",
+            "targetValue": "trigger",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {},
+              "targetOrder": [],
+              "sourceOrder": []
+            },
+            "targetName": "MobileDeviceInfo21"
+          }
+        ]
+      },
+      "zindex": 11,
+      "designer": {
+        "x": 36,
+        "y": 96
+      }
+    },
+    "ConType": {
+      "type": "Label",
+      "properties": {
+        "label": "Connection Type:",
+        "enabled": true,
+        "visible": true,
+        "font": "14px Arial",
+        "color": "Black",
+        "elementType": "element"
+      },
+      "triggers": {},
+      "zindex": 12,
+      "designer": {
+        "x": 429,
+        "y": 48
+      }
+    },
+    "ConfirmLabel": {
+      "type": "Label",
+      "properties": {
+        "label": "Button Pressed",
+        "enabled": true,
+        "visible": true,
+        "font": "14px Arial",
+        "color": "Black",
+        "elementType": "element"
+      },
+      "triggers": {},
+      "zindex": 13,
+      "designer": {
+        "x": 432,
+        "y": 200
+      }
+    },
+    "PromptVal": {
+      "type": "Label",
+      "properties": {
+        "label": "Return Value",
+        "enabled": true,
+        "visible": true,
+        "font": "14px Arial",
+        "color": "Black",
+        "elementType": "element"
+      },
+      "triggers": {},
+      "zindex": 14,
+      "designer": {
+        "x": 432,
+        "y": 291
+      }
+    },
+    "PromptReturn": {
+      "type": "Label",
+      "properties": {
+        "label": "Button Pressed",
+        "enabled": true,
+        "visible": true,
+        "font": "14px Arial",
+        "color": "Black",
+        "elementType": "element"
+      },
+      "triggers": {},
+      "zindex": 15,
+      "designer": {
+        "x": 429,
+        "y": 368
+      }
+    },
+    "Vibrate": {
+      "type": "Button",
+      "properties": {
+        "label": "Test Vibrate",
+        "enabled": true,
+        "visible": true,
+        "border": "plain",
+        "topColor": "rgb(250, 250, 250)",
+        "bottomColor": "rgb(234, 234, 234)",
+        "pressedTopColor": "rgb(255, 255, 255)",
+        "pressedBottomColor": "rgb(255, 255, 255)",
+        "overTopColor": "rgb(234, 234, 234)",
+        "overBottomColor": "rgb(214, 214, 214)",
+        "disabledTopColor": "rgb(211, 211, 211)",
+        "disabledBottomColor": "rgb(211, 211, 211)",
+        "elementType": "element"
+      },
+      "triggers": {
+        "mousePressed": [
+          {
+            "sourceTrigger": "mousePressed",
+            "sourceValue": "Static",
+            "targetValue": "trigger",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {},
+              "targetOrder": [],
+              "sourceOrder": []
+            },
+            "targetName": "VibeTime"
+          }
+        ]
+      },
+      "zindex": 16,
+      "designer": {
+        "x": 34,
+        "y": 450
+      }
+    },
+    "VibeTime": {
+      "type": "TextField",
+      "properties": {
+        "label": "New TextField",
+        "value": "1000",
+        "enabled": true,
+        "visible": true,
+        "elementType": "element"
+      },
+      "triggers": {
+        "onTrigger": [
+          {
+            "sourceTrigger": "onTrigger",
+            "sourceValue": "getValue",
+            "targetValue": "vibrate",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "value"
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": [
+                "value"
+              ]
+            },
+            "targetName": "MobileVibration20"
+          }
+        ]
+      },
+      "zindex": 17,
+      "designer": {
+        "x": 178,
+        "y": 450
+      }
+    },
+    "VibeTimeLabel": {
+      "type": "Label",
+      "properties": {
+        "label": "Time (MS)",
+        "enabled": true,
+        "visible": true,
+        "font": "14px Arial",
+        "color": "Black",
+        "elementType": "element"
+      },
+      "triggers": {},
+      "zindex": 18,
+      "designer": {
+        "x": 430,
+        "y": 446
+      }
+    },
+    "MobileVibration20": {
+      "type": "MobileVibration",
+      "properties": {
+        "vibrationTime": "1000",
+        "elementType": "element"
+      },
+      "triggers": {},
+      "zindex": 19,
+      "designer": {
+        "x": 333,
+        "y": 451
+      }
+    },
+    "MobileDeviceInfo21": {
+      "type": "MobileDeviceInfo",
+      "properties": {
+        "elementType": "element"
+      },
+      "triggers": {
+        "onTrigger": [
+          {
+            "sourceTrigger": "onTrigger",
+            "sourceValue": "getInfo",
+            "targetValue": "setValue",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "\"Model: \" + value.model + \"\\n\" +\n\"Platform: \" + value.platform + \"\\n\" +\n\"UUID: \" + value.uuid + \"\\n\" +\n\"Version: \" + value.version + \"\\n\" +\n\"isVirtual: \" + value.isVirtual + \"\\n\" +\n\"serial: \" + value.serial;"
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": [
+                "value"
+              ]
+            },
+            "targetName": "DeviceInfo"
+          },
+          {
+            "sourceTrigger": "onTrigger",
+            "sourceValue": "getPlatform",
+            "targetValue": "setVisible",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "visible": "(value.toLowerCase() == \"android\")"
+              },
+              "targetOrder": [
+                "visible"
+              ],
+              "sourceOrder": [
+                "value"
+              ]
+            },
+            "targetName": "AndroidLogo"
+          },
+          {
+            "sourceTrigger": "onTrigger",
+            "sourceValue": "getPlatform",
+            "targetValue": "setVisible",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "visible": "(value.toLowerCase() == \"ios\")"
+              },
+              "targetOrder": [
+                "visible"
+              ],
+              "sourceOrder": [
+                "value"
+              ]
+            },
+            "targetName": "iOSLogo"
+          }
+        ]
+      },
+      "zindex": 20,
+      "designer": {
+        "x": 197,
+        "y": 127
+      }
+    },
+    "DeviceInfoLabel": {
+      "type": "Label",
+      "properties": {
+        "label": "Device Info:",
+        "enabled": true,
+        "visible": true,
+        "font": "14px Arial",
+        "color": "Black",
+        "elementType": "element"
+      },
+      "triggers": {},
+      "zindex": 21,
+      "designer": {
+        "x": 429,
+        "y": 125
+      }
+    },
+    "DeviceInfo": {
+      "type": "Label",
+      "properties": {
+        "label": "",
+        "enabled": true,
+        "visible": true,
+        "font": "12px Arial",
+        "color": "Black",
+        "elementType": "element"
+      },
+      "triggers": {},
+      "zindex": 22,
+      "designer": {
+        "x": 339,
+        "y": 127
+      }
+    },
+    "MobileBeep26": {
+      "type": "MobileBeep",
+      "properties": {
+        "numberOfBeeps": "1",
+        "elementType": "element"
+      },
+      "triggers": {},
+      "zindex": 23,
+      "designer": {
+        "x": 330,
+        "y": 532
+      }
+    },
+    "TestBeep": {
+      "type": "Button",
+      "properties": {
+        "label": "Test Beep",
+        "enabled": true,
+        "visible": true,
+        "border": "plain",
+        "topColor": "rgb(250, 250, 250)",
+        "bottomColor": "rgb(234, 234, 234)",
+        "pressedTopColor": "rgb(255, 255, 255)",
+        "pressedBottomColor": "rgb(255, 255, 255)",
+        "overTopColor": "rgb(234, 234, 234)",
+        "overBottomColor": "rgb(214, 214, 214)",
+        "disabledTopColor": "rgb(211, 211, 211)",
+        "disabledBottomColor": "rgb(211, 211, 211)",
+        "elementType": "element"
+      },
+      "triggers": {
+        "mousePressed": [
+          {
+            "sourceTrigger": "mousePressed",
+            "sourceValue": "Static",
+            "targetValue": "trigger",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {},
+              "targetOrder": [],
+              "sourceOrder": []
+            },
+            "targetName": "BeepTimes"
+          }
+        ]
+      },
+      "zindex": 24,
+      "designer": {
+        "x": 35,
+        "y": 534
+      }
+    },
+    "BeepTimesLabel": {
+      "type": "Label",
+      "properties": {
+        "label": "# of Beeps",
+        "enabled": true,
+        "visible": true,
+        "font": "14px Arial",
+        "color": "Black",
+        "elementType": "element"
+      },
+      "triggers": {},
+      "zindex": 25,
+      "designer": {
+        "x": 424,
+        "y": 533
+      }
+    },
+    "BeepTimes": {
+      "type": "TextField",
+      "properties": {
+        "label": "New TextField",
+        "value": "1",
+        "enabled": true,
+        "visible": true,
+        "elementType": "element"
+      },
+      "triggers": {
+        "onTrigger": [
+          {
+            "sourceTrigger": "onTrigger",
+            "sourceValue": "getValue",
+            "targetValue": "setNumberOfBeeps",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "value"
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": [
+                "value"
+              ]
+            },
+            "targetName": "MobileBeep26"
+          },
+          {
+            "sourceTrigger": "onTrigger",
+            "sourceValue": "getValue",
+            "targetValue": "beep",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "value"
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": [
+                "value"
+              ]
+            },
+            "targetName": "MobileBeep26"
+          }
+        ]
+      },
+      "zindex": 26,
+      "designer": {
+        "x": 181,
+        "y": 536
+      }
+    },
+    "WebLink": {
+      "type": "WebLink",
+      "properties": {
+        "url": "https://atmosphere.anaren.com",
+        "elementType": "element"
+      },
+      "triggers": {},
+      "zindex": 27,
+      "designer": {
+        "x": 328,
+        "y": 712
+      }
+    },
+    "TestBrowser": {
+      "type": "Button",
+      "properties": {
+        "label": "Test Browser",
+        "enabled": true,
+        "visible": true,
+        "border": "plain",
+        "topColor": "rgb(250, 250, 250)",
+        "bottomColor": "rgb(234, 234, 234)",
+        "pressedTopColor": "rgb(255, 255, 255)",
+        "pressedBottomColor": "rgb(255, 255, 255)",
+        "overTopColor": "rgb(234, 234, 234)",
+        "overBottomColor": "rgb(214, 214, 214)",
+        "disabledTopColor": "rgb(211, 211, 211)",
+        "disabledBottomColor": "rgb(211, 211, 211)",
+        "elementType": "element"
+      },
+      "triggers": {
+        "mousePressed": [
+          {
+            "sourceTrigger": "mousePressed",
+            "sourceValue": "Static",
+            "targetValue": "trigger",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {},
+              "targetOrder": [],
+              "sourceOrder": []
+            },
+            "targetName": "UrlField"
+          }
+        ]
+      },
+      "zindex": 28,
+      "designer": {
+        "x": 36,
+        "y": 720
+      }
+    },
+    "UrlLabel": {
+      "type": "Label",
+      "properties": {
+        "label": "Open URL",
+        "enabled": true,
+        "visible": true,
+        "font": "14px Arial",
+        "color": "Black",
+        "elementType": "element"
+      },
+      "triggers": {},
+      "zindex": 29,
+      "designer": {
+        "x": 432,
+        "y": 712
+      }
+    },
+    "UrlField": {
+      "type": "TextField",
+      "properties": {
+        "label": "New TextField",
+        "value": "http://www.google.com",
+        "enabled": true,
+        "visible": true,
+        "elementType": "element"
+      },
+      "triggers": {
+        "onTrigger": [
+          {
+            "sourceTrigger": "onTrigger",
+            "sourceValue": "getValue",
+            "targetValue": "setURL",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "url": "value"
+              },
+              "targetOrder": [
+                "url"
+              ],
+              "sourceOrder": [
+                "value"
+              ]
+            },
+            "targetName": "WebLink"
+          },
+          {
+            "sourceTrigger": "onTrigger",
+            "sourceValue": "getValue",
+            "targetValue": "open",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "value"
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": [
+                "value"
+              ]
+            },
+            "targetName": "WebLink"
+          }
+        ]
+      },
+      "zindex": 30,
+      "designer": {
+        "x": 185,
+        "y": 714
+      }
+    },
+    "LEDTest": {
+      "type": "Button",
+      "properties": {
+        "label": "LED Test",
+        "enabled": false,
+        "visible": true,
+        "border": "plain",
+        "topColor": "rgb(250, 250, 250)",
+        "bottomColor": "rgb(234, 234, 234)",
+        "pressedTopColor": "rgb(255, 255, 255)",
+        "pressedBottomColor": "rgb(255, 255, 255)",
+        "overTopColor": "rgb(234, 234, 234)",
+        "overBottomColor": "rgb(214, 214, 214)",
+        "disabledTopColor": "rgb(211, 211, 211)",
+        "disabledBottomColor": "rgb(211, 211, 211)",
+        "elementType": "element"
+      },
+      "triggers": {
+        "mousePressed": [
+          {
+            "sourceTrigger": "mousePressed",
+            "sourceValue": "Static",
+            "targetValue": "execute",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "20"
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": []
+            },
+            "targetName": "ToggleGreenLED"
+          }
+        ],
+        "mouseReleased": [
+          {
+            "sourceTrigger": "mouseReleased",
+            "sourceValue": "Static",
+            "targetValue": "execute",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "0"
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": []
+            },
+            "targetName": "ToggleGreenLED"
+          }
+        ]
+      },
+      "zindex": 31,
+      "designer": {
+        "x": 150,
+        "y": 1152
+      }
+    },
+    "ToggleGreenLED": {
+      "type": "PWMSet",
+      "properties": {
+        "code": "\n\t\n\tAIR_PWM_Enable(%(pin)s);\n\t\n\tunsigned int value = 0;\n\tunsigned int step = 0x3FF/20;\n\t\n\tvalue = 0x3FF - (step * data);\n\t\t\n\tAIR_PWM_Set(%(pin)s, value);\n\t\n\treturn data;\n\t",
+        "pin": "27",
+        "length": "128",
+        "permission": "public",
+        "inputType": "int",
+        "returnType": "int",
+        "elementType": "element"
+      },
+      "triggers": {},
+      "zindex": 32,
+      "designer": {
+        "x": 322,
+        "y": 1154
+      }
+    },
+    "TestGeo": {
+      "type": "Button",
+      "properties": {
+        "label": "Test Geolocation",
+        "enabled": true,
+        "visible": true,
+        "border": "plain",
+        "topColor": "rgb(250, 250, 250)",
+        "bottomColor": "rgb(234, 234, 234)",
+        "pressedTopColor": "rgb(255, 255, 255)",
+        "pressedBottomColor": "rgb(255, 255, 255)",
+        "overTopColor": "rgb(234, 234, 234)",
+        "overBottomColor": "rgb(214, 214, 214)",
+        "disabledTopColor": "rgb(211, 211, 211)",
+        "disabledBottomColor": "rgb(211, 211, 211)",
+        "elementType": "element"
+      },
+      "triggers": {
+        "mousePressed": [
+          {
+            "sourceTrigger": "mousePressed",
+            "sourceValue": "Static",
+            "targetValue": "retrievePosition",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {},
+              "targetOrder": [],
+              "sourceOrder": []
+            },
+            "targetName": "MobileGeolocation36"
+          }
+        ]
+      },
+      "zindex": 33,
+      "designer": {
+        "x": 38,
+        "y": 627
+      }
+    },
+    "LatLon": {
+      "type": "TextField",
+      "properties": {
+        "label": "New TextField",
+        "value": "",
+        "enabled": true,
+        "visible": true,
+        "elementType": "element"
+      },
+      "triggers": {},
+      "zindex": 34,
+      "designer": {
+        "x": 327,
+        "y": 620
+      }
+    },
+    "GeoLabel": {
+      "type": "Label",
+      "properties": {
+        "label": "Lat, Long",
+        "enabled": true,
+        "visible": true,
+        "font": "14px Arial",
+        "color": "Black",
+        "elementType": "element"
+      },
+      "triggers": {},
+      "zindex": 35,
+      "designer": {
+        "x": 429,
+        "y": 621
+      }
+    },
+    "MobileGeolocation36": {
+      "type": "MobileGeolocation",
+      "properties": {
+        "elementType": "element"
+      },
+      "triggers": {
+        "positionRetrieved": [
+          {
+            "sourceTrigger": "positionRetrieved",
+            "sourceValue": "getPositionData",
+            "targetValue": "setValue",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "latitude + \" : \" + longitude"
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": [
+                "latitude",
+                "longitude",
+                "altitude",
+                "accuracy",
+                "altitudeAccuracy",
+                "heading",
+                "speed",
+                "timestamp"
+              ]
+            },
+            "targetName": "LatLon"
+          }
+        ]
+      },
+      "zindex": 36,
+      "designer": {
+        "x": 187,
+        "y": 628
+      }
+    },
+    "LEDInfo": {
+      "type": "Label",
+      "properties": {
+        "label": "To use the LED test you\nmust program the MSDK\nwith this project, then\nconnect to it over BLE",
+        "enabled": true,
+        "visible": true,
+        "font": "14px Arial",
+        "color": "Black",
+        "elementType": "element"
+      },
+      "triggers": {},
+      "zindex": 37,
+      "designer": {
+        "x": 151,
+        "y": 1083
+      }
+    },
+    "Buzzer": {
+      "type": "Buzzer",
+      "properties": {
+        "code": "\n\tif(data != NULL && length > 0)\n\t{\n\t\tif(data[0] == '1' || data[0] == 't')\n\t\t{\n\t\t\tBUZZER_Start(%(note)s);\n\t\t}\n\t\t\n\t\telse if(data[0] == '0' || data[0] == 'f')\n\t\t{\n\t\t\tBUZZER_Stop();\n\t\t}\n\t}\n\t\n\telse\n\t{\n\t\tstatic bool toggle = false;\n\t\t\n\t\ttoggle = !toggle;\n\t\t\n\t\tif(toggle)\n\t\t{\n\t\t\tBUZZER_Start(%(note)s);\n\t\t}\n\t\t\n\t\telse\n\t\t{\n\t\t\tBUZZER_Stop();\n\t\t}\n\t}\n\t\n\treturn NULL;\n\t",
+        "note": "BUZZER_Note_B6",
+        "length": "128",
+        "permission": "public",
+        "inputType": "json",
+        "returnType": "json",
+        "elementType": "element"
+      },
+      "triggers": {},
+      "zindex": 38,
+      "designer": {
+        "x": 319,
+        "y": 1294
+      }
+    },
+    "BuzzerTest": {
+      "type": "Button",
+      "properties": {
+        "label": "Buzzer Test",
+        "enabled": false,
+        "visible": true,
+        "border": "plain",
+        "topColor": "rgb(250, 250, 250)",
+        "bottomColor": "rgb(234, 234, 234)",
+        "pressedTopColor": "rgb(255, 255, 255)",
+        "pressedBottomColor": "rgb(255, 255, 255)",
+        "overTopColor": "rgb(234, 234, 234)",
+        "overBottomColor": "rgb(214, 214, 214)",
+        "disabledTopColor": "rgb(211, 211, 211)",
+        "disabledBottomColor": "rgb(211, 211, 211)",
+        "elementType": "element"
+      },
+      "triggers": {
+        "mousePressed": [
+          {
+            "sourceTrigger": "mousePressed",
+            "sourceValue": "Static",
+            "targetValue": "execute",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": ""
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": []
+            },
+            "targetName": "Buzzer"
+          }
+        ],
+        "mouseReleased": [
+          {
+            "sourceTrigger": "mouseReleased",
+            "sourceValue": "Static",
+            "targetValue": "execute",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": ""
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": []
+            },
+            "targetName": "Buzzer"
+          }
+        ]
+      },
+      "zindex": 39,
+      "designer": {
+        "x": 151,
+        "y": 1297
+      }
+    },
+    "BuzzerInfo": {
+      "type": "Label",
+      "properties": {
+        "label": "To use the Buzzer you\nmust program the MSDK\nwith this project, then\nconnect to it over BLE",
+        "enabled": true,
+        "visible": true,
+        "font": "14px Arial",
+        "color": "Black",
+        "elementType": "element"
+      },
+      "triggers": {},
+      "zindex": 40,
+      "designer": {
+        "x": 150,
+        "y": 1227
+      }
+    },
+    "StartupAlert": {
+      "type": "Task",
+      "properties": {
+        "runOnStart": true,
+        "runIn": "200",
+        "runEvery": "10000",
+        "elementType": "element"
+      },
+      "triggers": {
+        "task": [
+          {
+            "sourceTrigger": "task",
+            "sourceValue": "Static",
+            "targetValue": "alert",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "title": "",
+                "message": "",
+                "buttonName": ""
+              },
+              "targetOrder": [
+                "message",
+                "title",
+                "buttonName"
+              ],
+              "sourceOrder": []
+            },
+            "targetName": "StartMessage"
+          },
+          {
+            "sourceTrigger": "task",
+            "sourceValue": "Static",
+            "targetValue": "pause",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {},
+              "targetOrder": [],
+              "sourceOrder": []
+            },
+            "targetName": "StartupAlert"
+          }
+        ]
+      },
+      "zindex": 41,
+      "designer": {
+        "x": 581,
+        "y": 224
+      }
+    },
+    "StartMessage": {
+      "type": "MobileAlert",
+      "properties": {
+        "message": "Welcome to the Atmosphere Debug App. This app demos some of the mobile features available using Atmosphere.",
+        "title": "Welcome",
+        "buttonName": "OK",
+        "elementType": "element"
+      },
+      "triggers": {},
+      "zindex": 42,
+      "designer": {
+        "x": 727,
+        "y": 223
+      }
+    },
+    "AndroidLogo": {
+      "type": "ImagePan",
+      "properties": {
+        "image": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAMAAACdt4HsAAAAA3NCSVQICAjb4U/gAAAACXBIWXMAACXUAAAl1AElndq2AAAAGXRFWHRTb2Z0d2FyZQB3d3cuaW5rc2NhcGUub3Jnm+48GgAAATJQTFRF////AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAEAAAEAAADAAADAAADAAADAAADAAADAAADAAADAAADAAADAAACAAACAAACAAACAAACAAACAAACAAACAAACAAACAAACAgACAgACAgACAgACAgACAgACAgACAgACAgACAgACAgACAgACAgACAgACAgACAgACAgACAQABAQABAQABAQABAQABAQABAQABAQADAQADAQADAQADAQACAQACAQACAQACAQACAQACAQACAQACAQACAQACAQACAQACAQACAQACAQACAQACAQACAQACAQACAQACAQACAQACUFZejAAAAGV0Uk5TAAECAwkMDQ4PERIUFRYYGRsfIiMlJiszODs8PkVHSEtOT1JTV1lfYGNnaGpscHJzdXl9f4CCg4WGh4iJjpCTlpmapqiqq66ws7W5vsLGyMzNz9Dc4OPm5+jt7vDx8vP19vn7/P0xxaGyAAAB8klEQVRYw+2Xa1sBQRTHD9I9RIRyzaUUuqBahUIXFZVCN7Yy3/8rZGdHETsz+9Qrj/8b5xzz/63xPHPOLMAQZcPDquEs8CraXBwsLjaj3ABtuTRYLJW13ACwvUub0JiWPevrnmWTRtrAuw1UaO/Z4j2pIaLaidfyvKfGD0YR/ZJoVONfa6ABNda47QtFNFTFBT6/oYoUVDXw+KfvkaLup9n+iWtpZV0467eeC3Xp43qCCTjA670AV73+GwAvDg5Z/tk3vM4B0PcTLgAcOGjOMQBJ2XDr3/3sBbR3/bdyJND9ky+IoeYMFbCCmFqlAjbYgC0q4JgNyFABJTagRAUUHpgqKJ0gFf2m07N+nSvdzhNq5fQAQYGpIIA+10JPO7oewD7e3SVAnv0f5AEucbD/45/6kL9z8gGccvAx9Q0gFRTnA8RR93lduUklwQdIkMg9BowBY8DoARykEuMDxEjk+L+W9uemCrrtBnrN6HkB+swramzr+kfDPB4sfIDOYJlXmDi8AEWdsgGnPDccmpJUgFVk+UUrfey6Hun+RxdrcGuW7HZ7mixPdWJ7iiTpTryk4Rv/EeLB705hkkRU3B/GgJEABIjHJyU+kgRUAMxtbPk0SYlJfnNom9XcRAXSpbHkLnwEqhS5EyuhbhKqiHebCqfgC5tMJc2IxPooAAAAAElFTkSuQmCC",
+        "aspectLock": true,
+        "enabled": true,
+        "visible": false,
+        "rotation": "0",
+        "background": "transparent",
+        "elementType": "element"
+      },
+      "triggers": {},
+      "zindex": 43,
+      "designer": {
+        "x": 584,
+        "y": 32
+      }
+    },
+    "iOSLogo": {
+      "type": "ImagePan",
+      "properties": {
+        "image": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAmAwAAJgMB13EBPQAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAARWSURBVHic3ZtdiFVVFMd/axxxBktK/MAyCK00iqLSFMKxwJIUgwIV7DmNih6CiKB6ivKhQCa1lzQfqhGkSIQo8KGI7KFP8mOsqWQCtUx0KEUSb8uHfYThcs7ZZ3/cc/bcPywu3LPX3uv/v+ue/XHWEVUldYjIzcAa4BFgUFU/itV3b6yOOgERGQBeAh4c9/V7McdIUgARmQ/sBAZyLl8dc6zkBBCRlcAQcG1Bkykxx+uJ2VkoROR54BOKyQMcjDpmKjdBEXkI+KxC05mqejrauCkIICJTgUPAjZamv6nqTTHHTuUv8Cp28gCbYw/ceAaISB9wBui3NP0SWK6RA04hA5ZhJ38ReDI2eUhDgJWW62PAOlU90onBU1gH3Fly7VsM+WOdGjyFDLgq57sxzI3xvk6ShzQyYLwAw8A2YJeqnq9j8BQE2AX8DhxQ1b/qHjzqNCgiAswAZmWfP6vqn4F93g7cA8wBZgP/AKOZDavqiaCgVTXIgKXAh8BJ4BKgbTYCvAtsAKZU7HMO8BzwY05/460FfAo8BvR6xR9AfBXwhSXAdvsbs5q7Jae/mcATmP1AnpA2Owls7LgAwKTsF3UNsN1OAfuArZmQPqTz7GNgRkcEAPqAvZEC7aSdABZEFQCY5pHyTdoocH0UAQCZYOSv2CGgL4YAmxIg42r/AmuDMwAzJY0lQMjFzgHLotwDgD0JEHKx85hzg/BZAHMe3zQhF2sBK1xmNttucIPlemrYoqr7XRwK9wIi0oNZXc2KEFgd+ANYqKoXXJzKMuBeJg55gK2u5KFcgDUBwdSNC8AOH8cyAR72i6URHFDVMz6OZQLM9gymCfzg61gmQNSHkB3GT76O3SKAN7pFgOm+jrkCZGuAyd7h1I+4AmC2vy3fThvAYl/HXAFUtYVZWU0U3C8itueLuSi7B4x4BtME+oEHfBy7RQCAp3ycukmA1SKyyNWpmwQAeFNEnB73lQlwODCYJjAAvOXkYTkROkjzpzw+9kysE6G9Tmqmgy0isrpSS0sGLKb5XzPkfPANQp4LYFaExxMgE2JHgEfJjv98jsXfToBEqA0XCVClRmhPhTapY1ALTn8rVYiIyHfA3bGjqglngRu0oOaoapXYa/HiqR3vFJGH6hnQg1kYLYwYWB1oAfNUtXBnWykDVPV/4PVYUdWIoTLy4FAllq2xR6hW1Z0C/sNUiYyWNapcKaqql4AXQqOqEYM28oB9HZCzLhii+XndZqeBa4IfjxcIMB1ThNQ0yTKrvBlyFiATYVUCJItstxMXHwEyEbYnQLbdvgH66xJgErA7AdJX7DhwnTMPXwEyEXoxdcJNkx8GbvPhEFwtLiKTgfeBtY6uxzBlrV9hVmw9wF3ACkxxRtUpeifwrPq+XxCSAW3ZsA777PA98Apwh6WvucCLwNGSvsaA9aFxx35fYBrwNLAcWIIpWfsV+Bz4QFV/8ehzCfA4sAi4FfOK3dfAyxrhdZrLU49yOSVqlrkAAAAASUVORK5CYII=",
+        "aspectLock": true,
+        "enabled": true,
+        "visible": false,
+        "rotation": "0",
+        "background": "transparent",
+        "elementType": "element"
+      },
+      "triggers": {},
+      "zindex": 44,
+      "designer": {
+        "x": 582,
+        "y": 99
+      }
+    },
+    "BLEEnabled": {
+      "type": "ImagePan",
+      "properties": {
+        "image": "data:image/png;base64,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",
+        "aspectLock": true,
+        "enabled": true,
+        "visible": false,
+        "rotation": "0",
+        "background": "transparent",
+        "elementType": "element"
+      },
+      "triggers": {},
+      "zindex": 45,
+      "designer": {
+        "x": 176,
+        "y": 1006
+      }
+    },
+    "ConnectedCheck": {
+      "type": "Connection",
+      "properties": {
+        "elementType": "element"
+      },
+      "triggers": {
+        "connected": [
+          {
+            "sourceTrigger": "connected",
+            "sourceValue": "Static",
+            "targetValue": "setVisible",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "visible": "true"
+              },
+              "targetOrder": [
+                "visible"
+              ],
+              "sourceOrder": []
+            },
+            "targetName": "BLEEnabled"
+          },
+          {
+            "sourceTrigger": "connected",
+            "sourceValue": "Static",
+            "targetValue": "setEnabled",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "enabled": "true"
+              },
+              "targetOrder": [
+                "enabled"
+              ],
+              "sourceOrder": []
+            },
+            "targetName": "LEDTest"
+          },
+          {
+            "sourceTrigger": "connected",
+            "sourceValue": "Static",
+            "targetValue": "setEnabled",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "enabled": "true"
+              },
+              "targetOrder": [
+                "enabled"
+              ],
+              "sourceOrder": []
+            },
+            "targetName": "BuzzerTest"
+          }
+        ],
+        "disconnected": [
+          {
+            "sourceTrigger": "disconnected",
+            "sourceValue": "Static",
+            "targetValue": "setVisible",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "visible": "false"
+              },
+              "targetOrder": [
+                "visible"
+              ],
+              "sourceOrder": []
+            },
+            "targetName": "BLEEnabled"
+          },
+          {
+            "sourceTrigger": "disconnected",
+            "sourceValue": "Static",
+            "targetValue": "setEnabled",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "enabled": "false"
+              },
+              "targetOrder": [
+                "enabled"
+              ],
+              "sourceOrder": []
+            },
+            "targetName": "LEDTest"
+          },
+          {
+            "sourceTrigger": "disconnected",
+            "sourceValue": "Static",
+            "targetValue": "setEnabled",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "enabled": "false"
+              },
+              "targetOrder": [
+                "enabled"
+              ],
+              "sourceOrder": []
+            },
+            "targetName": "BuzzerTest"
+          }
+        ]
+      },
+      "zindex": 46,
+      "designer": {
+        "x": 0,
+        "y": 1034
+      }
+    }
+  },
+  "cloudElements": {}
+}

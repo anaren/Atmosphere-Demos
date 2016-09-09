@@ -1,0 +1,3345 @@
+{
+  "header": {
+    "data": {
+      "order": [
+        "Globals",
+        "Interval",
+        "Connected",
+        "Disconnected",
+        "Setup"
+      ],
+      "Globals": {
+        "close": "//END",
+        "code": "",
+        "name": "Globals",
+        "func": "#include \"callbacks.h\""
+      },
+      "Interval": {
+        "close": "}",
+        "code": "",
+        "name": "Interval",
+        "func": "\nvoid interval() {"
+      },
+      "Connected": {
+        "close": "}",
+        "code": "",
+        "name": "Connected",
+        "func": "\nvoid connected() {"
+      },
+      "Disconnected": {
+        "close": "}",
+        "code": "",
+        "name": "Disconnected",
+        "func": "\nvoid disconnected() {"
+      },
+      "Setup": {
+        "close": "}",
+        "code": "\tAIR_GPIO_Init();\n\tAIR_UART_Init();\n\tAIR_I2C_Init();\n\tAIR_SPI_Init();\n\tBUZZER_Init();",
+        "name": "Setup",
+        "func": "\nvoid setup() {"
+      }
+    },
+    "boardConfiguration": {
+      "ble": {
+        "values": {
+          "txPowerLevel": {
+            "regex": "^[0-9]*$",
+            "input": "TextField",
+            "prefix": "#define BLE_TX_POWER_LEVEL ",
+            "name": "TX Power Level (dbm)",
+            "value": "4"
+          },
+          "pairing": {
+            "regex": "^[a-zA-Z0-9_.]*$",
+            "name": "Pairing",
+            "value": "BLE_PAIRING_NONE",
+            "prefix": "#define ",
+            "input": "Combo",
+            "options": [
+              "BLE_PAIRING_NONE",
+              "BLE_PAIRING_PASSKEY",
+              "BLE_PAIRING_OOB"
+            ]
+          },
+          "intervalFineTimer": {
+            "regex": "^[0-9]*$",
+            "input": "TextField",
+            "prefix": "#define BLE_INTERVAL_FINE_TIMER ",
+            "name": "Interval Timer Length (ms)",
+            "value": "1000"
+          },
+          "version": {
+            "regex": "^[a-zA-Z0-9_.]*$",
+            "name": "Version",
+            "value": "1.00",
+            "prefix": "#define BLE_VERSION \"",
+            "input": "TextField",
+            "suffix": "\""
+          },
+          "localName": {
+            "regex": "^[a-zA-Z0-9_.]*$",
+            "name": "Local Name",
+            "value": "ui_demo",
+            "prefix": "#define BLE_LOCAL_NAME \"",
+            "input": "TextField",
+            "suffix": "\""
+          },
+          "powersave": {
+            "regex": "^[a-zA-Z0-9_.]*$",
+            "name": "Power Saving",
+            "value": "BLE_POWERSAVE_OFF",
+            "prefix": "#define ",
+            "input": "Combo",
+            "options": [
+              "BLE_POWERSAVE_OFF",
+              "BLE_POWERSAVE"
+            ]
+          },
+          "ota": {
+            "name": "Over the Air Updating",
+            "input": "Combo",
+            "prefix": "#define BLE_",
+            "options": [
+              "OTA",
+              "NO_OTA"
+            ],
+            "value": "OTA",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "minInterval": {
+            "name": "BLE Min Interval (ms) (Default: 20)",
+            "input": "TextField",
+            "prefix": "#define BLE_INTERVAL_MIN ",
+            "value": "20",
+            "regex": "^[0-9]*$"
+          },
+          "maxInterval": {
+            "name": "BLE Max Interval (ms) (Default: 40)",
+            "input": "TextField",
+            "prefix": "#define BLE_INTERVAL_MAX ",
+            "value": "40",
+            "regex": "^[0-9]*$"
+          },
+          "slaveLatency": {
+            "name": "BLE Slave Latency (ms) (Default: 04)",
+            "input": "TextField",
+            "prefix": "#define BLE_SLAVE_LATENCY ",
+            "value": "0",
+            "regex": "^[0-9]*$"
+          },
+          "timeout": {
+            "name": "BLE Connection Timeout (ms) (Default: 700)",
+            "input": "TextField",
+            "prefix": "#define BLE_CONNECTION_TIMEOUT ",
+            "value": "700",
+            "regex": "^[0-9]*$"
+          }
+        },
+        "name": "Bluetooth Low Energy",
+        "file": "ble_config.h"
+      },
+      "power": {
+        "name": "Power Driver",
+        "file": "power_config.h",
+        "values": {
+          "external_osc": {
+            "name": "External Oscillator",
+            "input": "Combo",
+            "prefix": "#define AIR_POWER_",
+            "options": [
+              "EXTERNAL_32KHZ_OSC",
+              "INTERNAL_OSC"
+            ],
+            "value": "INTERNAL_OSC",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          }
+        }
+      },
+      "gpio": {
+        "name": "GPIO Driver",
+        "file": "gpio_config.h",
+        "values": {
+          "buad": {
+            "name": "ADC Sample Frequency",
+            "input": "Combo",
+            "prefix": "#define AIR_ADC_SAMPLE_FREQUENCY ",
+            "options": [
+              "ADC_SAMPLE_FREQUENCY_LOW",
+              "ADC_SAMPLE_FREQUENCY_MEDIUM_LOW",
+              "ADC_SAMPLE_FREQUENCY_MEDIUM",
+              "ADC_SAMPLE_FREQUENCY_MEDIUM_HIGH",
+              "ADC_SAMPLE_FREQUENCY_HIGH"
+            ],
+            "value": "ADC_SAMPLE_FREQUENCY_LOW",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "pwmClockSource": {
+            "name": "PWM Clock Source",
+            "input": "Combo",
+            "prefix": "#define AIR_PWM_CLOCK_SOURCE ",
+            "options": [
+              "PMU_CLK",
+              "LHL_CLK"
+            ],
+            "value": "LHL_CLK",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          }
+        }
+      },
+      "uart": {
+        "values": {
+          "rtsPin": {
+            "regex": "^[a-zA-Z0-9_.]*$",
+            "name": "RTS Pin",
+            "value": "1",
+            "prefix": "#define AIR_UART_RTS_PIN ",
+            "input": "Combo",
+            "options": [
+              "1"
+            ]
+          },
+          "buad": {
+            "regex": "^[a-zA-Z0-9_.]*$",
+            "name": "Baudrate",
+            "value": "AIR_UART_BAUD_115200",
+            "prefix": "#define ",
+            "input": "Combo",
+            "options": [
+              "AIR_UART_BAUD_115200",
+              "AIR_UART_BAUD_57600",
+              "AIR_UART_BAUD_9600"
+            ]
+          },
+          "rxBuffer": {
+            "regex": "^[0-9]*$",
+            "input": "TextField",
+            "prefix": "#define AIR_UART_RX_CIRCULAR_BUFFER_SIZE ",
+            "name": "RX Circular Buffer size",
+            "value": "128"
+          },
+          "txBuffer": {
+            "regex": "^[0-9]*$",
+            "input": "TextField",
+            "prefix": "#define AIR_UART_TX_CIRCULAR_BUFFER_SIZE ",
+            "name": "TX Circular Buffer size",
+            "value": "128"
+          },
+          "txPin": {
+            "regex": "^[a-zA-Z0-9_.]*$",
+            "name": "TX Pin",
+            "value": "32",
+            "prefix": "#define AIR_UART_TX_PIN ",
+            "input": "Combo",
+            "options": [
+              "32"
+            ]
+          },
+          "rxPin": {
+            "regex": "^[a-zA-Z0-9_.]*$",
+            "name": "RX Pin",
+            "value": "33",
+            "prefix": "#define AIR_UART_RX_PIN ",
+            "input": "Combo",
+            "options": [
+              "33"
+            ]
+          },
+          "ctsPin": {
+            "regex": "^[a-zA-Z0-9_.]*$",
+            "name": "CTS Pin",
+            "value": "3",
+            "prefix": "#define AIR_UART_CTS_PIN ",
+            "input": "Combo",
+            "options": [
+              "3"
+            ]
+          }
+        },
+        "name": "AIR UART Driver",
+        "file": "uart_config.h"
+      },
+      "spi": {
+        "name": "AIR SPI Driver",
+        "file": "spi_config.h",
+        "values": {
+          "speed": {
+            "name": "SPI Speed",
+            "input": "Combo",
+            "prefix": "#define AIR_SPI_SPEED ",
+            "options": [
+              "1000000",
+              "500000"
+            ],
+            "value": "1000000",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "mode": {
+            "name": "SPI Mode",
+            "input": "Combo",
+            "prefix": "#define AIR_SPI_MODE ",
+            "options": [
+              "SPI_MODE_0",
+              "SPI_MODE_1",
+              "SPI_MODE_2",
+              "SPI_MODE_3"
+            ],
+            "value": "SPI_MODE_3",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          }
+        }
+      },
+      "buzzer": {
+        "name": "Buzzer Driver",
+        "file": "buzzer_config.h",
+        "values": {
+          "pin": {
+            "name": "Buzzer Pin",
+            "input": "Combo",
+            "prefix": "#define BUZZER_PWM_PIN ",
+            "options": [
+              "13",
+              "14",
+              "26",
+              "27"
+            ],
+            "value": "14",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          }
+        }
+      }
+    },
+    "meta": {
+      "version": "1.5.0",
+      "layoutGrid": true,
+      "layoutSnapping": false,
+      "layoutSnappingSize": 65,
+      "cloudLayoutGrid": false,
+      "cloudLayoutSnapping": false,
+      "cloudLayoutSnappingSize": 10,
+      "language": "en",
+      "enableTooltips": true,
+      "enableAutoSave": true,
+      "enableBuildSave": false,
+      "description": "Demonstration of a various methods for enhancing \nthe app user interface, stateful buttons, pages, and \nother goodies",
+      "project_uuid": null,
+      "tokensEnabled": false,
+      "codeAssist": false,
+      "highlightLine": false,
+      "editorTheme": "Default",
+      "editorFontSize": 12,
+      "customEmbeddedElementLibraries": {},
+      "theme": {
+        "bg1": "#e9f3fb",
+        "bg2": "#DCEBF9"
+      },
+      "projectType": "bcm20737",
+      "name": "UI Demo"
+    },
+    "type": "Header",
+    "currentLayoutName": "Default"
+  },
+  "layouts": {
+    "iPad": {
+      "devicename": ".*",
+      "elements": {
+        "ButtonBackground": {
+          "y": 188,
+          "x": -17,
+          "height": 147,
+          "width": 802
+        },
+        "logo02": {
+          "y": 16,
+          "x": 330,
+          "height": 55,
+          "width": 110
+        },
+        "logo01": {
+          "y": 16,
+          "x": 330,
+          "height": 55,
+          "width": 110
+        },
+        "Needle": {
+          "y": 649,
+          "x": 364,
+          "height": 86,
+          "width": 86
+        },
+        "logo05": {
+          "y": 16,
+          "x": 330,
+          "height": 55,
+          "width": 110
+        },
+        "logo04": {
+          "y": 16,
+          "x": 330,
+          "height": 55,
+          "width": 110
+        },
+        "StatefulButton": {
+          "y": 270,
+          "x": 498,
+          "height": 51,
+          "width": 116
+        },
+        "Spinner": {
+          "y": 631.5,
+          "x": 108,
+          "height": 127,
+          "width": 106
+        },
+        "ButtonUp2": {
+          "y": 211,
+          "x": 500,
+          "height": 51,
+          "width": 116
+        },
+        "Page3But": {
+          "y": 550,
+          "x": 190,
+          "height": 38,
+          "width": 80
+        },
+        "logo03": {
+          "y": 16,
+          "x": 330,
+          "height": 55,
+          "width": 110
+        },
+        "ButtonDown": {
+          "y": 211,
+          "x": 103,
+          "height": 51,
+          "width": 116
+        },
+        "ButtonUp": {
+          "y": 211,
+          "x": 103,
+          "height": 51,
+          "width": 116
+        },
+        "informationLabel": {
+          "y": 352,
+          "x": 227,
+          "height": 37,
+          "width": 314
+        },
+        "TogButLabel": {
+          "y": 447,
+          "x": 441,
+          "height": 40,
+          "width": 146
+        },
+        "PageBg": {
+          "y": 600,
+          "x": -13,
+          "height": 186,
+          "width": 794
+        },
+        "On": {
+          "y": 448,
+          "x": 221,
+          "height": 38,
+          "width": 80
+        },
+        "Off": {
+          "y": 448,
+          "x": 221,
+          "height": 38,
+          "width": 80
+        },
+        "ImageAsButton": {
+          "y": 270,
+          "x": 102,
+          "height": 51,
+          "width": 116
+        },
+        "Value": {
+          "y": 448,
+          "x": 324,
+          "height": 38,
+          "width": 92
+        },
+        "BLEon": {
+          "y": 30,
+          "x": 57,
+          "height": 27,
+          "width": 67
+        },
+        "SoundIcon": {
+          "y": 21,
+          "x": 635.5,
+          "height": 45,
+          "width": 45
+        },
+        "Page2But": {
+          "y": 550,
+          "x": 100,
+          "height": 38,
+          "width": 80
+        },
+        "LedIcon": {
+          "y": 21,
+          "x": 635.5,
+          "height": 45,
+          "width": 45
+        },
+        "ButtonDown2": {
+          "y": 211,
+          "x": 500,
+          "height": 51,
+          "width": 116
+        },
+        "Page1But": {
+          "y": 550,
+          "x": 10,
+          "height": 38,
+          "width": 80
+        },
+        "Page2": {
+          "y": 626,
+          "x": 24,
+          "height": 130,
+          "width": 296
+        },
+        "Page3": {
+          "y": 628,
+          "x": 25.5,
+          "height": 130,
+          "width": 293
+        },
+        "Page1": {
+          "y": 627,
+          "x": 24,
+          "height": 130,
+          "width": 296
+        }
+      },
+      "orientation": "portrait",
+      "platform": "iOS",
+      "height": 1024,
+      "width": 768,
+      "version": ".*",
+      "name": "iPad 1/2/Mini"
+    },
+    "Default": {
+      "devicename": ".*",
+      "elements": {
+        "PageBg": {
+          "x": 4,
+          "y": 312,
+          "width": 316,
+          "height": 146
+        },
+        "On": {
+          "x": 10.5,
+          "y": 216,
+          "width": 80,
+          "height": 38
+        },
+        "LedIcon": {
+          "x": 273,
+          "y": 15.5,
+          "width": 45,
+          "height": 45
+        },
+        "SoundIcon": {
+          "x": 272.5,
+          "y": 15,
+          "width": 45,
+          "height": 45
+        },
+        "ButtonBackground": {
+          "x": 4,
+          "y": 70,
+          "width": 316,
+          "height": 100
+        },
+        "ButtonUp2": {
+          "x": 202,
+          "y": 72,
+          "width": 116,
+          "height": 51
+        },
+        "ButtonDown": {
+          "x": 7,
+          "y": 72,
+          "width": 116,
+          "height": 51
+        },
+        "ButtonDown2": {
+          "x": 202,
+          "y": 72,
+          "width": 116,
+          "height": 51
+        },
+        "ImageAsButton": {
+          "x": 10,
+          "y": 126,
+          "width": 116,
+          "height": 51
+        },
+        "StatefulButton": {
+          "x": 199,
+          "y": 126,
+          "width": 116,
+          "height": 51
+        },
+        "informationLabel": {
+          "x": 7,
+          "y": 177,
+          "width": 311,
+          "height": 37
+        },
+        "logo01": {
+          "x": 105,
+          "y": 10,
+          "width": 110,
+          "height": 55
+        },
+        "logo02": {
+          "x": 105,
+          "y": 10,
+          "width": 110,
+          "height": 55
+        },
+        "logo03": {
+          "x": 105,
+          "y": 10,
+          "width": 110,
+          "height": 55
+        },
+        "logo04": {
+          "x": 105,
+          "y": 10,
+          "width": 110,
+          "height": 55
+        },
+        "logo05": {
+          "x": 105,
+          "y": 10,
+          "width": 110,
+          "height": 55
+        },
+        "Off": {
+          "x": 9.5,
+          "y": 216,
+          "width": 80,
+          "height": 38
+        },
+        "Value": {
+          "x": 104,
+          "y": 216,
+          "width": 55,
+          "height": 38
+        },
+        "BLEon": {
+          "x": 10,
+          "y": 22,
+          "width": 67,
+          "height": 27
+        },
+        "Page1But": {
+          "x": 10,
+          "y": 270,
+          "width": 80,
+          "height": 38
+        },
+        "Page2But": {
+          "x": 100,
+          "y": 270,
+          "width": 80,
+          "height": 38
+        },
+        "Page3But": {
+          "x": 190,
+          "y": 270,
+          "width": 80,
+          "height": 38
+        },
+        "Page3": {
+          "x": 10.5,
+          "y": 319,
+          "width": 293,
+          "height": 130
+        },
+        "Page2": {
+          "x": 10,
+          "y": 320,
+          "width": 296,
+          "height": 130
+        },
+        "TogButLabel": {
+          "x": 173,
+          "y": 216,
+          "width": 146,
+          "height": 40
+        },
+        "Needle": {
+          "x": 138,
+          "y": 336.5,
+          "width": 86,
+          "height": 86
+        },
+        "Spinner": {
+          "x": 17,
+          "y": 323,
+          "width": 106,
+          "height": 127
+        },
+        "Page1": {
+          "x": 13.5,
+          "y": 319.5,
+          "width": 296,
+          "height": 130
+        },
+        "ButtonUp": {
+          "x": 7,
+          "y": 72,
+          "width": 116,
+          "height": 51
+        }
+      },
+      "orientation": "portrait",
+      "platform": ".*",
+      "height": 1024,
+      "width": 768,
+      "version": ".*",
+      "name": "Default (768x1024)"
+    },
+    "iPhone4": {
+      "devicename": ".*",
+      "elements": {
+        "ButtonBackground": {
+          "y": 70,
+          "x": -9,
+          "height": 100,
+          "width": 332
+        },
+        "logo02": {
+          "y": 10,
+          "x": 105,
+          "height": 55,
+          "width": 110
+        },
+        "logo01": {
+          "y": 10,
+          "x": 105,
+          "height": 55,
+          "width": 110
+        },
+        "Needle": {
+          "y": 336.5,
+          "x": 138,
+          "height": 86,
+          "width": 86
+        },
+        "logo05": {
+          "y": 10,
+          "x": 105,
+          "height": 55,
+          "width": 110
+        },
+        "logo04": {
+          "y": 10,
+          "x": 105,
+          "height": 55,
+          "width": 110
+        },
+        "StatefulButton": {
+          "y": 126,
+          "x": 190,
+          "height": 51,
+          "width": 116
+        },
+        "Spinner": {
+          "y": 323,
+          "x": 16,
+          "height": 127,
+          "width": 106
+        },
+        "ButtonUp2": {
+          "y": 72,
+          "x": 190,
+          "height": 51,
+          "width": 116
+        },
+        "Page3But": {
+          "y": 270,
+          "x": 190,
+          "height": 38,
+          "width": 80
+        },
+        "logo03": {
+          "y": 10,
+          "x": 105,
+          "height": 55,
+          "width": 110
+        },
+        "ButtonDown": {
+          "y": 72,
+          "x": 7,
+          "height": 51,
+          "width": 116
+        },
+        "ButtonUp": {
+          "y": 72,
+          "x": 7,
+          "height": 51,
+          "width": 116
+        },
+        "informationLabel": {
+          "y": 177,
+          "x": 11,
+          "height": 37,
+          "width": 311
+        },
+        "TogButLabel": {
+          "y": 217,
+          "x": 164,
+          "height": 40,
+          "width": 146
+        },
+        "PageBg": {
+          "y": 312,
+          "x": -11,
+          "height": 146,
+          "width": 335
+        },
+        "On": {
+          "y": 216,
+          "x": 10.5,
+          "height": 38,
+          "width": 80
+        },
+        "Off": {
+          "y": 216,
+          "x": 9.5,
+          "height": 38,
+          "width": 80
+        },
+        "ImageAsButton": {
+          "y": 126,
+          "x": 10,
+          "height": 51,
+          "width": 116
+        },
+        "Value": {
+          "y": 216,
+          "x": 104,
+          "height": 38,
+          "width": 55
+        },
+        "BLEon": {
+          "y": 22,
+          "x": 10,
+          "height": 27,
+          "width": 67
+        },
+        "SoundIcon": {
+          "y": 15,
+          "x": 261,
+          "height": 45,
+          "width": 45
+        },
+        "Page2But": {
+          "y": 270,
+          "x": 100,
+          "height": 38,
+          "width": 80
+        },
+        "LedIcon": {
+          "y": 15.5,
+          "x": 261,
+          "height": 45,
+          "width": 45
+        },
+        "ButtonDown2": {
+          "y": 72,
+          "x": 190,
+          "height": 51,
+          "width": 116
+        },
+        "Page1But": {
+          "y": 270,
+          "x": 10,
+          "height": 38,
+          "width": 80
+        },
+        "Page2": {
+          "y": 320,
+          "x": 12,
+          "height": 130,
+          "width": 296
+        },
+        "Page3": {
+          "y": 319,
+          "x": 10.5,
+          "height": 130,
+          "width": 293
+        },
+        "Page1": {
+          "y": 319.5,
+          "x": 10,
+          "height": 130,
+          "width": 296
+        }
+      },
+      "orientation": "portrait",
+      "platform": "iOS",
+      "height": 480,
+      "width": 320,
+      "version": ".*",
+      "name": "iPhone 4/4S"
+    },
+    "iPhone5": {
+      "devicename": ".*",
+      "elements": {
+        "ButtonBackground": {
+          "y": 80,
+          "x": -21,
+          "height": 100,
+          "width": 343
+        },
+        "logo02": {
+          "y": 10,
+          "x": 105,
+          "height": 55,
+          "width": 110
+        },
+        "logo01": {
+          "y": 10,
+          "x": 105,
+          "height": 55,
+          "width": 110
+        },
+        "Needle": {
+          "y": 380.5,
+          "x": 138,
+          "height": 86,
+          "width": 86
+        },
+        "logo05": {
+          "y": 10,
+          "x": 105,
+          "height": 55,
+          "width": 110
+        },
+        "logo04": {
+          "y": 10,
+          "x": 105,
+          "height": 55,
+          "width": 110
+        },
+        "StatefulButton": {
+          "y": 135,
+          "x": 190,
+          "height": 51,
+          "width": 116
+        },
+        "Spinner": {
+          "y": 360,
+          "x": 17,
+          "height": 127,
+          "width": 106
+        },
+        "ButtonUp2": {
+          "y": 82,
+          "x": 190,
+          "height": 51,
+          "width": 116
+        },
+        "Page3But": {
+          "y": 310,
+          "x": 190,
+          "height": 38,
+          "width": 80
+        },
+        "logo03": {
+          "y": 10,
+          "x": 105,
+          "height": 55,
+          "width": 110
+        },
+        "ButtonDown": {
+          "y": 82,
+          "x": 7,
+          "height": 51,
+          "width": 116
+        },
+        "ButtonUp": {
+          "y": 82,
+          "x": 7,
+          "height": 51,
+          "width": 116
+        },
+        "informationLabel": {
+          "y": 197,
+          "x": 6,
+          "height": 37,
+          "width": 311
+        },
+        "TogButLabel": {
+          "y": 251,
+          "x": 163,
+          "height": 40,
+          "width": 146
+        },
+        "PageBg": {
+          "y": 349,
+          "x": -13,
+          "height": 146,
+          "width": 333
+        },
+        "On": {
+          "y": 250,
+          "x": 10.5,
+          "height": 38,
+          "width": 80
+        },
+        "Off": {
+          "y": 250,
+          "x": 9.5,
+          "height": 38,
+          "width": 80
+        },
+        "ImageAsButton": {
+          "y": 136,
+          "x": 10,
+          "height": 51,
+          "width": 116
+        },
+        "Value": {
+          "y": 250,
+          "x": 104,
+          "height": 38,
+          "width": 55
+        },
+        "BLEon": {
+          "y": 22,
+          "x": 10,
+          "height": 27,
+          "width": 67
+        },
+        "SoundIcon": {
+          "y": 15,
+          "x": 261,
+          "height": 45,
+          "width": 45
+        },
+        "Page2But": {
+          "y": 310,
+          "x": 100,
+          "height": 38,
+          "width": 80
+        },
+        "LedIcon": {
+          "y": 15.5,
+          "x": 261,
+          "height": 45,
+          "width": 45
+        },
+        "ButtonDown2": {
+          "y": 82,
+          "x": 190,
+          "height": 51,
+          "width": 116
+        },
+        "Page1But": {
+          "y": 310,
+          "x": 10,
+          "height": 38,
+          "width": 80
+        },
+        "Page2": {
+          "y": 359,
+          "x": 10,
+          "height": 130,
+          "width": 296
+        },
+        "Page3": {
+          "y": 360,
+          "x": 10.5,
+          "height": 130,
+          "width": 293
+        },
+        "Page1": {
+          "y": 359.5,
+          "x": 10,
+          "height": 130,
+          "width": 296
+        }
+      },
+      "orientation": "portrait",
+      "platform": "iOS",
+      "height": 568,
+      "width": 320,
+      "version": ".*",
+      "name": "iPhone 5/5C/5S & iPod Touch"
+    },
+    "iPhone6": {
+      "devicename": ".*",
+      "elements": {
+        "ButtonBackground": {
+          "y": 80,
+          "x": -21,
+          "height": 100,
+          "width": 397
+        },
+        "logo02": {
+          "y": 10,
+          "x": 140,
+          "height": 55,
+          "width": 110
+        },
+        "logo01": {
+          "y": 10,
+          "x": 140,
+          "height": 55,
+          "width": 110
+        },
+        "Needle": {
+          "y": 380.5,
+          "x": 162,
+          "height": 86,
+          "width": 86
+        },
+        "logo05": {
+          "y": 10,
+          "x": 140,
+          "height": 55,
+          "width": 110
+        },
+        "logo04": {
+          "y": 10,
+          "x": 140,
+          "height": 55,
+          "width": 110
+        },
+        "StatefulButton": {
+          "y": 135,
+          "x": 227,
+          "height": 51,
+          "width": 116
+        },
+        "Spinner": {
+          "y": 360,
+          "x": 24,
+          "height": 127,
+          "width": 106
+        },
+        "ButtonUp2": {
+          "y": 82,
+          "x": 225,
+          "height": 51,
+          "width": 116
+        },
+        "Page3But": {
+          "y": 310,
+          "x": 190,
+          "height": 38,
+          "width": 80
+        },
+        "logo03": {
+          "y": 10,
+          "x": 140,
+          "height": 55,
+          "width": 110
+        },
+        "ButtonDown": {
+          "y": 82,
+          "x": 25,
+          "height": 51,
+          "width": 116
+        },
+        "ButtonUp": {
+          "y": 82,
+          "x": 25,
+          "height": 51,
+          "width": 116
+        },
+        "informationLabel": {
+          "y": 199,
+          "x": 30.5,
+          "height": 37,
+          "width": 314
+        },
+        "TogButLabel": {
+          "y": 251,
+          "x": 204,
+          "height": 40,
+          "width": 146
+        },
+        "PageBg": {
+          "y": 349,
+          "x": -13,
+          "height": 146,
+          "width": 391
+        },
+        "On": {
+          "y": 250,
+          "x": 29.5,
+          "height": 38,
+          "width": 80
+        },
+        "Off": {
+          "y": 250,
+          "x": 29.5,
+          "height": 38,
+          "width": 80
+        },
+        "ImageAsButton": {
+          "y": 136,
+          "x": 28,
+          "height": 51,
+          "width": 116
+        },
+        "Value": {
+          "y": 250,
+          "x": 131,
+          "height": 38,
+          "width": 55
+        },
+        "BLEon": {
+          "y": 22,
+          "x": 19,
+          "height": 27,
+          "width": 67
+        },
+        "SoundIcon": {
+          "y": 15,
+          "x": 300,
+          "height": 45,
+          "width": 45
+        },
+        "Page2But": {
+          "y": 310,
+          "x": 100,
+          "height": 38,
+          "width": 80
+        },
+        "LedIcon": {
+          "y": 15.5,
+          "x": 300,
+          "height": 45,
+          "width": 45
+        },
+        "ButtonDown2": {
+          "y": 82,
+          "x": 225,
+          "height": 51,
+          "width": 116
+        },
+        "Page1But": {
+          "y": 310,
+          "x": 10,
+          "height": 38,
+          "width": 80
+        },
+        "Page2": {
+          "y": 359,
+          "x": 13,
+          "height": 130,
+          "width": 296
+        },
+        "Page3": {
+          "y": 360,
+          "x": 10.5,
+          "height": 130,
+          "width": 293
+        },
+        "Page1": {
+          "y": 359.5,
+          "x": 10,
+          "height": 130,
+          "width": 296
+        }
+      },
+      "orientation": "portrait",
+      "platform": "iOS",
+      "height": 568,
+      "width": 375,
+      "version": ".*",
+      "name": "iPhone 6"
+    },
+    "iPhone6Plus": {
+      "devicename": ".*",
+      "elements": {
+        "ButtonBackground": {
+          "y": 184.5,
+          "x": -11,
+          "height": 147,
+          "width": 562
+        },
+        "logo02": {
+          "y": 16,
+          "x": 220,
+          "height": 55,
+          "width": 110
+        },
+        "logo01": {
+          "y": 16,
+          "x": 220,
+          "height": 55,
+          "width": 110
+        },
+        "Needle": {
+          "y": 630,
+          "x": 364,
+          "height": 86,
+          "width": 86
+        },
+        "logo05": {
+          "y": 16,
+          "x": 220,
+          "height": 55,
+          "width": 110
+        },
+        "logo04": {
+          "y": 16,
+          "x": 220,
+          "height": 55,
+          "width": 110
+        },
+        "StatefulButton": {
+          "y": 270,
+          "x": 333,
+          "height": 51,
+          "width": 116
+        },
+        "Spinner": {
+          "y": 605.5,
+          "x": 108,
+          "height": 127,
+          "width": 106
+        },
+        "ButtonUp2": {
+          "y": 211,
+          "x": 334,
+          "height": 51,
+          "width": 116
+        },
+        "Page3But": {
+          "y": 550,
+          "x": 190,
+          "height": 38,
+          "width": 80
+        },
+        "logo03": {
+          "y": 16,
+          "x": 220,
+          "height": 55,
+          "width": 110
+        },
+        "ButtonDown": {
+          "y": 211,
+          "x": 103,
+          "height": 51,
+          "width": 116
+        },
+        "ButtonUp": {
+          "y": 211,
+          "x": 103,
+          "height": 51,
+          "width": 116
+        },
+        "informationLabel": {
+          "y": 349,
+          "x": 111,
+          "height": 37,
+          "width": 314
+        },
+        "TogButLabel": {
+          "y": 404,
+          "x": 334,
+          "height": 40,
+          "width": 146
+        },
+        "PageBg": {
+          "y": 595,
+          "x": -19.5,
+          "height": 146,
+          "width": 567
+        },
+        "On": {
+          "y": 405,
+          "x": 85,
+          "height": 38,
+          "width": 80
+        },
+        "Off": {
+          "y": 405,
+          "x": 85,
+          "height": 38,
+          "width": 80
+        },
+        "ImageAsButton": {
+          "y": 270,
+          "x": 102,
+          "height": 51,
+          "width": 116
+        },
+        "Value": {
+          "y": 405,
+          "x": 242.5,
+          "height": 38,
+          "width": 55
+        },
+        "BLEon": {
+          "y": 30,
+          "x": 57,
+          "height": 27,
+          "width": 67
+        },
+        "SoundIcon": {
+          "y": 22,
+          "x": 424.5,
+          "height": 45,
+          "width": 45
+        },
+        "Page2But": {
+          "y": 550,
+          "x": 100,
+          "height": 38,
+          "width": 80
+        },
+        "LedIcon": {
+          "y": 22,
+          "x": 424.5,
+          "height": 45,
+          "width": 45
+        },
+        "ButtonDown2": {
+          "y": 211,
+          "x": 334,
+          "height": 51,
+          "width": 116
+        },
+        "Page1But": {
+          "y": 550,
+          "x": 10,
+          "height": 38,
+          "width": 80
+        },
+        "Page2": {
+          "y": 608,
+          "x": 24,
+          "height": 130,
+          "width": 296
+        },
+        "Page3": {
+          "y": 608,
+          "x": 25.5,
+          "height": 130,
+          "width": 293
+        },
+        "Page1": {
+          "y": 606,
+          "x": 24,
+          "height": 130,
+          "width": 296
+        }
+      },
+      "orientation": "portrait",
+      "platform": "iOS",
+      "height": 960,
+      "width": 540,
+      "version": ".*",
+      "name": "iPhone 6 Plus"
+    },
+    "Nexus7": {
+      "devicename": ".*",
+      "elements": {
+        "ButtonBackground": {
+          "y": 188,
+          "x": -15.5,
+          "height": 147,
+          "width": 631
+        },
+        "logo02": {
+          "y": 16,
+          "x": 240,
+          "height": 55,
+          "width": 110
+        },
+        "logo01": {
+          "y": 16,
+          "x": 240,
+          "height": 55,
+          "width": 110
+        },
+        "Needle": {
+          "y": 630,
+          "x": 364,
+          "height": 86,
+          "width": 86
+        },
+        "logo05": {
+          "y": 16,
+          "x": 240,
+          "height": 55,
+          "width": 110
+        },
+        "logo04": {
+          "y": 16,
+          "x": 240,
+          "height": 55,
+          "width": 110
+        },
+        "StatefulButton": {
+          "y": 271,
+          "x": 360,
+          "height": 51,
+          "width": 116
+        },
+        "Spinner": {
+          "y": 605.5,
+          "x": 108,
+          "height": 127,
+          "width": 106
+        },
+        "ButtonUp2": {
+          "y": 211,
+          "x": 360,
+          "height": 51,
+          "width": 116
+        },
+        "Page3But": {
+          "y": 550,
+          "x": 190,
+          "height": 38,
+          "width": 80
+        },
+        "logo03": {
+          "y": 16,
+          "x": 240,
+          "height": 55,
+          "width": 110
+        },
+        "ButtonDown": {
+          "y": 211,
+          "x": 103,
+          "height": 51,
+          "width": 116
+        },
+        "ButtonUp": {
+          "y": 211,
+          "x": 103,
+          "height": 51,
+          "width": 116
+        },
+        "informationLabel": {
+          "y": 349,
+          "x": 145,
+          "height": 37,
+          "width": 314
+        },
+        "TogButLabel": {
+          "y": 404,
+          "x": 334,
+          "height": 40,
+          "width": 146
+        },
+        "PageBg": {
+          "y": 598,
+          "x": -15,
+          "height": 146,
+          "width": 630
+        },
+        "On": {
+          "y": 405,
+          "x": 85,
+          "height": 38,
+          "width": 80
+        },
+        "Off": {
+          "y": 405,
+          "x": 85,
+          "height": 38,
+          "width": 80
+        },
+        "ImageAsButton": {
+          "y": 270,
+          "x": 102,
+          "height": 51,
+          "width": 116
+        },
+        "Value": {
+          "y": 405,
+          "x": 242.5,
+          "height": 38,
+          "width": 55
+        },
+        "BLEon": {
+          "y": 30,
+          "x": 57,
+          "height": 27,
+          "width": 67
+        },
+        "SoundIcon": {
+          "y": 22,
+          "x": 468.5,
+          "height": 45,
+          "width": 45
+        },
+        "Page2But": {
+          "y": 550,
+          "x": 100,
+          "height": 38,
+          "width": 80
+        },
+        "LedIcon": {
+          "y": 22,
+          "x": 468.5,
+          "height": 45,
+          "width": 45
+        },
+        "ButtonDown2": {
+          "y": 211,
+          "x": 360,
+          "height": 51,
+          "width": 116
+        },
+        "Page1But": {
+          "y": 550,
+          "x": 10,
+          "height": 38,
+          "width": 80
+        },
+        "Page2": {
+          "y": 608,
+          "x": 24,
+          "height": 130,
+          "width": 296
+        },
+        "Page3": {
+          "y": 608,
+          "x": 25.5,
+          "height": 130,
+          "width": 293
+        },
+        "Page1": {
+          "y": 606,
+          "x": 24,
+          "height": 130,
+          "width": 296
+        }
+      },
+      "orientation": "portrait",
+      "platform": "Android",
+      "height": 912,
+      "width": 600,
+      "version": ".*",
+      "name": "Nexus 7 (2013)"
+    }
+  },
+  "cloudLayouts": {},
+  "elements": {
+    "PageBg": {
+      "type": "ImagePan",
+      "properties": {
+        "image": "https://atmosphere.anaren.com/dev/images/demo/blank.png",
+        "enabled": false,
+        "visible": true,
+        "background": "#ccc",
+        "aspectLock": false,
+        "rotation": "0",
+        "elementType": "element"
+      },
+      "triggers": {},
+      "zindex": 1,
+      "designer": {
+        "x": 635,
+        "y": 370
+      }
+    },
+    "On": {
+      "type": "Button",
+      "properties": {
+        "visible": false,
+        "enabled": true,
+        "label": "On",
+        "border": "plain",
+        "topColor": "rgb(250, 250, 250)",
+        "bottomColor": "rgb(234, 234, 234)",
+        "pressedTopColor": "rgb(255, 255, 255)",
+        "pressedBottomColor": "rgb(255, 255, 255)",
+        "overTopColor": "rgb(234, 234, 234)",
+        "overBottomColor": "rgb(214, 214, 214)",
+        "disabledTopColor": "rgb(211, 211, 211)",
+        "disabledBottomColor": "rgb(211, 211, 211)",
+        "elementType": "element"
+      },
+      "triggers": {
+        "onTrigger": [
+          {
+            "sourceValue": "Static",
+            "targetName": "Off",
+            "arguments": {
+              "targetOrder": [
+                "visible"
+              ],
+              "mapping": {
+                "visible": "false"
+              },
+              "sourceOrder": []
+            },
+            "sourceStaticValue": "",
+            "targetValue": "setVisible",
+            "sourceTrigger": "onTrigger"
+          }
+        ],
+        "mousePressed": [
+          {
+            "sourceValue": "Static",
+            "targetName": "Off",
+            "arguments": {
+              "targetOrder": [
+                "visible"
+              ],
+              "mapping": {
+                "visible": "true"
+              },
+              "sourceOrder": []
+            },
+            "sourceStaticValue": "",
+            "targetValue": "setVisible",
+            "sourceTrigger": "mousePressed"
+          },
+          {
+            "sourceValue": "Static",
+            "targetName": "Off",
+            "arguments": {
+              "targetOrder": [],
+              "mapping": {},
+              "sourceOrder": []
+            },
+            "sourceStaticValue": "",
+            "targetValue": "trigger",
+            "sourceTrigger": "mousePressed"
+          },
+          {
+            "sourceValue": "Static",
+            "targetName": "Value",
+            "arguments": {
+              "targetOrder": [
+                "value"
+              ],
+              "mapping": {
+                "value": "\"Off\""
+              },
+              "sourceOrder": []
+            },
+            "sourceStaticValue": "",
+            "targetValue": "setValue",
+            "sourceTrigger": "mousePressed"
+          }
+        ]
+      },
+      "zindex": 2,
+      "designer": {
+        "x": 83,
+        "y": 400
+      }
+    },
+    "LedIcon": {
+      "type": "ImagePan",
+      "properties": {
+        "image": "https://atmosphere.anaren.com/dev/images/demo/led.png",
+        "enabled": true,
+        "visible": false,
+        "background": "#2EB1D9",
+        "aspectLock": true,
+        "rotation": "0",
+        "elementType": "element"
+      },
+      "triggers": {},
+      "zindex": 3,
+      "designer": {
+        "x": 430,
+        "y": 196
+      }
+    },
+    "SoundIcon": {
+      "type": "ImagePan",
+      "properties": {
+        "image": "https://atmosphere.anaren.com/dev/images/demo/sound.png",
+        "enabled": true,
+        "visible": false,
+        "background": "transparent",
+        "aspectLock": true,
+        "rotation": "0",
+        "elementType": "element"
+      },
+      "triggers": {},
+      "zindex": 4,
+      "designer": {
+        "x": 405,
+        "y": 28
+      }
+    },
+    "ButtonBackground": {
+      "type": "ImagePan",
+      "properties": {
+        "image": "https://atmosphere.anaren.com/dev/images/demo/blank.png",
+        "enabled": true,
+        "visible": true,
+        "background": "#8CC4DB",
+        "aspectLock": true,
+        "rotation": "0",
+        "elementType": "element"
+      },
+      "triggers": {},
+      "zindex": 5,
+      "designer": {
+        "x": 598,
+        "y": 161
+      }
+    },
+    "ButtonUp2": {
+      "type": "ImagePan",
+      "properties": {
+        "image": "https://atmosphere.anaren.com/dev/images/demo/button-up.png",
+        "enabled": true,
+        "label": "New Image",
+        "visible": true,
+        "background": "transparent",
+        "aspectLock": false,
+        "rotation": "0",
+        "elementType": "element"
+      },
+      "triggers": {
+        "onTrigger": [
+          {
+            "sourceValue": "Static",
+            "targetName": "ButtonDown2",
+            "arguments": {
+              "targetOrder": [
+                "visible"
+              ],
+              "mapping": {
+                "visible": "false"
+              },
+              "sourceOrder": []
+            },
+            "sourceStaticValue": "",
+            "targetValue": "setVisible",
+            "sourceTrigger": "onTrigger"
+          }
+        ],
+        "mousePressed": [
+          {
+            "sourceValue": "Static",
+            "targetName": "ButtonDown2",
+            "arguments": {
+              "targetOrder": [
+                "visible"
+              ],
+              "mapping": {
+                "visible": "true"
+              },
+              "sourceOrder": []
+            },
+            "sourceStaticValue": "",
+            "targetValue": "setVisible",
+            "sourceTrigger": "mousePressed"
+          },
+          {
+            "sourceValue": "Static",
+            "targetName": "ButtonDown2",
+            "arguments": {
+              "targetOrder": [],
+              "mapping": {},
+              "sourceOrder": []
+            },
+            "sourceStaticValue": "",
+            "targetValue": "trigger",
+            "sourceTrigger": "mousePressed"
+          },
+          {
+            "sourceValue": "Static",
+            "targetName": "Light",
+            "arguments": {
+              "targetOrder": [
+                "value"
+              ],
+              "mapping": {
+                "value": "true"
+              },
+              "sourceOrder": []
+            },
+            "sourceStaticValue": "",
+            "targetValue": "execute",
+            "sourceTrigger": "mousePressed"
+          },
+          {
+            "sourceValue": "Static",
+            "targetName": "LedIcon",
+            "arguments": {
+              "targetOrder": [
+                "visible"
+              ],
+              "mapping": {
+                "visible": "true"
+              },
+              "sourceOrder": []
+            },
+            "sourceStaticValue": "",
+            "targetValue": "setVisible",
+            "sourceTrigger": "mousePressed"
+          }
+        ]
+      },
+      "zindex": 6,
+      "designer": {
+        "x": 172,
+        "y": 236
+      }
+    },
+    "ButtonDown": {
+      "type": "ImagePan",
+      "properties": {
+        "image": "https://atmosphere.anaren.com/dev/images/demo/button-down.png",
+        "enabled": true,
+        "label": "New Image",
+        "visible": true,
+        "background": "transparent",
+        "aspectLock": false,
+        "rotation": "0",
+        "elementType": "element"
+      },
+      "triggers": {},
+      "zindex": 7,
+      "designer": {
+        "x": 266,
+        "y": 113
+      }
+    },
+    "ButtonDown2": {
+      "type": "ImagePan",
+      "properties": {
+        "image": "https://atmosphere.anaren.com/dev/images/demo/button-down.png",
+        "enabled": true,
+        "label": "New Image",
+        "visible": false,
+        "background": "transparent",
+        "aspectLock": false,
+        "rotation": "0",
+        "elementType": "element"
+      },
+      "triggers": {
+        "onTrigger": [
+          {
+            "sourceValue": "Static",
+            "targetName": "ButtonUp2",
+            "arguments": {
+              "targetOrder": [
+                "visible"
+              ],
+              "mapping": {
+                "visible": "false"
+              },
+              "sourceOrder": []
+            },
+            "sourceStaticValue": "",
+            "targetValue": "setVisible",
+            "sourceTrigger": "onTrigger"
+          }
+        ],
+        "mousePressed": [
+          {
+            "sourceValue": "Static",
+            "targetName": "ButtonUp2",
+            "arguments": {
+              "targetOrder": [
+                "visible"
+              ],
+              "mapping": {
+                "visible": "true"
+              },
+              "sourceOrder": []
+            },
+            "sourceStaticValue": "",
+            "targetValue": "setVisible",
+            "sourceTrigger": "mousePressed"
+          },
+          {
+            "sourceValue": "Static",
+            "targetName": "ButtonUp2",
+            "arguments": {
+              "targetOrder": [],
+              "mapping": {},
+              "sourceOrder": []
+            },
+            "sourceStaticValue": "",
+            "targetValue": "trigger",
+            "sourceTrigger": "mousePressed"
+          },
+          {
+            "sourceValue": "Static",
+            "targetName": "Light",
+            "arguments": {
+              "targetOrder": [
+                "value"
+              ],
+              "mapping": {
+                "value": "false"
+              },
+              "sourceOrder": []
+            },
+            "sourceStaticValue": "",
+            "targetValue": "execute",
+            "sourceTrigger": "mousePressed"
+          },
+          {
+            "sourceValue": "Static",
+            "targetName": "LedIcon",
+            "arguments": {
+              "targetOrder": [
+                "visible"
+              ],
+              "mapping": {
+                "visible": "false"
+              },
+              "sourceOrder": []
+            },
+            "sourceStaticValue": "",
+            "targetValue": "setVisible",
+            "sourceTrigger": "mousePressed"
+          }
+        ]
+      },
+      "zindex": 8,
+      "designer": {
+        "x": 285,
+        "y": 335
+      }
+    },
+    "ImageAsButton": {
+      "type": "Label",
+      "properties": {
+        "color": "Black",
+        "visible": true,
+        "font": "12px Arial",
+        "enabled": true,
+        "label": "Button Image\nPressing will also\ntrigger the Buzzer",
+        "elementType": "element"
+      },
+      "triggers": {},
+      "zindex": 9,
+      "designer": {
+        "x": 19,
+        "y": 72
+      }
+    },
+    "StatefulButton": {
+      "type": "Label",
+      "properties": {
+        "color": "Black",
+        "visible": true,
+        "font": "12px Arial",
+        "enabled": true,
+        "label": "Stateful Button Image\nThis will toggle the\nBlue LED",
+        "elementType": "element"
+      },
+      "triggers": {},
+      "zindex": 10,
+      "designer": {
+        "x": 36,
+        "y": 234
+      }
+    },
+    "Beep": {
+      "type": "Buzzer",
+      "properties": {
+        "note": "BUZZER_Note_C5",
+        "code": "\n\tif(data[0] == '1' || data[0] == 't')\n\t{\n\t\tBUZZER_Start(%(note)s);\n\t}\n\t\n\telse if(data[0] == '0' || data[0] == 'f')\n\t{\n\t\tBUZZER_Stop();\n\t}\n\t\n\telse\n\t{\n\t\tstatic bool toggle = false;\n\t\t\n\t\ttoggle = !toggle;\n\t\t\n\t\tif(toggle)\n\t\t{\n\t\t\tBUZZER_Start(%(note)s);\n\t\t}\n\t\t\n\t\telse\n\t\t{\n\t\t\tBUZZER_Stop();\n\t\t}\n\t}\n\t\n\treturn NULL;\n\t",
+        "length": "128",
+        "permission": "public",
+        "inputType": "json",
+        "returnType": "json",
+        "elementType": "element"
+      },
+      "triggers": {},
+      "zindex": 11,
+      "designer": {
+        "x": 278,
+        "y": 0
+      }
+    },
+    "Light": {
+      "type": "PWMSet",
+      "properties": {
+        "code": "\n\t\n\tAIR_PWM_Enable(%(pin)s);\n\t\n\tint i = 0;\n\tunsigned int value = 0;\n\tint m = 1;\n\t\n\tif(length > 0)\n\t{\n\t\tif(data[0] == 't')\n\t\t\tvalue = 0x0000;\n\t\t\n\t\telse if(data[0] == 'f')\n\t\t\tvalue = 0x03FF;\n\t\t\t\n\t\t\n\t\telse if(data[length - 1] >= '0' && data[length - 1] <= '9')\n\t\t{\n\t\t\tfor(i = length - 1; i >= 0; i--)\n\t\t\t{\n\t\t\t\tif(data[i] >= '0' && data[i] <= '9')\n\t\t\t\t{\n\t\t\t\t\tvalue = value + ((data[i] - '0') * m);\n\t\t\t\t\tm = m * 10;\n\t\t\t\t}\n\t\t\t}\n\t\t\t\n\t\t\tunsigned int step = 0x3FF/20;\n\t\t\t\n\t\t\tvalue = 0x3FF - (step * value);\n\t\t}\n\t\t\n\t\tAIR_PWM_Set(%(pin)s, value);\n\t}\n\t\n\treturn NULL;\n\t",
+        "pin": "13",
+        "length": "128",
+        "permission": "public",
+        "inputType": "json",
+        "returnType": "json",
+        "elementType": "element"
+      },
+      "triggers": {},
+      "zindex": 12,
+      "designer": {
+        "x": 452,
+        "y": 290
+      }
+    },
+    "informationLabel": {
+      "type": "Label",
+      "properties": {
+        "color": "#a3c0da",
+        "visible": true,
+        "font": "Bold 12px Georgia",
+        "enabled": true,
+        "label": "Using a transparent png above and setting the \nbackground color to create a background box.",
+        "elementType": "element"
+      },
+      "triggers": {},
+      "zindex": 13,
+      "designer": {
+        "x": 680,
+        "y": 160
+      }
+    },
+    "logo01": {
+      "type": "ImagePan",
+      "properties": {
+        "image": "https://atmosphere.anaren.com/dev/images/demo/animdemo/01.gif",
+        "enabled": true,
+        "visible": true,
+        "background": "transparent",
+        "aspectLock": false,
+        "rotation": "0",
+        "elementType": "element"
+      },
+      "triggers": {},
+      "zindex": 14,
+      "designer": {
+        "x": 1020,
+        "y": 852
+      }
+    },
+    "logo02": {
+      "type": "ImagePan",
+      "properties": {
+        "image": "https://atmosphere.anaren.com/dev/images/demo/animdemo/02.gif",
+        "enabled": true,
+        "visible": false,
+        "background": "transparent",
+        "aspectLock": false,
+        "rotation": "0",
+        "elementType": "element"
+      },
+      "triggers": {},
+      "zindex": 15,
+      "designer": {
+        "x": 1018,
+        "y": 1045
+      }
+    },
+    "logo03": {
+      "type": "ImagePan",
+      "properties": {
+        "image": "https://atmosphere.anaren.com/dev/images/demo/animdemo/03.gif",
+        "enabled": true,
+        "visible": false,
+        "background": "transparent",
+        "aspectLock": false,
+        "rotation": "0",
+        "elementType": "element"
+      },
+      "triggers": {},
+      "zindex": 16,
+      "designer": {
+        "x": 1033,
+        "y": 1192
+      }
+    },
+    "logo04": {
+      "type": "ImagePan",
+      "properties": {
+        "image": "https://atmosphere.anaren.com/dev/images/demo/animdemo/04.gif",
+        "enabled": true,
+        "visible": false,
+        "background": "transparent",
+        "aspectLock": false,
+        "rotation": "0",
+        "elementType": "element"
+      },
+      "triggers": {},
+      "zindex": 17,
+      "designer": {
+        "x": 1040,
+        "y": 1372
+      }
+    },
+    "logo05": {
+      "type": "ImagePan",
+      "properties": {
+        "image": "https://atmosphere.anaren.com/dev/images/demo/animdemo/05.gif",
+        "enabled": true,
+        "visible": false,
+        "background": "transparent",
+        "aspectLock": false,
+        "rotation": "0",
+        "elementType": "element"
+      },
+      "triggers": {},
+      "zindex": 18,
+      "designer": {
+        "x": 1056,
+        "y": 1608
+      }
+    },
+    "Task1": {
+      "type": "Task",
+      "properties": {
+        "runEvery": "5000",
+        "runOnStart": true,
+        "runIn": "500",
+        "elementType": "element"
+      },
+      "triggers": {
+        "task": [
+          {
+            "sourceValue": "Static",
+            "targetName": "logo01",
+            "arguments": {
+              "targetOrder": [
+                "visible"
+              ],
+              "mapping": {
+                "visible": "false"
+              },
+              "sourceOrder": []
+            },
+            "sourceStaticValue": "",
+            "targetValue": "setVisible",
+            "sourceTrigger": "task"
+          },
+          {
+            "sourceValue": "Static",
+            "targetName": "logo02",
+            "arguments": {
+              "targetOrder": [
+                "visible"
+              ],
+              "mapping": {
+                "visible": "true"
+              },
+              "sourceOrder": []
+            },
+            "sourceStaticValue": "",
+            "targetValue": "setVisible",
+            "sourceTrigger": "task"
+          },
+          {
+            "sourceValue": "Static",
+            "targetName": "Task2",
+            "arguments": {
+              "targetOrder": [
+                "runIn",
+                "runEvery"
+              ],
+              "mapping": {
+                "runEvery": "5000",
+                "runIn": "500"
+              },
+              "sourceOrder": []
+            },
+            "sourceStaticValue": "",
+            "targetValue": "run",
+            "sourceTrigger": "task"
+          },
+          {
+            "sourceTrigger": "task",
+            "sourceValue": "Static",
+            "targetValue": "pause",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {},
+              "targetOrder": [],
+              "sourceOrder": []
+            },
+            "targetName": "Task1"
+          }
+        ]
+      },
+      "zindex": 19,
+      "designer": {
+        "x": 390,
+        "y": 857
+      }
+    },
+    "Task2": {
+      "type": "Task",
+      "properties": {
+        "runEvery": "5000",
+        "runOnStart": false,
+        "runIn": "500",
+        "elementType": "element"
+      },
+      "triggers": {
+        "task": [
+          {
+            "sourceValue": "Static",
+            "targetName": "logo02",
+            "arguments": {
+              "targetOrder": [
+                "visible"
+              ],
+              "mapping": {
+                "visible": "false"
+              },
+              "sourceOrder": []
+            },
+            "sourceStaticValue": "",
+            "targetValue": "setVisible",
+            "sourceTrigger": "task"
+          },
+          {
+            "sourceValue": "Static",
+            "targetName": "logo03",
+            "arguments": {
+              "targetOrder": [
+                "visible"
+              ],
+              "mapping": {
+                "visible": "true"
+              },
+              "sourceOrder": []
+            },
+            "sourceStaticValue": "",
+            "targetValue": "setVisible",
+            "sourceTrigger": "task"
+          },
+          {
+            "sourceValue": "Static",
+            "targetName": "Task3",
+            "arguments": {
+              "targetOrder": [
+                "runIn",
+                "runEvery"
+              ],
+              "mapping": {
+                "runEvery": "5000",
+                "runIn": "500"
+              },
+              "sourceOrder": []
+            },
+            "sourceStaticValue": "",
+            "targetValue": "run",
+            "sourceTrigger": "task"
+          },
+          {
+            "sourceTrigger": "task",
+            "sourceValue": "Static",
+            "targetValue": "pause",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {},
+              "targetOrder": [],
+              "sourceOrder": []
+            },
+            "targetName": "Task2"
+          }
+        ]
+      },
+      "zindex": 20,
+      "designer": {
+        "x": 395,
+        "y": 1058
+      }
+    },
+    "Task3": {
+      "type": "Task",
+      "properties": {
+        "runEvery": "5000",
+        "runOnStart": false,
+        "runIn": "500",
+        "elementType": "element"
+      },
+      "triggers": {
+        "task": [
+          {
+            "sourceValue": "Static",
+            "targetName": "logo03",
+            "arguments": {
+              "targetOrder": [
+                "visible"
+              ],
+              "mapping": {
+                "visible": "false"
+              },
+              "sourceOrder": []
+            },
+            "sourceStaticValue": "",
+            "targetValue": "setVisible",
+            "sourceTrigger": "task"
+          },
+          {
+            "sourceValue": "Static",
+            "targetName": "logo04",
+            "arguments": {
+              "targetOrder": [
+                "visible"
+              ],
+              "mapping": {
+                "visible": "true"
+              },
+              "sourceOrder": []
+            },
+            "sourceStaticValue": "",
+            "targetValue": "setVisible",
+            "sourceTrigger": "task"
+          },
+          {
+            "sourceValue": "Static",
+            "targetName": "Task4",
+            "arguments": {
+              "targetOrder": [
+                "runIn",
+                "runEvery"
+              ],
+              "mapping": {
+                "runEvery": "5000",
+                "runIn": "500"
+              },
+              "sourceOrder": []
+            },
+            "sourceStaticValue": "",
+            "targetValue": "run",
+            "sourceTrigger": "task"
+          },
+          {
+            "sourceTrigger": "task",
+            "sourceValue": "Static",
+            "targetValue": "pause",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {},
+              "targetOrder": [],
+              "sourceOrder": []
+            },
+            "targetName": "Task3"
+          }
+        ]
+      },
+      "zindex": 21,
+      "designer": {
+        "x": 394,
+        "y": 1233
+      }
+    },
+    "Task4": {
+      "type": "Task",
+      "properties": {
+        "runEvery": "5000",
+        "runOnStart": false,
+        "runIn": "500",
+        "elementType": "element"
+      },
+      "triggers": {
+        "task": [
+          {
+            "sourceValue": "Static",
+            "targetName": "logo04",
+            "arguments": {
+              "targetOrder": [
+                "visible"
+              ],
+              "mapping": {
+                "visible": "false"
+              },
+              "sourceOrder": []
+            },
+            "sourceStaticValue": "",
+            "targetValue": "setVisible",
+            "sourceTrigger": "task"
+          },
+          {
+            "sourceValue": "Static",
+            "targetName": "logo05",
+            "arguments": {
+              "targetOrder": [
+                "visible"
+              ],
+              "mapping": {
+                "visible": "true"
+              },
+              "sourceOrder": []
+            },
+            "sourceStaticValue": "",
+            "targetValue": "setVisible",
+            "sourceTrigger": "task"
+          },
+          {
+            "sourceValue": "Static",
+            "targetName": "Task5",
+            "arguments": {
+              "targetOrder": [
+                "runIn",
+                "runEvery"
+              ],
+              "mapping": {
+                "runEvery": "5000",
+                "runIn": "500"
+              },
+              "sourceOrder": []
+            },
+            "sourceStaticValue": "",
+            "targetValue": "run",
+            "sourceTrigger": "task"
+          },
+          {
+            "sourceTrigger": "task",
+            "sourceValue": "Static",
+            "targetValue": "pause",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {},
+              "targetOrder": [],
+              "sourceOrder": []
+            },
+            "targetName": "Task4"
+          }
+        ]
+      },
+      "zindex": 22,
+      "designer": {
+        "x": 379,
+        "y": 1422
+      }
+    },
+    "Task5": {
+      "type": "Task",
+      "properties": {
+        "runEvery": "5000",
+        "runOnStart": false,
+        "runIn": "500",
+        "elementType": "element"
+      },
+      "triggers": {
+        "task": [
+          {
+            "sourceValue": "Static",
+            "targetName": "logo05",
+            "arguments": {
+              "targetOrder": [
+                "visible"
+              ],
+              "mapping": {
+                "visible": "false"
+              },
+              "sourceOrder": []
+            },
+            "sourceStaticValue": "",
+            "targetValue": "setVisible",
+            "sourceTrigger": "task"
+          },
+          {
+            "sourceValue": "Static",
+            "targetName": "logo01",
+            "arguments": {
+              "targetOrder": [
+                "visible"
+              ],
+              "mapping": {
+                "visible": "true"
+              },
+              "sourceOrder": []
+            },
+            "sourceStaticValue": "",
+            "targetValue": "setVisible",
+            "sourceTrigger": "task"
+          },
+          {
+            "sourceValue": "Static",
+            "targetName": "Task1",
+            "arguments": {
+              "targetOrder": [
+                "runIn",
+                "runEvery"
+              ],
+              "mapping": {
+                "runEvery": "5000",
+                "runIn": "500"
+              },
+              "sourceOrder": []
+            },
+            "sourceStaticValue": "",
+            "targetValue": "run",
+            "sourceTrigger": "task"
+          },
+          {
+            "sourceTrigger": "task",
+            "sourceValue": "Static",
+            "targetValue": "pause",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {},
+              "targetOrder": [],
+              "sourceOrder": []
+            },
+            "targetName": "Task5"
+          }
+        ]
+      },
+      "zindex": 23,
+      "designer": {
+        "x": 394,
+        "y": 1608
+      }
+    },
+    "Off": {
+      "type": "Button",
+      "properties": {
+        "visible": true,
+        "enabled": true,
+        "label": "Off",
+        "border": "plain",
+        "topColor": "rgb(250, 250, 250)",
+        "bottomColor": "rgb(234, 234, 234)",
+        "pressedTopColor": "rgb(255, 255, 255)",
+        "pressedBottomColor": "rgb(255, 255, 255)",
+        "overTopColor": "rgb(234, 234, 234)",
+        "overBottomColor": "rgb(214, 214, 214)",
+        "disabledTopColor": "rgb(211, 211, 211)",
+        "disabledBottomColor": "rgb(211, 211, 211)",
+        "elementType": "element"
+      },
+      "triggers": {
+        "onTrigger": [
+          {
+            "sourceValue": "Static",
+            "targetName": "On",
+            "arguments": {
+              "targetOrder": [
+                "visible"
+              ],
+              "mapping": {
+                "visible": "false"
+              },
+              "sourceOrder": []
+            },
+            "sourceStaticValue": "",
+            "targetValue": "setVisible",
+            "sourceTrigger": "onTrigger"
+          }
+        ],
+        "mousePressed": [
+          {
+            "sourceValue": "Static",
+            "targetName": "On",
+            "arguments": {
+              "targetOrder": [
+                "visible"
+              ],
+              "mapping": {
+                "visible": "true"
+              },
+              "sourceOrder": []
+            },
+            "sourceStaticValue": "",
+            "targetValue": "setVisible",
+            "sourceTrigger": "mousePressed"
+          },
+          {
+            "sourceValue": "Static",
+            "targetName": "On",
+            "arguments": {
+              "targetOrder": [],
+              "mapping": {},
+              "sourceOrder": []
+            },
+            "sourceStaticValue": "",
+            "targetValue": "trigger",
+            "sourceTrigger": "mousePressed"
+          },
+          {
+            "sourceValue": "Static",
+            "targetName": "Value",
+            "arguments": {
+              "targetOrder": [
+                "value"
+              ],
+              "mapping": {
+                "value": "\"On\""
+              },
+              "sourceOrder": []
+            },
+            "sourceStaticValue": "",
+            "targetValue": "setValue",
+            "sourceTrigger": "mousePressed"
+          }
+        ]
+      },
+      "zindex": 24,
+      "designer": {
+        "x": 83,
+        "y": 512
+      }
+    },
+    "Value": {
+      "type": "TextField",
+      "properties": {
+        "visible": true,
+        "enabled": false,
+        "value": "Off",
+        "label": "New TextField",
+        "elementType": "element"
+      },
+      "triggers": {},
+      "zindex": 25,
+      "designer": {
+        "x": 331,
+        "y": 451
+      }
+    },
+    "Connected": {
+      "type": "Connection",
+      "properties": {
+        "elementType": "element"
+      },
+      "triggers": {
+        "connected": [
+          {
+            "sourceValue": "Static",
+            "targetName": "BLEon",
+            "arguments": {
+              "targetOrder": [
+                "visible"
+              ],
+              "mapping": {
+                "visible": "true"
+              },
+              "sourceOrder": []
+            },
+            "sourceStaticValue": "",
+            "targetValue": "setVisible",
+            "sourceTrigger": "connected"
+          }
+        ],
+        "disconnected": [
+          {
+            "sourceValue": "Static",
+            "targetName": "BLEon",
+            "arguments": {
+              "targetOrder": [
+                "visible"
+              ],
+              "mapping": {
+                "visible": "false"
+              },
+              "sourceOrder": []
+            },
+            "sourceStaticValue": "",
+            "targetValue": "setVisible",
+            "sourceTrigger": "disconnected"
+          }
+        ]
+      },
+      "zindex": 26,
+      "designer": {
+        "x": 581,
+        "y": 30
+      }
+    },
+    "BLEon": {
+      "type": "ImagePan",
+      "properties": {
+        "image": "https://atmosphere.anaren.com/dev/images/demo/LogoBluetoothSmart.jpg",
+        "enabled": true,
+        "visible": false,
+        "background": "transparent",
+        "aspectLock": false,
+        "rotation": "0",
+        "elementType": "element"
+      },
+      "triggers": {},
+      "zindex": 27,
+      "designer": {
+        "x": 774,
+        "y": 19
+      }
+    },
+    "Page1But": {
+      "type": "Button",
+      "properties": {
+        "visible": true,
+        "enabled": true,
+        "label": "Page1",
+        "border": "plain",
+        "topColor": "rgb(250, 250, 250)",
+        "bottomColor": "rgb(234, 234, 234)",
+        "pressedTopColor": "rgb(255, 255, 255)",
+        "pressedBottomColor": "rgb(255, 255, 255)",
+        "overTopColor": "rgb(234, 234, 234)",
+        "overBottomColor": "rgb(214, 214, 214)",
+        "disabledTopColor": "rgb(211, 211, 211)",
+        "disabledBottomColor": "rgb(211, 211, 211)",
+        "elementType": "element"
+      },
+      "triggers": {
+        "mousePressed": [
+          {
+            "sourceValue": "Static",
+            "targetName": "Page1",
+            "arguments": {
+              "targetOrder": [
+                "visible"
+              ],
+              "mapping": {
+                "visible": "true"
+              },
+              "sourceOrder": []
+            },
+            "sourceStaticValue": "",
+            "targetValue": "setVisible",
+            "sourceTrigger": "mousePressed"
+          },
+          {
+            "sourceValue": "Static",
+            "targetName": "Page2",
+            "arguments": {
+              "targetOrder": [
+                "visible"
+              ],
+              "mapping": {
+                "visible": "false"
+              },
+              "sourceOrder": []
+            },
+            "sourceStaticValue": "",
+            "targetValue": "setVisible",
+            "sourceTrigger": "mousePressed"
+          },
+          {
+            "sourceValue": "Static",
+            "targetName": "Page3",
+            "arguments": {
+              "targetOrder": [
+                "visible"
+              ],
+              "mapping": {
+                "visible": "false"
+              },
+              "sourceOrder": []
+            },
+            "sourceStaticValue": "",
+            "targetValue": "setVisible",
+            "sourceTrigger": "mousePressed"
+          },
+          {
+            "sourceValue": "Static",
+            "targetName": "Needle",
+            "arguments": {
+              "targetOrder": [
+                "visible"
+              ],
+              "mapping": {
+                "visible": "false"
+              },
+              "sourceOrder": []
+            },
+            "sourceStaticValue": "",
+            "targetValue": "setVisible",
+            "sourceTrigger": "mousePressed"
+          },
+          {
+            "sourceValue": "Static",
+            "targetName": "Spinner",
+            "arguments": {
+              "targetOrder": [
+                "visible"
+              ],
+              "mapping": {
+                "visible": "false"
+              },
+              "sourceOrder": []
+            },
+            "sourceStaticValue": "",
+            "targetValue": "setVisible",
+            "sourceTrigger": "mousePressed"
+          }
+        ]
+      },
+      "zindex": 28,
+      "designer": {
+        "x": 494,
+        "y": 435
+      }
+    },
+    "Page2But": {
+      "type": "Button",
+      "properties": {
+        "visible": true,
+        "enabled": true,
+        "label": "Page2",
+        "border": "plain",
+        "topColor": "rgb(250, 250, 250)",
+        "bottomColor": "rgb(234, 234, 234)",
+        "pressedTopColor": "rgb(255, 255, 255)",
+        "pressedBottomColor": "rgb(255, 255, 255)",
+        "overTopColor": "rgb(234, 234, 234)",
+        "overBottomColor": "rgb(214, 214, 214)",
+        "disabledTopColor": "rgb(211, 211, 211)",
+        "disabledBottomColor": "rgb(211, 211, 211)",
+        "elementType": "element"
+      },
+      "triggers": {
+        "mousePressed": [
+          {
+            "sourceValue": "Static",
+            "targetName": "Page1",
+            "arguments": {
+              "targetOrder": [
+                "visible"
+              ],
+              "mapping": {
+                "visible": "false"
+              },
+              "sourceOrder": []
+            },
+            "sourceStaticValue": "",
+            "targetValue": "setVisible",
+            "sourceTrigger": "mousePressed"
+          },
+          {
+            "sourceValue": "Static",
+            "targetName": "Page2",
+            "arguments": {
+              "targetOrder": [
+                "visible"
+              ],
+              "mapping": {
+                "visible": "true"
+              },
+              "sourceOrder": []
+            },
+            "sourceStaticValue": "",
+            "targetValue": "setVisible",
+            "sourceTrigger": "mousePressed"
+          },
+          {
+            "sourceValue": "Static",
+            "targetName": "Page3",
+            "arguments": {
+              "targetOrder": [
+                "visible"
+              ],
+              "mapping": {
+                "visible": "false"
+              },
+              "sourceOrder": []
+            },
+            "sourceStaticValue": "",
+            "targetValue": "setVisible",
+            "sourceTrigger": "mousePressed"
+          },
+          {
+            "sourceValue": "Static",
+            "targetName": "Needle",
+            "arguments": {
+              "targetOrder": [
+                "visible"
+              ],
+              "mapping": {
+                "visible": "false"
+              },
+              "sourceOrder": []
+            },
+            "sourceStaticValue": "",
+            "targetValue": "setVisible",
+            "sourceTrigger": "mousePressed"
+          },
+          {
+            "sourceValue": "Static",
+            "targetName": "Spinner",
+            "arguments": {
+              "targetOrder": [
+                "visible"
+              ],
+              "mapping": {
+                "visible": "false"
+              },
+              "sourceOrder": []
+            },
+            "sourceStaticValue": "",
+            "targetValue": "setVisible",
+            "sourceTrigger": "mousePressed"
+          }
+        ]
+      },
+      "zindex": 29,
+      "designer": {
+        "x": 496,
+        "y": 534
+      }
+    },
+    "Page3But": {
+      "type": "Button",
+      "properties": {
+        "visible": true,
+        "enabled": true,
+        "label": "Page3",
+        "border": "plain",
+        "topColor": "rgb(250, 250, 250)",
+        "bottomColor": "rgb(234, 234, 234)",
+        "pressedTopColor": "rgb(255, 255, 255)",
+        "pressedBottomColor": "rgb(255, 255, 255)",
+        "overTopColor": "rgb(234, 234, 234)",
+        "overBottomColor": "rgb(214, 214, 214)",
+        "disabledTopColor": "rgb(211, 211, 211)",
+        "disabledBottomColor": "rgb(211, 211, 211)",
+        "elementType": "element"
+      },
+      "triggers": {
+        "mousePressed": [
+          {
+            "sourceValue": "Static",
+            "targetName": "Page1",
+            "arguments": {
+              "targetOrder": [
+                "visible"
+              ],
+              "mapping": {
+                "visible": "false"
+              },
+              "sourceOrder": []
+            },
+            "sourceStaticValue": "",
+            "targetValue": "setVisible",
+            "sourceTrigger": "mousePressed"
+          },
+          {
+            "sourceValue": "Static",
+            "targetName": "Page2",
+            "arguments": {
+              "targetOrder": [
+                "visible"
+              ],
+              "mapping": {
+                "visible": "false"
+              },
+              "sourceOrder": []
+            },
+            "sourceStaticValue": "",
+            "targetValue": "setVisible",
+            "sourceTrigger": "mousePressed"
+          },
+          {
+            "sourceValue": "Static",
+            "targetName": "Page3",
+            "arguments": {
+              "targetOrder": [
+                "visible"
+              ],
+              "mapping": {
+                "visible": "true"
+              },
+              "sourceOrder": []
+            },
+            "sourceStaticValue": "",
+            "targetValue": "setVisible",
+            "sourceTrigger": "mousePressed"
+          },
+          {
+            "sourceValue": "Static",
+            "targetName": "Spinner",
+            "arguments": {
+              "targetOrder": [
+                "visible"
+              ],
+              "mapping": {
+                "visible": "true"
+              },
+              "sourceOrder": []
+            },
+            "sourceStaticValue": "",
+            "targetValue": "setVisible",
+            "sourceTrigger": "mousePressed"
+          },
+          {
+            "sourceValue": "Static",
+            "targetName": "Needle",
+            "arguments": {
+              "targetOrder": [
+                "visible"
+              ],
+              "mapping": {
+                "visible": "true"
+              },
+              "sourceOrder": []
+            },
+            "sourceStaticValue": "",
+            "targetValue": "setVisible",
+            "sourceTrigger": "mousePressed"
+          }
+        ]
+      },
+      "zindex": 30,
+      "designer": {
+        "x": 488,
+        "y": 646
+      }
+    },
+    "Page3": {
+      "type": "Label",
+      "properties": {
+        "color": "Black",
+        "visible": false,
+        "font": "12px Arial",
+        "enabled": false,
+        "label": "",
+        "elementType": "element"
+      },
+      "triggers": {},
+      "zindex": 31,
+      "designer": {
+        "x": 807,
+        "y": 649
+      }
+    },
+    "Page2": {
+      "type": "Label",
+      "properties": {
+        "color": "Black",
+        "visible": false,
+        "font": "12px Arial",
+        "enabled": true,
+        "label": "Atmosphere supports the following image formats\nfor the ImagePan; PNG, JPG, JPEG and GIF, however\nthere is no support for animated GIF. \n\nTo simulate this effect in the Logo above, note how \ntasks were used to step through the images as if \nthey were \"frames\".",
+        "elementType": "element"
+      },
+      "triggers": {},
+      "zindex": 32,
+      "designer": {
+        "x": 803,
+        "y": 533
+      }
+    },
+    "TogButLabel": {
+      "type": "Label",
+      "properties": {
+        "color": "Black",
+        "visible": true,
+        "font": "12px Verdana",
+        "enabled": true,
+        "label": "Using standard button\nas a toggle button",
+        "elementType": "element"
+      },
+      "triggers": {},
+      "zindex": 33,
+      "designer": {
+        "x": 244,
+        "y": 532
+      }
+    },
+    "Needle": {
+      "type": "ImagePan",
+      "properties": {
+        "image": "http://atmosphere.anaren.com/dev/images/demo/compass_needle.png",
+        "enabled": true,
+        "visible": false,
+        "background": "transparent",
+        "aspectLock": true,
+        "rotation": "0",
+        "elementType": "element"
+      },
+      "triggers": {},
+      "zindex": 34,
+      "designer": {
+        "x": 855,
+        "y": 745
+      }
+    },
+    "Spinner": {
+      "type": "Slider",
+      "properties": {
+        "orientation": "Vertical",
+        "enabled": true,
+        "maxValue": "360",
+        "value": "0",
+        "minValue": "0",
+        "visible": false,
+        "showScale": "True",
+        "scaleMarkers": [
+          0,
+          180,
+          180
+        ],
+        "scaleStep": "90",
+        "showTitle": "True",
+        "elementType": "element"
+      },
+      "triggers": {
+        "changed": [
+          {
+            "sourceValue": "getValue",
+            "targetName": "Needle",
+            "arguments": {
+              "targetOrder": [
+                "value"
+              ],
+              "mapping": {
+                "value": "value"
+              },
+              "sourceOrder": [
+                "value"
+              ]
+            },
+            "sourceStaticValue": "",
+            "targetValue": "setRotation",
+            "sourceTrigger": "changed"
+          }
+        ]
+      },
+      "zindex": 35,
+      "designer": {
+        "x": 656,
+        "y": 745
+      }
+    },
+    "Page1": {
+      "type": "Label",
+      "properties": {
+        "color": "Black",
+        "visible": true,
+        "font": "12px Arial",
+        "enabled": true,
+        "label": "This is an example of a way to create tab pages\nwith buttons and labels.\n\nUse the buttons above to navigate to a new \"page\"\nwithin this view.\n\n",
+        "elementType": "element"
+      },
+      "triggers": {},
+      "zindex": 36,
+      "designer": {
+        "x": 801,
+        "y": 433
+      }
+    },
+    "ButtonUp": {
+      "type": "ImagePan",
+      "properties": {
+        "image": "https://atmosphere.anaren.com/dev/images/demo/button-up.png",
+        "enabled": true,
+        "label": "New Image",
+        "visible": true,
+        "background": "transparent",
+        "aspectLock": false,
+        "rotation": "0",
+        "elementType": "element"
+      },
+      "triggers": {
+        "mouseReleased": [
+          {
+            "sourceValue": "Static",
+            "targetName": "Beep",
+            "arguments": {
+              "targetOrder": [
+                "value"
+              ],
+              "mapping": {
+                "value": "false"
+              },
+              "sourceOrder": []
+            },
+            "sourceStaticValue": "",
+            "targetValue": "execute",
+            "sourceTrigger": "mouseReleased"
+          },
+          {
+            "sourceValue": "Static",
+            "targetName": "SoundIcon",
+            "arguments": {
+              "targetOrder": [
+                "visible"
+              ],
+              "mapping": {
+                "visible": "false"
+              },
+              "sourceOrder": []
+            },
+            "sourceStaticValue": "",
+            "targetValue": "setVisible",
+            "sourceTrigger": "mouseReleased"
+          },
+          {
+            "sourceTrigger": "mouseReleased",
+            "sourceValue": "Static",
+            "targetValue": "setVisible",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "visible": "true"
+              },
+              "targetOrder": [
+                "visible"
+              ],
+              "sourceOrder": []
+            },
+            "targetName": "ButtonUp"
+          }
+        ],
+        "mousePressed": [
+          {
+            "sourceValue": "Static",
+            "targetName": "Beep",
+            "arguments": {
+              "targetOrder": [
+                "value"
+              ],
+              "mapping": {
+                "value": "true"
+              },
+              "sourceOrder": []
+            },
+            "sourceStaticValue": "",
+            "targetValue": "execute",
+            "sourceTrigger": "mousePressed"
+          },
+          {
+            "sourceValue": "Static",
+            "targetName": "SoundIcon",
+            "arguments": {
+              "targetOrder": [
+                "visible"
+              ],
+              "mapping": {
+                "visible": "true"
+              },
+              "sourceOrder": []
+            },
+            "sourceStaticValue": "",
+            "targetValue": "setVisible",
+            "sourceTrigger": "mousePressed"
+          },
+          {
+            "sourceTrigger": "mousePressed",
+            "sourceValue": "Static",
+            "targetValue": "setVisible",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "visible": "false"
+              },
+              "targetOrder": [
+                "visible"
+              ],
+              "sourceOrder": []
+            },
+            "targetName": "ButtonUp"
+          }
+        ]
+      },
+      "zindex": 37,
+      "designer": {
+        "x": 147,
+        "y": 68
+      }
+    }
+  },
+  "cloudElements": {}
+}

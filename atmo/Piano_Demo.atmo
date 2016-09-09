@@ -1,0 +1,1330 @@
+{
+  "header": {
+    "data": {
+      "order": [
+        "Globals",
+        "Interval",
+        "Connected",
+        "Disconnected",
+        "Setup"
+      ],
+      "Globals": {
+        "close": "//END",
+        "code": "",
+        "name": "Globals",
+        "func": "#include \"callbacks.h\""
+      },
+      "Interval": {
+        "close": "}",
+        "code": "",
+        "name": "Interval",
+        "func": "\nvoid interval() {"
+      },
+      "Connected": {
+        "close": "}",
+        "code": "",
+        "name": "Connected",
+        "func": "\nvoid connected() {"
+      },
+      "Disconnected": {
+        "close": "}",
+        "code": "",
+        "name": "Disconnected",
+        "func": "\nvoid disconnected() {"
+      },
+      "Setup": {
+        "close": "}",
+        "code": "\tAIR_GPIO_Init();\n\tBUZZER_Init();\n\tAIR_POWER_Init();\n\tAIR_POWER_SetMode(AIR_POWER_NOSLEEP);",
+        "name": "Setup",
+        "func": "\nvoid setup() {"
+      }
+    },
+    "boardConfiguration": {
+      "ble": {
+        "values": {
+          "localName": {
+            "regex": "^[a-zA-Z0-9_.]*$",
+            "name": "Local Name",
+            "value": "piano",
+            "prefix": "#define BLE_LOCAL_NAME \"",
+            "input": "TextField",
+            "suffix": "\""
+          },
+          "version": {
+            "regex": "^[a-zA-Z0-9_.]*$",
+            "name": "Version",
+            "value": "1.00",
+            "prefix": "#define BLE_VERSION \"",
+            "input": "TextField",
+            "suffix": "\""
+          },
+          "txPowerLevel": {
+            "regex": "^[0-9]*$",
+            "input": "TextField",
+            "prefix": "#define BLE_TX_POWER_LEVEL ",
+            "name": "TX Power Level (dbm)",
+            "value": "4"
+          },
+          "pairing": {
+            "regex": "^[a-zA-Z0-9_.]*$",
+            "name": "Pairing",
+            "value": "BLE_PAIRING_NONE",
+            "prefix": "#define ",
+            "input": "Combo",
+            "options": [
+              "BLE_PAIRING_NONE",
+              "BLE_PAIRING_PASSKEY",
+              "BLE_PAIRING_OOB"
+            ]
+          },
+          "intervalFineTimer": {
+            "regex": "^[0-9]*$",
+            "input": "TextField",
+            "prefix": "#define BLE_INTERVAL_FINE_TIMER ",
+            "name": "Interval Timer Length (ms)",
+            "value": "1000"
+          },
+          "ota": {
+            "name": "Over the Air Updating",
+            "input": "Combo",
+            "prefix": "#define BLE_",
+            "options": [
+              "OTA",
+              "NO_OTA"
+            ],
+            "value": "OTA",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "minInterval": {
+            "name": "BLE Min Interval (ms) (Default: 20)",
+            "input": "TextField",
+            "prefix": "#define BLE_INTERVAL_MIN ",
+            "value": "20",
+            "regex": "^[0-9]*$"
+          },
+          "maxInterval": {
+            "name": "BLE Max Interval (ms) (Default: 40)",
+            "input": "TextField",
+            "prefix": "#define BLE_INTERVAL_MAX ",
+            "value": "40",
+            "regex": "^[0-9]*$"
+          },
+          "slaveLatency": {
+            "name": "BLE Slave Latency (ms) (Default: 04)",
+            "input": "TextField",
+            "prefix": "#define BLE_SLAVE_LATENCY ",
+            "value": "0",
+            "regex": "^[0-9]*$"
+          },
+          "timeout": {
+            "name": "BLE Connection Timeout (ms) (Default: 700)",
+            "input": "TextField",
+            "prefix": "#define BLE_CONNECTION_TIMEOUT ",
+            "value": "700",
+            "regex": "^[0-9]*$"
+          }
+        },
+        "name": "Bluetooth Low Energy",
+        "file": "ble_config.h"
+      },
+      "power": {
+        "name": "Power Driver",
+        "file": "power_config.h",
+        "values": {
+          "external_osc": {
+            "name": "External Oscillator",
+            "input": "Combo",
+            "prefix": "#define AIR_POWER_",
+            "options": [
+              "EXTERNAL_32KHZ_OSC",
+              "INTERNAL_OSC"
+            ],
+            "value": "INTERNAL_OSC",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          }
+        }
+      },
+      "gpio": {
+        "name": "GPIO Driver",
+        "file": "gpio_config.h",
+        "values": {
+          "buad": {
+            "name": "ADC Sample Frequency",
+            "input": "Combo",
+            "prefix": "#define AIR_ADC_SAMPLE_FREQUENCY ",
+            "options": [
+              "ADC_SAMPLE_FREQUENCY_LOW",
+              "ADC_SAMPLE_FREQUENCY_MEDIUM_LOW",
+              "ADC_SAMPLE_FREQUENCY_MEDIUM",
+              "ADC_SAMPLE_FREQUENCY_MEDIUM_HIGH",
+              "ADC_SAMPLE_FREQUENCY_HIGH"
+            ],
+            "value": "ADC_SAMPLE_FREQUENCY_LOW",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "pwmClockSource": {
+            "name": "PWM Clock Source",
+            "input": "Combo",
+            "prefix": "#define AIR_PWM_CLOCK_SOURCE ",
+            "options": [
+              "PMU_CLK",
+              "LHL_CLK"
+            ],
+            "value": "PMU_CLK",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          }
+        }
+      },
+      "uart": {
+        "values": {
+          "rxBuffer": {
+            "regex": "^[0-9]*$",
+            "input": "TextField",
+            "prefix": "#define AIR_UART_RX_CIRCULAR_BUFFER_SIZE ",
+            "name": "RX Circular Buffer size",
+            "value": "128"
+          },
+          "buad": {
+            "regex": "^[a-zA-Z0-9_.]*$",
+            "name": "Baudrate",
+            "value": "AIR_UART_BAUD_115200",
+            "prefix": "#define ",
+            "input": "Combo",
+            "options": [
+              "AIR_UART_BAUD_115200",
+              "AIR_UART_BAUD_57600",
+              "AIR_UART_BAUD_9600"
+            ]
+          },
+          "rtsPin": {
+            "regex": "^[a-zA-Z0-9_.]*$",
+            "name": "RTS Pin",
+            "value": "1",
+            "prefix": "#define AIR_UART_RTS_PIN ",
+            "input": "Combo",
+            "options": [
+              "1"
+            ]
+          },
+          "txBuffer": {
+            "regex": "^[0-9]*$",
+            "input": "TextField",
+            "prefix": "#define AIR_UART_TX_CIRCULAR_BUFFER_SIZE ",
+            "name": "TX Circular Buffer size",
+            "value": "128"
+          },
+          "txPin": {
+            "regex": "^[a-zA-Z0-9_.]*$",
+            "name": "TX Pin",
+            "value": "32",
+            "prefix": "#define AIR_UART_TX_PIN ",
+            "input": "Combo",
+            "options": [
+              "32"
+            ]
+          },
+          "rxPin": {
+            "regex": "^[a-zA-Z0-9_.]*$",
+            "name": "RX Pin",
+            "value": "33",
+            "prefix": "#define AIR_UART_RX_PIN ",
+            "input": "Combo",
+            "options": [
+              "33"
+            ]
+          },
+          "ctsPin": {
+            "regex": "^[a-zA-Z0-9_.]*$",
+            "name": "CTS Pin",
+            "value": "3",
+            "prefix": "#define AIR_UART_CTS_PIN ",
+            "input": "Combo",
+            "options": [
+              "3"
+            ]
+          }
+        },
+        "name": "AIR UART Driver",
+        "file": "uart_config.h"
+      },
+      "spi": {
+        "name": "AIR SPI Driver",
+        "file": "spi_config.h",
+        "values": {
+          "rxBuffer": {
+            "name": "SPI Speed",
+            "input": "Combo",
+            "prefix": "#define AIR_SPI_SPEED ",
+            "options": [
+              "1000000",
+              "500000"
+            ],
+            "value": "1000000",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "speed": {
+            "name": "SPI Speed",
+            "input": "Combo",
+            "prefix": "#define AIR_SPI_SPEED ",
+            "options": [
+              "1000000",
+              "500000"
+            ],
+            "value": "1000000",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "mode": {
+            "name": "SPI Mode",
+            "input": "Combo",
+            "prefix": "#define AIR_SPI_MODE ",
+            "options": [
+              "SPI_MODE_0",
+              "SPI_MODE_1",
+              "SPI_MODE_2",
+              "SPI_MODE_3"
+            ],
+            "value": "SPI_MODE_3",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          }
+        }
+      },
+      "buzzer": {
+        "name": "Buzzer Driver",
+        "file": "buzzer_config.h",
+        "values": {
+          "pin": {
+            "name": "Buzzer Pin",
+            "input": "Combo",
+            "prefix": "#define BUZZER_PWM_PIN ",
+            "options": [
+              "13",
+              "14",
+              "26",
+              "27"
+            ],
+            "value": "14",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          }
+        }
+      }
+    },
+    "meta": {
+      "version": "1.5.0",
+      "layoutGrid": false,
+      "layoutSnapping": false,
+      "layoutSnappingSize": 25,
+      "cloudLayoutGrid": false,
+      "cloudLayoutSnapping": false,
+      "cloudLayoutSnappingSize": 10,
+      "language": "en",
+      "enableTooltips": true,
+      "enableAutoSave": true,
+      "enableBuildSave": false,
+      "description": null,
+      "project_uuid": null,
+      "tokensEnabled": false,
+      "codeAssist": false,
+      "highlightLine": false,
+      "editorTheme": "Default",
+      "editorFontSize": 12,
+      "customEmbeddedElementLibraries": {},
+      "theme": {
+        "bg1": "#e9f3fb",
+        "bg2": "#DCEBF9"
+      },
+      "projectType": "bcm20737",
+      "name": "Piano Demo"
+    },
+    "type": "Header",
+    "currentLayoutName": "Default",
+    "currentCloudLayoutName": "Default"
+  },
+  "layouts": {
+    "Default": {
+      "devicename": ".*",
+      "elements": {
+        "D6": {
+          "x": 247,
+          "y": 207,
+          "width": 106,
+          "height": 226
+        },
+        "F6": {
+          "x": 487,
+          "y": 207,
+          "width": 106,
+          "height": 226
+        },
+        "C6": {
+          "x": 127,
+          "y": 207,
+          "width": 106,
+          "height": 226
+        },
+        "E6": {
+          "x": 367,
+          "y": 207,
+          "width": 106,
+          "height": 226
+        },
+        "B5": {
+          "x": 7,
+          "y": 207,
+          "width": 106,
+          "height": 226
+        },
+        "G6": {
+          "x": 607,
+          "y": 207,
+          "width": 106,
+          "height": 226
+        },
+        "C6S": {
+          "x": 207,
+          "y": 207,
+          "width": 66,
+          "height": 146
+        },
+        "D6S": {
+          "x": 327,
+          "y": 207,
+          "width": 66,
+          "height": 146
+        },
+        "F6S": {
+          "x": 567,
+          "y": 207,
+          "width": 66,
+          "height": 146
+        }
+      },
+      "orientation": "portrait",
+      "platform": ".*",
+      "height": 1024,
+      "width": 768,
+      "version": ".*",
+      "name": "Default (768x1024)"
+    },
+    "iPad": {
+      "devicename": ".*",
+      "elements": {
+        "D6": {
+          "x": 247,
+          "y": 207,
+          "width": 106,
+          "height": 226
+        },
+        "F6": {
+          "x": 487,
+          "y": 207,
+          "width": 106,
+          "height": 226
+        },
+        "C6": {
+          "x": 127,
+          "y": 207,
+          "width": 106,
+          "height": 226
+        },
+        "E6": {
+          "x": 367,
+          "y": 207,
+          "width": 106,
+          "height": 226
+        },
+        "B5": {
+          "x": 7,
+          "y": 207,
+          "width": 106,
+          "height": 226
+        },
+        "G6": {
+          "x": 607,
+          "y": 207,
+          "width": 106,
+          "height": 226
+        },
+        "C6S": {
+          "x": 207,
+          "y": 207,
+          "width": 66,
+          "height": 146
+        },
+        "D6S": {
+          "x": 327,
+          "y": 207,
+          "width": 66,
+          "height": 146
+        },
+        "F6S": {
+          "x": 567,
+          "y": 207,
+          "width": 66,
+          "height": 146
+        }
+      },
+      "orientation": "portrait",
+      "platform": "iOS",
+      "height": 1024,
+      "width": 768,
+      "version": ".*",
+      "name": "iPad 1/2/Mini"
+    },
+    "nexus7": {
+      "devicename": ".*",
+      "elements": {
+        "D6": {
+          "x": 207,
+          "y": 157,
+          "width": 86,
+          "height": 236
+        },
+        "F6": {
+          "x": 407,
+          "y": 157,
+          "width": 86,
+          "height": 236
+        },
+        "C6": {
+          "x": 107,
+          "y": 157,
+          "width": 86,
+          "height": 236
+        },
+        "E6": {
+          "x": 307,
+          "y": 157,
+          "width": 86,
+          "height": 236
+        },
+        "B5": {
+          "x": 7,
+          "y": 157,
+          "width": 86,
+          "height": 236
+        },
+        "G6": {
+          "x": 507,
+          "y": 157,
+          "width": 86,
+          "height": 236
+        },
+        "C6S": {
+          "x": 157,
+          "y": 157,
+          "width": 86,
+          "height": 136
+        },
+        "D6S": {
+          "x": 257,
+          "y": 157,
+          "width": 86,
+          "height": 136
+        },
+        "F6S": {
+          "x": 457,
+          "y": 157,
+          "width": 86,
+          "height": 136
+        }
+      },
+      "orientation": "portrait",
+      "platform": ".*",
+      "height": 912,
+      "width": 600,
+      "version": ".*",
+      "name": "Nexus 7 (2013)"
+    },
+    "iPhone5": {
+      "name": "iPhone 5/5C/5S & iPod Touch",
+      "width": 320,
+      "height": 568,
+      "orientation": "portrait",
+      "devicename": ".*",
+      "platform": "iOS",
+      "version": ".*",
+      "elements": {
+        "D6": {
+          "x": 157,
+          "y": 57,
+          "width": 61,
+          "height": 161
+        },
+        "F6": {
+          "x": 7,
+          "y": 282,
+          "width": 61,
+          "height": 161
+        },
+        "C6": {
+          "x": 82,
+          "y": 57,
+          "width": 61,
+          "height": 161
+        },
+        "E6": {
+          "x": 232,
+          "y": 57,
+          "width": 61,
+          "height": 161
+        },
+        "B5": {
+          "x": 7,
+          "y": 57,
+          "width": 61,
+          "height": 161
+        },
+        "G6": {
+          "x": 82,
+          "y": 282,
+          "width": 61,
+          "height": 161
+        },
+        "C6S": {
+          "x": 117,
+          "y": 28,
+          "width": 61,
+          "height": 86
+        },
+        "D6S": {
+          "x": 194,
+          "y": 28,
+          "width": 61,
+          "height": 86
+        },
+        "F6S": {
+          "x": 43,
+          "y": 254,
+          "width": 61,
+          "height": 86
+        }
+      }
+    }
+  },
+  "cloudLayouts": {
+    "Default": {
+      "name": "Default (600x400)",
+      "width": 600,
+      "height": 400,
+      "orientation": "landscape",
+      "devicename": ".*",
+      "platform": "",
+      "version": ".*",
+      "elements": {}
+    }
+  },
+  "elements": {
+    "D6": {
+      "type": "Button",
+      "properties": {
+        "visible": true,
+        "enabled": true,
+        "label": "D6",
+        "border": "plain",
+        "topColor": "rgb(250, 250, 250)",
+        "bottomColor": "rgb(234, 234, 234)",
+        "pressedTopColor": "rgb(255, 255, 255)",
+        "pressedBottomColor": "rgb(255, 255, 255)",
+        "overTopColor": "rgb(234, 234, 234)",
+        "overBottomColor": "rgb(214, 214, 214)",
+        "disabledTopColor": "rgb(211, 211, 211)",
+        "disabledBottomColor": "rgb(211, 211, 211)",
+        "elementType": "element"
+      },
+      "triggers": {
+        "mouseReleased": [
+          {
+            "sourceValue": "Static",
+            "sourceStaticValue": "",
+            "targetName": "Buzzer13",
+            "arguments": {
+              "targetOrder": [
+                "value"
+              ],
+              "mapping": {
+                "value": "0"
+              },
+              "sourceOrder": []
+            },
+            "targetValue": "execute",
+            "sourceTrigger": "mouseReleased"
+          }
+        ],
+        "mousePressed": [
+          {
+            "sourceValue": "Static",
+            "sourceStaticValue": "",
+            "targetName": "Buzzer13",
+            "arguments": {
+              "targetOrder": [
+                "value"
+              ],
+              "mapping": {
+                "value": "1"
+              },
+              "sourceOrder": []
+            },
+            "targetValue": "execute",
+            "sourceTrigger": "mousePressed"
+          }
+        ]
+      },
+      "zindex": 1,
+      "designer": {
+        "x": 145,
+        "y": 240
+      }
+    },
+    "F6": {
+      "type": "Button",
+      "properties": {
+        "visible": true,
+        "enabled": true,
+        "label": "F6",
+        "border": "plain",
+        "topColor": "rgb(250, 250, 250)",
+        "bottomColor": "rgb(234, 234, 234)",
+        "pressedTopColor": "rgb(255, 255, 255)",
+        "pressedBottomColor": "rgb(255, 255, 255)",
+        "overTopColor": "rgb(234, 234, 234)",
+        "overBottomColor": "rgb(214, 214, 214)",
+        "disabledTopColor": "rgb(211, 211, 211)",
+        "disabledBottomColor": "rgb(211, 211, 211)",
+        "elementType": "element"
+      },
+      "triggers": {
+        "mouseReleased": [
+          {
+            "sourceValue": "Static",
+            "sourceStaticValue": "",
+            "targetName": "Buzzer16",
+            "arguments": {
+              "targetOrder": [
+                "value"
+              ],
+              "mapping": {
+                "value": "0"
+              },
+              "sourceOrder": []
+            },
+            "targetValue": "execute",
+            "sourceTrigger": "mouseReleased"
+          }
+        ],
+        "mousePressed": [
+          {
+            "sourceValue": "Static",
+            "sourceStaticValue": "",
+            "targetName": "Buzzer16",
+            "arguments": {
+              "targetOrder": [
+                "value"
+              ],
+              "mapping": {
+                "value": "1"
+              },
+              "sourceOrder": []
+            },
+            "targetValue": "execute",
+            "sourceTrigger": "mousePressed"
+          }
+        ]
+      },
+      "zindex": 2,
+      "designer": {
+        "x": 143,
+        "y": 453
+      }
+    },
+    "C6": {
+      "type": "Button",
+      "properties": {
+        "visible": true,
+        "enabled": true,
+        "label": "C6",
+        "border": "plain",
+        "topColor": "rgb(250, 250, 250)",
+        "bottomColor": "rgb(234, 234, 234)",
+        "pressedTopColor": "rgb(255, 255, 255)",
+        "pressedBottomColor": "rgb(255, 255, 255)",
+        "overTopColor": "rgb(234, 234, 234)",
+        "overBottomColor": "rgb(214, 214, 214)",
+        "disabledTopColor": "rgb(211, 211, 211)",
+        "disabledBottomColor": "rgb(211, 211, 211)",
+        "elementType": "element"
+      },
+      "triggers": {
+        "mouseReleased": [
+          {
+            "sourceValue": "Static",
+            "sourceStaticValue": "",
+            "targetName": "Buzzer11",
+            "arguments": {
+              "targetOrder": [
+                "value"
+              ],
+              "mapping": {
+                "value": "0"
+              },
+              "sourceOrder": []
+            },
+            "targetValue": "execute",
+            "sourceTrigger": "mouseReleased"
+          }
+        ],
+        "mousePressed": [
+          {
+            "sourceValue": "Static",
+            "sourceStaticValue": "",
+            "targetName": "Buzzer11",
+            "arguments": {
+              "targetOrder": [
+                "value"
+              ],
+              "mapping": {
+                "value": "1"
+              },
+              "sourceOrder": []
+            },
+            "targetValue": "execute",
+            "sourceTrigger": "mousePressed"
+          }
+        ]
+      },
+      "zindex": 3,
+      "designer": {
+        "x": 150,
+        "y": 98
+      }
+    },
+    "E6": {
+      "type": "Button",
+      "properties": {
+        "visible": true,
+        "enabled": true,
+        "label": "E6",
+        "border": "plain",
+        "topColor": "rgb(250, 250, 250)",
+        "bottomColor": "rgb(234, 234, 234)",
+        "pressedTopColor": "rgb(255, 255, 255)",
+        "pressedBottomColor": "rgb(255, 255, 255)",
+        "overTopColor": "rgb(234, 234, 234)",
+        "overBottomColor": "rgb(214, 214, 214)",
+        "disabledTopColor": "rgb(211, 211, 211)",
+        "disabledBottomColor": "rgb(211, 211, 211)",
+        "elementType": "element"
+      },
+      "triggers": {
+        "mouseReleased": [
+          {
+            "sourceValue": "Static",
+            "sourceStaticValue": "",
+            "targetName": "Buzzer15",
+            "arguments": {
+              "targetOrder": [
+                "value"
+              ],
+              "mapping": {
+                "value": "0"
+              },
+              "sourceOrder": []
+            },
+            "targetValue": "execute",
+            "sourceTrigger": "mouseReleased"
+          }
+        ],
+        "mousePressed": [
+          {
+            "sourceValue": "Static",
+            "sourceStaticValue": "",
+            "targetName": "Buzzer15",
+            "arguments": {
+              "targetOrder": [
+                "value"
+              ],
+              "mapping": {
+                "value": "1"
+              },
+              "sourceOrder": []
+            },
+            "targetValue": "execute",
+            "sourceTrigger": "mousePressed"
+          }
+        ]
+      },
+      "zindex": 4,
+      "designer": {
+        "x": 147,
+        "y": 379
+      }
+    },
+    "B5": {
+      "type": "Button",
+      "properties": {
+        "visible": true,
+        "enabled": true,
+        "label": "B5",
+        "border": "plain",
+        "topColor": "rgb(250, 250, 250)",
+        "bottomColor": "rgb(234, 234, 234)",
+        "pressedTopColor": "rgb(255, 255, 255)",
+        "pressedBottomColor": "rgb(255, 255, 255)",
+        "overTopColor": "rgb(234, 234, 234)",
+        "overBottomColor": "rgb(214, 214, 214)",
+        "disabledTopColor": "rgb(211, 211, 211)",
+        "disabledBottomColor": "rgb(211, 211, 211)",
+        "elementType": "element"
+      },
+      "triggers": {
+        "mouseReleased": [
+          {
+            "sourceValue": "Static",
+            "sourceStaticValue": "",
+            "targetName": "Buzzer10",
+            "arguments": {
+              "targetOrder": [
+                "value"
+              ],
+              "mapping": {
+                "value": "0"
+              },
+              "sourceOrder": []
+            },
+            "targetValue": "execute",
+            "sourceTrigger": "mouseReleased"
+          }
+        ],
+        "mousePressed": [
+          {
+            "sourceValue": "Static",
+            "sourceStaticValue": "",
+            "targetName": "Buzzer10",
+            "arguments": {
+              "targetOrder": [
+                "value"
+              ],
+              "mapping": {
+                "value": "1"
+              },
+              "sourceOrder": []
+            },
+            "targetValue": "execute",
+            "sourceTrigger": "mousePressed"
+          }
+        ]
+      },
+      "zindex": 5,
+      "designer": {
+        "x": 143,
+        "y": 24
+      }
+    },
+    "G6": {
+      "type": "Button",
+      "properties": {
+        "visible": true,
+        "enabled": true,
+        "label": "G6",
+        "border": "plain",
+        "topColor": "rgb(250, 250, 250)",
+        "bottomColor": "rgb(234, 234, 234)",
+        "pressedTopColor": "rgb(255, 255, 255)",
+        "pressedBottomColor": "rgb(255, 255, 255)",
+        "overTopColor": "rgb(234, 234, 234)",
+        "overBottomColor": "rgb(214, 214, 214)",
+        "disabledTopColor": "rgb(211, 211, 211)",
+        "disabledBottomColor": "rgb(211, 211, 211)",
+        "elementType": "element"
+      },
+      "triggers": {
+        "mouseReleased": [
+          {
+            "sourceValue": "Static",
+            "sourceStaticValue": "",
+            "targetName": "Buzzer18",
+            "arguments": {
+              "targetOrder": [
+                "value"
+              ],
+              "mapping": {
+                "value": "0"
+              },
+              "sourceOrder": []
+            },
+            "targetValue": "execute",
+            "sourceTrigger": "mouseReleased"
+          }
+        ],
+        "mousePressed": [
+          {
+            "sourceValue": "Static",
+            "sourceStaticValue": "",
+            "targetName": "Buzzer18",
+            "arguments": {
+              "targetOrder": [
+                "value"
+              ],
+              "mapping": {
+                "value": "1"
+              },
+              "sourceOrder": []
+            },
+            "targetValue": "execute",
+            "sourceTrigger": "mousePressed"
+          }
+        ]
+      },
+      "zindex": 6,
+      "designer": {
+        "x": 149,
+        "y": 593
+      }
+    },
+    "C6S": {
+      "type": "Button",
+      "properties": {
+        "visible": true,
+        "enabled": true,
+        "label": "C6#",
+        "border": "plain",
+        "topColor": "rgb(250, 250, 250)",
+        "bottomColor": "rgb(234, 234, 234)",
+        "pressedTopColor": "rgb(255, 255, 255)",
+        "pressedBottomColor": "rgb(255, 255, 255)",
+        "overTopColor": "rgb(234, 234, 234)",
+        "overBottomColor": "rgb(214, 214, 214)",
+        "disabledTopColor": "rgb(211, 211, 211)",
+        "disabledBottomColor": "rgb(211, 211, 211)",
+        "elementType": "element"
+      },
+      "triggers": {
+        "mouseReleased": [
+          {
+            "sourceValue": "Static",
+            "sourceStaticValue": "",
+            "targetName": "Buzzer12",
+            "arguments": {
+              "targetOrder": [
+                "value"
+              ],
+              "mapping": {
+                "value": "0"
+              },
+              "sourceOrder": []
+            },
+            "targetValue": "execute",
+            "sourceTrigger": "mouseReleased"
+          }
+        ],
+        "mousePressed": [
+          {
+            "sourceValue": "Static",
+            "sourceStaticValue": "",
+            "targetName": "Buzzer12",
+            "arguments": {
+              "targetOrder": [
+                "value"
+              ],
+              "mapping": {
+                "value": "1"
+              },
+              "sourceOrder": []
+            },
+            "targetValue": "execute",
+            "sourceTrigger": "mousePressed"
+          }
+        ]
+      },
+      "zindex": 7,
+      "designer": {
+        "x": 145,
+        "y": 169
+      }
+    },
+    "D6S": {
+      "type": "Button",
+      "properties": {
+        "visible": true,
+        "enabled": true,
+        "label": "D6#",
+        "border": "plain",
+        "topColor": "rgb(250, 250, 250)",
+        "bottomColor": "rgb(234, 234, 234)",
+        "pressedTopColor": "rgb(255, 255, 255)",
+        "pressedBottomColor": "rgb(255, 255, 255)",
+        "overTopColor": "rgb(234, 234, 234)",
+        "overBottomColor": "rgb(214, 214, 214)",
+        "disabledTopColor": "rgb(211, 211, 211)",
+        "disabledBottomColor": "rgb(211, 211, 211)",
+        "elementType": "element"
+      },
+      "triggers": {
+        "mouseReleased": [
+          {
+            "sourceValue": "Static",
+            "sourceStaticValue": "",
+            "targetName": "Buzzer14",
+            "arguments": {
+              "targetOrder": [
+                "value"
+              ],
+              "mapping": {
+                "value": "0"
+              },
+              "sourceOrder": []
+            },
+            "targetValue": "execute",
+            "sourceTrigger": "mouseReleased"
+          }
+        ],
+        "mousePressed": [
+          {
+            "sourceValue": "Static",
+            "sourceStaticValue": "",
+            "targetName": "Buzzer14",
+            "arguments": {
+              "targetOrder": [
+                "value"
+              ],
+              "mapping": {
+                "value": "1"
+              },
+              "sourceOrder": []
+            },
+            "targetValue": "execute",
+            "sourceTrigger": "mousePressed"
+          }
+        ]
+      },
+      "zindex": 8,
+      "designer": {
+        "x": 147,
+        "y": 307
+      }
+    },
+    "F6S": {
+      "type": "Button",
+      "properties": {
+        "visible": true,
+        "enabled": true,
+        "label": "F6#",
+        "border": "plain",
+        "topColor": "rgb(250, 250, 250)",
+        "bottomColor": "rgb(234, 234, 234)",
+        "pressedTopColor": "rgb(255, 255, 255)",
+        "pressedBottomColor": "rgb(255, 255, 255)",
+        "overTopColor": "rgb(234, 234, 234)",
+        "overBottomColor": "rgb(214, 214, 214)",
+        "disabledTopColor": "rgb(211, 211, 211)",
+        "disabledBottomColor": "rgb(211, 211, 211)",
+        "elementType": "element"
+      },
+      "triggers": {
+        "mouseReleased": [
+          {
+            "sourceValue": "Static",
+            "sourceStaticValue": "",
+            "targetName": "Buzzer17",
+            "arguments": {
+              "targetOrder": [
+                "value"
+              ],
+              "mapping": {
+                "value": "0"
+              },
+              "sourceOrder": []
+            },
+            "targetValue": "execute",
+            "sourceTrigger": "mouseReleased"
+          }
+        ],
+        "mousePressed": [
+          {
+            "sourceValue": "Static",
+            "sourceStaticValue": "",
+            "targetName": "Buzzer17",
+            "arguments": {
+              "targetOrder": [
+                "value"
+              ],
+              "mapping": {
+                "value": "1"
+              },
+              "sourceOrder": []
+            },
+            "targetValue": "execute",
+            "sourceTrigger": "mousePressed"
+          }
+        ]
+      },
+      "zindex": 9,
+      "designer": {
+        "x": 148,
+        "y": 523
+      }
+    },
+    "Buzzer10": {
+      "type": "Buzzer",
+      "properties": {
+        "code": "\n\tif(data)\n\t{\n\t\tBUZZER_Start(%(note)s);\n\t}\n\t\n\telse\n\t{\n\t\tBUZZER_Stop();\n\t}\n\t\n\treturn;\n\t",
+        "permission": "public",
+        "note": "BUZZER_Note_B5",
+        "length": "128",
+        "returnType": "void",
+        "inputType": "bool",
+        "elementType": "element"
+      },
+      "triggers": {},
+      "zindex": 10,
+      "designer": {
+        "x": 372,
+        "y": 27
+      }
+    },
+    "Buzzer11": {
+      "type": "Buzzer",
+      "properties": {
+        "code": "\n\tif(data)\n\t{\n\t\tBUZZER_Start(%(note)s);\n\t}\n\t\n\telse\n\t{\n\t\tBUZZER_Stop();\n\t}\n\t\n\treturn;\n\t",
+        "permission": "public",
+        "note": "BUZZER_Note_C6",
+        "length": "128",
+        "returnType": "void",
+        "inputType": "bool",
+        "elementType": "element"
+      },
+      "triggers": {},
+      "zindex": 11,
+      "designer": {
+        "x": 373,
+        "y": 101
+      }
+    },
+    "Buzzer12": {
+      "type": "Buzzer",
+      "properties": {
+        "code": "\n\tif(data)\n\t{\n\t\tBUZZER_Start(%(note)s);\n\t}\n\t\n\telse\n\t{\n\t\tBUZZER_Stop();\n\t}\n\t\n\treturn;\n\t",
+        "permission": "public",
+        "note": "BUZZER_Note_CsDf6",
+        "length": "128",
+        "returnType": "void",
+        "inputType": "bool",
+        "elementType": "element"
+      },
+      "triggers": {},
+      "zindex": 12,
+      "designer": {
+        "x": 366,
+        "y": 172
+      }
+    },
+    "Buzzer13": {
+      "type": "Buzzer",
+      "properties": {
+        "code": "\n\tif(data)\n\t{\n\t\tBUZZER_Start(%(note)s);\n\t}\n\t\n\telse\n\t{\n\t\tBUZZER_Stop();\n\t}\n\t\n\treturn;\n\t",
+        "permission": "public",
+        "note": "BUZZER_Note_D6",
+        "length": "128",
+        "returnType": "void",
+        "inputType": "bool",
+        "elementType": "element"
+      },
+      "triggers": {},
+      "zindex": 13,
+      "designer": {
+        "x": 373,
+        "y": 236
+      }
+    },
+    "Buzzer14": {
+      "type": "Buzzer",
+      "properties": {
+        "code": "\n\tif(data)\n\t{\n\t\tBUZZER_Start(%(note)s);\n\t}\n\t\n\telse\n\t{\n\t\tBUZZER_Stop();\n\t}\n\t\n\treturn;\n\t",
+        "permission": "public",
+        "note": "BUZZER_Note_DsEf6",
+        "length": "128",
+        "returnType": "void",
+        "inputType": "bool",
+        "elementType": "element"
+      },
+      "triggers": {},
+      "zindex": 14,
+      "designer": {
+        "x": 364,
+        "y": 307
+      }
+    },
+    "Buzzer15": {
+      "type": "Buzzer",
+      "properties": {
+        "code": "\n\tif(data)\n\t{\n\t\tBUZZER_Start(%(note)s);\n\t}\n\t\n\telse\n\t{\n\t\tBUZZER_Stop();\n\t}\n\t\n\treturn;\n\t",
+        "permission": "public",
+        "note": "BUZZER_Note_E6",
+        "length": "128",
+        "returnType": "void",
+        "inputType": "bool",
+        "elementType": "element"
+      },
+      "triggers": {},
+      "zindex": 15,
+      "designer": {
+        "x": 366,
+        "y": 379
+      }
+    },
+    "Buzzer16": {
+      "type": "Buzzer",
+      "properties": {
+        "code": "\n\tif(data)\n\t{\n\t\tBUZZER_Start(%(note)s);\n\t}\n\t\n\telse\n\t{\n\t\tBUZZER_Stop();\n\t}\n\t\n\treturn;\n\t",
+        "permission": "public",
+        "note": "BUZZER_Note_F6",
+        "length": "128",
+        "returnType": "void",
+        "inputType": "bool",
+        "elementType": "element"
+      },
+      "triggers": {},
+      "zindex": 16,
+      "designer": {
+        "x": 369,
+        "y": 466
+      }
+    },
+    "Buzzer17": {
+      "type": "Buzzer",
+      "properties": {
+        "code": "\n\tif(data)\n\t{\n\t\tBUZZER_Start(%(note)s);\n\t}\n\t\n\telse\n\t{\n\t\tBUZZER_Stop();\n\t}\n\t\n\treturn;\n\t",
+        "permission": "public",
+        "note": "BUZZER_Note_FsGf6",
+        "length": "128",
+        "returnType": "void",
+        "inputType": "bool",
+        "elementType": "element"
+      },
+      "triggers": {},
+      "zindex": 17,
+      "designer": {
+        "x": 370,
+        "y": 547
+      }
+    },
+    "Buzzer18": {
+      "type": "Buzzer",
+      "properties": {
+        "code": "\n\tif(data)\n\t{\n\t\tBUZZER_Start(%(note)s);\n\t}\n\t\n\telse\n\t{\n\t\tBUZZER_Stop();\n\t}\n\t\n\treturn;\n\t",
+        "permission": "public",
+        "note": "BUZZER_Note_G6",
+        "length": "128",
+        "returnType": "void",
+        "inputType": "bool",
+        "elementType": "element"
+      },
+      "triggers": {},
+      "zindex": 18,
+      "designer": {
+        "x": 368,
+        "y": 619
+      }
+    }
+  },
+  "cloudElements": {}
+}
