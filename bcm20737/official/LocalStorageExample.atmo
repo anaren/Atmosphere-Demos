@@ -1,0 +1,515 @@
+{
+  "header": {
+    "data": {
+      "order": [
+        "Globals",
+        "Interval",
+        "Connected",
+        "Disconnected",
+        "Setup"
+      ],
+      "Globals": {
+        "name": "Globals",
+        "func": "#include \"callbacks.h\"",
+        "code": "\n#define NUM_VALUES 8\n#define NUM_CHARS 128\n\nuint8 dataValues[NUM_VALUES];\nunsigned char returnString[NUM_CHARS];\nint count = 0;\n",
+        "close": "//END"
+      },
+      "Interval": {
+        "name": "Interval",
+        "func": "\nvoid interval() {",
+        "code": "        ",
+        "close": "}"
+      },
+      "Connected": {
+        "name": "Connected",
+        "func": "\nvoid connected() {",
+        "code": "",
+        "close": "}"
+      },
+      "Disconnected": {
+        "name": "Disconnected",
+        "func": "\nvoid disconnected() {",
+        "code": "",
+        "close": "}"
+      },
+      "Setup": {
+        "name": "Setup",
+        "func": "\nvoid setup() {",
+        "code": "    AIR_GPIO_Init();\n\tAIR_UART_Init();\n\tAIR_I2C_Init();\n\tAIR_SPI_Init();\n\tBUZZER_Init();\n\tAIR_POWER_Init();\n    AIR_POWER_SetMode(AIR_POWER_NOSLEEP);\t",
+        "close": "}"
+      }
+    },
+    "boardConfiguration": {
+      "ble": {
+        "name": "Bluetooth Low Energy",
+        "file": "ble_config.h",
+        "values": {
+          "localName": {
+            "name": "Local Name",
+            "input": "TextField",
+            "prefix": "#define BLE_LOCAL_NAME \"",
+            "value": "Storage",
+            "suffix": "\"",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "version": {
+            "name": "Version",
+            "input": "TextField",
+            "prefix": "#define BLE_VERSION \"",
+            "value": "1.00",
+            "suffix": "\"",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "pairing": {
+            "name": "Pairing",
+            "input": "Combo",
+            "prefix": "#define ",
+            "options": [
+              "BLE_PAIRING_NONE",
+              "BLE_PAIRING_PASSKEY",
+              "BLE_PAIRING_OOB"
+            ],
+            "value": "BLE_PAIRING_NONE",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "txPowerLevel": {
+            "name": "TX Power Level (dbm)",
+            "input": "TextField",
+            "prefix": "#define BLE_TX_POWER_LEVEL ",
+            "value": "4",
+            "regex": "^[0-9]*$"
+          },
+          "intervalFineTimer": {
+            "name": "Interval Timer Length (ms)",
+            "input": "TextField",
+            "prefix": "#define BLE_INTERVAL_FINE_TIMER ",
+            "value": "1000",
+            "regex": "^[0-9]*$"
+          }
+        }
+      },
+      "uart": {
+        "name": "AIR UART Driver",
+        "file": "uart_config.h",
+        "values": {
+          "rxBuffer": {
+            "name": "RX Circular Buffer size",
+            "input": "TextField",
+            "prefix": "#define AIR_UART_RX_CIRCULAR_BUFFER_SIZE ",
+            "value": "128",
+            "regex": "^[0-9]*$"
+          },
+          "txBuffer": {
+            "name": "TX Circular Buffer size",
+            "input": "TextField",
+            "prefix": "#define AIR_UART_TX_CIRCULAR_BUFFER_SIZE ",
+            "value": "128",
+            "regex": "^[0-9]*$"
+          },
+          "buad": {
+            "name": "Baudrate",
+            "input": "Combo",
+            "prefix": "#define ",
+            "options": [
+              "AIR_UART_BAUD_115200",
+              "AIR_UART_BAUD_57600",
+              "AIR_UART_BAUD_9600"
+            ],
+            "value": "AIR_UART_BAUD_115200",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "txPin": {
+            "name": "TX Pin",
+            "input": "Combo",
+            "prefix": "#define AIR_UART_TX_PIN ",
+            "options": [
+              "32"
+            ],
+            "value": "32",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "rxPin": {
+            "name": "RX Pin",
+            "input": "Combo",
+            "prefix": "#define AIR_UART_RX_PIN ",
+            "options": [
+              "33"
+            ],
+            "value": "33",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "rtsPin": {
+            "name": "RTS Pin",
+            "input": "Combo",
+            "prefix": "#define AIR_UART_RTS_PIN ",
+            "options": [
+              "1"
+            ],
+            "value": "1",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "ctsPin": {
+            "name": "CTS Pin",
+            "input": "Combo",
+            "prefix": "#define AIR_UART_CTS_PIN ",
+            "options": [
+              "3"
+            ],
+            "value": "3",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          }
+        }
+      }
+    },
+    "meta": {
+      "version": "1.0.10-1",
+      "layoutGrid": false,
+      "layoutSnapping": false,
+      "layoutSnappingSize": 10,
+      "language": "en",
+      "enableTooltips": true,
+      "enableAutoSave": true,
+      "enableBuildSave": false,
+      "description": null,
+      "project_uuid": null,
+      "tokensEnabled": false,
+      "codeAssist": false,
+      "highlightLine": false,
+      "editorTheme": "Default",
+      "projectType": "bcm920737",
+      "name": "LocalStorageExample"
+    },
+    "type": "Header",
+    "currentLayoutName": "Default"
+  },
+  "layouts": {
+    "Default": {
+      "name": "Default (768x1024)",
+      "width": 768,
+      "height": 1024,
+      "orientation": "portrait",
+      "devicename": ".*",
+      "platform": ".*",
+      "version": ".*",
+      "elements": {
+        "fromStorage": {
+          "x": 156,
+          "y": 191,
+          "width": 236,
+          "height": 34
+        },
+        "Label4": {
+          "x": 28,
+          "y": 71,
+          "width": 289,
+          "height": 34
+        },
+        "toStorage": {
+          "x": 156,
+          "y": 143,
+          "width": 235,
+          "height": 34
+        },
+        "Label7": {
+          "x": 28,
+          "y": 143,
+          "width": 114,
+          "height": 34
+        },
+        "Label8": {
+          "x": 28,
+          "y": 191,
+          "width": 114,
+          "height": 34
+        },
+        "fromStorageKey": {
+          "x": 156,
+          "y": 239,
+          "width": 236,
+          "height": 34
+        },
+        "Label12": {
+          "x": 28,
+          "y": 239,
+          "width": 114,
+          "height": 34
+        }
+      }
+    }
+  },
+  "elements": {
+    "LocalStorage1": {
+      "type": "LocalStorage",
+      "properties": {},
+      "triggers": {
+        "valueSet": [
+          {
+            "sourceTrigger": "valueSet",
+            "sourceValue": "getValue",
+            "targetValue": "setValue",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "JSON.stringify(value)"
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": [
+                "value"
+              ]
+            },
+            "targetName": "fromStorage"
+          },
+          {
+            "sourceTrigger": "valueSet",
+            "sourceValue": "getKey",
+            "targetValue": "setValue",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "JSON.stringify(key)"
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": [
+                "key"
+              ]
+            },
+            "targetName": "fromStorageKey"
+          }
+        ]
+      },
+      "zindex": 1,
+      "designer": {
+        "x": 327,
+        "y": 188
+      }
+    },
+    "getData": {
+      "type": "Function",
+      "properties": {
+        "code": "    uint8 i;\n    for (i=0; i<8; i++) {\n        dataValues[i] = (count + i) % 256;\n    }    \n    count += 8;\n\tsprintf(returnString, \"[%d,%d,%d,%d,%d,%d,%d,%d]\"\n\t    , dataValues[0], dataValues[1], dataValues[2], dataValues[3]\n\t    , dataValues[4], dataValues[5], dataValues[6], dataValues[7]);\n\treturn returnString;"
+      },
+      "triggers": {
+        "valueReturned": [
+          {
+            "sourceTrigger": "valueReturned",
+            "sourceValue": "getValue",
+            "targetValue": "setValue",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "value"
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": [
+                "value"
+              ]
+            },
+            "targetName": "LocalStorage1"
+          },
+          {
+            "sourceTrigger": "valueReturned",
+            "sourceValue": "Static",
+            "targetValue": "setKey",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "key": "\"Octet\""
+              },
+              "targetOrder": [
+                "key"
+              ],
+              "sourceOrder": []
+            },
+            "targetName": "LocalStorage1"
+          },
+          {
+            "sourceTrigger": "valueReturned",
+            "sourceValue": "Static",
+            "targetValue": "retrieveValue",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {},
+              "targetOrder": [],
+              "sourceOrder": []
+            },
+            "targetName": "LocalStorage1"
+          },
+          {
+            "sourceTrigger": "valueReturned",
+            "sourceValue": "getValue",
+            "targetValue": "setValue",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "JSON.stringify(value)"
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": [
+                "value"
+              ]
+            },
+            "targetName": "toStorage"
+          }
+        ]
+      },
+      "zindex": 2,
+      "designer": {
+        "x": 170,
+        "y": 188
+      }
+    },
+    "fromStorage": {
+      "type": "Label",
+      "properties": {
+        "label": "",
+        "enabled": true,
+        "visible": true,
+        "font": "14px Arial",
+        "color": "Black"
+      },
+      "triggers": {},
+      "zindex": 3,
+      "designer": {
+        "x": 447,
+        "y": 188
+      }
+    },
+    "Label4": {
+      "type": "Label",
+      "properties": {
+        "label": "Local Storage Example",
+        "enabled": true,
+        "visible": true,
+        "font": "14px Arial",
+        "color": "Black"
+      },
+      "triggers": {},
+      "zindex": 4,
+      "designer": {
+        "x": 14,
+        "y": 71
+      }
+    },
+    "Task5": {
+      "type": "Task",
+      "properties": {
+        "runOnStart": true,
+        "runIn": "2000",
+        "runEvery": "2000"
+      },
+      "triggers": {
+        "task": [
+          {
+            "sourceTrigger": "task",
+            "sourceValue": "Static",
+            "targetValue": "execute",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": ""
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": []
+            },
+            "targetName": "getData"
+          }
+        ]
+      },
+      "zindex": 5,
+      "designer": {
+        "x": 24,
+        "y": 188
+      }
+    },
+    "toStorage": {
+      "type": "Label",
+      "properties": {
+        "label": "",
+        "enabled": true,
+        "visible": true,
+        "font": "14px Arial",
+        "color": "Black"
+      },
+      "triggers": {},
+      "zindex": 6,
+      "designer": {
+        "x": 327,
+        "y": 92
+      }
+    },
+    "Label7": {
+      "type": "Label",
+      "properties": {
+        "label": "To storage:",
+        "enabled": true,
+        "visible": true,
+        "font": "14px Arial",
+        "color": "Black"
+      },
+      "triggers": {},
+      "zindex": 7,
+      "designer": {
+        "x": 31,
+        "y": 86
+      }
+    },
+    "Label8": {
+      "type": "Label",
+      "properties": {
+        "label": "From storage:",
+        "enabled": true,
+        "visible": true,
+        "font": "14px Arial",
+        "color": "Black"
+      },
+      "triggers": {},
+      "zindex": 8,
+      "designer": {
+        "x": 46,
+        "y": 96
+      }
+    },
+    "fromStorageKey": {
+      "type": "Label",
+      "properties": {
+        "label": "",
+        "enabled": true,
+        "visible": true,
+        "font": "14px Arial",
+        "color": "Black"
+      },
+      "triggers": {},
+      "zindex": 9,
+      "designer": {
+        "x": 448,
+        "y": 260
+      }
+    },
+    "Label12": {
+      "type": "Label",
+      "properties": {
+        "label": "Key from storage",
+        "enabled": true,
+        "visible": true,
+        "font": "14px Arial",
+        "color": "Black"
+      },
+      "triggers": {},
+      "zindex": 10,
+      "designer": {
+        "x": 68,
+        "y": 107
+      }
+    }
+  }
+}

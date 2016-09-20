@@ -1,0 +1,661 @@
+{
+  "header": {
+    "data": {
+      "order": [
+        "Globals",
+        "Interval",
+        "Connected",
+        "Disconnected",
+        "Setup"
+      ],
+      "Globals": {
+        "name": "Globals",
+        "func": "#include \"callbacks.h\"",
+        "code": "\n#include \"emconinfo.h\"              // Include library\n\n#define BUFFER_SIZE         256\n#define BYTES_TO_WRITE      128\n#define LINE_LENGTH         16\n#define PIN_WRITE_PROTECT   1\n#define BLOCK_MIN           0x11\n#define BLOCK_MAX           0x6F\n#define STATE_IDLE          0\n#define STATE_WRITING       1\n#define STATE_READING       2\n#define STATE_DELETING      3\n\nunsigned int block = BLOCK_MIN;\nunsigned int offset = 0;\nunsigned char buf[BUFFER_SIZE];\nunsigned char debugString[128];\nunsigned int numBytesRead;\nunsigned int numBytesWritten;\nunsigned char testPattern[BUFFER_SIZE];\nunsigned int state = STATE_IDLE;\nunsigned int blockMin = BLOCK_MIN;\nunsigned int blockMax = BLOCK_MIN+1;\nunsigned int numBytes = BYTES_TO_WRITE;\nbool buzzerOn = true;\nbool consoleLogging = true;\nchar macString[24];                 // JSON format string\nunsigned char *macAddr;             // Array in little endian\n\n\nstatic void delay(int msecs) {\n// delay for msecs milliseconds\n    int i, j;\n    volatile int x;\n    for (i=0; i<msecs; i++) {\n        for (j=0; j<2665; j++) {\n            x++;\n        }\n    }\n}\n\nunsigned int readDecStringToInt(unsigned char *data, unsigned int length) {\n    unsigned int i;\n    unsigned int sum = 0;\n    for (i=0; i<length; i++) {\n        if (data[i] >= '0' && data[i] <= '9') {\n            sum = 10 * sum + (data[i] - '0');\n        }\n    }\n    return sum;\n}\n\nunsigned int readHexStringToInt(unsigned char *data, unsigned int length) {\n    unsigned int i;\n    unsigned int sum = 0;\n    for (i=0; i<length; i++) {\n        if (data[i] >= '0' && data[i] <= '9') {\n            sum = 16 * sum + (data[i] - '0');\n        }\n        if (data[i] >= 'A' && data[i] <= 'F') {\n            sum = 16 * sum + (data[i] - 'A') + 10;\n        }\n        if (data[i] >= 'a' && data[i] <= 'f') {\n            sum = 16 * sum + (data[i] - 'a') + 10;\n        }\n    }\n    return sum;\n}\n\nstatic void shortBeeps(int numBeeps, int note) {\n// emit a short beeps of note\n    int j;\n    if (buzzerOn) {\n        for (j=0; j<numBeeps; j++) {\n            BUZZER_Start(note);\n            delay(60);\n            BUZZER_Stop();\n            delay(60);\n        }\n    }\n}\n",
+        "close": "//END"
+      },
+      "Interval": {
+        "name": "Interval",
+        "func": "\nvoid interval() {",
+        "code": "\n    unsigned int j;\n    \n    switch (state) {\n    case STATE_WRITING:\n        // Write a test pattern to each block in the range\n\t    for (j=0; j<numBytes; j++) {\n\t        testPattern[j] = j + block;\n\t    }\n\t    numBytesWritten = AIR_NVRAM_Write(block, testPattern, numBytes); // Write a test pattern\n\t    sprintf(debugString, \"....Write to blockID 0x%02X returned %d\\r\\n\", block, numBytesWritten);\n\t    AIR_UART_Print(debugString);\n\t    block++;\n        if (block > blockMax) {\n            block = blockMin;\n        \tAIR_GPIO_Write(PIN_WRITE_PROTECT, 1);   // Turn write-protection on\n        \tAIR_UART_Print(\"....Write protection on\\r\\n\");\n            AIR_UART_Print(\"..Read from all blocks\\r\\n\");\n            state = STATE_READING;\n        }\n        break;\t\n\tcase STATE_READING:\n    \t// Read back and print from each block in the range\n        if (offset < numBytes) {\n            if (offset == 0) {            \t\n        \t    for (j=0; j<BUFFER_SIZE; j++) {\n\t                buf[j] = 0xFF;              // FF to indicate nothing was read here\n\t            }\n                numBytesRead = AIR_NVRAM_Read(block, buf, numBytes);   // Read in the block data\n                sprintf(debugString, \"....Read from blockID 0x%02X returned: %3d\\r\\n\", block, numBytesRead);\n                AIR_UART_Print(debugString);\n            }\n            sprintf(debugString, \"....%02X,%02X:  \", block, offset);\n            for (j=offset; j<offset+LINE_LENGTH && j<numBytes; j++) {\n                sprintf(debugString, \"%s%02X \", debugString, buf[j]);\n            }\n            sprintf(debugString, \"%s\\r\\n\", debugString);\n            AIR_UART_Print(debugString);\n            offset += LINE_LENGTH;\n        }\n        else {    \n            offset = 0;\n            block++;\n            AIR_UART_Print(\"\\r\\n\");\n            if (block > blockMax) {\n                block = blockMin;\n                AIR_UART_Print(\"..Delete all blocks\\r\\n\");\n                state = STATE_DELETING;\n            }\n        }\n        break;\n    case STATE_DELETING:\n        if (bleprofile_DeleteNVRAM(block)) {\n            sprintf(debugString, \"....Delete block 0x%02X succeeded\\r\\n\", block);\n        }\n        else {\n            sprintf(debugString, \"....Delete block 0x%02X failed\\r\\n\", block);\n        }\n        AIR_UART_Print(debugString);\n        block++;\n        if (block > blockMax) {\n            block = blockMin;\n            AIR_UART_Print(\"Test complete.\\r\\n\");\n            state = STATE_IDLE;\n        }\n        break;\n    default:\n        break;\n    }\n    ",
+        "close": "}"
+      },
+      "Connected": {
+        "name": "Connected",
+        "func": "\nvoid connected() {",
+        "code": "\n    shortBeeps(1, BUZZER_Note_C5);          // Happy beeps to announce connection\n    shortBeeps(1, BUZZER_Note_E5);\n    shortBeeps(1, BUZZER_Note_G5);\n    if (consoleLogging) {\n        AIR_UART_Print(\"Connected\\r\\n\");    // log to console\"\n    }\n",
+        "close": "}"
+      },
+      "Disconnected": {
+        "name": "Disconnected",
+        "func": "\nvoid disconnected() {",
+        "code": "\n    shortBeeps(1, BUZZER_Note_G5);          // Happy beeps to announce connection\n    shortBeeps(1, BUZZER_Note_E5);\n    shortBeeps(1, BUZZER_Note_C5);\n    if (consoleLogging) {\n        AIR_UART_Print(\"Disonnected\\r\\n\");    // log to console\"\n    }\n",
+        "close": "}"
+      },
+      "Setup": {
+        "name": "Setup",
+        "func": "\nvoid setup() {",
+        "code": "\n\tAIR_GPIO_Init();\n\tAIR_POWER_Init();\n\tAIR_UART_Init();\n\tAIR_I2C_Init();\n\tAIR_SPI_Init();\n\tBUZZER_Init();\n\tAIR_POWER_SetMode(AIR_POWER_NOSLEEP);\n\t\n\t// Enable writing to NVRAM\n\tAIR_GPIO_SetMode(PIN_WRITE_PROTECT, AIR_GPIO_OUTPUT_OPEN_DRAIN_NO_PULL);\n\t\n\t// Initialize NVRAM APIs\n\tAIR_NVRAM_Init();\n\t\n    macAddr = emconinfo_getAddr();                          // Read in MAC address.  Returns 6-byte array in little endian.\n    sprintf(macString, \"\\\"%02X:%02X:%02X:%02X:%02X:%02X\\\"\"  // Convert to JSON\n      , macAddr[5], macAddr[4], macAddr[3], macAddr[2], macAddr[1], macAddr[0]);\n    sprintf(debugString, \"MAC Address=%s\\r\\n\", macString);  // Print to PUART port on startup\n    AIR_UART_Print(debugString);\n\n    shortBeeps(3, BUZZER_Note_G5);          // Happy beeps to announce connection\n\t",
+        "close": "}"
+      }
+    },
+    "boardConfiguration": {
+      "ble": {
+        "name": "Bluetooth Low Energy",
+        "file": "ble_config.h",
+        "values": {
+          "localName": {
+            "name": "Local Name",
+            "input": "TextField",
+            "prefix": "#define BLE_LOCAL_NAME \"",
+            "value": "NVRAM",
+            "suffix": "\"",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "version": {
+            "name": "Version",
+            "input": "TextField",
+            "prefix": "#define BLE_VERSION \"",
+            "value": "1.00",
+            "suffix": "\"",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "pairing": {
+            "name": "Pairing",
+            "input": "Combo",
+            "prefix": "#define ",
+            "options": [
+              "BLE_PAIRING_NONE",
+              "BLE_PAIRING_PASSKEY",
+              "BLE_PAIRING_OOB"
+            ],
+            "value": "BLE_PAIRING_NONE",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "txPowerLevel": {
+            "name": "TX Power Level (dbm)",
+            "input": "TextField",
+            "prefix": "#define BLE_TX_POWER_LEVEL ",
+            "value": "4",
+            "regex": "^[0-9]*$"
+          },
+          "intervalFineTimer": {
+            "name": "Interval Timer Length (ms)",
+            "input": "TextField",
+            "prefix": "#define BLE_INTERVAL_FINE_TIMER ",
+            "value": "250",
+            "regex": "^[0-9]*$"
+          }
+        }
+      },
+      "uart": {
+        "name": "AIR UART Driver",
+        "file": "uart_config.h",
+        "values": {
+          "rxBuffer": {
+            "name": "RX Circular Buffer size",
+            "input": "TextField",
+            "prefix": "#define AIR_UART_RX_CIRCULAR_BUFFER_SIZE ",
+            "value": "128",
+            "regex": "^[0-9]*$"
+          },
+          "txBuffer": {
+            "name": "TX Circular Buffer size",
+            "input": "TextField",
+            "prefix": "#define AIR_UART_TX_CIRCULAR_BUFFER_SIZE ",
+            "value": "128",
+            "regex": "^[0-9]*$"
+          },
+          "buad": {
+            "name": "Baudrate",
+            "input": "Combo",
+            "prefix": "#define ",
+            "options": [
+              "AIR_UART_BAUD_460800",
+              "AIR_UART_BAUD_230400",
+              "AIR_UART_BAUD_115200",
+              "AIR_UART_BAUD_57600",
+              "AIR_UART_BAUD_38400",
+              "AIR_UART_BAUD_19200",
+              "AIR_UART_BAUD_9600"
+            ],
+            "value": "AIR_UART_BAUD_115200",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "txPin": {
+            "name": "TX Pin",
+            "input": "Combo",
+            "prefix": "#define AIR_UART_TX_PIN ",
+            "options": [
+              "32"
+            ],
+            "value": "32",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "rxPin": {
+            "name": "RX Pin",
+            "input": "Combo",
+            "prefix": "#define AIR_UART_RX_PIN ",
+            "options": [
+              "33"
+            ],
+            "value": "33",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "rtsPin": {
+            "name": "RTS Pin",
+            "input": "Combo",
+            "prefix": "#define AIR_UART_RTS_PIN ",
+            "options": [
+              "1"
+            ],
+            "value": "1",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "ctsPin": {
+            "name": "CTS Pin",
+            "input": "Combo",
+            "prefix": "#define AIR_UART_CTS_PIN ",
+            "options": [
+              "3"
+            ],
+            "value": "3",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          }
+        }
+      }
+    },
+    "meta": {
+      "version": "1.0.10-2",
+      "layoutGrid": false,
+      "layoutSnapping": false,
+      "layoutSnappingSize": 10,
+      "language": "en",
+      "enableTooltips": true,
+      "enableAutoSave": true,
+      "enableBuildSave": false,
+      "description": null,
+      "project_uuid": null,
+      "tokensEnabled": false,
+      "codeAssist": false,
+      "highlightLine": false,
+      "editorTheme": "Default",
+      "projectType": "bcm920737",
+      "name": "NvramExample"
+    },
+    "type": "Header",
+    "currentLayoutName": "Default"
+  },
+  "layouts": {
+    "Default": {
+      "name": "Default (768x1024)",
+      "width": 768,
+      "height": 1024,
+      "orientation": "portrait",
+      "devicename": ".*",
+      "platform": "",
+      "version": ".*",
+      "elements": {
+        "Label6": {
+          "x": 33,
+          "y": 146,
+          "width": 94,
+          "height": 22
+        },
+        "Label8": {
+          "x": 22,
+          "y": 187,
+          "width": 96,
+          "height": 23
+        },
+        "Label11": {
+          "x": 42,
+          "y": 230,
+          "width": 76,
+          "height": 22
+        },
+        "TextField2": {
+          "x": 130,
+          "y": 134,
+          "width": 114,
+          "height": 34
+        },
+        "TextField3": {
+          "x": 129,
+          "y": 182,
+          "width": 114,
+          "height": 34
+        },
+        "Button4": {
+          "x": 52,
+          "y": 286,
+          "width": 146,
+          "height": 46
+        },
+        "TextField9": {
+          "x": 130,
+          "y": 224,
+          "width": 114,
+          "height": 34
+        },
+        "Label15": {
+          "x": 19,
+          "y": 39,
+          "width": 239,
+          "height": 81
+        },
+        "Label14": {
+          "x": 22,
+          "y": 346,
+          "width": 233,
+          "height": 46
+        }
+      }
+    }
+  },
+  "elements": {
+    "Label6": {
+      "type": "Label",
+      "properties": {
+        "label": "Block Min:  0x",
+        "enabled": true,
+        "visible": true,
+        "font": "14px Arial",
+        "color": "Black"
+      },
+      "triggers": {},
+      "zindex": 1,
+      "designer": {
+        "x": 35,
+        "y": 107
+      }
+    },
+    "Label8": {
+      "type": "Label",
+      "properties": {
+        "label": "Block Max:  0x",
+        "enabled": true,
+        "visible": true,
+        "font": "14px Arial",
+        "color": "Black"
+      },
+      "triggers": {},
+      "zindex": 2,
+      "designer": {
+        "x": 35,
+        "y": 181
+      }
+    },
+    "Label11": {
+      "type": "Label",
+      "properties": {
+        "label": "Num Bytes",
+        "enabled": true,
+        "visible": true,
+        "font": "14px Arial",
+        "color": "Black"
+      },
+      "triggers": {},
+      "zindex": 3,
+      "designer": {
+        "x": 35,
+        "y": 255
+      }
+    },
+    "TextField2": {
+      "type": "TextField",
+      "properties": {
+        "label": "New TextField",
+        "value": "",
+        "enabled": true,
+        "visible": true
+      },
+      "triggers": {
+        "keyReleased": [
+          {
+            "sourceTrigger": "keyReleased",
+            "sourceValue": "getValue",
+            "targetValue": "execute",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "value"
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": [
+                "value"
+              ]
+            },
+            "targetName": "setBlockMin"
+          }
+        ]
+      },
+      "zindex": 4,
+      "designer": {
+        "x": 390,
+        "y": 107
+      }
+    },
+    "TextField3": {
+      "type": "TextField",
+      "properties": {
+        "label": "New TextField",
+        "value": "",
+        "enabled": true,
+        "visible": true
+      },
+      "triggers": {
+        "keyReleased": [
+          {
+            "sourceTrigger": "keyReleased",
+            "sourceValue": "getValue",
+            "targetValue": "execute",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "value"
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": [
+                "value"
+              ]
+            },
+            "targetName": "setBlockMax"
+          }
+        ]
+      },
+      "zindex": 5,
+      "designer": {
+        "x": 391,
+        "y": 179
+      }
+    },
+    "Button4": {
+      "type": "Button",
+      "properties": {
+        "label": "Run Test",
+        "enabled": true,
+        "visible": true
+      },
+      "triggers": {
+        "mousePressed": [
+          {
+            "sourceTrigger": "mousePressed",
+            "sourceValue": "Static",
+            "targetValue": "execute",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": ""
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": []
+            },
+            "targetName": "startTest"
+          }
+        ]
+      },
+      "zindex": 6,
+      "designer": {
+        "x": 133,
+        "y": 333
+      }
+    },
+    "setBlockMin": {
+      "type": "Function",
+      "properties": {
+        "code": "\n    blockMin = readHexStringToInt(data, length);\n    blockMin = (blockMin >= BLOCK_MIN ? blockMin : BLOCK_MIN);\n\treturn NULL;\n\t"
+      },
+      "triggers": {},
+      "zindex": 7,
+      "designer": {
+        "x": 507,
+        "y": 107
+      }
+    },
+    "setBlockMax": {
+      "type": "Function",
+      "properties": {
+        "code": "\n    blockMax = readHexStringToInt(data, length);\n    blockMax = (blockMax <= BLOCK_MAX ? blockMax : BLOCK_MAX);\n\treturn NULL;\n\t"
+      },
+      "triggers": {},
+      "zindex": 8,
+      "designer": {
+        "x": 509,
+        "y": 179
+      }
+    },
+    "TextField9": {
+      "type": "TextField",
+      "properties": {
+        "label": "New TextField",
+        "value": "",
+        "enabled": true,
+        "visible": true
+      },
+      "triggers": {
+        "keyReleased": [
+          {
+            "sourceTrigger": "keyReleased",
+            "sourceValue": "getValue",
+            "targetValue": "execute",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "value"
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": [
+                "value"
+              ]
+            },
+            "targetName": "setNumBytes"
+          }
+        ]
+      },
+      "zindex": 9,
+      "designer": {
+        "x": 390,
+        "y": 252
+      }
+    },
+    "setNumBytes": {
+      "type": "Function",
+      "properties": {
+        "code": "\n    numBytes = readDecStringToInt(data, length);\n    numBytes = (numBytes <= 255 ? numBytes : 255);\n\treturn NULL;\n\t"
+      },
+      "triggers": {},
+      "zindex": 10,
+      "designer": {
+        "x": 510,
+        "y": 252
+      }
+    },
+    "startTest": {
+      "type": "Function",
+      "properties": {
+        "code": "\n    if (state == STATE_IDLE) {\n        sprintf(debugString, \"\\r\\nStarting Test:  BlockIDs 0x%02X:0x%02X, numBytes = %d\\r\\n\", blockMin, blockMax, numBytes);\n        AIR_UART_Print(debugString);\n        AIR_UART_Print(\"..Write to all blocks\\r\\n\");\n        block = blockMin;\n        offset = 0;\n    \tAIR_GPIO_Write(PIN_WRITE_PROTECT, 0);   // Turn off write-protection\n    \tAIR_UART_Print(\"....Write protection off\\r\\n\");\n        state = STATE_WRITING;\n    }\n    else {\n        AIR_UART_Print(\"*** Test still running.\\r\\n\");\n    }\n\treturn NULL;\n\t"
+      },
+      "triggers": {},
+      "zindex": 11,
+      "designer": {
+        "x": 268,
+        "y": 333
+      }
+    },
+    "Connection14": {
+      "type": "Connection",
+      "properties": {},
+      "triggers": {
+        "connected": [
+          {
+            "sourceTrigger": "connected",
+            "sourceValue": "Static",
+            "targetValue": "execute",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": ""
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": []
+            },
+            "targetName": "getValues"
+          }
+        ],
+        "disconnected": [
+          {
+            "sourceTrigger": "disconnected",
+            "sourceValue": "Static",
+            "targetValue": "setValue",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "\"Not connected to BLE device\""
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": []
+            },
+            "targetName": "Label14"
+          }
+        ]
+      },
+      "zindex": 12,
+      "designer": {
+        "x": 24,
+        "y": 19
+      }
+    },
+    "Label15": {
+      "type": "Label",
+      "properties": {
+        "label": "Test NVRAM read/writes\nConnect, set parameters, \nRun teraterm\nRun test",
+        "enabled": true,
+        "visible": true,
+        "font": "14px Arial",
+        "color": "Black"
+      },
+      "triggers": {},
+      "zindex": 13,
+      "designer": {
+        "x": 34,
+        "y": 333
+      }
+    },
+    "getValues": {
+      "type": "Function",
+      "properties": {
+        "code": "\n    sprintf(debugString, \"{\\\"min\\\":%02X,\\\"max\\\":%02X,\\\"n\\\":%d,\\\"mac\\\":%s}\", blockMin, blockMax, numBytes, macString);\n\treturn debugString;\n\t"
+      },
+      "triggers": {
+        "valueReturned": [
+          {
+            "sourceTrigger": "valueReturned",
+            "sourceValue": "getValue",
+            "targetValue": "setValue",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "value.min"
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": [
+                "value"
+              ]
+            },
+            "targetName": "TextField2"
+          },
+          {
+            "sourceTrigger": "valueReturned",
+            "sourceValue": "getValue",
+            "targetValue": "setValue",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "value.max"
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": [
+                "value"
+              ]
+            },
+            "targetName": "TextField3"
+          },
+          {
+            "sourceTrigger": "valueReturned",
+            "sourceValue": "getValue",
+            "targetValue": "setValue",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "value.n"
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": [
+                "value"
+              ]
+            },
+            "targetName": "TextField9"
+          },
+          {
+            "sourceTrigger": "valueReturned",
+            "sourceValue": "getValue",
+            "targetValue": "setValue",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "\"Connected to \" + value.mac"
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": [
+                "value"
+              ]
+            },
+            "targetName": "Label14"
+          }
+        ]
+      },
+      "zindex": 14,
+      "designer": {
+        "x": 160,
+        "y": 107
+      }
+    },
+    "Label14": {
+      "type": "Label",
+      "properties": {
+        "label": "Not connected to BLE device",
+        "enabled": true,
+        "visible": true,
+        "font": "14px Arial",
+        "color": "Black"
+      },
+      "triggers": {},
+      "zindex": 15,
+      "designer": {
+        "x": 291,
+        "y": 19
+      }
+    }
+  }
+}

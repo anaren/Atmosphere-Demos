@@ -1,0 +1,484 @@
+{
+  "header": {
+    "data": {
+      "order": [
+        "Globals",
+        "Interval",
+        "Connected",
+        "Disconnected",
+        "Setup"
+      ],
+      "Globals": {
+        "name": "Globals",
+        "func": "#include \"callbacks.h\"",
+        "code": "#define LED_CONNECT 26",
+        "close": "//END"
+      },
+      "Interval": {
+        "name": "Interval",
+        "func": "\nvoid interval() {",
+        "code": "",
+        "close": "}"
+      },
+      "Connected": {
+        "name": "Connected",
+        "func": "\nvoid connected() {",
+        "code": "    AIR_GPIO_Write(LED_CONNECT, 1);    ",
+        "close": "}"
+      },
+      "Disconnected": {
+        "name": "Disconnected",
+        "func": "\nvoid disconnected() {",
+        "code": "    AIR_GPIO_Write(LED_CONNECT, 0);    ",
+        "close": "}"
+      },
+      "Setup": {
+        "name": "Setup",
+        "func": "\nvoid setup() {",
+        "code": "\tAIR_GPIO_Init();\n\tAIR_UART_Init();\n\tAIR_I2C_Init();\n\tAIR_SPI_Init();\n\tBUZZER_Init();\n\tAIR_POWER_Init();\n    AIR_POWER_SetMode(AIR_POWER_NOSLEEP);\t\n\tAIR_GPIO_SetMode(LED_CONNECT, AIR_GPIO_OUTPUT_OPEN_DRAIN_NO_PULL);",
+        "close": "}"
+      }
+    },
+    "boardConfiguration": {
+      "ble": {
+        "name": "Bluetooth Low Energy",
+        "file": "ble_config.h",
+        "values": {
+          "localName": {
+            "name": "Local Name",
+            "input": "TextField",
+            "prefix": "#define BLE_LOCAL_NAME \"",
+            "value": "ble_test",
+            "suffix": "\"",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "version": {
+            "name": "Version",
+            "input": "TextField",
+            "prefix": "#define BLE_VERSION \"",
+            "value": "1.00",
+            "suffix": "\"",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "powersave": {
+            "name": "Power Saving",
+            "input": "Combo",
+            "prefix": "#define ",
+            "options": [
+              "BLE_POWERSAVE_OFF",
+              "BLE_POWERSAVE"
+            ],
+            "value": "BLE_POWERSAVE_OFF",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "pairing": {
+            "name": "Pairing",
+            "input": "Combo",
+            "prefix": "#define ",
+            "options": [
+              "BLE_PAIRING_NONE",
+              "BLE_PAIRING_PASSKEY",
+              "BLE_PAIRING_OOB"
+            ],
+            "value": "BLE_PAIRING_NONE",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "txPowerLevel": {
+            "name": "TX Power Level (dbm)",
+            "input": "TextField",
+            "prefix": "#define BLE_TX_POWER_LEVEL ",
+            "value": "4",
+            "regex": "^[0-9]*$"
+          },
+          "intervalFineTimer": {
+            "name": "Interval Timer Length (ms)",
+            "input": "TextField",
+            "prefix": "#define BLE_INTERVAL_FINE_TIMER ",
+            "value": "1000",
+            "regex": "^[0-9]*$"
+          }
+        }
+      },
+      "uart": {
+        "name": "AIR UART Driver",
+        "file": "uart_config.h",
+        "values": {
+          "rxBuffer": {
+            "name": "RX Circular Buffer size",
+            "input": "TextField",
+            "prefix": "#define AIR_UART_RX_CIRCULAR_BUFFER_SIZE ",
+            "value": "128",
+            "regex": "^[0-9]*$"
+          },
+          "txBuffer": {
+            "name": "TX Circular Buffer size",
+            "input": "TextField",
+            "prefix": "#define AIR_UART_TX_CIRCULAR_BUFFER_SIZE ",
+            "value": "128",
+            "regex": "^[0-9]*$"
+          },
+          "buad": {
+            "name": "Baudrate",
+            "input": "Combo",
+            "prefix": "#define ",
+            "options": [
+              "AIR_UART_BAUD_115200",
+              "AIR_UART_BAUD_57600",
+              "AIR_UART_BAUD_9600"
+            ],
+            "value": "AIR_UART_BAUD_115200",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "txPin": {
+            "name": "TX Pin",
+            "input": "Combo",
+            "prefix": "#define AIR_UART_TX_PIN ",
+            "options": [
+              "32"
+            ],
+            "value": "32",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "rxPin": {
+            "name": "RX Pin",
+            "input": "Combo",
+            "prefix": "#define AIR_UART_RX_PIN ",
+            "options": [
+              "33"
+            ],
+            "value": "33",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "rtsPin": {
+            "name": "RTS Pin",
+            "input": "Combo",
+            "prefix": "#define AIR_UART_RTS_PIN ",
+            "options": [
+              "1"
+            ],
+            "value": "1",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "ctsPin": {
+            "name": "CTS Pin",
+            "input": "Combo",
+            "prefix": "#define AIR_UART_CTS_PIN ",
+            "options": [
+              "3"
+            ],
+            "value": "3",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          }
+        }
+      }
+    },
+    "meta": {
+      "version": "1.0.10-1",
+      "layoutGrid": false,
+      "layoutSnapping": false,
+      "layoutSnappingSize": 10,
+      "language": "en",
+      "enableTooltips": true,
+      "enableAutoSave": true,
+      "enableBuildSave": false,
+      "description": null,
+      "project_uuid": null,
+      "tokensEnabled": false,
+      "codeAssist": false,
+      "highlightLine": false,
+      "editorTheme": "Default",
+      "projectType": "bcm920737",
+      "name": "ReconnectExample"
+    },
+    "type": "Header",
+    "currentLayoutName": "Default"
+  },
+  "layouts": {
+    "Default": {
+      "name": "Default (768x1024)",
+      "width": 768,
+      "height": 1024,
+      "orientation": "portrait",
+      "devicename": ".*",
+      "platform": "",
+      "version": ".*",
+      "elements": {
+        "Label3": {
+          "x": 20,
+          "y": 136,
+          "width": 306,
+          "height": 46
+        },
+        "Label5": {
+          "x": 19,
+          "y": 196,
+          "width": 308,
+          "height": 87
+        },
+        "Label12": {
+          "x": 20,
+          "y": 43,
+          "width": 306,
+          "height": 70
+        }
+      }
+    }
+  },
+  "elements": {
+    "Connection1": {
+      "type": "Connection",
+      "properties": {},
+      "triggers": {
+        "connected": [
+          {
+            "sourceTrigger": "connected",
+            "sourceValue": "getDeviceAddress",
+            "targetValue": "setValue",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "\"Connected to:\\r\\n\" + address"
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": [
+                "address"
+              ]
+            },
+            "targetName": "Label3"
+          },
+          {
+            "sourceTrigger": "connected",
+            "sourceValue": "Static",
+            "targetValue": "clearValues",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {},
+              "targetOrder": [],
+              "sourceOrder": []
+            },
+            "targetName": "Expression4"
+          },
+          {
+            "sourceTrigger": "connected",
+            "sourceValue": "getDeviceAddress",
+            "targetValue": "addValue",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "key": "\"c\"",
+                "value": "address"
+              },
+              "targetOrder": [
+                "key",
+                "value"
+              ],
+              "sourceOrder": [
+                "address"
+              ]
+            },
+            "targetName": "Expression4"
+          },
+          {
+            "sourceTrigger": "connected",
+            "sourceValue": "Static",
+            "targetValue": "stopScan",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {},
+              "targetOrder": [],
+              "sourceOrder": []
+            },
+            "targetName": "Scanner2"
+          }
+        ],
+        "disconnected": [
+          {
+            "sourceTrigger": "disconnected",
+            "sourceValue": "getDeviceAddress",
+            "targetValue": "setValue",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "\"Disconnected\" "
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": [
+                "address"
+              ]
+            },
+            "targetName": "Label3"
+          },
+          {
+            "sourceTrigger": "disconnected",
+            "sourceValue": "Static",
+            "targetValue": "startScan",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {},
+              "targetOrder": [],
+              "sourceOrder": []
+            },
+            "targetName": "Scanner2"
+          }
+        ]
+      },
+      "zindex": 1,
+      "designer": {
+        "x": 53,
+        "y": 20
+      }
+    },
+    "Scanner2": {
+      "type": "Scanner",
+      "properties": {},
+      "triggers": {
+        "deviceDiscovered": [
+          {
+            "sourceTrigger": "deviceDiscovered",
+            "sourceValue": "getDeviceAddress",
+            "targetValue": "addValue",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "key": "address",
+                "value": "true"
+              },
+              "targetOrder": [
+                "key",
+                "value"
+              ],
+              "sourceOrder": [
+                "address"
+              ]
+            },
+            "targetName": "Expression4"
+          },
+          {
+            "sourceTrigger": "deviceDiscovered",
+            "sourceValue": "Static",
+            "targetValue": "evaluate",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "values": ""
+              },
+              "targetOrder": [
+                "values"
+              ],
+              "sourceOrder": []
+            },
+            "targetName": "Expression4"
+          }
+        ]
+      },
+      "zindex": 2,
+      "designer": {
+        "x": 218,
+        "y": 148
+      }
+    },
+    "Label3": {
+      "type": "Label",
+      "properties": {
+        "label": "",
+        "enabled": true,
+        "visible": true,
+        "font": "14px Arial",
+        "color": "Black"
+      },
+      "triggers": {},
+      "zindex": 3,
+      "designer": {
+        "x": 302,
+        "y": 20
+      }
+    },
+    "Expression4": {
+      "type": "Expression",
+      "properties": {
+        "expression": "Object.keys(values).indexOf(values.c) >= 0 ? values.c : false"
+      },
+      "triggers": {
+        "evaluated": [
+          {
+            "sourceTrigger": "evaluated",
+            "sourceValue": "getValue",
+            "targetValue": "setValue",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "\"Reconnecting to:\\r\\n\" + value"
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": [
+                "value"
+              ]
+            },
+            "targetName": "Label5"
+          },
+          {
+            "sourceTrigger": "evaluated",
+            "sourceValue": "getValue",
+            "targetValue": "connectToDevice",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "address": "value"
+              },
+              "targetOrder": [
+                "address"
+              ],
+              "sourceOrder": [
+                "value"
+              ]
+            },
+            "targetName": "Connection1"
+          }
+        ]
+      },
+      "zindex": 4,
+      "designer": {
+        "x": 418,
+        "y": 148
+      }
+    },
+    "Label5": {
+      "type": "Label",
+      "properties": {
+        "label": "",
+        "enabled": true,
+        "visible": true,
+        "font": "14px Arial",
+        "color": "Black"
+      },
+      "triggers": {},
+      "zindex": 5,
+      "designer": {
+        "x": 579,
+        "y": 148
+      }
+    },
+    "Label12": {
+      "type": "Label",
+      "properties": {
+        "label": "Auto-reconnect Example\n\nConnect then reset the board.\nIt will automatically reconnect.",
+        "enabled": true,
+        "visible": true,
+        "font": "14px Arial",
+        "color": "Black"
+      },
+      "triggers": {},
+      "zindex": 6,
+      "designer": {
+        "x": 54,
+        "y": 136
+      }
+    }
+  }
+}

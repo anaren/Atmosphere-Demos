@@ -1,0 +1,1221 @@
+{
+  "header": {
+    "data": {
+      "order": [
+        "Globals",
+        "Interval",
+        "Connected",
+        "Disconnected",
+        "Setup"
+      ],
+      "Globals": {
+        "name": "Globals",
+        "func": "#include \"callbacks.h\"",
+        "code": "#include \"lis3mdl/lis3mdl.h\"\n",
+        "close": "//END"
+      },
+      "Interval": {
+        "name": "Interval",
+        "func": "\nvoid interval() {",
+        "code": "",
+        "close": "}"
+      },
+      "Connected": {
+        "name": "Connected",
+        "func": "\nvoid connected() {",
+        "code": "",
+        "close": "}"
+      },
+      "Disconnected": {
+        "name": "Disconnected",
+        "func": "\nvoid disconnected() {",
+        "code": "",
+        "close": "}"
+      },
+      "Setup": {
+        "name": "Setup",
+        "func": "\nvoid setup() {",
+        "code": "\tAIR_GPIO_Init();\n\tAIR_POWER_Init();\n\tAIR_UART_Init();\n\tAIR_I2C_Init();\n\tAIR_SPI_Init();\n\tBUZZER_Init();\n\tAIR_POWER_SetMode(AIR_POWER_NOSLEEP);\n\tLIS3MDL_MAG_W_FullScale(AIR_LIS3MDL_MAG_W_FULLSCALE);\n\tLIS3MDL_MAG_W_OutputDataRate(AIR_LIS3MDL_MAG_W_OUTPUTDATARATE);\n\tLIS3MDL_MAG_W_BlockDataUpdate(AIR_LIS3MDL_MAG_W_BLOCKDATAUPDATE);\n\tLIS3MDL_MAG_W_OperatingModeXY(AIR_LIS3MDL_MAG_W_OPERATINGMODEXY);\n\tLIS3MDL_MAG_W_OperatingModeZ(AIR_LIS3MDL_MAG_W_OPERATINGMODEZ);\n\tLIS3MDL_MAG_W_SystemOperatingMode(AIR_LIS3MDL_MAG_W_SYSTEMOPERATINGMODE);",
+        "close": "}"
+      }
+    },
+    "boardConfiguration": {
+      "ble": {
+        "name": "Bluetooth Low Energy",
+        "file": "ble_config.h",
+        "values": {
+          "localName": {
+            "name": "Local Name",
+            "input": "TextField",
+            "prefix": "#define BLE_LOCAL_NAME \"",
+            "value": "ble_test",
+            "suffix": "\"",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "version": {
+            "name": "Version",
+            "input": "TextField",
+            "prefix": "#define BLE_VERSION \"",
+            "value": "1.00",
+            "suffix": "\"",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "pairing": {
+            "name": "Pairing",
+            "input": "Combo",
+            "prefix": "#define ",
+            "options": [
+              "BLE_PAIRING_NONE",
+              "BLE_PAIRING_PASSKEY",
+              "BLE_PAIRING_OOB"
+            ],
+            "value": "BLE_PAIRING_NONE",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "txPowerLevel": {
+            "name": "TX Power Level (dbm)",
+            "input": "TextField",
+            "prefix": "#define BLE_TX_POWER_LEVEL ",
+            "value": "4",
+            "regex": "^-?[0-9]d{0,2}(.d*)?$"
+          },
+          "intervalFineTimer": {
+            "name": "Interval Timer Length (ms)",
+            "input": "TextField",
+            "prefix": "#define BLE_INTERVAL_FINE_TIMER ",
+            "value": "1000",
+            "regex": "^[0-9]*$"
+          }
+        }
+      },
+      "power": {
+        "name": "Power Driver",
+        "file": "power_config.h",
+        "values": {
+          "external_osc": {
+            "name": "External Oscillator",
+            "input": "Combo",
+            "prefix": "#define AIR_POWER_",
+            "options": [
+              "EXTERNAL_32KHZ_OSC",
+              "INTERNAL_OSC"
+            ],
+            "value": "INTERNAL_OSC",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          }
+        }
+      },
+      "gpio": {
+        "name": "GPIO Driver",
+        "file": "gpio_config.h",
+        "values": {
+          "buad": {
+            "name": "ADC Sample Frequency",
+            "input": "Combo",
+            "prefix": "#define AIR_ADC_SAMPLE_FREQUENCY ",
+            "options": [
+              "ADC_SAMPLE_FREQUENCY_LOW",
+              "ADC_SAMPLE_FREQUENCY_MEDIUM_LOW",
+              "ADC_SAMPLE_FREQUENCY_MEDIUM",
+              "ADC_SAMPLE_FREQUENCY_MEDIUM_HIGH",
+              "ADC_SAMPLE_FREQUENCY_HIGH"
+            ],
+            "value": "ADC_SAMPLE_FREQUENCY_LOW",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          }
+        }
+      },
+      "uart": {
+        "name": "AIR UART Driver",
+        "file": "uart_config.h",
+        "values": {
+          "rxBuffer": {
+            "name": "RX Circular Buffer size",
+            "input": "TextField",
+            "prefix": "#define AIR_UART_RX_CIRCULAR_BUFFER_SIZE ",
+            "value": "128",
+            "regex": "^[0-9]*$"
+          },
+          "txBuffer": {
+            "name": "TX Circular Buffer size",
+            "input": "TextField",
+            "prefix": "#define AIR_UART_TX_CIRCULAR_BUFFER_SIZE ",
+            "value": "128",
+            "regex": "^[0-9]*$"
+          },
+          "buad": {
+            "name": "Baudrate",
+            "input": "Combo",
+            "prefix": "#define ",
+            "options": [
+              "AIR_UART_BAUD_460800",
+              "AIR_UART_BAUD_230400",
+              "AIR_UART_BAUD_115200",
+              "AIR_UART_BAUD_57600",
+              "AIR_UART_BAUD_38400",
+              "AIR_UART_BAUD_19200",
+              "AIR_UART_BAUD_9600"
+            ],
+            "value": "AIR_UART_BAUD_115200",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "txPin": {
+            "name": "TX Pin",
+            "input": "Combo",
+            "prefix": "#define AIR_UART_TX_PIN ",
+            "options": [
+              "32"
+            ],
+            "value": "32",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "rxPin": {
+            "name": "RX Pin",
+            "input": "Combo",
+            "prefix": "#define AIR_UART_RX_PIN ",
+            "options": [
+              "33"
+            ],
+            "value": "33",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "rtsPin": {
+            "name": "RTS Pin",
+            "input": "Combo",
+            "prefix": "#define AIR_UART_RTS_PIN ",
+            "options": [
+              "1"
+            ],
+            "value": "1",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "ctsPin": {
+            "name": "CTS Pin",
+            "input": "Combo",
+            "prefix": "#define AIR_UART_CTS_PIN ",
+            "options": [
+              "3"
+            ],
+            "value": "3",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          }
+        }
+      },
+      "lis3mdl": {
+        "values": {
+          "MAG_W_FullScale": {
+            "regex": "^[a-zA-Z0-9_.]*$",
+            "name": "LIS3MDL_MAG_W_FullScale",
+            "value": "LIS3MDL_MAG_FS_4Ga",
+            "prefix": "#define AIR_LIS3MDL_MAG_W_FULLSCALE ",
+            "input": "Combo",
+            "options": [
+              "LIS3MDL_MAG_FS_4Ga",
+              "LIS3MDL_MAG_FS_8Ga",
+              "LIS3MDL_MAG_FS_12Ga",
+              "LIS3MDL_MAG_FS_16Ga"
+            ]
+          },
+          "MAG_W_OutputDataRate": {
+            "regex": "^[a-zA-Z0-9_.]*$",
+            "name": "LIS3MDL_MAG_W_OutputDataRate",
+            "value": "LIS3MDL_MAG_DO_20Hz",
+            "prefix": "#define AIR_LIS3MDL_MAG_W_OUTPUTDATARATE ",
+            "input": "Combo",
+            "options": [
+              "LIS3MDL_MAG_DO_0_625Hz",
+              "LIS3MDL_MAG_DO_1_25Hz",
+              "LIS3MDL_MAG_DO_2_5Hz",
+              "LIS3MDL_MAG_DO_5Hz",
+              "LIS3MDL_MAG_DO_10Hz",
+              "LIS3MDL_MAG_DO_20Hz",
+              "LIS3MDL_MAG_DO_40Hz",
+              "LIS3MDL_MAG_DO_80Hz"
+            ]
+          },
+          "MAG_W_OperatingModeZ": {
+            "regex": "^[a-zA-Z0-9_.]*$",
+            "name": "LIS3MDL_MAG_W_OperatingModeZ",
+            "value": "LIS3MDL_MAG_OMZ_HIGH",
+            "prefix": "#define AIR_LIS3MDL_MAG_W_OPERATINGMODEZ ",
+            "input": "Combo",
+            "options": [
+              "LIS3MDL_MAG_OMZ_LOW_POWER",
+              "LIS3MDL_MAG_OMZ_MEDIUM",
+              "LIS3MDL_MAG_OMZ_HIGH",
+              "LIS3MDL_MAG_OMZ_ULTRA_HIGH"
+            ]
+          },
+          "MAG_W_BlockDataUpdate": {
+            "regex": "^[a-zA-Z0-9_.]*$",
+            "name": "LIS3MDL_MAG_W_BlockDataUpdate",
+            "value": "LIS3MDL_MAG_BDU_ENABLE",
+            "prefix": "#define AIR_LIS3MDL_MAG_W_BLOCKDATAUPDATE ",
+            "input": "Combo",
+            "options": [
+              "LIS3MDL_MAG_BDU_DISABLE",
+              "LIS3MDL_MAG_BDU_ENABLE"
+            ]
+          },
+          "MAG_W_OperatingModeXY": {
+            "regex": "^[a-zA-Z0-9_.]*$",
+            "name": "LIS3MDL_MAG_W_OperatingModeXY",
+            "value": "LIS3MDL_MAG_OM_HIGH",
+            "prefix": "#define AIR_LIS3MDL_MAG_W_OPERATINGMODEXY ",
+            "input": "Combo",
+            "options": [
+              "LIS3MDL_MAG_OM_LOW_POWER",
+              "LIS3MDL_MAG_OM_MEDIUM",
+              "LIS3MDL_MAG_OM_HIGH",
+              "LIS3MDL_MAG_OM_ULTRA_HIGH"
+            ]
+          },
+          "i2c_address": {
+            "regex": "^[a-zA-Z0-9_.]*$",
+            "name": "I2C Address (7 bit)",
+            "value": "0x1c",
+            "prefix": "#define AIR_LIS3MDL_MAG_I2C_ADDRESS ",
+            "input": "Combo",
+            "options": [
+              "0x1c",
+              "0x1e"
+            ]
+          },
+          "MAG_W_SystemOperatingMode": {
+            "regex": "^[a-zA-Z0-9_.]*$",
+            "name": "LIS3MDL_MAG_W_SystemOperatingMode",
+            "value": "LIS3MDL_MAG_MD_CONTINUOUS",
+            "prefix": "#define AIR_LIS3MDL_MAG_W_SYSTEMOPERATINGMODE ",
+            "input": "Combo",
+            "options": [
+              "LIS3MDL_MAG_MD_CONTINUOUS",
+              "LIS3MDL_MAG_MD_SINGLE",
+              "LIS3MDL_MAG_MD_POWER_DOWN",
+              "LIS3MDL_MAG_MD_POWER_DOWN_AUTO"
+            ]
+          }
+        },
+        "file": "lis3mdl_config.h",
+        "name": "LIS3MDL Driver"
+      }
+    },
+    "meta": {
+      "version": "1.2.0",
+      "layoutGrid": false,
+      "layoutSnapping": false,
+      "layoutSnappingSize": 10,
+      "cloudLayoutGrid": false,
+      "cloudLayoutSnapping": false,
+      "cloudLayoutSnappingSize": 10,
+      "language": "en",
+      "enableTooltips": true,
+      "enableAutoSave": true,
+      "enableBuildSave": false,
+      "description": null,
+      "project_uuid": null,
+      "tokensEnabled": false,
+      "codeAssist": false,
+      "highlightLine": false,
+      "editorTheme": "Default",
+      "editorFontSize": 12,
+      "customEmbeddedElementLibraries": {
+        "lis3mdl": {
+          "files": {
+            "common": {
+              "headers": {
+                "lis3mdl.h": "/******************** (C) COPYRIGHT 2013 STMicroelectronics ********************\r\n*\r\n* File Name          : LIS3MDL_MAG_driver.h\r\n* Author             : MSH Application Team\r\n* Version            : v1.10\r\n* Date               : 12/11/2013 \r\n* Description        : LIS3MDL MAG driver header file\r\n*\r\n* HISTORY:\r\n* Date:   12/11/2013            \r\n* Modification: Initial Revision                \r\n* Author:\tPlatform Independent Driver Generator v0.03\r\n* Reviewed by: Alberto Zancanato\r\n*-------------------------------------------------------------------------------\r\n*\r\n*\r\n********************************************************************************\r\n* THE PRESENT FIRMWARE WHICH IS FOR GUIDANCE ONLY AIMS AT PROVIDING CUSTOMERS\r\n* WITH CODING INFORMATION REGARDING THEIR PRODUCTS IN ORDER FOR THEM TO SAVE TIME.\r\n* AS A RESULT, STMICROELECTRONICS SHALL NOT BE HELD LIABLE FOR ANY DIRECT,\r\n* INDIRECT OR CONSEQUENTIAL DAMAGES WITH RESPECT TO ANY CLAIMS ARISING FROM THE\r\n* CONTENT OF SUCH FIRMWARE AND/OR THE USE MADE BY CUSTOMERS OF THE CODING\r\n* INFORMATION CONTAINED HEREIN IN CONNECTION WITH THEIR PRODUCTS.\r\n*\r\n* THIS SOFTWARE IS SPECIFICALLY DESIGNED FOR EXCLUSIVE USE WITH ST PARTS.\r\n*\r\n*******************************************************************************/\r\n\r\n/* Define to prevent recursive inclusion -------------------------------------*/\r\n#ifndef __LIS3MDL_MAG_DRIVER__H\r\n#define __LIS3MDL_MAG_DRIVER__H\r\n\r\n#include \"lis3mdl_config.h\" // Generated by Atmosphere\r\n\r\n/* Includes ------------------------------------------------------------------*/\r\n/* Exported types ------------------------------------------------------------*/\r\n\r\n//these could change accordingly with the architecture\r\n\r\n#ifndef __ARCHDEP__TYPES\r\n#define __ARCHDEP__TYPES\r\n\r\ntypedef unsigned char u8_t;\r\ntypedef unsigned short int u16_t;\r\ntypedef unsigned int u32_t;\r\ntypedef int i32_t;\r\ntypedef short int i16_t;\r\ntypedef signed char i8_t;\r\n\r\n#endif /*__ARCHDEP__TYPES*/\r\n\r\n/* Exported common structure --------------------------------------------------------*/\r\n\r\n#ifndef __SHARED__TYPES\r\n#define __SHARED__TYPES\r\n\r\ntypedef union{\r\n\ti16_t i16bit[3];\r\n\tu8_t u8bit[6];\r\n} Type3Axis16bit_U;\t\r\n\r\ntypedef union{\r\n\ti16_t i16bit;\r\n\tu8_t u8bit[2];\r\n} Type1Axis16bit_U;\r\n\r\ntypedef union{\r\n\ti32_t i32bit;\r\n\tu8_t u8bit[4];\r\n} Type1Axis32bit_U;\r\n\r\ntypedef enum {\r\n  MEMS_SUCCESS\t\t\t\t=\t\t0x01,\r\n  MEMS_ERROR\t\t\t\t=\t\t0x00\t\r\n} status_t;\r\n\r\n#endif /*__SHARED__TYPES*/\r\n\r\n/* Exported macro ------------------------------------------------------------*/\r\n\r\n/* Exported constants --------------------------------------------------------*/\r\n\r\n/************** I2C Address *****************/\r\n\r\n#define LIS3MDL_MAG_I2C_ADDRESS         AIR_LIS3MDL_MAG_I2C_ADDRESS\r\n\r\n/************** Who am I  *******************/\r\n\r\n#define LIS3MDL_MAG_WHO_AM_I         0x3D\r\n\r\n/* Private Function Prototype -------------------------------------------------------*/\r\n\r\nu8_t LIS3MDL_MAG_ReadReg(u8_t Reg, u8_t* Data);\r\nu8_t LIS3MDL_MAG_WriteReg(u8_t Reg, u8_t Data); \r\nvoid LIS3MDL_MAG_SwapHighLowByte(u8_t *bufferToSwap, u8_t numberOfByte, u8_t dimension); \r\n\r\n\r\n/************** Device Register  *******************/\r\n#define LIS3MDL_MAG_WHO_AM_I_REG  \t0X0F\r\n#define LIS3MDL_MAG_CTRL_REG1  \t0X20\r\n#define LIS3MDL_MAG_CTRL_REG2  \t0X21\r\n#define LIS3MDL_MAG_CTRL_REG3  \t0X22\r\n#define LIS3MDL_MAG_CTRL_REG4  \t0X23\r\n#define LIS3MDL_MAG_CTRL_REG5  \t0X24\r\n#define LIS3MDL_MAG_STATUS_REG  \t0X27\r\n#define LIS3MDL_MAG_OUTX_L  \t0X28\r\n#define LIS3MDL_MAG_OUTX_H  \t0X29\r\n#define LIS3MDL_MAG_OUTY_L  \t0X2A\r\n#define LIS3MDL_MAG_OUTY_H  \t0X2B\r\n#define LIS3MDL_MAG_OUTZ_L  \t0X2C\r\n#define LIS3MDL_MAG_OUTZ_H  \t0X2D\r\n#define LIS3MDL_MAG_TEMP_OUT_L  \t0X2E\r\n#define LIS3MDL_MAG_TEMP_OUT_H  \t0X2F\r\n#define LIS3MDL_MAG_INT_CFG  \t0X30\r\n#define LIS3MDL_MAG_INT_SRC  \t0X31\r\n#define LIS3MDL_MAG_INT_THS_L  \t0X32\r\n#define LIS3MDL_MAG_INT_THS_H  \t0X33\r\n\r\n/*******************************************************************************\r\n* Register      : WHO_AM_I_REG\r\n* Address       : 0X0F\r\n* Bit Group Name: WHO_AM_I_BIT\r\n* Permission    : RO\r\n*******************************************************************************/\r\n#define  \tLIS3MDL_MAG_WHO_AM_I_BIT_MASK  \t0xFF\r\n#define  \tLIS3MDL_MAG_WHO_AM_I_BIT_POSITION  \t0\r\nstatus_t LIS3MDL_MAG_R_WHO_AM_I_(u8_t *value);\r\n\r\n/*******************************************************************************\r\n* Register      : CTRL_REG1\r\n* Address       : 0X20\r\n* Bit Group Name: ST\r\n* Permission    : RW\r\n*******************************************************************************/\r\ntypedef enum {\r\n  \tLIS3MDL_MAG_ST_DISABLE \t\t =0x00,\r\n  \tLIS3MDL_MAG_ST_ENABLE \t\t =0x01,\r\n} LIS3MDL_MAG_ST_t;\r\n\r\n#define  \tLIS3MDL_MAG_ST_MASK  \t0x01\r\nstatus_t  LIS3MDL_MAG_W_SelfTest(LIS3MDL_MAG_ST_t newValue);\r\nstatus_t LIS3MDL_MAG_R_SelfTest(LIS3MDL_MAG_ST_t *value);\r\n\r\n/*******************************************************************************\r\n* Register      : CTRL_REG1\r\n* Address       : 0X20\r\n* Bit Group Name: DO\r\n* Permission    : RW\r\n*******************************************************************************/\r\ntypedef enum {\r\n  \tLIS3MDL_MAG_DO_0_625Hz \t\t =0x00,\r\n  \tLIS3MDL_MAG_DO_1_25Hz \t\t =0x04,\r\n  \tLIS3MDL_MAG_DO_2_5Hz \t\t =0x08,\r\n  \tLIS3MDL_MAG_DO_5Hz \t\t =0x0C,\r\n  \tLIS3MDL_MAG_DO_10Hz \t\t =0x10,\r\n  \tLIS3MDL_MAG_DO_20Hz \t\t =0x14,\r\n  \tLIS3MDL_MAG_DO_40Hz \t\t =0x18,\r\n  \tLIS3MDL_MAG_DO_80Hz \t\t =0x1C,\r\n} LIS3MDL_MAG_DO_t;\r\n\r\n#define  \tLIS3MDL_MAG_DO_MASK  \t0x1C\r\nstatus_t  LIS3MDL_MAG_W_OutputDataRate(LIS3MDL_MAG_DO_t newValue);\r\nstatus_t LIS3MDL_MAG_R_OutputDataRate(LIS3MDL_MAG_DO_t *value);\r\n\r\n/*******************************************************************************\r\n* Register      : CTRL_REG1\r\n* Address       : 0X20\r\n* Bit Group Name: OM\r\n* Permission    : RW\r\n*******************************************************************************/\r\ntypedef enum {\r\n  \tLIS3MDL_MAG_OM_LOW_POWER \t\t =0x00,\r\n  \tLIS3MDL_MAG_OM_MEDIUM \t\t =0x20,\r\n  \tLIS3MDL_MAG_OM_HIGH \t\t =0x40,\r\n  \tLIS3MDL_MAG_OM_ULTRA_HIGH \t\t =0x60,\r\n} LIS3MDL_MAG_OM_t;\r\n\r\n#define  \tLIS3MDL_MAG_OM_MASK  \t0x60\r\nstatus_t  LIS3MDL_MAG_W_OperatingModeXY(LIS3MDL_MAG_OM_t newValue);\r\nstatus_t LIS3MDL_MAG_R_OperatingModeXY(LIS3MDL_MAG_OM_t *value);\r\n\r\n/*******************************************************************************\r\n* Register      : CTRL_REG1\r\n* Address       : 0X20\r\n* Bit Group Name: TEMP_EN\r\n* Permission    : RW\r\n*******************************************************************************/\r\ntypedef enum {\r\n  \tLIS3MDL_MAG_TEMP_EN_DISABLE \t\t =0x00,\r\n  \tLIS3MDL_MAG_TEMP_EN_ENABLE \t\t =0x80,\r\n} LIS3MDL_MAG_TEMP_EN_t;\r\n\r\n#define  \tLIS3MDL_MAG_TEMP_EN_MASK  \t0x80\r\nstatus_t  LIS3MDL_MAG_W_TemperatureSensor(LIS3MDL_MAG_TEMP_EN_t newValue);\r\nstatus_t LIS3MDL_MAG_R_TemperatureSensor(LIS3MDL_MAG_TEMP_EN_t *value);\r\n\r\n/*******************************************************************************\r\n* Register      : CTRL_REG2\r\n* Address       : 0X21\r\n* Bit Group Name: SOFT_RST\r\n* Permission    : RW\r\n*******************************************************************************/\r\ntypedef enum {\r\n  \tLIS3MDL_MAG_SOFT_RST_NO \t\t =0x00,\r\n  \tLIS3MDL_MAG_SOFT_RST_YES \t\t =0x04,\r\n} LIS3MDL_MAG_SOFT_RST_t;\r\n\r\n#define  \tLIS3MDL_MAG_SOFT_RST_MASK  \t0x04\r\nstatus_t  LIS3MDL_MAG_W_SoftRST(LIS3MDL_MAG_SOFT_RST_t newValue);\r\nstatus_t LIS3MDL_MAG_R_SoftRST(LIS3MDL_MAG_SOFT_RST_t *value);\r\n\r\n/*******************************************************************************\r\n* Register      : CTRL_REG2\r\n* Address       : 0X21\r\n* Bit Group Name: REBOOT\r\n* Permission    : RW\r\n*******************************************************************************/\r\ntypedef enum {\r\n  \tLIS3MDL_MAG_REBOOT_NO \t\t =0x00,\r\n  \tLIS3MDL_MAG_REBOOT_YES \t\t =0x08,\r\n} LIS3MDL_MAG_REBOOT_t;\r\n\r\n#define  \tLIS3MDL_MAG_REBOOT_MASK  \t0x08\r\nstatus_t  LIS3MDL_MAG_W_Reboot(LIS3MDL_MAG_REBOOT_t newValue);\r\nstatus_t LIS3MDL_MAG_R_Reboot(LIS3MDL_MAG_REBOOT_t *value);\r\n\r\n/*******************************************************************************\r\n* Register      : CTRL_REG2\r\n* Address       : 0X21\r\n* Bit Group Name: FS\r\n* Permission    : RW\r\n*******************************************************************************/\r\ntypedef enum {\r\n  \tLIS3MDL_MAG_FS_4Ga \t\t =0x00,\r\n  \tLIS3MDL_MAG_FS_8Ga \t\t =0x20,\r\n  \tLIS3MDL_MAG_FS_12Ga \t\t =0x40,\r\n  \tLIS3MDL_MAG_FS_16Ga \t\t =0x60,\r\n} LIS3MDL_MAG_FS_t;\r\n\r\n#define  \tLIS3MDL_MAG_FS_MASK  \t0x60\r\nstatus_t  LIS3MDL_MAG_W_FullScale(LIS3MDL_MAG_FS_t newValue);\r\nstatus_t LIS3MDL_MAG_R_FullScale(LIS3MDL_MAG_FS_t *value);\r\n\r\n/*******************************************************************************\r\n* Register      : CTRL_REG3\r\n* Address       : 0X22\r\n* Bit Group Name: MD\r\n* Permission    : RW\r\n*******************************************************************************/\r\ntypedef enum {\r\n  \tLIS3MDL_MAG_MD_CONTINUOUS \t\t =0x00,\r\n  \tLIS3MDL_MAG_MD_SINGLE \t\t =0x01,\r\n  \tLIS3MDL_MAG_MD_POWER_DOWN \t\t =0x02,\r\n  \tLIS3MDL_MAG_MD_POWER_DOWN_AUTO \t\t =0x03,\r\n} LIS3MDL_MAG_MD_t;\r\n\r\n#define  \tLIS3MDL_MAG_MD_MASK  \t0x03\r\nstatus_t  LIS3MDL_MAG_W_SystemOperatingMode(LIS3MDL_MAG_MD_t newValue);\r\nstatus_t LIS3MDL_MAG_R_SystemOperatingMode(LIS3MDL_MAG_MD_t *value);\r\n\r\n/*******************************************************************************\r\n* Register      : CTRL_REG3\r\n* Address       : 0X22\r\n* Bit Group Name: SIM\r\n* Permission    : RW\r\n*******************************************************************************/\r\ntypedef enum {\r\n  \tLIS3MDL_MAG_SIM_4_WIRE \t\t =0x00,\r\n  \tLIS3MDL_MAG_SIM_3_WIRE \t\t =0x04,\r\n} LIS3MDL_MAG_SIM_t;\r\n\r\n#define  \tLIS3MDL_MAG_SIM_MASK  \t0x04\r\nstatus_t  LIS3MDL_MAG_W_SerialInterfaceMode(LIS3MDL_MAG_SIM_t newValue);\r\nstatus_t LIS3MDL_MAG_R_SerialInterfaceMode(LIS3MDL_MAG_SIM_t *value);\r\n\r\n/*******************************************************************************\r\n* Register      : CTRL_REG3\r\n* Address       : 0X22\r\n* Bit Group Name: LP\r\n* Permission    : RW\r\n*******************************************************************************/\r\ntypedef enum {\r\n  \tLIS3MDL_MAG_LP_DISABLE \t\t =0x00,\r\n  \tLIS3MDL_MAG_LP_ENABLE \t\t =0x20,\r\n} LIS3MDL_MAG_LP_t;\r\n\r\n#define  \tLIS3MDL_MAG_LP_MASK  \t0x20\r\nstatus_t  LIS3MDL_MAG_W_FastLowPowerXYZ(LIS3MDL_MAG_LP_t newValue);\r\nstatus_t LIS3MDL_MAG_R_FastLowPowerXYZ(LIS3MDL_MAG_LP_t *value);\r\n\r\n/*******************************************************************************\r\n* Register      : CTRL_REG4\r\n* Address       : 0X23\r\n* Bit Group Name: BLE\r\n* Permission    : RW\r\n*******************************************************************************/\r\ntypedef enum {\r\n  \tLIS3MDL_MAG_BLE_INVERT \t\t =0x00,\r\n  \tLIS3MDL_MAG_BLE_DEFAULT \t\t =0x02,\r\n} LIS3MDL_MAG_BLE_t;\r\n\r\n#define  \tLIS3MDL_MAG_BLE_MASK  \t0x02\r\nstatus_t  LIS3MDL_MAG_W_LittleBigEndianInversion(LIS3MDL_MAG_BLE_t newValue);\r\nstatus_t LIS3MDL_MAG_R_LittleBigEndianInversion(LIS3MDL_MAG_BLE_t *value);\r\n\r\n/*******************************************************************************\r\n* Register      : CTRL_REG4\r\n* Address       : 0X23\r\n* Bit Group Name: OMZ\r\n* Permission    : RW\r\n*******************************************************************************/\r\ntypedef enum {\r\n  \tLIS3MDL_MAG_OMZ_LOW_POWER \t\t =0x00,\r\n  \tLIS3MDL_MAG_OMZ_MEDIUM \t\t =0x04,\r\n  \tLIS3MDL_MAG_OMZ_HIGH \t\t =0x08,\r\n  \tLIS3MDL_MAG_OMZ_ULTRA_HIGH \t\t =0x0C,\r\n} LIS3MDL_MAG_OMZ_t;\r\n\r\n#define  \tLIS3MDL_MAG_OMZ_MASK  \t0x0C\r\nstatus_t  LIS3MDL_MAG_W_OperatingModeZ(LIS3MDL_MAG_OMZ_t newValue);\r\nstatus_t LIS3MDL_MAG_R_OperatingModeZ(LIS3MDL_MAG_OMZ_t *value);\r\n\r\n/*******************************************************************************\r\n* Register      : CTRL_REG5\r\n* Address       : 0X24\r\n* Bit Group Name: BDU\r\n* Permission    : RW\r\n*******************************************************************************/\r\ntypedef enum {\r\n  \tLIS3MDL_MAG_BDU_DISABLE \t\t =0x00,\r\n  \tLIS3MDL_MAG_BDU_ENABLE \t\t =0x40,\r\n} LIS3MDL_MAG_BDU_t;\r\n\r\n#define  \tLIS3MDL_MAG_BDU_MASK  \t0x40\r\nstatus_t  LIS3MDL_MAG_W_BlockDataUpdate(LIS3MDL_MAG_BDU_t newValue);\r\nstatus_t LIS3MDL_MAG_R_BlockDataUpdate(LIS3MDL_MAG_BDU_t *value);\r\n\r\n/*******************************************************************************\r\n* Register      : STATUS_REG\r\n* Address       : 0X27\r\n* Bit Group Name: XDA\r\n* Permission    : RO\r\n*******************************************************************************/\r\ntypedef enum {\r\n  \tLIS3MDL_MAG_XDA_NOT_AVAILABLE \t\t =0x00,\r\n  \tLIS3MDL_MAG_XDA_AVAILABLE \t\t =0x01,\r\n} LIS3MDL_MAG_XDA_t;\r\n\r\n#define  \tLIS3MDL_MAG_XDA_MASK  \t0x01\r\nstatus_t LIS3MDL_MAG_R_NewXData(LIS3MDL_MAG_XDA_t *value);\r\n\r\n/*******************************************************************************\r\n* Register      : STATUS_REG\r\n* Address       : 0X27\r\n* Bit Group Name: YDA\r\n* Permission    : RO\r\n*******************************************************************************/\r\ntypedef enum {\r\n  \tLIS3MDL_MAG_YDA_NOT_AVAILABLE \t\t =0x00,\r\n  \tLIS3MDL_MAG_YDA_AVAILABLE \t\t =0x02,\r\n} LIS3MDL_MAG_YDA_t;\r\n\r\n#define  \tLIS3MDL_MAG_YDA_MASK  \t0x02\r\nstatus_t LIS3MDL_MAG_R_NewYData(LIS3MDL_MAG_YDA_t *value);\r\n\r\n/*******************************************************************************\r\n* Register      : STATUS_REG\r\n* Address       : 0X27\r\n* Bit Group Name: ZDA\r\n* Permission    : RO\r\n*******************************************************************************/\r\ntypedef enum {\r\n  \tLIS3MDL_MAG_ZDA_NOT_AVAILABLE \t\t =0x00,\r\n  \tLIS3MDL_MAG_ZDA_AVAILABLE \t\t =0x04,\r\n} LIS3MDL_MAG_ZDA_t;\r\n\r\n#define  \tLIS3MDL_MAG_ZDA_MASK  \t0x04\r\nstatus_t LIS3MDL_MAG_R_NewZData(LIS3MDL_MAG_ZDA_t *value);\r\n\r\n/*******************************************************************************\r\n* Register      : STATUS_REG\r\n* Address       : 0X27\r\n* Bit Group Name: ZYXDA\r\n* Permission    : RO\r\n*******************************************************************************/\r\ntypedef enum {\r\n  \tLIS3MDL_MAG_ZYXDA_NOT_AVAILABLE \t\t =0x00,\r\n  \tLIS3MDL_MAG_ZYXDA_AVAILABLE \t\t =0x08,\r\n} LIS3MDL_MAG_ZYXDA_t;\r\n\r\n#define  \tLIS3MDL_MAG_ZYXDA_MASK  \t0x08\r\nstatus_t LIS3MDL_MAG_R_NewXYZData(LIS3MDL_MAG_ZYXDA_t *value);\r\n\r\n/*******************************************************************************\r\n* Register      : STATUS_REG\r\n* Address       : 0X27\r\n* Bit Group Name: XOR\r\n* Permission    : RO\r\n*******************************************************************************/\r\ntypedef enum {\r\n  \tLIS3MDL_MAG_XOR_NOT_OVERRUN \t\t =0x00,\r\n  \tLIS3MDL_MAG_XOR_OVERRUN \t\t =0x10,\r\n} LIS3MDL_MAG_XOR_t;\r\n\r\n#define  \tLIS3MDL_MAG_XOR_MASK  \t0x10\r\nstatus_t LIS3MDL_MAG_R_DataXOverrun(LIS3MDL_MAG_XOR_t *value);\r\n\r\n/*******************************************************************************\r\n* Register      : STATUS_REG\r\n* Address       : 0X27\r\n* Bit Group Name: YOR\r\n* Permission    : RO\r\n*******************************************************************************/\r\ntypedef enum {\r\n  \tLIS3MDL_MAG_YOR_NOT_OVERRUN \t\t =0x00,\r\n  \tLIS3MDL_MAG_YOR_OVERRUN \t\t =0x20,\r\n} LIS3MDL_MAG_YOR_t;\r\n\r\n#define  \tLIS3MDL_MAG_YOR_MASK  \t0x20\r\nstatus_t LIS3MDL_MAG_R_DataYOverrun(LIS3MDL_MAG_YOR_t *value);\r\n\r\n/*******************************************************************************\r\n* Register      : STATUS_REG\r\n* Address       : 0X27\r\n* Bit Group Name: ZOR\r\n* Permission    : RO\r\n*******************************************************************************/\r\ntypedef enum {\r\n  \tLIS3MDL_MAG_ZOR_NOT_OVERRUN \t\t =0x00,\r\n  \tLIS3MDL_MAG_ZOR_OVERRUN \t\t =0x40,\r\n} LIS3MDL_MAG_ZOR_t;\r\n\r\n#define  \tLIS3MDL_MAG_ZOR_MASK  \t0x40\r\nstatus_t LIS3MDL_MAG_R_DataZOverrun(LIS3MDL_MAG_ZOR_t *value);\r\n\r\n/*******************************************************************************\r\n* Register      : STATUS_REG\r\n* Address       : 0X27\r\n* Bit Group Name: ZYXOR\r\n* Permission    : RO\r\n*******************************************************************************/\r\ntypedef enum {\r\n  \tLIS3MDL_MAG_ZYXOR_NOT_OVERRUN \t\t =0x00,\r\n  \tLIS3MDL_MAG_ZYXOR_OVERRUN \t\t =0x80,\r\n} LIS3MDL_MAG_ZYXOR_t;\r\n\r\n#define  \tLIS3MDL_MAG_ZYXOR_MASK  \t0x80\r\nstatus_t LIS3MDL_MAG_R_DataXYZOverrun(LIS3MDL_MAG_ZYXOR_t *value);\r\n\r\n/*******************************************************************************\r\n* Register      : INT_CFG\r\n* Address       : 0X30\r\n* Bit Group Name: IEN\r\n* Permission    : RW\r\n*******************************************************************************/\r\ntypedef enum {\r\n  \tLIS3MDL_MAG_IEN_DISABLE \t\t =0x00,\r\n  \tLIS3MDL_MAG_IEN_ENABLE \t\t =0x01,\r\n} LIS3MDL_MAG_IEN_t;\r\n\r\n#define  \tLIS3MDL_MAG_IEN_MASK  \t0x01\r\nstatus_t  LIS3MDL_MAG_W_InterruptEnable(LIS3MDL_MAG_IEN_t newValue);\r\nstatus_t LIS3MDL_MAG_R_InterruptEnable(LIS3MDL_MAG_IEN_t *value);\r\n\r\n/*******************************************************************************\r\n* Register      : INT_CFG\r\n* Address       : 0X30\r\n* Bit Group Name: LIR\r\n* Permission    : RW\r\n*******************************************************************************/\r\ntypedef enum {\r\n  \tLIS3MDL_MAG_LIR_LATCHED \t\t =0x00,\r\n  \tLIS3MDL_MAG_LIR_NOT_LATCHED \t\t =0x02,\r\n} LIS3MDL_MAG_LIR_t;\r\n\r\n#define  \tLIS3MDL_MAG_LIR_MASK  \t0x02\r\nstatus_t  LIS3MDL_MAG_W_LatchInterruptRq(LIS3MDL_MAG_LIR_t newValue);\r\nstatus_t LIS3MDL_MAG_R_LatchInterruptRq(LIS3MDL_MAG_LIR_t *value);\r\n\r\n/*******************************************************************************\r\n* Register      : INT_CFG\r\n* Address       : 0X30\r\n* Bit Group Name: IEA\r\n* Permission    : RW\r\n*******************************************************************************/\r\ntypedef enum {\r\n  \tLIS3MDL_MAG_IEA_LOW \t\t =0x00,\r\n  \tLIS3MDL_MAG_IEA_HIGH \t\t =0x04,\r\n} LIS3MDL_MAG_IEA_t;\r\n\r\n#define  \tLIS3MDL_MAG_IEA_MASK  \t0x04\r\nstatus_t  LIS3MDL_MAG_W_InterruptActive(LIS3MDL_MAG_IEA_t newValue);\r\nstatus_t LIS3MDL_MAG_R_InterruptActive(LIS3MDL_MAG_IEA_t *value);\r\n\r\n/*******************************************************************************\r\n* Register      : INT_CFG\r\n* Address       : 0X30\r\n* Bit Group Name: ZIEN\r\n* Permission    : RW\r\n*******************************************************************************/\r\ntypedef enum {\r\n  \tLIS3MDL_MAG_ZIEN_DISABLE \t\t =0x00,\r\n  \tLIS3MDL_MAG_ZIEN_ENABLE \t\t =0x20,\r\n} LIS3MDL_MAG_ZIEN_t;\r\n\r\n#define  \tLIS3MDL_MAG_ZIEN_MASK  \t0x20\r\nstatus_t  LIS3MDL_MAG_W_InterruptOnZ(LIS3MDL_MAG_ZIEN_t newValue);\r\nstatus_t LIS3MDL_MAG_R_InterruptOnZ(LIS3MDL_MAG_ZIEN_t *value);\r\n\r\n/*******************************************************************************\r\n* Register      : INT_CFG\r\n* Address       : 0X30\r\n* Bit Group Name: YIEN\r\n* Permission    : RW\r\n*******************************************************************************/\r\ntypedef enum {\r\n  \tLIS3MDL_MAG_YIEN_DISABLE \t\t =0x00,\r\n  \tLIS3MDL_MAG_YIEN_ENABLE \t\t =0x40,\r\n} LIS3MDL_MAG_YIEN_t;\r\n\r\n#define  \tLIS3MDL_MAG_YIEN_MASK  \t0x40\r\nstatus_t  LIS3MDL_MAG_W_InterruptOnY(LIS3MDL_MAG_YIEN_t newValue);\r\nstatus_t LIS3MDL_MAG_R_InterruptOnY(LIS3MDL_MAG_YIEN_t *value);\r\n\r\n/*******************************************************************************\r\n* Register      : INT_CFG\r\n* Address       : 0X30\r\n* Bit Group Name: XIEN\r\n* Permission    : RW\r\n*******************************************************************************/\r\ntypedef enum {\r\n  \tLIS3MDL_MAG_XIEN_DISABLE \t\t =0x00,\r\n  \tLIS3MDL_MAG_XIEN_ENABLE \t\t =0x80,\r\n} LIS3MDL_MAG_XIEN_t;\r\n\r\n#define  \tLIS3MDL_MAG_XIEN_MASK  \t0x80\r\nstatus_t  LIS3MDL_MAG_W_InterruptOnX(LIS3MDL_MAG_XIEN_t newValue);\r\nstatus_t LIS3MDL_MAG_R_InterruptOnX(LIS3MDL_MAG_XIEN_t *value);\r\n\r\n/*******************************************************************************\r\n* Register      : INT_SRC\r\n* Address       : 0X31\r\n* Bit Group Name: INT\r\n* Permission    : RW\r\n*******************************************************************************/\r\ntypedef enum {\r\n  \tLIS3MDL_MAG_INT_DOWN \t\t =0x00,\r\n  \tLIS3MDL_MAG_INT_UP \t\t =0x01,\r\n} LIS3MDL_MAG_INT_t;\r\n\r\n#define  \tLIS3MDL_MAG_INT_MASK  \t0x01\r\nstatus_t  LIS3MDL_MAG_W_InterruptFlag(LIS3MDL_MAG_INT_t newValue);\r\nstatus_t LIS3MDL_MAG_R_InterruptFlag(LIS3MDL_MAG_INT_t *value);\r\n\r\n/*******************************************************************************\r\n* Register      : INT_SRC\r\n* Address       : 0X31\r\n* Bit Group Name: MROI\r\n* Permission    : RW\r\n*******************************************************************************/\r\ntypedef enum {\r\n  \tLIS3MDL_MAG_MROI_IN_RANGE \t\t =0x00,\r\n  \tLIS3MDL_MAG_MROI_OVERFLOW \t\t =0x02,\r\n} LIS3MDL_MAG_MROI_t;\r\n\r\n#define  \tLIS3MDL_MAG_MROI_MASK  \t0x02\r\nstatus_t  LIS3MDL_MAG_W_MagneticFieldOverflow(LIS3MDL_MAG_MROI_t newValue);\r\nstatus_t LIS3MDL_MAG_R_MagneticFieldOverflow(LIS3MDL_MAG_MROI_t *value);\r\n\r\n/*******************************************************************************\r\n* Register      : INT_SRC\r\n* Address       : 0X31\r\n* Bit Group Name: NTH_Z\r\n* Permission    : RW\r\n*******************************************************************************/\r\ntypedef enum {\r\n  \tLIS3MDL_MAG_NTH_Z_DOWN \t\t =0x00,\r\n  \tLIS3MDL_MAG_NTH_Z_UP \t\t =0x04,\r\n} LIS3MDL_MAG_NTH_Z_t;\r\n\r\n#define  \tLIS3MDL_MAG_NTH_Z_MASK  \t0x04\r\nstatus_t  LIS3MDL_MAG_W_NegativeThresholdFlagZ(LIS3MDL_MAG_NTH_Z_t newValue);\r\nstatus_t LIS3MDL_MAG_R_NegativeThresholdFlagZ(LIS3MDL_MAG_NTH_Z_t *value);\r\n\r\n/*******************************************************************************\r\n* Register      : INT_SRC\r\n* Address       : 0X31\r\n* Bit Group Name: NTH_Y\r\n* Permission    : RW\r\n*******************************************************************************/\r\ntypedef enum {\r\n  \tLIS3MDL_MAG_NTH_Y_DOWN \t\t =0x00,\r\n  \tLIS3MDL_MAG_NTH_Y_UP \t\t =0x08,\r\n} LIS3MDL_MAG_NTH_Y_t;\r\n\r\n#define  \tLIS3MDL_MAG_NTH_Y_MASK  \t0x08\r\nstatus_t  LIS3MDL_MAG_W_NegativeThresholdFlagY(LIS3MDL_MAG_NTH_Y_t newValue);\r\nstatus_t LIS3MDL_MAG_R_NegativeThresholdFlagY(LIS3MDL_MAG_NTH_Y_t *value);\r\n\r\n/*******************************************************************************\r\n* Register      : INT_SRC\r\n* Address       : 0X31\r\n* Bit Group Name: NTH_X\r\n* Permission    : RW\r\n*******************************************************************************/\r\ntypedef enum {\r\n  \tLIS3MDL_MAG_NTH_X_DOWN \t\t =0x00,\r\n  \tLIS3MDL_MAG_NTH_X_UP \t\t =0x10,\r\n} LIS3MDL_MAG_NTH_X_t;\r\n\r\n#define  \tLIS3MDL_MAG_NTH_X_MASK  \t0x10\r\nstatus_t  LIS3MDL_MAG_W_NegativeThresholdFlagX(LIS3MDL_MAG_NTH_X_t newValue);\r\nstatus_t LIS3MDL_MAG_R_NegativeThresholdFlagX(LIS3MDL_MAG_NTH_X_t *value);\r\n\r\n/*******************************************************************************\r\n* Register      : INT_SRC\r\n* Address       : 0X31\r\n* Bit Group Name: PTH_Z\r\n* Permission    : RW\r\n*******************************************************************************/\r\ntypedef enum {\r\n  \tLIS3MDL_MAG_PTH_Z_DOWN \t\t =0x00,\r\n  \tLIS3MDL_MAG_PTH_Z_UP \t\t =0x20,\r\n} LIS3MDL_MAG_PTH_Z_t;\r\n\r\n#define  \tLIS3MDL_MAG_PTH_Z_MASK  \t0x20\r\nstatus_t  LIS3MDL_MAG_W_PositiveThresholdFlagZ(LIS3MDL_MAG_PTH_Z_t newValue);\r\nstatus_t LIS3MDL_MAG_R_PositiveThresholdFlagZ(LIS3MDL_MAG_PTH_Z_t *value);\r\n\r\n/*******************************************************************************\r\n* Register      : INT_SRC\r\n* Address       : 0X31\r\n* Bit Group Name: PTH_Y\r\n* Permission    : RW\r\n*******************************************************************************/\r\ntypedef enum {\r\n  \tLIS3MDL_MAG_PTH_Y_DOWN \t\t =0x00,\r\n  \tLIS3MDL_MAG_PTH_Y_UP \t\t =0x40,\r\n} LIS3MDL_MAG_PTH_Y_t;\r\n\r\n#define  \tLIS3MDL_MAG_PTH_Y_MASK  \t0x40\r\nstatus_t  LIS3MDL_MAG_W_PositiveThresholdFlagY(LIS3MDL_MAG_PTH_Y_t newValue);\r\nstatus_t LIS3MDL_MAG_R_PositiveThresholdFlagY(LIS3MDL_MAG_PTH_Y_t *value);\r\n\r\n/*******************************************************************************\r\n* Register      : INT_SRC\r\n* Address       : 0X31\r\n* Bit Group Name: PTH_X\r\n* Permission    : RW\r\n*******************************************************************************/\r\ntypedef enum {\r\n  \tLIS3MDL_MAG_PTH_X_DOWN \t\t =0x00,\r\n  \tLIS3MDL_MAG_PTH_X_UP \t\t =0x80,\r\n} LIS3MDL_MAG_PTH_X_t;\r\n\r\n#define  \tLIS3MDL_MAG_PTH_X_MASK  \t0x80\r\nstatus_t  LIS3MDL_MAG_W_PositiveThresholdFlagX(LIS3MDL_MAG_PTH_X_t newValue);\r\nstatus_t LIS3MDL_MAG_R_PositiveThresholdFlagX(LIS3MDL_MAG_PTH_X_t *value);\r\n/*******************************************************************************\r\n* Register      : <REGISTER_L> - <REGISTER_H>\r\n* Output Type   : Magnetic\r\n* Permission    : RO \r\n*******************************************************************************/\r\nstatus_t LIS3MDL_MAG_Get_Magnetic(u8_t *buff); \r\n/*******************************************************************************\r\n* Register      : <REGISTER_L> - <REGISTER_H>\r\n* Output Type   : Temperature\r\n* Permission    : RO \r\n*******************************************************************************/\r\nstatus_t LIS3MDL_MAG_Get_Temperature(u8_t *buff); \r\n/*******************************************************************************\r\n* Register      : <REGISTER_L> - <REGISTER_H>\r\n* Output Type   : MagneticThreshold\r\n* Permission    : RW \r\n*******************************************************************************/\r\nstatus_t LIS3MDL_MAG_Set_MagneticThreshold(u8_t *buff);\r\nstatus_t LIS3MDL_MAG_Get_MagneticThreshold(u8_t *buff); \r\n#endif\r\n\r\n"
+              },
+              "objects": {
+                "lis3mdl.c": "\r\n/******************** (C) COPYRIGHT 2013 STMicroelectronics ********************\r\n* File Name          : LIS3MDL_MAG_driver.c\r\n* Author             : MSH Application Team\r\n* Version            : v1.10\r\n* Date               : 12/11/2013 \r\n* Description        : LIS3MDL MAG driver source file\r\n*                      \r\n* HISTORY:\r\n* Date:   12/11/2013            \r\n* Modification: Initial Revision                \r\n* Author:\tPlatform Independent Driver Generator v0.03\r\n* Reviewed by: Alberto Zancanato\r\n*-------------------------------------------------------------------------------\r\n*\r\n*\r\n********************************************************************************\r\n* THE PRESENT FIRMWARE WHICH IS FOR GUIDANCE ONLY AIMS AT PROVIDING CUSTOMERS\r\n* WITH CODING INFORMATION REGARDING THEIR PRODUCTS IN ORDER FOR THEM TO SAVE TIME.\r\n* AS A RESULT, STMICROELECTRONICS SHALL NOT BE HELD LIABLE FOR ANY DIRECT,\r\n* INDIRECT OR CONSEQUENTIAL DAMAGES WITH RESPECT TO ANY CLAIMS ARISING FROM THE\r\n* CONTENT OF SUCH FIRMWARE AND/OR THE USE MADE BY CUSTOMERS OF THE CODING\r\n* INFORMATION CONTAINED HEREIN IN CONNECTION WITH THEIR PRODUCTS.\r\n*\r\n* THIS SOFTWARE IS SPECIFICALLY DESIGNED FOR EXCLUSIVE USE WITH ST PARTS.\r\n*\r\n*******************************************************************************/\r\n\r\n/* Includes ------------------------------------------------------------------*/\r\n#include \"lis3mdl.h\"\r\n#include \"../i2c/i2c.h\"\r\n\r\n/* Private typedef -----------------------------------------------------------*/\r\n\r\n/* Private define ------------------------------------------------------------*/\r\n\r\n/* Private macro -------------------------------------------------------------*/\r\n\r\n/* Private variables ---------------------------------------------------------*/\r\n\r\n/* Private functions ---------------------------------------------------------*/\r\n\r\n/*******************************************************************************\r\n* Function Name\t\t: LIS3MDL_MAG_ReadReg\r\n* Description\t\t: Generic Reading function. It must be fullfilled with either\r\n*\t\t\t\t\t: I2C or SPI reading functions\t\t\t\t\t\r\n* Input\t\t\t\t: Register Address\r\n* Output\t\t\t: Data REad\r\n* Return\t\t\t: None\r\n*******************************************************************************/\r\nu8_t LIS3MDL_MAG_ReadReg(u8_t Reg, u8_t* Data) \r\n{\r\n\r\n  AIR_I2C_ComboRead(LIS3MDL_MAG_I2C_ADDRESS, &Reg, 1, Data, 1);\r\n\r\n  return MEMS_SUCCESS;\r\n  \r\n  //To be completed with either I2c or SPI reading function\r\n  //i.e.: *Data = SPI_Mems_Read_Reg( Reg );\r\n/*  if(!I2C_BufferRead(Data, LIS3MDL_MAG_I2C_ADDRESS, Reg, 1))  //[Example]\r\n\treturn MEMS_ERROR;                                                        //[Example]\r\n  else                                                                        //[Example]\r\n\treturn MEMS_SUCCESS;  */                                                    //[Example]\r\n}\r\n\r\n/*******************************************************************************\r\n* Function Name\t\t: LIS3MDL_MAG_WriteReg\r\n* Description\t\t: Generic Writing function. It must be fullfilled with either\r\n*\t\t\t\t\t: I2C or SPI writing function\r\n* Input\t\t\t\t: Register Address, Data to be written\r\n* Output\t\t\t: None\r\n* Return\t\t\t: None\r\n*******************************************************************************/\r\nu8_t LIS3MDL_MAG_WriteReg(u8_t Reg, u8_t Data) \r\n{\r\n  u8_t writeData[2];\r\n  writeData[0] = Reg;\r\n  writeData[1] = Data;\r\n  \r\n  AIR_I2C_Write(LIS3MDL_MAG_I2C_ADDRESS, &writeData, 2);\r\n  \r\n  return MEMS_SUCCESS;\r\n  \r\n  //To be completed with either I2c or SPI writing function\r\n  //i.e.: SPI_Mems_Write_Reg(Reg, Data);\r\n/*  I2C_ByteWrite(&Data,  LIS3MDL_MAG_I2C_ADDRESS,  Reg);       //[Example]\r\n  return MEMS_SUCCESS;    */                                                    //[Example]\r\n}\r\n\r\n/*******************************************************************************\r\n* Function Name\t\t: SwapHighLowByte\r\n* Description\t\t: Swap High/low byte in multiple byte values \r\n*                     It works with minimum 2 byte for every dimension.\r\n*                     Example x,y,z with 2 byte for every dimension\r\n*\r\n* Input\t\t\t\t: bufferToSwap -> buffer to swap \r\n*                     numberOfByte -> the buffer length in byte\r\n*                     dimension -> number of dimension \r\n*\r\n* Output\t\t\t: bufferToSwap -> buffer swapped \r\n* Return\t\t\t: None\r\n*******************************************************************************/\r\nvoid LIS3MDL_MAG_SwapHighLowByte(u8_t *bufferToSwap, u8_t numberOfByte, u8_t dimension)\r\n{\r\n\r\n  u8_t numberOfByteForDimension, i, j;\r\n  u8_t tempValue[10];\r\n  \r\n  numberOfByteForDimension=numberOfByte/dimension;\r\n    \r\n  for (i=0; i<dimension;i++ )\r\n  {\r\n\tfor (j=0; j<numberOfByteForDimension;j++ )\r\n\t\ttempValue[j]=bufferToSwap[j+i*numberOfByteForDimension];\r\n\tfor (j=0; j<numberOfByteForDimension;j++ )\r\n\t\t*(bufferToSwap+i*(numberOfByteForDimension)+j)=*(tempValue+(numberOfByteForDimension-1)-j);\r\n  } \r\n}\r\n\r\n/* Exported functions ---------------------------------------------------------*/\r\n\r\n/*******************************************************************************\r\n* Function Name  : LIS3MDL_MAG_R_WHO_AM_I_\r\n* Description    : Read WHO_AM_I_BIT\r\n* Input          : Pointer to u8_t\r\n* Output         : Status of WHO_AM_I_BIT \r\n* Return         : Status [MEMS_ERROR, MEMS_SUCCESS]\r\n*******************************************************************************/\r\n\r\nstatus_t LIS3MDL_MAG_R_WHO_AM_I_(u8_t *value)\r\n{\r\n if( !LIS3MDL_MAG_ReadReg(LIS3MDL_MAG_WHO_AM_I_REG, (u8_t *)value) )\r\n    return MEMS_ERROR;\r\n\r\n  *value &= LIS3MDL_MAG_WHO_AM_I_BIT_MASK; //coerce\t\r\n  *value = *value >> LIS3MDL_MAG_WHO_AM_I_BIT_POSITION; //mask\t\r\n\r\n  return MEMS_SUCCESS;\r\n}\r\n/*******************************************************************************\r\n* Function Name  : LIS3MDL_MAG_W_SelfTest\r\n* Description    : Write ST\r\n* Input          : LIS3MDL_MAG_ST_t\r\n* Output         : None\r\n* Return         : Status [MEMS_ERROR, MEMS_SUCCESS]\r\n*******************************************************************************/\r\nstatus_t  LIS3MDL_MAG_W_SelfTest(LIS3MDL_MAG_ST_t newValue)\r\n{\r\n  u8_t value;\r\n\r\n  if( !LIS3MDL_MAG_ReadReg(LIS3MDL_MAG_CTRL_REG1, &value) )\r\n    return MEMS_ERROR;\r\n\r\n  value &= ~LIS3MDL_MAG_ST_MASK; \r\n  value |= newValue;\r\n  \r\n  if( !LIS3MDL_MAG_WriteReg(LIS3MDL_MAG_CTRL_REG1, value) )\r\n    return MEMS_ERROR;\r\n\r\n  return MEMS_SUCCESS;\r\n}\r\n\r\n/*******************************************************************************\r\n* Function Name  : LIS3MDL_MAG_R_SelfTest\r\n* Description    : Read ST\r\n* Input          : Pointer to LIS3MDL_MAG_ST_t\r\n* Output         : Status of ST see LIS3MDL_MAG_ST_t\r\n* Return         : Status [MEMS_ERROR, MEMS_SUCCESS]\r\n*******************************************************************************/\r\n\r\nstatus_t LIS3MDL_MAG_R_SelfTest(LIS3MDL_MAG_ST_t *value)\r\n{\r\n if( !LIS3MDL_MAG_ReadReg(LIS3MDL_MAG_CTRL_REG1, (u8_t *)value) )\r\n    return MEMS_ERROR;\r\n\r\n  *value &= LIS3MDL_MAG_ST_MASK; //mask\r\n\r\n  return MEMS_SUCCESS;\r\n}\r\n/*******************************************************************************\r\n* Function Name  : LIS3MDL_MAG_W_OutputDataRate\r\n* Description    : Write DO\r\n* Input          : LIS3MDL_MAG_DO_t\r\n* Output         : None\r\n* Return         : Status [MEMS_ERROR, MEMS_SUCCESS]\r\n*******************************************************************************/\r\nstatus_t  LIS3MDL_MAG_W_OutputDataRate(LIS3MDL_MAG_DO_t newValue)\r\n{\r\n  u8_t value;\r\n\r\n  if( !LIS3MDL_MAG_ReadReg(LIS3MDL_MAG_CTRL_REG1, &value) )\r\n    return MEMS_ERROR;\r\n\r\n  value &= ~LIS3MDL_MAG_DO_MASK; \r\n  value |= newValue;\r\n  \r\n  if( !LIS3MDL_MAG_WriteReg(LIS3MDL_MAG_CTRL_REG1, value) )\r\n    return MEMS_ERROR;\r\n\r\n  return MEMS_SUCCESS;\r\n}\r\n\r\n/*******************************************************************************\r\n* Function Name  : LIS3MDL_MAG_R_OutputDataRate\r\n* Description    : Read DO\r\n* Input          : Pointer to LIS3MDL_MAG_DO_t\r\n* Output         : Status of DO see LIS3MDL_MAG_DO_t\r\n* Return         : Status [MEMS_ERROR, MEMS_SUCCESS]\r\n*******************************************************************************/\r\n\r\nstatus_t LIS3MDL_MAG_R_OutputDataRate(LIS3MDL_MAG_DO_t *value)\r\n{\r\n if( !LIS3MDL_MAG_ReadReg(LIS3MDL_MAG_CTRL_REG1, (u8_t *)value) )\r\n    return MEMS_ERROR;\r\n\r\n  *value &= LIS3MDL_MAG_DO_MASK; //mask\r\n\r\n  return MEMS_SUCCESS;\r\n}\r\n/*******************************************************************************\r\n* Function Name  : LIS3MDL_MAG_W_OperatingModeXY\r\n* Description    : Write OM\r\n* Input          : LIS3MDL_MAG_OM_t\r\n* Output         : None\r\n* Return         : Status [MEMS_ERROR, MEMS_SUCCESS]\r\n*******************************************************************************/\r\nstatus_t  LIS3MDL_MAG_W_OperatingModeXY(LIS3MDL_MAG_OM_t newValue)\r\n{\r\n  u8_t value;\r\n\r\n  if( !LIS3MDL_MAG_ReadReg(LIS3MDL_MAG_CTRL_REG1, &value) )\r\n    return MEMS_ERROR;\r\n\r\n  value &= ~LIS3MDL_MAG_OM_MASK; \r\n  value |= newValue;\r\n  \r\n  if( !LIS3MDL_MAG_WriteReg(LIS3MDL_MAG_CTRL_REG1, value) )\r\n    return MEMS_ERROR;\r\n\r\n  return MEMS_SUCCESS;\r\n}\r\n\r\n/*******************************************************************************\r\n* Function Name  : LIS3MDL_MAG_R_OperatingModeXY\r\n* Description    : Read OM\r\n* Input          : Pointer to LIS3MDL_MAG_OM_t\r\n* Output         : Status of OM see LIS3MDL_MAG_OM_t\r\n* Return         : Status [MEMS_ERROR, MEMS_SUCCESS]\r\n*******************************************************************************/\r\n\r\nstatus_t LIS3MDL_MAG_R_OperatingModeXY(LIS3MDL_MAG_OM_t *value)\r\n{\r\n if( !LIS3MDL_MAG_ReadReg(LIS3MDL_MAG_CTRL_REG1, (u8_t *)value) )\r\n    return MEMS_ERROR;\r\n\r\n  *value &= LIS3MDL_MAG_OM_MASK; //mask\r\n\r\n  return MEMS_SUCCESS;\r\n}\r\n/*******************************************************************************\r\n* Function Name  : LIS3MDL_MAG_W_TemperatureSensor\r\n* Description    : Write TEMP_EN\r\n* Input          : LIS3MDL_MAG_TEMP_EN_t\r\n* Output         : None\r\n* Return         : Status [MEMS_ERROR, MEMS_SUCCESS]\r\n*******************************************************************************/\r\nstatus_t  LIS3MDL_MAG_W_TemperatureSensor(LIS3MDL_MAG_TEMP_EN_t newValue)\r\n{\r\n  u8_t value;\r\n\r\n  if( !LIS3MDL_MAG_ReadReg(LIS3MDL_MAG_CTRL_REG1, &value) )\r\n    return MEMS_ERROR;\r\n\r\n  value &= ~LIS3MDL_MAG_TEMP_EN_MASK; \r\n  value |= newValue;\r\n  \r\n  if( !LIS3MDL_MAG_WriteReg(LIS3MDL_MAG_CTRL_REG1, value) )\r\n    return MEMS_ERROR;\r\n\r\n  return MEMS_SUCCESS;\r\n}\r\n\r\n/*******************************************************************************\r\n* Function Name  : LIS3MDL_MAG_R_TemperatureSensor\r\n* Description    : Read TEMP_EN\r\n* Input          : Pointer to LIS3MDL_MAG_TEMP_EN_t\r\n* Output         : Status of TEMP_EN see LIS3MDL_MAG_TEMP_EN_t\r\n* Return         : Status [MEMS_ERROR, MEMS_SUCCESS]\r\n*******************************************************************************/\r\n\r\nstatus_t LIS3MDL_MAG_R_TemperatureSensor(LIS3MDL_MAG_TEMP_EN_t *value)\r\n{\r\n if( !LIS3MDL_MAG_ReadReg(LIS3MDL_MAG_CTRL_REG1, (u8_t *)value) )\r\n    return MEMS_ERROR;\r\n\r\n  *value &= LIS3MDL_MAG_TEMP_EN_MASK; //mask\r\n\r\n  return MEMS_SUCCESS;\r\n}\r\n/*******************************************************************************\r\n* Function Name  : LIS3MDL_MAG_W_SoftRST\r\n* Description    : Write SOFT_RST\r\n* Input          : LIS3MDL_MAG_SOFT_RST_t\r\n* Output         : None\r\n* Return         : Status [MEMS_ERROR, MEMS_SUCCESS]\r\n*******************************************************************************/\r\nstatus_t  LIS3MDL_MAG_W_SoftRST(LIS3MDL_MAG_SOFT_RST_t newValue)\r\n{\r\n  u8_t value;\r\n\r\n  if( !LIS3MDL_MAG_ReadReg(LIS3MDL_MAG_CTRL_REG2, &value) )\r\n    return MEMS_ERROR;\r\n\r\n  value &= ~LIS3MDL_MAG_SOFT_RST_MASK; \r\n  value |= newValue;\r\n  \r\n  if( !LIS3MDL_MAG_WriteReg(LIS3MDL_MAG_CTRL_REG2, value) )\r\n    return MEMS_ERROR;\r\n\r\n  return MEMS_SUCCESS;\r\n}\r\n\r\n/*******************************************************************************\r\n* Function Name  : LIS3MDL_MAG_R_SoftRST\r\n* Description    : Read SOFT_RST\r\n* Input          : Pointer to LIS3MDL_MAG_SOFT_RST_t\r\n* Output         : Status of SOFT_RST see LIS3MDL_MAG_SOFT_RST_t\r\n* Return         : Status [MEMS_ERROR, MEMS_SUCCESS]\r\n*******************************************************************************/\r\n\r\nstatus_t LIS3MDL_MAG_R_SoftRST(LIS3MDL_MAG_SOFT_RST_t *value)\r\n{\r\n if( !LIS3MDL_MAG_ReadReg(LIS3MDL_MAG_CTRL_REG2, (u8_t *)value) )\r\n    return MEMS_ERROR;\r\n\r\n  *value &= LIS3MDL_MAG_SOFT_RST_MASK; //mask\r\n\r\n  return MEMS_SUCCESS;\r\n}\r\n/*******************************************************************************\r\n* Function Name  : LIS3MDL_MAG_W_Reboot\r\n* Description    : Write REBOOT\r\n* Input          : LIS3MDL_MAG_REBOOT_t\r\n* Output         : None\r\n* Return         : Status [MEMS_ERROR, MEMS_SUCCESS]\r\n*******************************************************************************/\r\nstatus_t  LIS3MDL_MAG_W_Reboot(LIS3MDL_MAG_REBOOT_t newValue)\r\n{\r\n  u8_t value;\r\n\r\n  if( !LIS3MDL_MAG_ReadReg(LIS3MDL_MAG_CTRL_REG2, &value) )\r\n    return MEMS_ERROR;\r\n\r\n  value &= ~LIS3MDL_MAG_REBOOT_MASK; \r\n  value |= newValue;\r\n  \r\n  if( !LIS3MDL_MAG_WriteReg(LIS3MDL_MAG_CTRL_REG2, value) )\r\n    return MEMS_ERROR;\r\n\r\n  return MEMS_SUCCESS;\r\n}\r\n\r\n/*******************************************************************************\r\n* Function Name  : LIS3MDL_MAG_R_Reboot\r\n* Description    : Read REBOOT\r\n* Input          : Pointer to LIS3MDL_MAG_REBOOT_t\r\n* Output         : Status of REBOOT see LIS3MDL_MAG_REBOOT_t\r\n* Return         : Status [MEMS_ERROR, MEMS_SUCCESS]\r\n*******************************************************************************/\r\n\r\nstatus_t LIS3MDL_MAG_R_Reboot(LIS3MDL_MAG_REBOOT_t *value)\r\n{\r\n if( !LIS3MDL_MAG_ReadReg(LIS3MDL_MAG_CTRL_REG2, (u8_t *)value) )\r\n    return MEMS_ERROR;\r\n\r\n  *value &= LIS3MDL_MAG_REBOOT_MASK; //mask\r\n\r\n  return MEMS_SUCCESS;\r\n}\r\n/*******************************************************************************\r\n* Function Name  : LIS3MDL_MAG_W_FullScale\r\n* Description    : Write FS\r\n* Input          : LIS3MDL_MAG_FS_t\r\n* Output         : None\r\n* Return         : Status [MEMS_ERROR, MEMS_SUCCESS]\r\n*******************************************************************************/\r\nstatus_t  LIS3MDL_MAG_W_FullScale(LIS3MDL_MAG_FS_t newValue)\r\n{\r\n  u8_t value;\r\n\r\n  if( !LIS3MDL_MAG_ReadReg(LIS3MDL_MAG_CTRL_REG2, &value) )\r\n    return MEMS_ERROR;\r\n\r\n  value &= ~LIS3MDL_MAG_FS_MASK; \r\n  value |= newValue;\r\n  \r\n  if( !LIS3MDL_MAG_WriteReg(LIS3MDL_MAG_CTRL_REG2, value) )\r\n    return MEMS_ERROR;\r\n\r\n  return MEMS_SUCCESS;\r\n}\r\n\r\n/*******************************************************************************\r\n* Function Name  : LIS3MDL_MAG_R_FullScale\r\n* Description    : Read FS\r\n* Input          : Pointer to LIS3MDL_MAG_FS_t\r\n* Output         : Status of FS see LIS3MDL_MAG_FS_t\r\n* Return         : Status [MEMS_ERROR, MEMS_SUCCESS]\r\n*******************************************************************************/\r\n\r\nstatus_t LIS3MDL_MAG_R_FullScale(LIS3MDL_MAG_FS_t *value)\r\n{\r\n if( !LIS3MDL_MAG_ReadReg(LIS3MDL_MAG_CTRL_REG2, (u8_t *)value) )\r\n    return MEMS_ERROR;\r\n\r\n  *value &= LIS3MDL_MAG_FS_MASK; //mask\r\n\r\n  return MEMS_SUCCESS;\r\n}\r\n/*******************************************************************************\r\n* Function Name  : LIS3MDL_MAG_W_SystemOperatingMode\r\n* Description    : Write MD\r\n* Input          : LIS3MDL_MAG_MD_t\r\n* Output         : None\r\n* Return         : Status [MEMS_ERROR, MEMS_SUCCESS]\r\n*******************************************************************************/\r\nstatus_t  LIS3MDL_MAG_W_SystemOperatingMode(LIS3MDL_MAG_MD_t newValue)\r\n{\r\n  u8_t value;\r\n\r\n  if( !LIS3MDL_MAG_ReadReg(LIS3MDL_MAG_CTRL_REG3, &value) )\r\n    return MEMS_ERROR;\r\n\r\n  value &= ~LIS3MDL_MAG_MD_MASK; \r\n  value |= newValue;\r\n  \r\n  if( !LIS3MDL_MAG_WriteReg(LIS3MDL_MAG_CTRL_REG3, value) )\r\n    return MEMS_ERROR;\r\n\r\n  return MEMS_SUCCESS;\r\n}\r\n\r\n/*******************************************************************************\r\n* Function Name  : LIS3MDL_MAG_R_SystemOperatingMode\r\n* Description    : Read MD\r\n* Input          : Pointer to LIS3MDL_MAG_MD_t\r\n* Output         : Status of MD see LIS3MDL_MAG_MD_t\r\n* Return         : Status [MEMS_ERROR, MEMS_SUCCESS]\r\n*******************************************************************************/\r\n\r\nstatus_t LIS3MDL_MAG_R_SystemOperatingMode(LIS3MDL_MAG_MD_t *value)\r\n{\r\n if( !LIS3MDL_MAG_ReadReg(LIS3MDL_MAG_CTRL_REG3, (u8_t *)value) )\r\n    return MEMS_ERROR;\r\n\r\n  *value &= LIS3MDL_MAG_MD_MASK; //mask\r\n\r\n  return MEMS_SUCCESS;\r\n}\r\n/*******************************************************************************\r\n* Function Name  : LIS3MDL_MAG_W_SerialInterfaceMode\r\n* Description    : Write SIM\r\n* Input          : LIS3MDL_MAG_SIM_t\r\n* Output         : None\r\n* Return         : Status [MEMS_ERROR, MEMS_SUCCESS]\r\n*******************************************************************************/\r\nstatus_t  LIS3MDL_MAG_W_SerialInterfaceMode(LIS3MDL_MAG_SIM_t newValue)\r\n{\r\n  u8_t value;\r\n\r\n  if( !LIS3MDL_MAG_ReadReg(LIS3MDL_MAG_CTRL_REG3, &value) )\r\n    return MEMS_ERROR;\r\n\r\n  value &= ~LIS3MDL_MAG_SIM_MASK; \r\n  value |= newValue;\r\n  \r\n  if( !LIS3MDL_MAG_WriteReg(LIS3MDL_MAG_CTRL_REG3, value) )\r\n    return MEMS_ERROR;\r\n\r\n  return MEMS_SUCCESS;\r\n}\r\n\r\n/*******************************************************************************\r\n* Function Name  : LIS3MDL_MAG_R_SerialInterfaceMode\r\n* Description    : Read SIM\r\n* Input          : Pointer to LIS3MDL_MAG_SIM_t\r\n* Output         : Status of SIM see LIS3MDL_MAG_SIM_t\r\n* Return         : Status [MEMS_ERROR, MEMS_SUCCESS]\r\n*******************************************************************************/\r\n\r\nstatus_t LIS3MDL_MAG_R_SerialInterfaceMode(LIS3MDL_MAG_SIM_t *value)\r\n{\r\n if( !LIS3MDL_MAG_ReadReg(LIS3MDL_MAG_CTRL_REG3, (u8_t *)value) )\r\n    return MEMS_ERROR;\r\n\r\n  *value &= LIS3MDL_MAG_SIM_MASK; //mask\r\n\r\n  return MEMS_SUCCESS;\r\n}\r\n/*******************************************************************************\r\n* Function Name  : LIS3MDL_MAG_W_FastLowPowerXYZ\r\n* Description    : Write LP\r\n* Input          : LIS3MDL_MAG_LP_t\r\n* Output         : None\r\n* Return         : Status [MEMS_ERROR, MEMS_SUCCESS]\r\n*******************************************************************************/\r\nstatus_t  LIS3MDL_MAG_W_FastLowPowerXYZ(LIS3MDL_MAG_LP_t newValue)\r\n{\r\n  u8_t value;\r\n\r\n  if( !LIS3MDL_MAG_ReadReg(LIS3MDL_MAG_CTRL_REG3, &value) )\r\n    return MEMS_ERROR;\r\n\r\n  value &= ~LIS3MDL_MAG_LP_MASK; \r\n  value |= newValue;\r\n  \r\n  if( !LIS3MDL_MAG_WriteReg(LIS3MDL_MAG_CTRL_REG3, value) )\r\n    return MEMS_ERROR;\r\n\r\n  return MEMS_SUCCESS;\r\n}\r\n\r\n/*******************************************************************************\r\n* Function Name  : LIS3MDL_MAG_R_FastLowPowerXYZ\r\n* Description    : Read LP\r\n* Input          : Pointer to LIS3MDL_MAG_LP_t\r\n* Output         : Status of LP see LIS3MDL_MAG_LP_t\r\n* Return         : Status [MEMS_ERROR, MEMS_SUCCESS]\r\n*******************************************************************************/\r\n\r\nstatus_t LIS3MDL_MAG_R_FastLowPowerXYZ(LIS3MDL_MAG_LP_t *value)\r\n{\r\n if( !LIS3MDL_MAG_ReadReg(LIS3MDL_MAG_CTRL_REG3, (u8_t *)value) )\r\n    return MEMS_ERROR;\r\n\r\n  *value &= LIS3MDL_MAG_LP_MASK; //mask\r\n\r\n  return MEMS_SUCCESS;\r\n}\r\n/*******************************************************************************\r\n* Function Name  : LIS3MDL_MAG_W_LittleBigEndianInversion\r\n* Description    : Write BLE\r\n* Input          : LIS3MDL_MAG_BLE_t\r\n* Output         : None\r\n* Return         : Status [MEMS_ERROR, MEMS_SUCCESS]\r\n*******************************************************************************/\r\nstatus_t  LIS3MDL_MAG_W_LittleBigEndianInversion(LIS3MDL_MAG_BLE_t newValue)\r\n{\r\n  u8_t value;\r\n\r\n  if( !LIS3MDL_MAG_ReadReg(LIS3MDL_MAG_CTRL_REG4, &value) )\r\n    return MEMS_ERROR;\r\n\r\n  value &= ~LIS3MDL_MAG_BLE_MASK; \r\n  value |= newValue;\r\n  \r\n  if( !LIS3MDL_MAG_WriteReg(LIS3MDL_MAG_CTRL_REG4, value) )\r\n    return MEMS_ERROR;\r\n\r\n  return MEMS_SUCCESS;\r\n}\r\n\r\n/*******************************************************************************\r\n* Function Name  : LIS3MDL_MAG_R_LittleBigEndianInversion\r\n* Description    : Read BLE\r\n* Input          : Pointer to LIS3MDL_MAG_BLE_t\r\n* Output         : Status of BLE see LIS3MDL_MAG_BLE_t\r\n* Return         : Status [MEMS_ERROR, MEMS_SUCCESS]\r\n*******************************************************************************/\r\n\r\nstatus_t LIS3MDL_MAG_R_LittleBigEndianInversion(LIS3MDL_MAG_BLE_t *value)\r\n{\r\n if( !LIS3MDL_MAG_ReadReg(LIS3MDL_MAG_CTRL_REG4, (u8_t *)value) )\r\n    return MEMS_ERROR;\r\n\r\n  *value &= LIS3MDL_MAG_BLE_MASK; //mask\r\n\r\n  return MEMS_SUCCESS;\r\n}\r\n/*******************************************************************************\r\n* Function Name  : LIS3MDL_MAG_W_OperatingModeZ\r\n* Description    : Write OMZ\r\n* Input          : LIS3MDL_MAG_OMZ_t\r\n* Output         : None\r\n* Return         : Status [MEMS_ERROR, MEMS_SUCCESS]\r\n*******************************************************************************/\r\nstatus_t  LIS3MDL_MAG_W_OperatingModeZ(LIS3MDL_MAG_OMZ_t newValue)\r\n{\r\n  u8_t value;\r\n\r\n  if( !LIS3MDL_MAG_ReadReg(LIS3MDL_MAG_CTRL_REG4, &value) )\r\n    return MEMS_ERROR;\r\n\r\n  value &= ~LIS3MDL_MAG_OMZ_MASK; \r\n  value |= newValue;\r\n  \r\n  if( !LIS3MDL_MAG_WriteReg(LIS3MDL_MAG_CTRL_REG4, value) )\r\n    return MEMS_ERROR;\r\n\r\n  return MEMS_SUCCESS;\r\n}\r\n\r\n/*******************************************************************************\r\n* Function Name  : LIS3MDL_MAG_R_OperatingModeZ\r\n* Description    : Read OMZ\r\n* Input          : Pointer to LIS3MDL_MAG_OMZ_t\r\n* Output         : Status of OMZ see LIS3MDL_MAG_OMZ_t\r\n* Return         : Status [MEMS_ERROR, MEMS_SUCCESS]\r\n*******************************************************************************/\r\n\r\nstatus_t LIS3MDL_MAG_R_OperatingModeZ(LIS3MDL_MAG_OMZ_t *value)\r\n{\r\n if( !LIS3MDL_MAG_ReadReg(LIS3MDL_MAG_CTRL_REG4, (u8_t *)value) )\r\n    return MEMS_ERROR;\r\n\r\n  *value &= LIS3MDL_MAG_OMZ_MASK; //mask\r\n\r\n  return MEMS_SUCCESS;\r\n}\r\n/*******************************************************************************\r\n* Function Name  : LIS3MDL_MAG_W_BlockDataUpdate\r\n* Description    : Write BDU\r\n* Input          : LIS3MDL_MAG_BDU_t\r\n* Output         : None\r\n* Return         : Status [MEMS_ERROR, MEMS_SUCCESS]\r\n*******************************************************************************/\r\nstatus_t  LIS3MDL_MAG_W_BlockDataUpdate(LIS3MDL_MAG_BDU_t newValue)\r\n{\r\n  u8_t value;\r\n\r\n  if( !LIS3MDL_MAG_ReadReg(LIS3MDL_MAG_CTRL_REG5, &value) )\r\n    return MEMS_ERROR;\r\n\r\n  value &= ~LIS3MDL_MAG_BDU_MASK; \r\n  value |= newValue;\r\n  \r\n  if( !LIS3MDL_MAG_WriteReg(LIS3MDL_MAG_CTRL_REG5, value) )\r\n    return MEMS_ERROR;\r\n\r\n  return MEMS_SUCCESS;\r\n}\r\n\r\n/*******************************************************************************\r\n* Function Name  : LIS3MDL_MAG_R_BlockDataUpdate\r\n* Description    : Read BDU\r\n* Input          : Pointer to LIS3MDL_MAG_BDU_t\r\n* Output         : Status of BDU see LIS3MDL_MAG_BDU_t\r\n* Return         : Status [MEMS_ERROR, MEMS_SUCCESS]\r\n*******************************************************************************/\r\n\r\nstatus_t LIS3MDL_MAG_R_BlockDataUpdate(LIS3MDL_MAG_BDU_t *value)\r\n{\r\n if( !LIS3MDL_MAG_ReadReg(LIS3MDL_MAG_CTRL_REG5, (u8_t *)value) )\r\n    return MEMS_ERROR;\r\n\r\n  *value &= LIS3MDL_MAG_BDU_MASK; //mask\r\n\r\n  return MEMS_SUCCESS;\r\n}\r\n/*******************************************************************************\r\n* Function Name  : LIS3MDL_MAG_R_NewXData\r\n* Description    : Read XDA\r\n* Input          : Pointer to LIS3MDL_MAG_XDA_t\r\n* Output         : Status of XDA see LIS3MDL_MAG_XDA_t\r\n* Return         : Status [MEMS_ERROR, MEMS_SUCCESS]\r\n*******************************************************************************/\r\n\r\nstatus_t LIS3MDL_MAG_R_NewXData(LIS3MDL_MAG_XDA_t *value)\r\n{\r\n if( !LIS3MDL_MAG_ReadReg(LIS3MDL_MAG_STATUS_REG, (u8_t *)value) )\r\n    return MEMS_ERROR;\r\n\r\n  *value &= LIS3MDL_MAG_XDA_MASK; //mask\r\n\r\n  return MEMS_SUCCESS;\r\n}\r\n/*******************************************************************************\r\n* Function Name  : LIS3MDL_MAG_R_NewYData\r\n* Description    : Read YDA\r\n* Input          : Pointer to LIS3MDL_MAG_YDA_t\r\n* Output         : Status of YDA see LIS3MDL_MAG_YDA_t\r\n* Return         : Status [MEMS_ERROR, MEMS_SUCCESS]\r\n*******************************************************************************/\r\n\r\nstatus_t LIS3MDL_MAG_R_NewYData(LIS3MDL_MAG_YDA_t *value)\r\n{\r\n if( !LIS3MDL_MAG_ReadReg(LIS3MDL_MAG_STATUS_REG, (u8_t *)value) )\r\n    return MEMS_ERROR;\r\n\r\n  *value &= LIS3MDL_MAG_YDA_MASK; //mask\r\n\r\n  return MEMS_SUCCESS;\r\n}\r\n/*******************************************************************************\r\n* Function Name  : LIS3MDL_MAG_R_NewZData\r\n* Description    : Read ZDA\r\n* Input          : Pointer to LIS3MDL_MAG_ZDA_t\r\n* Output         : Status of ZDA see LIS3MDL_MAG_ZDA_t\r\n* Return         : Status [MEMS_ERROR, MEMS_SUCCESS]\r\n*******************************************************************************/\r\n\r\nstatus_t LIS3MDL_MAG_R_NewZData(LIS3MDL_MAG_ZDA_t *value)\r\n{\r\n if( !LIS3MDL_MAG_ReadReg(LIS3MDL_MAG_STATUS_REG, (u8_t *)value) )\r\n    return MEMS_ERROR;\r\n\r\n  *value &= LIS3MDL_MAG_ZDA_MASK; //mask\r\n\r\n  return MEMS_SUCCESS;\r\n}\r\n/*******************************************************************************\r\n* Function Name  : LIS3MDL_MAG_R_NewXYZData\r\n* Description    : Read ZYXDA\r\n* Input          : Pointer to LIS3MDL_MAG_ZYXDA_t\r\n* Output         : Status of ZYXDA see LIS3MDL_MAG_ZYXDA_t\r\n* Return         : Status [MEMS_ERROR, MEMS_SUCCESS]\r\n*******************************************************************************/\r\n\r\nstatus_t LIS3MDL_MAG_R_NewXYZData(LIS3MDL_MAG_ZYXDA_t *value)\r\n{\r\n if( !LIS3MDL_MAG_ReadReg(LIS3MDL_MAG_STATUS_REG, (u8_t *)value) )\r\n    return MEMS_ERROR;\r\n\r\n  *value &= LIS3MDL_MAG_ZYXDA_MASK; //mask\r\n\r\n  return MEMS_SUCCESS;\r\n}\r\n/*******************************************************************************\r\n* Function Name  : LIS3MDL_MAG_R_DataXOverrun\r\n* Description    : Read XOR\r\n* Input          : Pointer to LIS3MDL_MAG_XOR_t\r\n* Output         : Status of XOR see LIS3MDL_MAG_XOR_t\r\n* Return         : Status [MEMS_ERROR, MEMS_SUCCESS]\r\n*******************************************************************************/\r\n\r\nstatus_t LIS3MDL_MAG_R_DataXOverrun(LIS3MDL_MAG_XOR_t *value)\r\n{\r\n if( !LIS3MDL_MAG_ReadReg(LIS3MDL_MAG_STATUS_REG, (u8_t *)value) )\r\n    return MEMS_ERROR;\r\n\r\n  *value &= LIS3MDL_MAG_XOR_MASK; //mask\r\n\r\n  return MEMS_SUCCESS;\r\n}\r\n/*******************************************************************************\r\n* Function Name  : LIS3MDL_MAG_R_DataYOverrun\r\n* Description    : Read YOR\r\n* Input          : Pointer to LIS3MDL_MAG_YOR_t\r\n* Output         : Status of YOR see LIS3MDL_MAG_YOR_t\r\n* Return         : Status [MEMS_ERROR, MEMS_SUCCESS]\r\n*******************************************************************************/\r\n\r\nstatus_t LIS3MDL_MAG_R_DataYOverrun(LIS3MDL_MAG_YOR_t *value)\r\n{\r\n if( !LIS3MDL_MAG_ReadReg(LIS3MDL_MAG_STATUS_REG, (u8_t *)value) )\r\n    return MEMS_ERROR;\r\n\r\n  *value &= LIS3MDL_MAG_YOR_MASK; //mask\r\n\r\n  return MEMS_SUCCESS;\r\n}\r\n/*******************************************************************************\r\n* Function Name  : LIS3MDL_MAG_R_DataZOverrun\r\n* Description    : Read ZOR\r\n* Input          : Pointer to LIS3MDL_MAG_ZOR_t\r\n* Output         : Status of ZOR see LIS3MDL_MAG_ZOR_t\r\n* Return         : Status [MEMS_ERROR, MEMS_SUCCESS]\r\n*******************************************************************************/\r\n\r\nstatus_t LIS3MDL_MAG_R_DataZOverrun(LIS3MDL_MAG_ZOR_t *value)\r\n{\r\n if( !LIS3MDL_MAG_ReadReg(LIS3MDL_MAG_STATUS_REG, (u8_t *)value) )\r\n    return MEMS_ERROR;\r\n\r\n  *value &= LIS3MDL_MAG_ZOR_MASK; //mask\r\n\r\n  return MEMS_SUCCESS;\r\n}\r\n/*******************************************************************************\r\n* Function Name  : LIS3MDL_MAG_R_DataXYZOverrun\r\n* Description    : Read ZYXOR\r\n* Input          : Pointer to LIS3MDL_MAG_ZYXOR_t\r\n* Output         : Status of ZYXOR see LIS3MDL_MAG_ZYXOR_t\r\n* Return         : Status [MEMS_ERROR, MEMS_SUCCESS]\r\n*******************************************************************************/\r\n\r\nstatus_t LIS3MDL_MAG_R_DataXYZOverrun(LIS3MDL_MAG_ZYXOR_t *value)\r\n{\r\n if( !LIS3MDL_MAG_ReadReg(LIS3MDL_MAG_STATUS_REG, (u8_t *)value) )\r\n    return MEMS_ERROR;\r\n\r\n  *value &= LIS3MDL_MAG_ZYXOR_MASK; //mask\r\n\r\n  return MEMS_SUCCESS;\r\n}\r\n/*******************************************************************************\r\n* Function Name  : LIS3MDL_MAG_W_InterruptEnable\r\n* Description    : Write IEN\r\n* Input          : LIS3MDL_MAG_IEN_t\r\n* Output         : None\r\n* Return         : Status [MEMS_ERROR, MEMS_SUCCESS]\r\n*******************************************************************************/\r\nstatus_t  LIS3MDL_MAG_W_InterruptEnable(LIS3MDL_MAG_IEN_t newValue)\r\n{\r\n  u8_t value;\r\n\r\n  if( !LIS3MDL_MAG_ReadReg(LIS3MDL_MAG_INT_CFG, &value) )\r\n    return MEMS_ERROR;\r\n\r\n  value &= ~LIS3MDL_MAG_IEN_MASK; \r\n  value |= newValue;\r\n  \r\n  if( !LIS3MDL_MAG_WriteReg(LIS3MDL_MAG_INT_CFG, value) )\r\n    return MEMS_ERROR;\r\n\r\n  return MEMS_SUCCESS;\r\n}\r\n\r\n/*******************************************************************************\r\n* Function Name  : LIS3MDL_MAG_R_InterruptEnable\r\n* Description    : Read IEN\r\n* Input          : Pointer to LIS3MDL_MAG_IEN_t\r\n* Output         : Status of IEN see LIS3MDL_MAG_IEN_t\r\n* Return         : Status [MEMS_ERROR, MEMS_SUCCESS]\r\n*******************************************************************************/\r\n\r\nstatus_t LIS3MDL_MAG_R_InterruptEnable(LIS3MDL_MAG_IEN_t *value)\r\n{\r\n if( !LIS3MDL_MAG_ReadReg(LIS3MDL_MAG_INT_CFG, (u8_t *)value) )\r\n    return MEMS_ERROR;\r\n\r\n  *value &= LIS3MDL_MAG_IEN_MASK; //mask\r\n\r\n  return MEMS_SUCCESS;\r\n}\r\n/*******************************************************************************\r\n* Function Name  : LIS3MDL_MAG_W_LatchInterruptRq\r\n* Description    : Write LIR\r\n* Input          : LIS3MDL_MAG_LIR_t\r\n* Output         : None\r\n* Return         : Status [MEMS_ERROR, MEMS_SUCCESS]\r\n*******************************************************************************/\r\nstatus_t  LIS3MDL_MAG_W_LatchInterruptRq(LIS3MDL_MAG_LIR_t newValue)\r\n{\r\n  u8_t value;\r\n\r\n  if( !LIS3MDL_MAG_ReadReg(LIS3MDL_MAG_INT_CFG, &value) )\r\n    return MEMS_ERROR;\r\n\r\n  value &= ~LIS3MDL_MAG_LIR_MASK; \r\n  value |= newValue;\r\n  \r\n  if( !LIS3MDL_MAG_WriteReg(LIS3MDL_MAG_INT_CFG, value) )\r\n    return MEMS_ERROR;\r\n\r\n  return MEMS_SUCCESS;\r\n}\r\n\r\n/*******************************************************************************\r\n* Function Name  : LIS3MDL_MAG_R_LatchInterruptRq\r\n* Description    : Read LIR\r\n* Input          : Pointer to LIS3MDL_MAG_LIR_t\r\n* Output         : Status of LIR see LIS3MDL_MAG_LIR_t\r\n* Return         : Status [MEMS_ERROR, MEMS_SUCCESS]\r\n*******************************************************************************/\r\n\r\nstatus_t LIS3MDL_MAG_R_LatchInterruptRq(LIS3MDL_MAG_LIR_t *value)\r\n{\r\n if( !LIS3MDL_MAG_ReadReg(LIS3MDL_MAG_INT_CFG, (u8_t *)value) )\r\n    return MEMS_ERROR;\r\n\r\n  *value &= LIS3MDL_MAG_LIR_MASK; //mask\r\n\r\n  return MEMS_SUCCESS;\r\n}\r\n/*******************************************************************************\r\n* Function Name  : LIS3MDL_MAG_W_InterruptActive\r\n* Description    : Write IEA\r\n* Input          : LIS3MDL_MAG_IEA_t\r\n* Output         : None\r\n* Return         : Status [MEMS_ERROR, MEMS_SUCCESS]\r\n*******************************************************************************/\r\nstatus_t  LIS3MDL_MAG_W_InterruptActive(LIS3MDL_MAG_IEA_t newValue)\r\n{\r\n  u8_t value;\r\n\r\n  if( !LIS3MDL_MAG_ReadReg(LIS3MDL_MAG_INT_CFG, &value) )\r\n    return MEMS_ERROR;\r\n\r\n  value &= ~LIS3MDL_MAG_IEA_MASK; \r\n  value |= newValue;\r\n  \r\n  if( !LIS3MDL_MAG_WriteReg(LIS3MDL_MAG_INT_CFG, value) )\r\n    return MEMS_ERROR;\r\n\r\n  return MEMS_SUCCESS;\r\n}\r\n\r\n/*******************************************************************************\r\n* Function Name  : LIS3MDL_MAG_R_InterruptActive\r\n* Description    : Read IEA\r\n* Input          : Pointer to LIS3MDL_MAG_IEA_t\r\n* Output         : Status of IEA see LIS3MDL_MAG_IEA_t\r\n* Return         : Status [MEMS_ERROR, MEMS_SUCCESS]\r\n*******************************************************************************/\r\n\r\nstatus_t LIS3MDL_MAG_R_InterruptActive(LIS3MDL_MAG_IEA_t *value)\r\n{\r\n if( !LIS3MDL_MAG_ReadReg(LIS3MDL_MAG_INT_CFG, (u8_t *)value) )\r\n    return MEMS_ERROR;\r\n\r\n  *value &= LIS3MDL_MAG_IEA_MASK; //mask\r\n\r\n  return MEMS_SUCCESS;\r\n}\r\n/*******************************************************************************\r\n* Function Name  : LIS3MDL_MAG_W_InterruptOnZ\r\n* Description    : Write ZIEN\r\n* Input          : LIS3MDL_MAG_ZIEN_t\r\n* Output         : None\r\n* Return         : Status [MEMS_ERROR, MEMS_SUCCESS]\r\n*******************************************************************************/\r\nstatus_t  LIS3MDL_MAG_W_InterruptOnZ(LIS3MDL_MAG_ZIEN_t newValue)\r\n{\r\n  u8_t value;\r\n\r\n  if( !LIS3MDL_MAG_ReadReg(LIS3MDL_MAG_INT_CFG, &value) )\r\n    return MEMS_ERROR;\r\n\r\n  value &= ~LIS3MDL_MAG_ZIEN_MASK; \r\n  value |= newValue;\r\n  \r\n  if( !LIS3MDL_MAG_WriteReg(LIS3MDL_MAG_INT_CFG, value) )\r\n    return MEMS_ERROR;\r\n\r\n  return MEMS_SUCCESS;\r\n}\r\n\r\n/*******************************************************************************\r\n* Function Name  : LIS3MDL_MAG_R_InterruptOnZ\r\n* Description    : Read ZIEN\r\n* Input          : Pointer to LIS3MDL_MAG_ZIEN_t\r\n* Output         : Status of ZIEN see LIS3MDL_MAG_ZIEN_t\r\n* Return         : Status [MEMS_ERROR, MEMS_SUCCESS]\r\n*******************************************************************************/\r\n\r\nstatus_t LIS3MDL_MAG_R_InterruptOnZ(LIS3MDL_MAG_ZIEN_t *value)\r\n{\r\n if( !LIS3MDL_MAG_ReadReg(LIS3MDL_MAG_INT_CFG, (u8_t *)value) )\r\n    return MEMS_ERROR;\r\n\r\n  *value &= LIS3MDL_MAG_ZIEN_MASK; //mask\r\n\r\n  return MEMS_SUCCESS;\r\n}\r\n/*******************************************************************************\r\n* Function Name  : LIS3MDL_MAG_W_InterruptOnY\r\n* Description    : Write YIEN\r\n* Input          : LIS3MDL_MAG_YIEN_t\r\n* Output         : None\r\n* Return         : Status [MEMS_ERROR, MEMS_SUCCESS]\r\n*******************************************************************************/\r\nstatus_t  LIS3MDL_MAG_W_InterruptOnY(LIS3MDL_MAG_YIEN_t newValue)\r\n{\r\n  u8_t value;\r\n\r\n  if( !LIS3MDL_MAG_ReadReg(LIS3MDL_MAG_INT_CFG, &value) )\r\n    return MEMS_ERROR;\r\n\r\n  value &= ~LIS3MDL_MAG_YIEN_MASK; \r\n  value |= newValue;\r\n  \r\n  if( !LIS3MDL_MAG_WriteReg(LIS3MDL_MAG_INT_CFG, value) )\r\n    return MEMS_ERROR;\r\n\r\n  return MEMS_SUCCESS;\r\n}\r\n\r\n/*******************************************************************************\r\n* Function Name  : LIS3MDL_MAG_R_InterruptOnY\r\n* Description    : Read YIEN\r\n* Input          : Pointer to LIS3MDL_MAG_YIEN_t\r\n* Output         : Status of YIEN see LIS3MDL_MAG_YIEN_t\r\n* Return         : Status [MEMS_ERROR, MEMS_SUCCESS]\r\n*******************************************************************************/\r\n\r\nstatus_t LIS3MDL_MAG_R_InterruptOnY(LIS3MDL_MAG_YIEN_t *value)\r\n{\r\n if( !LIS3MDL_MAG_ReadReg(LIS3MDL_MAG_INT_CFG, (u8_t *)value) )\r\n    return MEMS_ERROR;\r\n\r\n  *value &= LIS3MDL_MAG_YIEN_MASK; //mask\r\n\r\n  return MEMS_SUCCESS;\r\n}\r\n/*******************************************************************************\r\n* Function Name  : LIS3MDL_MAG_W_InterruptOnX\r\n* Description    : Write XIEN\r\n* Input          : LIS3MDL_MAG_XIEN_t\r\n* Output         : None\r\n* Return         : Status [MEMS_ERROR, MEMS_SUCCESS]\r\n*******************************************************************************/\r\nstatus_t  LIS3MDL_MAG_W_InterruptOnX(LIS3MDL_MAG_XIEN_t newValue)\r\n{\r\n  u8_t value;\r\n\r\n  if( !LIS3MDL_MAG_ReadReg(LIS3MDL_MAG_INT_CFG, &value) )\r\n    return MEMS_ERROR;\r\n\r\n  value &= ~LIS3MDL_MAG_XIEN_MASK; \r\n  value |= newValue;\r\n  \r\n  if( !LIS3MDL_MAG_WriteReg(LIS3MDL_MAG_INT_CFG, value) )\r\n    return MEMS_ERROR;\r\n\r\n  return MEMS_SUCCESS;\r\n}\r\n\r\n/*******************************************************************************\r\n* Function Name  : LIS3MDL_MAG_R_InterruptOnX\r\n* Description    : Read XIEN\r\n* Input          : Pointer to LIS3MDL_MAG_XIEN_t\r\n* Output         : Status of XIEN see LIS3MDL_MAG_XIEN_t\r\n* Return         : Status [MEMS_ERROR, MEMS_SUCCESS]\r\n*******************************************************************************/\r\n\r\nstatus_t LIS3MDL_MAG_R_InterruptOnX(LIS3MDL_MAG_XIEN_t *value)\r\n{\r\n if( !LIS3MDL_MAG_ReadReg(LIS3MDL_MAG_INT_CFG, (u8_t *)value) )\r\n    return MEMS_ERROR;\r\n\r\n  *value &= LIS3MDL_MAG_XIEN_MASK; //mask\r\n\r\n  return MEMS_SUCCESS;\r\n}\r\n/*******************************************************************************\r\n* Function Name  : LIS3MDL_MAG_W_InterruptFlag\r\n* Description    : Write INT\r\n* Input          : LIS3MDL_MAG_INT_t\r\n* Output         : None\r\n* Return         : Status [MEMS_ERROR, MEMS_SUCCESS]\r\n*******************************************************************************/\r\nstatus_t  LIS3MDL_MAG_W_InterruptFlag(LIS3MDL_MAG_INT_t newValue)\r\n{\r\n  u8_t value;\r\n\r\n  if( !LIS3MDL_MAG_ReadReg(LIS3MDL_MAG_INT_SRC, &value) )\r\n    return MEMS_ERROR;\r\n\r\n  value &= ~LIS3MDL_MAG_INT_MASK; \r\n  value |= newValue;\r\n  \r\n  if( !LIS3MDL_MAG_WriteReg(LIS3MDL_MAG_INT_SRC, value) )\r\n    return MEMS_ERROR;\r\n\r\n  return MEMS_SUCCESS;\r\n}\r\n\r\n/*******************************************************************************\r\n* Function Name  : LIS3MDL_MAG_R_InterruptFlag\r\n* Description    : Read INT\r\n* Input          : Pointer to LIS3MDL_MAG_INT_t\r\n* Output         : Status of INT see LIS3MDL_MAG_INT_t\r\n* Return         : Status [MEMS_ERROR, MEMS_SUCCESS]\r\n*******************************************************************************/\r\n\r\nstatus_t LIS3MDL_MAG_R_InterruptFlag(LIS3MDL_MAG_INT_t *value)\r\n{\r\n if( !LIS3MDL_MAG_ReadReg(LIS3MDL_MAG_INT_SRC, (u8_t *)value) )\r\n    return MEMS_ERROR;\r\n\r\n  *value &= LIS3MDL_MAG_INT_MASK; //mask\r\n\r\n  return MEMS_SUCCESS;\r\n}\r\n/*******************************************************************************\r\n* Function Name  : LIS3MDL_MAG_W_MagneticFieldOverflow\r\n* Description    : Write MROI\r\n* Input          : LIS3MDL_MAG_MROI_t\r\n* Output         : None\r\n* Return         : Status [MEMS_ERROR, MEMS_SUCCESS]\r\n*******************************************************************************/\r\nstatus_t  LIS3MDL_MAG_W_MagneticFieldOverflow(LIS3MDL_MAG_MROI_t newValue)\r\n{\r\n  u8_t value;\r\n\r\n  if( !LIS3MDL_MAG_ReadReg(LIS3MDL_MAG_INT_SRC, &value) )\r\n    return MEMS_ERROR;\r\n\r\n  value &= ~LIS3MDL_MAG_MROI_MASK; \r\n  value |= newValue;\r\n  \r\n  if( !LIS3MDL_MAG_WriteReg(LIS3MDL_MAG_INT_SRC, value) )\r\n    return MEMS_ERROR;\r\n\r\n  return MEMS_SUCCESS;\r\n}\r\n\r\n/*******************************************************************************\r\n* Function Name  : LIS3MDL_MAG_R_MagneticFieldOverflow\r\n* Description    : Read MROI\r\n* Input          : Pointer to LIS3MDL_MAG_MROI_t\r\n* Output         : Status of MROI see LIS3MDL_MAG_MROI_t\r\n* Return         : Status [MEMS_ERROR, MEMS_SUCCESS]\r\n*******************************************************************************/\r\n\r\nstatus_t LIS3MDL_MAG_R_MagneticFieldOverflow(LIS3MDL_MAG_MROI_t *value)\r\n{\r\n if( !LIS3MDL_MAG_ReadReg(LIS3MDL_MAG_INT_SRC, (u8_t *)value) )\r\n    return MEMS_ERROR;\r\n\r\n  *value &= LIS3MDL_MAG_MROI_MASK; //mask\r\n\r\n  return MEMS_SUCCESS;\r\n}\r\n/*******************************************************************************\r\n* Function Name  : LIS3MDL_MAG_W_NegativeThresholdFlagZ\r\n* Description    : Write NTH_Z\r\n* Input          : LIS3MDL_MAG_NTH_Z_t\r\n* Output         : None\r\n* Return         : Status [MEMS_ERROR, MEMS_SUCCESS]\r\n*******************************************************************************/\r\nstatus_t  LIS3MDL_MAG_W_NegativeThresholdFlagZ(LIS3MDL_MAG_NTH_Z_t newValue)\r\n{\r\n  u8_t value;\r\n\r\n  if( !LIS3MDL_MAG_ReadReg(LIS3MDL_MAG_INT_SRC, &value) )\r\n    return MEMS_ERROR;\r\n\r\n  value &= ~LIS3MDL_MAG_NTH_Z_MASK; \r\n  value |= newValue;\r\n  \r\n  if( !LIS3MDL_MAG_WriteReg(LIS3MDL_MAG_INT_SRC, value) )\r\n    return MEMS_ERROR;\r\n\r\n  return MEMS_SUCCESS;\r\n}\r\n\r\n/*******************************************************************************\r\n* Function Name  : LIS3MDL_MAG_R_NegativeThresholdFlagZ\r\n* Description    : Read NTH_Z\r\n* Input          : Pointer to LIS3MDL_MAG_NTH_Z_t\r\n* Output         : Status of NTH_Z see LIS3MDL_MAG_NTH_Z_t\r\n* Return         : Status [MEMS_ERROR, MEMS_SUCCESS]\r\n*******************************************************************************/\r\n\r\nstatus_t LIS3MDL_MAG_R_NegativeThresholdFlagZ(LIS3MDL_MAG_NTH_Z_t *value)\r\n{\r\n if( !LIS3MDL_MAG_ReadReg(LIS3MDL_MAG_INT_SRC, (u8_t *)value) )\r\n    return MEMS_ERROR;\r\n\r\n  *value &= LIS3MDL_MAG_NTH_Z_MASK; //mask\r\n\r\n  return MEMS_SUCCESS;\r\n}\r\n/*******************************************************************************\r\n* Function Name  : LIS3MDL_MAG_W_NegativeThresholdFlagY\r\n* Description    : Write NTH_Y\r\n* Input          : LIS3MDL_MAG_NTH_Y_t\r\n* Output         : None\r\n* Return         : Status [MEMS_ERROR, MEMS_SUCCESS]\r\n*******************************************************************************/\r\nstatus_t  LIS3MDL_MAG_W_NegativeThresholdFlagY(LIS3MDL_MAG_NTH_Y_t newValue)\r\n{\r\n  u8_t value;\r\n\r\n  if( !LIS3MDL_MAG_ReadReg(LIS3MDL_MAG_INT_SRC, &value) )\r\n    return MEMS_ERROR;\r\n\r\n  value &= ~LIS3MDL_MAG_NTH_Y_MASK; \r\n  value |= newValue;\r\n  \r\n  if( !LIS3MDL_MAG_WriteReg(LIS3MDL_MAG_INT_SRC, value) )\r\n    return MEMS_ERROR;\r\n\r\n  return MEMS_SUCCESS;\r\n}\r\n\r\n/*******************************************************************************\r\n* Function Name  : LIS3MDL_MAG_R_NegativeThresholdFlagY\r\n* Description    : Read NTH_Y\r\n* Input          : Pointer to LIS3MDL_MAG_NTH_Y_t\r\n* Output         : Status of NTH_Y see LIS3MDL_MAG_NTH_Y_t\r\n* Return         : Status [MEMS_ERROR, MEMS_SUCCESS]\r\n*******************************************************************************/\r\n\r\nstatus_t LIS3MDL_MAG_R_NegativeThresholdFlagY(LIS3MDL_MAG_NTH_Y_t *value)\r\n{\r\n if( !LIS3MDL_MAG_ReadReg(LIS3MDL_MAG_INT_SRC, (u8_t *)value) )\r\n    return MEMS_ERROR;\r\n\r\n  *value &= LIS3MDL_MAG_NTH_Y_MASK; //mask\r\n\r\n  return MEMS_SUCCESS;\r\n}\r\n/*******************************************************************************\r\n* Function Name  : LIS3MDL_MAG_W_NegativeThresholdFlagX\r\n* Description    : Write NTH_X\r\n* Input          : LIS3MDL_MAG_NTH_X_t\r\n* Output         : None\r\n* Return         : Status [MEMS_ERROR, MEMS_SUCCESS]\r\n*******************************************************************************/\r\nstatus_t  LIS3MDL_MAG_W_NegativeThresholdFlagX(LIS3MDL_MAG_NTH_X_t newValue)\r\n{\r\n  u8_t value;\r\n\r\n  if( !LIS3MDL_MAG_ReadReg(LIS3MDL_MAG_INT_SRC, &value) )\r\n    return MEMS_ERROR;\r\n\r\n  value &= ~LIS3MDL_MAG_NTH_X_MASK; \r\n  value |= newValue;\r\n  \r\n  if( !LIS3MDL_MAG_WriteReg(LIS3MDL_MAG_INT_SRC, value) )\r\n    return MEMS_ERROR;\r\n\r\n  return MEMS_SUCCESS;\r\n}\r\n\r\n/*******************************************************************************\r\n* Function Name  : LIS3MDL_MAG_R_NegativeThresholdFlagX\r\n* Description    : Read NTH_X\r\n* Input          : Pointer to LIS3MDL_MAG_NTH_X_t\r\n* Output         : Status of NTH_X see LIS3MDL_MAG_NTH_X_t\r\n* Return         : Status [MEMS_ERROR, MEMS_SUCCESS]\r\n*******************************************************************************/\r\n\r\nstatus_t LIS3MDL_MAG_R_NegativeThresholdFlagX(LIS3MDL_MAG_NTH_X_t *value)\r\n{\r\n if( !LIS3MDL_MAG_ReadReg(LIS3MDL_MAG_INT_SRC, (u8_t *)value) )\r\n    return MEMS_ERROR;\r\n\r\n  *value &= LIS3MDL_MAG_NTH_X_MASK; //mask\r\n\r\n  return MEMS_SUCCESS;\r\n}\r\n/*******************************************************************************\r\n* Function Name  : LIS3MDL_MAG_W_PositiveThresholdFlagZ\r\n* Description    : Write PTH_Z\r\n* Input          : LIS3MDL_MAG_PTH_Z_t\r\n* Output         : None\r\n* Return         : Status [MEMS_ERROR, MEMS_SUCCESS]\r\n*******************************************************************************/\r\nstatus_t  LIS3MDL_MAG_W_PositiveThresholdFlagZ(LIS3MDL_MAG_PTH_Z_t newValue)\r\n{\r\n  u8_t value;\r\n\r\n  if( !LIS3MDL_MAG_ReadReg(LIS3MDL_MAG_INT_SRC, &value) )\r\n    return MEMS_ERROR;\r\n\r\n  value &= ~LIS3MDL_MAG_PTH_Z_MASK; \r\n  value |= newValue;\r\n  \r\n  if( !LIS3MDL_MAG_WriteReg(LIS3MDL_MAG_INT_SRC, value) )\r\n    return MEMS_ERROR;\r\n\r\n  return MEMS_SUCCESS;\r\n}\r\n\r\n/*******************************************************************************\r\n* Function Name  : LIS3MDL_MAG_R_PositiveThresholdFlagZ\r\n* Description    : Read PTH_Z\r\n* Input          : Pointer to LIS3MDL_MAG_PTH_Z_t\r\n* Output         : Status of PTH_Z see LIS3MDL_MAG_PTH_Z_t\r\n* Return         : Status [MEMS_ERROR, MEMS_SUCCESS]\r\n*******************************************************************************/\r\n\r\nstatus_t LIS3MDL_MAG_R_PositiveThresholdFlagZ(LIS3MDL_MAG_PTH_Z_t *value)\r\n{\r\n if( !LIS3MDL_MAG_ReadReg(LIS3MDL_MAG_INT_SRC, (u8_t *)value) )\r\n    return MEMS_ERROR;\r\n\r\n  *value &= LIS3MDL_MAG_PTH_Z_MASK; //mask\r\n\r\n  return MEMS_SUCCESS;\r\n}\r\n/*******************************************************************************\r\n* Function Name  : LIS3MDL_MAG_W_PositiveThresholdFlagY\r\n* Description    : Write PTH_Y\r\n* Input          : LIS3MDL_MAG_PTH_Y_t\r\n* Output         : None\r\n* Return         : Status [MEMS_ERROR, MEMS_SUCCESS]\r\n*******************************************************************************/\r\nstatus_t  LIS3MDL_MAG_W_PositiveThresholdFlagY(LIS3MDL_MAG_PTH_Y_t newValue)\r\n{\r\n  u8_t value;\r\n\r\n  if( !LIS3MDL_MAG_ReadReg(LIS3MDL_MAG_INT_SRC, &value) )\r\n    return MEMS_ERROR;\r\n\r\n  value &= ~LIS3MDL_MAG_PTH_Y_MASK; \r\n  value |= newValue;\r\n  \r\n  if( !LIS3MDL_MAG_WriteReg(LIS3MDL_MAG_INT_SRC, value) )\r\n    return MEMS_ERROR;\r\n\r\n  return MEMS_SUCCESS;\r\n}\r\n\r\n/*******************************************************************************\r\n* Function Name  : LIS3MDL_MAG_R_PositiveThresholdFlagY\r\n* Description    : Read PTH_Y\r\n* Input          : Pointer to LIS3MDL_MAG_PTH_Y_t\r\n* Output         : Status of PTH_Y see LIS3MDL_MAG_PTH_Y_t\r\n* Return         : Status [MEMS_ERROR, MEMS_SUCCESS]\r\n*******************************************************************************/\r\n\r\nstatus_t LIS3MDL_MAG_R_PositiveThresholdFlagY(LIS3MDL_MAG_PTH_Y_t *value)\r\n{\r\n if( !LIS3MDL_MAG_ReadReg(LIS3MDL_MAG_INT_SRC, (u8_t *)value) )\r\n    return MEMS_ERROR;\r\n\r\n  *value &= LIS3MDL_MAG_PTH_Y_MASK; //mask\r\n\r\n  return MEMS_SUCCESS;\r\n}\r\n/*******************************************************************************\r\n* Function Name  : LIS3MDL_MAG_W_PositiveThresholdFlagX\r\n* Description    : Write PTH_X\r\n* Input          : LIS3MDL_MAG_PTH_X_t\r\n* Output         : None\r\n* Return         : Status [MEMS_ERROR, MEMS_SUCCESS]\r\n*******************************************************************************/\r\nstatus_t  LIS3MDL_MAG_W_PositiveThresholdFlagX(LIS3MDL_MAG_PTH_X_t newValue)\r\n{\r\n  u8_t value;\r\n\r\n  if( !LIS3MDL_MAG_ReadReg(LIS3MDL_MAG_INT_SRC, &value) )\r\n    return MEMS_ERROR;\r\n\r\n  value &= ~LIS3MDL_MAG_PTH_X_MASK; \r\n  value |= newValue;\r\n  \r\n  if( !LIS3MDL_MAG_WriteReg(LIS3MDL_MAG_INT_SRC, value) )\r\n    return MEMS_ERROR;\r\n\r\n  return MEMS_SUCCESS;\r\n}\r\n\r\n/*******************************************************************************\r\n* Function Name  : LIS3MDL_MAG_R_PositiveThresholdFlagX\r\n* Description    : Read PTH_X\r\n* Input          : Pointer to LIS3MDL_MAG_PTH_X_t\r\n* Output         : Status of PTH_X see LIS3MDL_MAG_PTH_X_t\r\n* Return         : Status [MEMS_ERROR, MEMS_SUCCESS]\r\n*******************************************************************************/\r\n\r\nstatus_t LIS3MDL_MAG_R_PositiveThresholdFlagX(LIS3MDL_MAG_PTH_X_t *value)\r\n{\r\n if( !LIS3MDL_MAG_ReadReg(LIS3MDL_MAG_INT_SRC, (u8_t *)value) )\r\n    return MEMS_ERROR;\r\n\r\n  *value &= LIS3MDL_MAG_PTH_X_MASK; //mask\r\n\r\n  return MEMS_SUCCESS;\r\n}\r\n/*******************************************************************************\r\n* Function Name  : status_t LIS3MDL_MAG_Get_Magnetic(u8_t *buff)\r\n* Description    : Read Magnetic output register\r\n* Input          : pointer to [u8_t]\r\n* Output         : Magnetic buffer u8_t\r\n* Return         : Status [MEMS_ERROR, MEMS_SUCCESS]\r\n*******************************************************************************/\r\nstatus_t LIS3MDL_MAG_Get_Magnetic(u8_t *buff) \r\n{\r\n  u8_t i, j, k;\r\n  u8_t numberOfByteForDimension;\r\n  \r\n  numberOfByteForDimension=6/3;\r\n\r\n  k=0;\r\n  for (i=0; i<3;i++ ) \r\n  {\r\n\tfor (j=0; j<numberOfByteForDimension;j++ )\r\n\t{\t\r\n\t\tif( !LIS3MDL_MAG_ReadReg(LIS3MDL_MAG_OUTX_L+k, &buff[k]))\r\n\t\t  return MEMS_ERROR;\r\n\t\tk++;\t\r\n\t}\r\n  }\r\n\r\n  return MEMS_SUCCESS; \r\n}\r\n\r\n/*******************************************************************************\r\n* Function Name  : status_t LIS3MDL_MAG_Get_Temperature(u8_t *buff)\r\n* Description    : Read Temperature output register\r\n* Input          : pointer to [u8_t]\r\n* Output         : Temperature buffer u8_t\r\n* Return         : Status [MEMS_ERROR, MEMS_SUCCESS]\r\n*******************************************************************************/\r\nstatus_t LIS3MDL_MAG_Get_Temperature(u8_t *buff) \r\n{\r\n  u8_t i, j, k;\r\n  u8_t numberOfByteForDimension;\r\n  \r\n  numberOfByteForDimension=2/1;\r\n\r\n  k=0;\r\n  for (i=0; i<1;i++ ) \r\n  {\r\n\tfor (j=0; j<numberOfByteForDimension;j++ )\r\n\t{\t\r\n\t\tif( !LIS3MDL_MAG_ReadReg(LIS3MDL_MAG_TEMP_OUT_L+k, &buff[k]))\r\n\t\t  return MEMS_ERROR;\r\n\t\tk++;\t\r\n\t}\r\n  }\r\n\r\n  return MEMS_SUCCESS; \r\n}\r\n\r\n\r\n/*******************************************************************************\r\n* Function Name  : status_t LIS3MDL_MAG_Set_MagneticThreshold(u8_t *buff) \r\n* Description    : Set MagneticThreshold data row\r\n* Input          : pointer to [u8_t]\r\n* Output         : None\r\n* Return         : Status [MEMS_ERROR, MEMS_SUCCESS]\r\n*******************************************************************************/\r\nstatus_t LIS3MDL_MAG_Set_MagneticThreshold(u8_t *buff) \r\n{\r\n  u8_t  i;\r\n\r\n  for (i=0; i<2;i++ ) \r\n  {\r\n\tif( !LIS3MDL_MAG_WriteReg(LIS3MDL_MAG_INT_THS_L+i,  buff[i]) )\r\n\t\treturn MEMS_ERROR;\r\n  }\r\n  return MEMS_SUCCESS;  \r\n}\r\n\r\n/*******************************************************************************\r\n* Function Name  : status_t LIS3MDL_MAG_Get_MagneticThreshold(u8_t *buff)\r\n* Description    : Read MagneticThreshold output register\r\n* Input          : pointer to [u8_t]\r\n* Output         : MagneticThreshold buffer u8_t\r\n* Return         : Status [MEMS_ERROR, MEMS_SUCCESS]\r\n*******************************************************************************/\r\nstatus_t LIS3MDL_MAG_Get_MagneticThreshold(u8_t *buff) \r\n{\r\n  u8_t i, j, k;\r\n  u8_t numberOfByteForDimension;\r\n  \r\n  numberOfByteForDimension=2/1;\r\n\r\n  k=0;\r\n  for (i=0; i<1;i++ ) \r\n  {\r\n\tfor (j=0; j<numberOfByteForDimension;j++ )\r\n\t{\t\r\n\t\tif( !LIS3MDL_MAG_ReadReg(LIS3MDL_MAG_INT_THS_L+k, &buff[k]))\r\n\t\t  return MEMS_ERROR;\r\n\t\tk++;\t\r\n\t}\r\n  }\r\n\r\n  return MEMS_SUCCESS; \r\n}\r\n\r\n"
+              },
+              "other": {}
+            }
+          },
+          "elements": {
+            "xMagneticField": {
+              "code": "\tLIS3MDL_MAG_ZYXDA_t isDataReady;\n\tstatic Type3Axis16bit_U magneticField;\n\t\n\t//First we check to see if the sensor has new data available\n\tLIS3MDL_MAG_R_NewXYZData(&isDataReady);\n\t\n\tif (isDataReady == LIS3MDL_MAG_ZYXDA_AVAILABLE)\n\t{\n\t\t//With new data available we will now update our magneticField buffer.\n\t\tLIS3MDL_MAG_Get_Magnetic(magneticField.u8bit);\n\t}\n\t\n\treturn magneticField.i16bit[0];\n",
+              "language": {
+                "en": {
+                  "label": "X Magnetic Field"
+                }
+              },
+              "label": "X Magnetic Field",
+              "returnType": "int",
+              "inputType": "void",
+              "icon": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAAA9CAYAAABbY8xrAAAABHNCSVQICAgIfAhkiAAAAAlwSFlz\nAAAczgAAHM4BIbw/DgAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAA1/SURB\nVHic7Zx7dFTV9cc/+84kBIKBvHhDQQ2PKg+DkMhPEWQGASkGKq0gUFZpKZIBqVhBuzRiraJtFc1A\nEattBZEf/ioKFSUTRKlFKw8RljwERQV5B0ICIa+5+/fHTCaZ5E4yE1qoJN+17lpz9tlnn33vd+55\n3X2OqCoVELezPXAPcD2QCrSgEf8JnAG2AVuAZ9Xl+bYiQyoIEbdzApANtLwUHjZg5AMz1OVZBn5C\nxO2cCLx8af26dEhv04OB7XphqompSn7pWV7a9U5ENhJj4hh79cAg2Wv7N5JXXBCuiUnq8iwVsh1t\ngc+A+Ig8uIwwt++dPHHDlED668JjdP7rhIhs9Em6ik/uXBwku27FNLaf/CJcE6eBawx8fUaDJeO/\nCPHAPQbQ71J70ogA+hlA30vtRSMC6CtkO7RuvcsPt3cZwJMDfgZAQkwcyU0rR/jlppcvzhwG4NV9\nG5j38VJLG01sUfxteBZXt2hHE1s0neNaB+V/VXCMEm8pBWVF3P7Wwxw5d6pOv4z63tB3HW8e2MTG\nwzvpFt8xiAwAu2GjW3xHCsvO89S2lSFtlHjLuH/TC7SNTaxBBkDnuNaktOzAY5tfCYsMaMCEAGS+\nn8373+6wzDty7hS3v/Uw58tLarWx69TXjM95HFOtG5pff/QSqw98GLZPDZqQMrOcH749jy8LjgTJ\ni72lZKzN4vC5vLDsvPXVv5j74Z9qyJd//i7zt66IyKcGTQhAXnEBP/j7QxSUFgVkU9b/gY+P7YnI\nzu+2reTlPZ5A+uNje5iy/g8R+9PgCYHgZmf+1hUs//zdetmZuuEZPjq6m8Pn8shYm0WxtzRiGw12\nlGWFYZ36kXNwS8j+IBy0aZZAu9hEtp3YV6/y9nrXfBnis1NfXRAZAKdLCjHVrHf5xibLjx7xndg5\n/gXGdR18QXaeHzyL1SN/Q4wtul7lGwkBEmKuYPXI39AiOpaXhtxHv1bd6mXnvuvG8pPuQ0lr3Z0X\nbrm3XjYaPCF2w8b/DXuYq1u0AyDGFs0bt82jXWxiRHZGfK8/Tw74eSA9odsQ5qT+OGJ/Gjwh2QNd\nDO7QJ0jWLjaRN26bF3az0yO+E6/e+msMkSD54zdMYWTn9Ij8adCEZPYcxbRrR1rm9WvVjReHzK7T\nRkVzFxfdrEaeIcLyoQ9wTULnsH1qsIQ4Oqay4KbpteqM73oLD/QdFzLfbthYOeyhQHNnhSuim7F6\n5KMkxsSF5VeDnYfERsUQZfhG/bN6jyGr/8RA3sGzJ+j16lQATDWDZvFVYRODK/xvRs/ELmwc83RQ\n/sDX72Vn3gEAisqLKfWW1+lXg52HnCsrDvyuPqM21SS/5GydNrxV9AotSCssLQrLTlU02CarKqpP\nBgUJoRkaIjXL1GeS2UgIBD5GVaB98yRio2IispHSon1Q2lStsYocDhoJAbYc/zwobROD61t1jchG\n31YpQem9+Qc5W3Y+Yl8aCcEX9lM9furHKYPCLh9tszOqy4Ag2dbj9VtcbCTEj+oPcNq1I7m5fa+w\nymb1m0T3+I5Bsi3H99bLj0ZC/Fjw6etBaUF42TGH/q2711ruZ98fzv2pPwqSHS06xbK96+vlh40R\nVz5Sr5KXGfaf+Zb2sUlBfUGLJrH89PvDaGKL5tDZE5wqLgR80SZ9W3Xl+cGzmH3dWAwJ/l+Pz3k8\nkojFINQ1MSwD9gDWM6PvPq4FYisSzaOasmPcErrEtbFULigt4tDZE6S0bB+YVFbHn3ev46frf19d\n/C1wCGgDfK82h0IRchaYA7yoLk/tYRffYVgFmae17s7rIx6JeLUX4N1D2xm9Nqv6zL4A6KMuzwF/\nnW2BpwDL4GErQhS4RV2e9yL26DsIcTuXA0ELVvFNmvPswEwmdnOEZeN8eQlzNv0J9443UWr8v+9S\nl2e5Rb2LgLury6069VcbChl+3A18XVVwuuQskzxPkvFWFp+e/JJy02tZ8GzZed75ZjN9Vkwje8cb\nVmQstSLDj18BhdWFVm/IL9TlWRLWrVwmELczBXgT6GGV39TehN5JV3J9q650bJ7MzrwDbD2+j735\nB2tbHlkKTFWXpziUgridHwD/U1Vm1TN9E9ZdXEZQl2efuJ1pwDJgVPX88+UlfHR0Nx8d3R2OOS9w\nv7o8T9ep6evog9A4D/FDXZ5CIAOYC4QXslgTO4FbwyTDEo2EVIG6PKouz5NAJyAT2B9m0Rx8RPRS\nl6d+M0I/Guz3kNqgLk8RsEjczsX4NjSlAFf5ryR8g4Av/NdOdXnCJa5O1EqIPDMsgSjvTGz6ut6d\nu0MWD2lPufFzVFfqjNxdQboLnVNBDmlmzloA+aOjF14ZQ17845q1shRA5v0omsTTDyDmXzRzfWBk\nI38cGY9ZcidId0zNocnpHJ26pUyeG5qCoXdRbv+Lznr7K8l23ITIEPJufJTYTU2JMX8V7DCHUYK/\npxrGi5jmHSBfqCtntc+PwXYSDScYIxE9pJm5TwSZyR46GdHOAYHaVoF5HMMs1czcJ2ShIxGVGUBv\noLe4ncXq8syXbMdMDOOgZuasCthyO6aDJCNaiMq2ukawtTZZ+st3TgGTKJf7ACg3xgEPUG4/WlOZ\nOSizAmmvcQeQRVJe24AsIa8P8AhqGx5wGBG8pf+LshDVOxD+TlmCL6jJRgqQhc073u/uTUAWbdfY\niPI2B7JApoBmgGagDPL9JguY5pcngtxL1c460f40GGuBcahU7vYMOKWTgdkBu2gnDHMoKg/6noOZ\n5K9jsr/e23zlZCZqjqlmLBO4F5X5wAZxOx8L/cTD6UOEVxDGyJJRzRAZDazxE1UdSaCplUn1b5Wz\nV65DiJEGlCFmWkCW7UgDdaLMxJXbAWUlqpNl3rxK30RrjHyq4Lfqyu3juzzj1ZXbB/AivKCu3D46\nPWd70O0sHJIKuIDlaFRbXLkpllZhS8DujHVrLDVE5/ryPTfV4h/AOqJJBv4JzJZnHTV39/hRNyHl\n3mVALCVFo1FNR/lzDb+yRzQB4oBEec7ZyS/2kaNatfJ0hA9QqSTEUN+HBMNco6gSZcwgL763ZmVV\nBMieB7rKosHWC0yRwrQNAwQxH9QZa0uUCwzmDRM61XMGMWYDMdiwjj0iDEL0nnf3AlsQeRQ4zqny\ndTWUokqS/L++xNBUcQ9th28h7TCiVR9kOspaoLsscfr2kal0ACDWPAag09Ydr+hz/GgK+h4aNRLD\nvPCHJ9oPOFW1D7toMG3bAQX/PVsgzFGWLANdAPxeszbUjGUxbcm+enQjSF8wy1HJBw6CtAGQ7BHJ\nCFci3rdR21OU0A/IRaQZqhCbXCZLRjWjqNAXLnhmUAEVNCvvgf4AEYvjFcyx4nZ0R9mtM3Kfr/te\nNAHkZBj3fLW4HQsAsMXMszZlTBK3Ix2VbTrDU+dJGDpjbYm4neeBkIFc4c1DRH1f61UPWtdkJgNg\nyj9QUoGewE7Qc4EmyyhNA0o4efNu4DCCr9nSKn+K0uJF2O2nsdtPk/Bhz8r6jU3AIFCLzwDSBSQd\npPYvSZX6zYAwdtJonN9uOnquSQidFJB0DEL1Q1YoAUIuJYf5hugEkBLEuAt4rma2JAPFCJuB34Kc\nRuQT0C4obfw66cA+zcoyxe38DFE/IVqIACeL4kDmA9+APoR4TSrCcQzKMdmGcl1N3+QpdeUsrikP\nAaEQDf1AqmCbujyBvQmy0GLlV/QhzcyNbBOhYEc5ESq7zjdEskckozIc9DXQ/rLQYRGOIclAAXnl\nu4F4VG5GdTum5CNS0YekAYYsdM5CaYZKf7+DZwDwlrVU17o9oL5Qv3J7lZVQMwrRNSBBC3H1gsox\noKM8M6DpBduKELJocHOUZqCHQ+mEMewtH+/Tsz0MnAOZWFNHk4ACf/+yC7QDhnyCkI9qa/8Qtj+C\nDSUDoQXQWhYM74zIpz4bpj+iQDsAZbQsDp7riH01WL0hEUJ0A2AnqvkPL9hWpPDabgdswOehVMLo\nQ3QS6AfqWncAZA3oBKF6mJ7/DQEQ/RQo40TLXaieBtqQ9H4PIA5TZqrLMwgD38YJe1kaUWX/AApQ\n5kq24w6QKQgf6OQNQcvWOv2d/YBFbI32FrcjQ9yOjLrvBTCjVgFHQJ+V7KEPysKhNf9g4eN6cTsy\nJNt5W6VIOlb4IwsGV5w91kmyHfMQWQjsJ8/7t1AGayVEnrv1WiAVxWdAdAUqnckecmOQompyoOlR\nYzvoLs1aWYohp4FYsPkOkrKV+Xbpn7hxL763LU2nbjgJ+hOgEyKvAWV45RchPFptIZwGssp31Q2d\nsfYEYoxGOIDoY6g+UXepUMZkNsgqhFeqSG8O+GNEX+WXpYJMB/6JaYy2HKn6YfWBari6PJGd3vVv\ngiy+tZVOW3f8otW30JFIq4R8HbvS+pPgf7p+t3MFELTNymqUlXBx3KmJi0kGgGbm1ve7x78LsdUF\nVk1W4/lZFwHidgoWR2MZ4G/7KzFF3M7OF8OpBo67gbbVZGcMYGs14RXAanE7r7kobjVAiNs5Gfid\nRdZWO7AZuKVaRk9gq7idG4HtXL6RixcbbYAbgFBR3JsbTyX974HvVFJ1eY7gO5m0EZcW96jLc8QA\nUJdnKTAR3ynLjbi4yAcm+jmoPGocGs9+v4gIefb7/wORE+z+I41hVwAAAABJRU5ErkJggg==\n"
+            },
+            "zMagneticField": {
+              "code": "\tLIS3MDL_MAG_ZYXDA_t isDataReady;\n\tstatic Type3Axis16bit_U magneticField;\n\t\n\t//First we check to see if the sensor has new data available\n\tLIS3MDL_MAG_R_NewXYZData(&isDataReady);\n\t\n\tif (isDataReady == LIS3MDL_MAG_ZYXDA_AVAILABLE)\n\t{\n\t\t//With new data available we will now update our magneticField buffer.\n\t\tLIS3MDL_MAG_Get_Magnetic(magneticField.u8bit);\n\t}\n\n\treturn magneticField.i16bit[2];\n",
+              "language": {
+                "en": {
+                  "label": "Z Magnetic Field"
+                }
+              },
+              "label": "Z Magnetic Field",
+              "returnType": "int",
+              "inputType": "void",
+              "icon": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAAA9CAYAAABbY8xrAAAABHNCSVQICAgIfAhkiAAAAAlwSFlz\nAAAczgAAHM4BIbw/DgAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAA2hSURB\nVHic7Zx5dNRVlsc/91dFEhJICCGsotDNKjvIItpIoIqtAdFuFBlw5jTdDEtF0W7QbltjxhmnoVul\nJwUHsbW7RZHBGVEcGEkFEA4HGHbJUTYBUVlCSAJZyVK/O39UpZKqVCqV0EJL8j2nTvLuu++++6tv\nvfV33xNVpRLitHcCngTuAQYDcTThu8A14BBwAPijOlznKzOkkhBx2mcBaUCrW+FhI8ZVIFkdrnfA\nS4g47bOBt2+tX7cOI9r3ZlTH/phqYqpytayQt774pF42EqJimd5tlJ/s/S93knM9P1wTj6vDtUZI\ns3UAPgfi6+XBbYRnh8zg3++d40ufK8iiy19n1cvGwDY/5PCMVX6yQevmceTK6XBN5AF9DDxjRqMl\n4+8I8cCTBjD0VnvSBB+GGsCQW+1FE3wYIqTZtG692w8Pdh3J0pE/B6B1VCyJzatm+BWmm9PXLgDw\n3qntpO5bE9RGpKUZ/z0xhW5xHYm0RNAltp1f/lf5WZS6y8gvL+bBTS9wsSi3Tr+Mhj7Q9x0fnd3N\nzguZ9Izv7EcGgNWw0DO+MwXlJSw7tL5WG6XucpbsfoMOMQk1yADoEtuO7q3u4F/3vxsWGdCICQFY\nuCONHeePBs27WJTLg5teoKSiNKSNL3LPMTP9ZUwN3tE8t/ctNp7dE7ZPjZqQcrOCn/xvKmfyL/rJ\nr7vLmLY5hQtFOWHZ2fTV//Hsnj/VkK89uY3fHVxXL58aNSEAOdfzmfI/z5NfVuyTzdn6CvuyjtfL\nzu8Preft4y5fel/WceZsfaXe/jR6QsC/2/ndwXWsPbmtQXbmbn+NvZeOcaEoh2mbU7juLqu3jUY7\nywqGCXcOJf2bA7WOB+GgfXRrOsYkcCj7VIPKWxtc822Iz3O/uiEyAPJKCzDVbHD5pi7Li97xd5I5\n8w0e65F0Q3ZeT1rExskvEWWJaFD5JkKA1lEt2Tj5JeIiYnhr7K8Y2rZng+z8atB0/rHXOIa368Ub\nY55ukI1GT4jVsPBfE16gW1xHAKIsEXz441Q6xiTUy86ku4axdOQvfOlZPcfyzOBH6+1PoyckbZSD\npDsG+sk6xiTw4Y9Tw+52esffyXvjn8MQ8ZO/fO8cJncZUS9/GjUhC/tNZV7fyUHzhrbtyZtjf1mn\njcruLjYiukaeIcLacb+mT+suYfvUaAmxdR7M8h8tCKkzs8cYfj3ksVrzrYaF9ROe93V3wdAyIpqN\nk/+FhKjYsPxqtOuQmGZRNDM8s/5FAx4mZdhsX943hdn0f28uAKaafqv46rCIQUtvy+iX0JWdD7/q\nlz/qg6fJzDkLQHHFdcrcFXX61WjXIUXl133/B66oTTW5WlpYpw13Nb2CIKQVlBWHZac6Gm2XVR2B\ni0FBatGsHSI1yzRkkdlECPheRlWiU4s2xDSLqpeN7nGd/NKmao1d5HDQRAhw4PJJv7RFDO5p26Ne\nNoa07e6XPnH1GwrLS+rtSxMheMJ+AuOnHu0+OuzyERYrU7uO9JMdvNywzcUmQrwI/ALn9Z3MA536\nh1U2Zejj9Irv7Cc7cPlEg/xoIsSL5Z994JcWhLdtzzCsXa+Q5X5+90SWDH7ET3apOJd3TmxtkB8W\nJv3gxQaVvM3w5bXzdIpp4zcWxEXG8LO7JxBpieDbwmxyrxcAnmiTIW178HrSIn45aDqG+P+uZ6a/\nXJ+IRT/UtTAsB44DwVdG33/0BWIqEy2aNefoY6vpGts+qHJ+WTHfFmbTvVUn36IyEH8+toWfbf1D\noPg88C3QHrgrlEO1EVIIPAO8qQ5X6LCL7zGCBZkPb9eLDya9WO/dXoBt3x7hoc0pgSv7fGCgOlxn\nvXV2AJYBQYOHgxGiwBh1uD6tt0ffQ4jTvhbw27CKj2zBH0ctZHZPW1g2SipKeWb3n3Ae/Qilxu/7\nH9ThWhuk3pXA/EB5sEH9vcZChhfzgXPVBXmlhTzuWsq0TSl8duUMFaY7aMHC8hI++Xo/A9fNI+3o\nh8HIWBOMDC8WAwWBwmAt5J/V4Vod1qPcJhCnvTvwEdA7WH5zayQD2vyAe9r2oHOLRDJzznLw8ilO\nXP0m1PbIGmCuOlzXa1MQp30XcF91WbCR6euwnuI2gjpcp8RpHw68A0wNzC+pKGXvpWPsvXQsHHNu\nYIk6XK/WqekZ6P3QtA7xQh2uAmAa8CwQXshiTWQC48MkIyiaCKkGdbhUHa6lwJ3AQuDLMIum4yGi\nvzpcDVsRetFo34eEgjpcxcBKcdpX4TnQ1B34offTBs8k4LT3k6kOV7jE1YmQhMiy+1sS3dz/xbJK\ngSan+wWtyooxfVDLT4nIe1nnHij3yGxPo5Yj6tiyrUpv3CRMM16TM971K++0jwamgpzD1A36hOtr\nj759Pqbma3LGu4IITlsKYmzThVt2itM2DaQqOkH1FCL+W64qJ8B9GjEmUV60VJ/aXeKpb3xXcE9H\n6Y5FXtUFLt/gICsndMN0V60RRLJpFvVnykqWYGiaLsjYLytsM1DpBQwABsh/jP8YS4WixlSKS17R\nJbsKACRtwgDE/RBQjkgWpnW9Jm8OeQo0dAuJjWlOhXua1zMD6IdokGmc5T7gRUrjNwKHvUT+ATVX\nAVWBsqqLMegC+AiRFTY7yBYgGzQegyXy2shu+tTuEpQFiHSU9x9ZB9OBvBRMswLYCcY00MdAj3m/\nOBeoHaQDkAh6FEN2YBoJQAoR0WlAiayw9QA5DBKNcAY3+4Cq0dos7w5GCnAKtBjVM5RWrEdIweQy\nsB9TZiCMA/Xs2xtmJqbRGiGF6OjV+Kaz7gFACpCDagJSniqrxg/SeVsuN4gQb8GBAJI27gFEPwX5\nzxqKprRBFEQHA4eJiRmEmoKobw9C3n/EAtyDSqSsGt/W55TyW+AMOfF3E3+tH4a5D2vMRKByt681\nl67eT/tWu2rUK3pBF2b4xfDICtu/obJYHRlev+0O/4eSNECA/upwZQpBXvUBqDlLk7fu89iYlBhE\n44Q6Mgb56k2z/yKIjgcWhuGWkaBrcLufBJ6rTTX8QV10BnCNnFZBDnCr12EZ7Plrev6KUXWs6Epu\nH6AY5CTlDAeQ1CQryFCUdE1ZX6ZPbDmIVtylya7qW68XCTIVbQjktZHNgdEof1GHKxNAucFg3nDg\nNlQd6e8AO1CZHko1LEIkNcmK8lNEN2jK+pox9gaJwBk813GA6hDgAlrVQjBlBOhxxDyDmMMBaGVJ\nAJojZFWqafL2wLn5HkSn8EWfG//irDEDgAgMOXTDthqGQ0CnUArhzbISrGOBNgg1uysAJRHRnag8\n6umaZDDKUYTqVxsMBzmOSTHiaSFYLNFggmiZpKYaxH3qCV6KblmmczdW7tCdARlGwu4eCAV+uxMq\nrcVpW+5JGMvUke7/cjwQhrT2NAjNrvOZxfKUOG1ZKLsgYkcQjU6+ui1RqXXaAxC5imq0LE9qpYu2\nXw3qYniGdAaQQ7Y7oxaNREw5DeRxOWcA0ANhLxAtK5NaAKCMQPQEwhlgqCCCqZ4fhGkIibt6YrXm\nYbXmUVZS/XxYLKofg3sqaOCCLRJkBMgIDKNm6GAgTNOrI+V1P7T29druWotCjK9uLYqs2x4Anp3z\nSGvr2hTqbCGSNikSkYeA9ZqyvZZIL0kEMx+Mz0BmAgYqexAFItvLans20BuM4yDXwYxjpa0X1vI8\nTCuItsTa/BxlJUnAOoRqBywkFov5V0z5LYEraNGLujAj/OBZEc/sR6vegdQKNefUMaifVIfLV7ek\n2euuX70/wIpmV2pTqbuFGOUTgDgkyOyqqqZEMPJBP0ONRxFOoeLtPtztKWUoIJg6CkxPN+aW4Vhb\neubkIvE6d2Oxd5fZQKvvgmoz3BHbgb7oDe4sGOIZq1Qbdt7gxtEOKAq1Fqn7AVVmAFm0bfVpsGxZ\ndn9LIBI0H/QI6B2oHCaiIg8Ak3bACKAEYQQwGihCdLh3nDiFan8AWT01GohH1G+DU5M3lwJbgfCi\nDmpD9n1HgVyEn3in4TcN8pekKGAicDKUXuiV+uqp0aBTgP1k5U4Rpw3UyNPk9KpBLjqmDZhgyDXU\nOO8ZpDmCEZMHJSDSHnQE6B51ZIwFkBW2jagMA0DZhPCEpNkdCD0AK0LNsUrlY0QfDpBFe1bsgGl8\nrk+kh4y90ZQUU1bYVqHyG7LyPpA023qsZOr8jOCH1UMjzld3RbMjVNKrOkGctlwMzuOLgHTPotAy\nGuiGEPLQSOgWUlY8Bc8759EgG0A2YKj/WV+t8PSvYuaTM/IkUIzJYe+vvwylHcpwVKoeWuUQ0F9e\nG9mciqLfABkIy4E5IC/pgoz9NZ2xbgICD++19fll4eGaZYLgyo+eR+R14AFE1uA2GtrqulbVXT7e\nJxXeBNmAKYurZLIY5E6QRSzMeD+U0WAvqCaqw1W/27v+BpC0SbFAqbd7+u7rS02yEhsZq099Et6d\nF9+FD077OvBvMcG6rFqnZN8l6tp0+5vX55kx3jIyvKgx2wvWZTXdn3UTIE67EORqLAPPDZnVMUec\n9i43w6lGjvlAhwDZNQM4GCBsCWwUp73PTXGrEUKc9n8Cfh8k66AV2A+MCcjoBxwUp30ncITbN3Lx\nZqM9cC+1r6f2N91K+vcDz62k6nBdxHMzaRNuLZ5Uh+uiAaAO1xpgNp5blptwc3EVmO3loOqqcWi6\n+/0mota73/8fpED9SDG1aNQAAAAASUVORK5CYII=\n"
+            },
+            "magneticField": {
+              "code": "\tLIS3MDL_MAG_ZYXDA_t isDataReady;\n\tstatic Type3Axis16bit_U magneticField;\n\t\n\t//First we check to see if the sensor has new data available\n\tLIS3MDL_MAG_R_NewXYZData(&isDataReady);\n\t\n\tif (isDataReady == LIS3MDL_MAG_ZYXDA_AVAILABLE)\n\t{\n\t\t//With new data available we will now update our magneticField buffer.\n\t\tLIS3MDL_MAG_Get_Magnetic(magneticField.u8bit);\n\t}\n\t\n\t//Now we build our return buffer for the app side.\n\tchar outputBuffer[32];\n\t\n\t//This will construct a JSON array for the application side.\n\tsprintf(outputBuffer, \"[%d,%d,%d]\", magneticField.i16bit[0], magneticField.i16bit[1], magneticField.i16bit[2]);\n\t\n\treturn outputBuffer;\n",
+              "language": {
+                "en": {
+                  "label": "Magnetic Field"
+                }
+              },
+              "label": "Magnetic Field",
+              "returnType": "json",
+              "inputType": "void",
+              "icon": "data:image/png;base64,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\nAElFTkSuQmCC\n"
+            },
+            "yMagneticField": {
+              "code": "\tLIS3MDL_MAG_ZYXDA_t isDataReady;\n\tstatic Type3Axis16bit_U magneticField;\n\t\n\t//First we check to see if the sensor has new data available\n\tLIS3MDL_MAG_R_NewXYZData(&isDataReady);\n\t\n\tif (isDataReady == LIS3MDL_MAG_ZYXDA_AVAILABLE)\n\t{\n\t\t//With new data available we will now update our magneticField buffer.\n\t\tLIS3MDL_MAG_Get_Magnetic(magneticField.u8bit);\n\t}\n\t\n\treturn magneticField.i16bit[1];\n",
+              "language": {
+                "en": {
+                  "label": "Y Magnetic Field"
+                }
+              },
+              "label": "Y Magnetic Field",
+              "returnType": "int",
+              "inputType": "void",
+              "icon": "data:image/png;base64,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\nAElFTkSuQmCC\n"
+            }
+          },
+          "type": "Embedded Library",
+          "description": "The LIS3MDL is an ultra-low-power high-performance three-axis magnetic sensor.\n\nThe LIS3MDL has user-selectable full scales of ±4/ ±8/ ±12/ ±16 gauss.\n\nThe self-test capability allows the user to check the functioning of the sensor in the final application.\n\nThe device may be configured to generate interrupt signals for magnetic field detection.\n\nThe LIS3MDL includes an I2C serial bus interface that supports standard and fast mode (100 kHz and 400 kHz) and SPI serial standard interface.\n\nThe LIS3MDL is available in a small thin plastic land grid array package (LGA) and is guaranteed to operate over an extended temperature range of -40 °C to +85 °C.",
+          "language": {
+            "en": {
+              "label": "LIS3MDL Driver"
+            }
+          },
+          "author": "STMicroelectronics",
+          "name": "lis3mdl",
+          "links": {
+            "Datasheet": "http://www.st.com/st-web-ui/static/active/en/resource/technical/document/datasheet/DM00075867.pdf",
+            "Product Page": "http://www.st.com/web/en/catalog/sense_power/FM89/SC1449/PF255198",
+            "Errata Sheet": "http://www.st.com/st-web-ui/static/active/en/fragment/legal/statements/disclaimer/disclaimer_errata.pdf"
+          },
+          "label": "LIS3MDL Driver",
+          "code": {
+            "setup": "\tLIS3MDL_MAG_W_FullScale(AIR_LIS3MDL_MAG_W_FULLSCALE);\n\tLIS3MDL_MAG_W_OutputDataRate(AIR_LIS3MDL_MAG_W_OUTPUTDATARATE);\n\tLIS3MDL_MAG_W_BlockDataUpdate(AIR_LIS3MDL_MAG_W_BLOCKDATAUPDATE);\n\tLIS3MDL_MAG_W_OperatingModeXY(AIR_LIS3MDL_MAG_W_OPERATINGMODEXY);\n\tLIS3MDL_MAG_W_OperatingModeZ(AIR_LIS3MDL_MAG_W_OPERATINGMODEZ);\n\tLIS3MDL_MAG_W_SystemOperatingMode(AIR_LIS3MDL_MAG_W_SYSTEMOPERATINGMODE);",
+            "global": "",
+            "connected": " \n",
+            "interval": " \n"
+          },
+          "version": "1.0.0",
+          "signature": "",
+          "config": {
+            "values": {
+              "MAG_W_FullScale": {
+                "regex": "^[a-zA-Z0-9_.]*$",
+                "name": "LIS3MDL_MAG_W_FullScale",
+                "value": "LIS3MDL_MAG_FS_16Ga",
+                "prefix": "#define AIR_LIS3MDL_MAG_W_FULLSCALE ",
+                "input": "Combo",
+                "options": [
+                  "LIS3MDL_MAG_FS_4Ga",
+                  "LIS3MDL_MAG_FS_8Ga",
+                  "LIS3MDL_MAG_FS_12Ga",
+                  "LIS3MDL_MAG_FS_16Ga"
+                ]
+              },
+              "MAG_W_OutputDataRate": {
+                "regex": "^[a-zA-Z0-9_.]*$",
+                "name": "LIS3MDL_MAG_W_OutputDataRate",
+                "value": "LIS3MDL_MAG_DO_0_625Hz",
+                "prefix": "#define AIR_LIS3MDL_MAG_W_OUTPUTDATARATE ",
+                "input": "Combo",
+                "options": [
+                  "LIS3MDL_MAG_DO_0_625Hz",
+                  "LIS3MDL_MAG_DO_1_25Hz",
+                  "LIS3MDL_MAG_DO_2_5Hz",
+                  "LIS3MDL_MAG_DO_5Hz",
+                  "LIS3MDL_MAG_DO_10Hz",
+                  "LIS3MDL_MAG_DO_20Hz",
+                  "LIS3MDL_MAG_DO_40Hz",
+                  "LIS3MDL_MAG_DO_80Hz"
+                ]
+              },
+              "MAG_W_OperatingModeZ": {
+                "regex": "^[a-zA-Z0-9_.]*$",
+                "name": "LIS3MDL_MAG_W_OperatingModeZ",
+                "value": "LIS3MDL_MAG_OMZ_HIGH",
+                "prefix": "#define AIR_LIS3MDL_MAG_W_OPERATINGMODEZ ",
+                "input": "Combo",
+                "options": [
+                  "LIS3MDL_MAG_OMZ_LOW_POWER",
+                  "LIS3MDL_MAG_OMZ_MEDIUM",
+                  "LIS3MDL_MAG_OMZ_HIGH",
+                  "LIS3MDL_MAG_OMZ_ULTRA_HIGH"
+                ]
+              },
+              "MAG_W_BlockDataUpdate": {
+                "regex": "^[a-zA-Z0-9_.]*$",
+                "name": "LIS3MDL_MAG_W_BlockDataUpdate",
+                "value": "LIS3MDL_MAG_BDU_ENABLE",
+                "prefix": "#define AIR_LIS3MDL_MAG_W_BLOCKDATAUPDATE ",
+                "input": "Combo",
+                "options": [
+                  "LIS3MDL_MAG_BDU_DISABLE",
+                  "LIS3MDL_MAG_BDU_ENABLE"
+                ]
+              },
+              "MAG_W_OperatingModeXY": {
+                "regex": "^[a-zA-Z0-9_.]*$",
+                "name": "LIS3MDL_MAG_W_OperatingModeXY",
+                "value": "LIS3MDL_MAG_OM_HIGH",
+                "prefix": "#define AIR_LIS3MDL_MAG_W_OPERATINGMODEXY ",
+                "input": "Combo",
+                "options": [
+                  "LIS3MDL_MAG_OM_LOW_POWER",
+                  "LIS3MDL_MAG_OM_MEDIUM",
+                  "LIS3MDL_MAG_OM_HIGH",
+                  "LIS3MDL_MAG_OM_ULTRA_HIGH"
+                ]
+              },
+              "i2c_address": {
+                "regex": "^[a-zA-Z0-9_.]*$",
+                "name": "I2C Address (7 bit)",
+                "value": "0x1c",
+                "prefix": "#define AIR_LIS3MDL_MAG_I2C_ADDRESS ",
+                "input": "Combo",
+                "options": [
+                  "0x1c",
+                  "0x1e"
+                ]
+              },
+              "MAG_W_SystemOperatingMode": {
+                "regex": "^[a-zA-Z0-9_.]*$",
+                "name": "LIS3MDL_MAG_W_SystemOperatingMode",
+                "value": "LIS3MDL_MAG_MD_CONTINUOUS",
+                "prefix": "#define AIR_LIS3MDL_MAG_W_SYSTEMOPERATINGMODE ",
+                "input": "Combo",
+                "options": [
+                  "LIS3MDL_MAG_MD_CONTINUOUS",
+                  "LIS3MDL_MAG_MD_SINGLE",
+                  "LIS3MDL_MAG_MD_POWER_DOWN",
+                  "LIS3MDL_MAG_MD_POWER_DOWN_AUTO"
+                ]
+              }
+            },
+            "file": "lis3mdl_config.h"
+          },
+          "categories": [
+            "Accelerometer",
+            "Magnetic",
+            "Compass",
+            "New",
+            "Featured",
+            "Sensor"
+          ],
+          "manufacturer": "STMicroelectronics"
+        }
+      },
+      "theme": {
+        "bg1": "#DCEBF9",
+        "bg2": "#DCEBF9"
+      },
+      "projectType": "bcm20737",
+      "name": "LIS3MDL"
+    },
+    "type": "Header",
+    "currentLayoutName": "Default",
+    "currentCloudLayoutName": "Default"
+  },
+  "layouts": {
+    "Default": {
+      "name": "Default (768x1024)",
+      "width": 768,
+      "height": 1024,
+      "orientation": "portrait",
+      "devicename": ".*",
+      "platform": "",
+      "version": ".*",
+      "elements": {
+        "ImagePan19": {
+          "x": 328,
+          "y": 259,
+          "width": 112,
+          "height": 112
+        },
+        "ImagePan18": {
+          "x": 338,
+          "y": 272,
+          "width": 93,
+          "height": 93
+        },
+        "Label6": {
+          "x": 166,
+          "y": 145,
+          "width": 146,
+          "height": 46
+        },
+        "Label7": {
+          "x": 6,
+          "y": 145,
+          "width": 146,
+          "height": 46
+        },
+        "ImagePan10": {
+          "x": 331,
+          "y": 144,
+          "width": 107,
+          "height": 107
+        },
+        "Label11": {
+          "x": 292,
+          "y": 84,
+          "width": 146,
+          "height": 46
+        },
+        "Label12": {
+          "x": 166,
+          "y": 205,
+          "width": 146,
+          "height": 46
+        },
+        "Label13": {
+          "x": 6,
+          "y": 205,
+          "width": 146,
+          "height": 46
+        },
+        "Label14": {
+          "x": 166,
+          "y": 265,
+          "width": 146,
+          "height": 46
+        },
+        "Label15": {
+          "x": 6,
+          "y": 265,
+          "width": 146,
+          "height": 46
+        },
+        "Label16": {
+          "x": 166,
+          "y": 325,
+          "width": 146,
+          "height": 46
+        },
+        "Label17": {
+          "x": 6,
+          "y": 325,
+          "width": 146,
+          "height": 46
+        },
+        "Label20": {
+          "x": 292,
+          "y": 379,
+          "width": 146,
+          "height": 46
+        },
+        "ImagePan9": {
+          "x": 341,
+          "y": 155,
+          "width": 87,
+          "height": 87
+        }
+      }
+    }
+  },
+  "cloudLayouts": {
+    "Default": {
+      "name": "Default (768x1024)",
+      "width": 768,
+      "height": 1024,
+      "orientation": "portrait",
+      "devicename": ".*",
+      "platform": "",
+      "version": ".*",
+      "elements": {}
+    }
+  },
+  "elements": {
+    "ImagePan19": {
+      "type": "ImagePan",
+      "properties": {
+        "image": "http://atmosphere.anaren.com/dev/images/demo/compass_back.png",
+        "aspectLock": true,
+        "enabled": true,
+        "visible": true,
+        "rotation": "0",
+        "background": "transparent",
+        "elementType": "element"
+      },
+      "triggers": {},
+      "zindex": 1,
+      "designer": {
+        "x": 478,
+        "y": 370
+      }
+    },
+    "ImagePan18": {
+      "type": "ImagePan",
+      "properties": {
+        "image": "http://atmosphere.anaren.com/dev/images/demo/compass_needle.png",
+        "aspectLock": true,
+        "enabled": true,
+        "visible": true,
+        "rotation": "0",
+        "background": "transparent",
+        "elementType": "element"
+      },
+      "triggers": {},
+      "zindex": 2,
+      "designer": {
+        "x": 378,
+        "y": 362
+      }
+    },
+    "lis3mdl_xMagneticField1": {
+      "type": "lis3mdl_xMagneticField",
+      "properties": {
+        "code": "\tLIS3MDL_MAG_ZYXDA_t isDataReady;\n\tstatic Type3Axis16bit_U magneticField;\n\t\n\t//First we check to see if the sensor has new data available\n\tLIS3MDL_MAG_R_NewXYZData(&isDataReady);\n\t\n\tif (isDataReady == LIS3MDL_MAG_ZYXDA_AVAILABLE)\n\t{\n\t\t//With new data available we will now update our magneticField buffer.\n\t\tLIS3MDL_MAG_Get_Magnetic(magneticField.u8bit);\n\t}\n\t\n\treturn magneticField.i16bit[0];\n",
+        "length": "128",
+        "inputType": "void",
+        "returnType": "int",
+        "permission": "public",
+        "elementType": "element"
+      },
+      "triggers": {
+        "valueReturned": [
+          {
+            "sourceTrigger": "valueReturned",
+            "sourceValue": "getValue",
+            "targetValue": "setValue",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "value"
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": [
+                "value"
+              ]
+            },
+            "targetName": "Label6"
+          },
+          {
+            "sourceTrigger": "valueReturned",
+            "sourceValue": "getValue",
+            "targetValue": "addValue",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "key": "\"x\"",
+                "value": "value"
+              },
+              "targetOrder": [
+                "key",
+                "value"
+              ],
+              "sourceOrder": [
+                "value"
+              ]
+            },
+            "targetName": "Expression8"
+          },
+          {
+            "sourceTrigger": "valueReturned",
+            "sourceValue": "Static",
+            "targetValue": "evaluate",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "values": ""
+              },
+              "targetOrder": [
+                "values"
+              ],
+              "sourceOrder": []
+            },
+            "targetName": "Expression8"
+          }
+        ]
+      },
+      "zindex": 3,
+      "designer": {
+        "x": 217,
+        "y": 32
+      }
+    },
+    "lis3mdl_zMagneticField2": {
+      "type": "lis3mdl_zMagneticField",
+      "properties": {
+        "code": "\tLIS3MDL_MAG_ZYXDA_t isDataReady;\n\tstatic Type3Axis16bit_U magneticField;\n\t\n\t//First we check to see if the sensor has new data available\n\tLIS3MDL_MAG_R_NewXYZData(&isDataReady);\n\t\n\tif (isDataReady == LIS3MDL_MAG_ZYXDA_AVAILABLE)\n\t{\n\t\t//With new data available we will now update our magneticField buffer.\n\t\tLIS3MDL_MAG_Get_Magnetic(magneticField.u8bit);\n\t}\n\n\treturn magneticField.i16bit[2];\n",
+        "length": "128",
+        "inputType": "void",
+        "returnType": "int",
+        "permission": "public",
+        "elementType": "element"
+      },
+      "triggers": {
+        "valueReturned": [
+          {
+            "sourceTrigger": "valueReturned",
+            "sourceValue": "getValue",
+            "targetValue": "setValue",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "value"
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": [
+                "value"
+              ]
+            },
+            "targetName": "Label14"
+          }
+        ]
+      },
+      "zindex": 4,
+      "designer": {
+        "x": 222,
+        "y": 221
+      }
+    },
+    "lis3mdl_magneticField3": {
+      "type": "lis3mdl_magneticField",
+      "properties": {
+        "code": "\tLIS3MDL_MAG_ZYXDA_t isDataReady;\n\tstatic Type3Axis16bit_U magneticField;\n\t\n\t//First we check to see if the sensor has new data available\n\tLIS3MDL_MAG_R_NewXYZData(&isDataReady);\n\t\n\tif (isDataReady == LIS3MDL_MAG_ZYXDA_AVAILABLE)\n\t{\n\t\t//With new data available we will now update our magneticField buffer.\n\t\tLIS3MDL_MAG_Get_Magnetic(magneticField.u8bit);\n\t}\n\t\n\t//Now we build our return buffer for the app side.\n\tchar outputBuffer[32];\n\t\n\t//This will construct a JSON array for the application side.\n\tsprintf(outputBuffer, \"[%d,%d,%d]\", magneticField.i16bit[0], magneticField.i16bit[1], magneticField.i16bit[2]);\n\t\n\treturn outputBuffer;\n",
+        "length": "128",
+        "inputType": "void",
+        "returnType": "json",
+        "permission": "public",
+        "elementType": "element"
+      },
+      "triggers": {
+        "valueReturned": [
+          {
+            "sourceTrigger": "valueReturned",
+            "sourceValue": "getValue",
+            "targetValue": "setValue",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "value"
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": [
+                "value"
+              ]
+            },
+            "targetName": "Label16"
+          },
+          {
+            "sourceTrigger": "valueReturned",
+            "sourceValue": "getValue",
+            "targetValue": "setRotation",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "(Math.atan2(value[1], value[0]) * (180/3.14159) + 90)"
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": [
+                "value"
+              ]
+            },
+            "targetName": "ImagePan18"
+          }
+        ]
+      },
+      "zindex": 5,
+      "designer": {
+        "x": 218,
+        "y": 322
+      }
+    },
+    "lis3mdl_yMagneticField4": {
+      "type": "lis3mdl_yMagneticField",
+      "properties": {
+        "code": "\tLIS3MDL_MAG_ZYXDA_t isDataReady;\n\tstatic Type3Axis16bit_U magneticField;\n\t\n\t//First we check to see if the sensor has new data available\n\tLIS3MDL_MAG_R_NewXYZData(&isDataReady);\n\t\n\tif (isDataReady == LIS3MDL_MAG_ZYXDA_AVAILABLE)\n\t{\n\t\t//With new data available we will now update our magneticField buffer.\n\t\tLIS3MDL_MAG_Get_Magnetic(magneticField.u8bit);\n\t}\n\t\n\treturn magneticField.i16bit[1];\n",
+        "length": "128",
+        "inputType": "void",
+        "returnType": "int",
+        "permission": "public",
+        "elementType": "element"
+      },
+      "triggers": {
+        "valueReturned": [
+          {
+            "sourceTrigger": "valueReturned",
+            "sourceValue": "getValue",
+            "targetValue": "addValue",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "key": "\"y\"",
+                "value": "value"
+              },
+              "targetOrder": [
+                "key",
+                "value"
+              ],
+              "sourceOrder": [
+                "value"
+              ]
+            },
+            "targetName": "Expression8"
+          },
+          {
+            "sourceTrigger": "valueReturned",
+            "sourceValue": "getValue",
+            "targetValue": "setValue",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "value"
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": [
+                "value"
+              ]
+            },
+            "targetName": "Label12"
+          }
+        ]
+      },
+      "zindex": 6,
+      "designer": {
+        "x": 217,
+        "y": 122
+      }
+    },
+    "Task5": {
+      "type": "Task",
+      "properties": {
+        "runOnStart": true,
+        "runIn": "0",
+        "runEvery": "1000",
+        "elementType": "element"
+      },
+      "triggers": {
+        "task": [
+          {
+            "sourceTrigger": "task",
+            "sourceValue": "Static",
+            "targetValue": "execute",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": ""
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": []
+            },
+            "targetName": "lis3mdl_xMagneticField1"
+          },
+          {
+            "sourceTrigger": "task",
+            "sourceValue": "Static",
+            "targetValue": "execute",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": ""
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": []
+            },
+            "targetName": "lis3mdl_yMagneticField4"
+          },
+          {
+            "sourceTrigger": "task",
+            "sourceValue": "Static",
+            "targetValue": "execute",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": ""
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": []
+            },
+            "targetName": "lis3mdl_zMagneticField2"
+          },
+          {
+            "sourceTrigger": "task",
+            "sourceValue": "Static",
+            "targetValue": "execute",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": ""
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": []
+            },
+            "targetName": "lis3mdl_magneticField3"
+          }
+        ]
+      },
+      "zindex": 7,
+      "designer": {
+        "x": 0,
+        "y": 178
+      }
+    },
+    "Label6": {
+      "type": "Label",
+      "properties": {
+        "label": "",
+        "enabled": true,
+        "visible": true,
+        "font": "14px Arial",
+        "color": "Black",
+        "elementType": "element"
+      },
+      "triggers": {},
+      "zindex": 8,
+      "designer": {
+        "x": 382,
+        "y": 16
+      }
+    },
+    "Label7": {
+      "type": "Label",
+      "properties": {
+        "label": "X Axis",
+        "enabled": true,
+        "visible": true,
+        "font": "14px Arial",
+        "color": "Black",
+        "elementType": "element"
+      },
+      "triggers": {},
+      "zindex": 9,
+      "designer": {
+        "x": 471,
+        "y": 17
+      }
+    },
+    "Expression8": {
+      "type": "Expression",
+      "properties": {
+        "expression": "(Math.atan2(values.y, values.x) * (180/3.14159) + 90);",
+        "elementType": "element"
+      },
+      "triggers": {
+        "evaluated": [
+          {
+            "sourceTrigger": "evaluated",
+            "sourceValue": "getValue",
+            "targetValue": "setRotation",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "value"
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": [
+                "value"
+              ]
+            },
+            "targetName": "ImagePan9"
+          }
+        ]
+      },
+      "zindex": 10,
+      "designer": {
+        "x": 382,
+        "y": 90
+      }
+    },
+    "ImagePan10": {
+      "type": "ImagePan",
+      "properties": {
+        "image": "http://atmosphere.anaren.com/dev/images/demo/compass_back.png",
+        "aspectLock": true,
+        "enabled": true,
+        "visible": true,
+        "rotation": "0",
+        "background": "transparent",
+        "elementType": "element"
+      },
+      "triggers": {},
+      "zindex": 11,
+      "designer": {
+        "x": 586,
+        "y": 87
+      }
+    },
+    "Label11": {
+      "type": "Label",
+      "properties": {
+        "label": "With X and Y seperate",
+        "enabled": true,
+        "visible": true,
+        "font": "14px Arial",
+        "color": "Black",
+        "elementType": "element"
+      },
+      "triggers": {},
+      "zindex": 12,
+      "designer": {
+        "x": 588,
+        "y": 17
+      }
+    },
+    "Label12": {
+      "type": "Label",
+      "properties": {
+        "label": "",
+        "enabled": true,
+        "visible": true,
+        "font": "14px Arial",
+        "color": "Black",
+        "elementType": "element"
+      },
+      "triggers": {},
+      "zindex": 13,
+      "designer": {
+        "x": 382,
+        "y": 156
+      }
+    },
+    "Label13": {
+      "type": "Label",
+      "properties": {
+        "label": "Y Axis",
+        "enabled": true,
+        "visible": true,
+        "font": "14px Arial",
+        "color": "Black",
+        "elementType": "element"
+      },
+      "triggers": {},
+      "zindex": 14,
+      "designer": {
+        "x": 480,
+        "y": 153
+      }
+    },
+    "Label14": {
+      "type": "Label",
+      "properties": {
+        "label": "",
+        "enabled": true,
+        "visible": true,
+        "font": "14px Arial",
+        "color": "Black",
+        "elementType": "element"
+      },
+      "triggers": {},
+      "zindex": 15,
+      "designer": {
+        "x": 381,
+        "y": 225
+      }
+    },
+    "Label15": {
+      "type": "Label",
+      "properties": {
+        "label": "Z Axis",
+        "enabled": true,
+        "visible": true,
+        "font": "14px Arial",
+        "color": "Black",
+        "elementType": "element"
+      },
+      "triggers": {},
+      "zindex": 16,
+      "designer": {
+        "x": 478,
+        "y": 225
+      }
+    },
+    "Label16": {
+      "type": "Label",
+      "properties": {
+        "label": "",
+        "enabled": true,
+        "visible": true,
+        "font": "14px Arial",
+        "color": "Black",
+        "elementType": "element"
+      },
+      "triggers": {},
+      "zindex": 17,
+      "designer": {
+        "x": 376,
+        "y": 298
+      }
+    },
+    "Label17": {
+      "type": "Label",
+      "properties": {
+        "label": "X, Y, Z Data object",
+        "enabled": true,
+        "visible": true,
+        "font": "14px Arial",
+        "color": "Black",
+        "elementType": "element"
+      },
+      "triggers": {},
+      "zindex": 18,
+      "designer": {
+        "x": 476,
+        "y": 302
+      }
+    },
+    "Label20": {
+      "type": "Label",
+      "properties": {
+        "label": "With Data Object",
+        "enabled": true,
+        "visible": true,
+        "font": "14px Arial",
+        "color": "Black",
+        "elementType": "element"
+      },
+      "triggers": {},
+      "zindex": 19,
+      "designer": {
+        "x": 562,
+        "y": 372
+      }
+    },
+    "ImagePan9": {
+      "type": "ImagePan",
+      "properties": {
+        "image": "http://atmosphere.anaren.com/dev/images/demo/compass_needle.png",
+        "aspectLock": true,
+        "enabled": true,
+        "visible": true,
+        "rotation": "0",
+        "background": "transparent",
+        "elementType": "element"
+      },
+      "triggers": {},
+      "zindex": 21,
+      "designer": {
+        "x": 496,
+        "y": 88
+      }
+    }
+  },
+  "cloudElements": {}
+}
