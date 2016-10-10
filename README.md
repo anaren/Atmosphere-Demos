@@ -10,7 +10,12 @@ https://atmosphere.anaren.com/developer#import&URLGOESHERE
 
 ## Format for repo
 
-/Board/
- /contrib - contributed demos from atmosphere users and developers that are not on the wiki
- /indev - demos in development or that have not been vetted
- /official - demos available via the IDE or from the wiki
+Board/ - EG bcm20737
+
+ contrib - contributed demos from atmosphere users and developers that are not on the wiki
+ 
+ indev - demos in development or that have not been vetted
+ 
+ official - demos available via the IDE or from the wiki
+ 
+ 
