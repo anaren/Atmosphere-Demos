@@ -1,0 +1,2370 @@
+{
+  "header": {
+    "data": {
+      "order": [
+        "Globals",
+        "Interval",
+        "Connected",
+        "Disconnected",
+        "Setup"
+      ],
+      "Globals": {
+        "name": "Globals",
+        "func": "#include \"callbacks.h\"",
+        "code": "\n#define MULTIPLICATION 0\n#define ADDITION 1\n#define SUBTRACTION 2\n#define DIVISION 3\n#define COMPARE 4\n#define SQUARE_ROOT 5\n#define EXPONENT 6\n#define MEMORY_STORE 7\n#define MEMORY_RECALL 8\n\n#define ALL_FP_MODE 0\n#define NO_FP_MODE 1\n\nunsigned char operator = 0;\nbool operatorSet = false;\nfloat num1 = 0;\nbool num1Set = false;\nfloat num2 = 0;\nbool num2Set = false;\nfloat memory = 0;\nunsigned char mode = NO_FP_MODE;\n\nfloat operator_cmp(float a, float b){\n    if(a > b){\n        return 1;\n    }\n    else if (a < b){\n        return -1;\n    }\n    else if (a == b){\n        return 0;\n    }\n    return 2;\n}\n",
+        "close": "//END"
+      },
+      "Interval": {
+        "name": "Interval",
+        "func": "\nvoid interval() {",
+        "code": "",
+        "close": "}"
+      },
+      "Connected": {
+        "name": "Connected",
+        "func": "\nvoid connected() {",
+        "code": "",
+        "close": "}"
+      },
+      "Disconnected": {
+        "name": "Disconnected",
+        "func": "\nvoid disconnected() {",
+        "code": "",
+        "close": "}"
+      },
+      "Setup": {
+        "name": "Setup",
+        "func": "\nvoid setup() {",
+        "code": "\tAIR_GPIO_Init();\n\tAIR_POWER_Init();\n\tAIR_UART_Init();\n\tAIR_I2C_Init();\n\tAIR_SPI_Init();\n\tBUZZER_Init();\n\tAIR_POWER_SetMode(AIR_POWER_NOSLEEP);",
+        "close": "}"
+      }
+    },
+    "boardConfiguration": {
+      "ble": {
+        "name": "Bluetooth Low Energy",
+        "file": "ble_config.h",
+        "values": {
+          "localName": {
+            "name": "Local Name",
+            "input": "TextField",
+            "prefix": "#define BLE_LOCAL_NAME \"",
+            "value": "Calc",
+            "suffix": "\"",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "version": {
+            "name": "Version",
+            "input": "TextField",
+            "prefix": "#define BLE_VERSION \"",
+            "value": "1.00",
+            "suffix": "\"",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "pairing": {
+            "name": "Pairing",
+            "input": "Combo",
+            "prefix": "#define ",
+            "options": [
+              "BLE_PAIRING_NONE",
+              "BLE_PAIRING_PASSKEY",
+              "BLE_PAIRING_OOB"
+            ],
+            "value": "BLE_PAIRING_NONE",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "txPowerLevel": {
+            "name": "TX Power Level (dbm)",
+            "input": "TextField",
+            "prefix": "#define BLE_TX_POWER_LEVEL ",
+            "value": "45",
+            "regex": "^-?[0-9]d{0,2}(.d*)?$"
+          },
+          "intervalFineTimer": {
+            "name": "Interval Timer Length (ms)",
+            "input": "TextField",
+            "prefix": "#define BLE_INTERVAL_FINE_TIMER ",
+            "value": "1000",
+            "regex": "^[0-9]*$"
+          },
+          "ota": {
+            "name": "Over the Air Updating",
+            "input": "Combo",
+            "prefix": "#define BLE_",
+            "options": [
+              "OTA",
+              "NO_OTA"
+            ],
+            "value": "OTA",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "minInterval": {
+            "name": "BLE Min Interval (ms) (Default: 20)",
+            "input": "TextField",
+            "prefix": "#define BLE_INTERVAL_MIN ",
+            "value": "20",
+            "regex": "^[0-9]*$"
+          },
+          "maxInterval": {
+            "name": "BLE Max Interval (ms) (Default: 40)",
+            "input": "TextField",
+            "prefix": "#define BLE_INTERVAL_MAX ",
+            "value": "40",
+            "regex": "^[0-9]*$"
+          },
+          "slaveLatency": {
+            "name": "BLE Slave Latency (ms) (Default: 0)",
+            "input": "TextField",
+            "prefix": "#define BLE_SLAVE_LATENCY ",
+            "value": "0",
+            "regex": "^[0-9]*$"
+          },
+          "timeout": {
+            "name": "BLE Connection Timeout (ms) (Default: 700)",
+            "input": "TextField",
+            "prefix": "#define BLE_CONNECTION_TIMEOUT ",
+            "value": "700",
+            "regex": "^[0-9]*$"
+          },
+          "advPowerLevel": {
+            "name": "Advertising TX Power Level (dbm) (Default: 4)",
+            "input": "TextField",
+            "prefix": "#define ADV_BLE_TX_POWER_LEVEL ",
+            "value": "4",
+            "regex": "^-?[0-9]d{0,2}(.d*)?$"
+          }
+        }
+      },
+      "power": {
+        "name": "Power Driver",
+        "file": "power_config.h",
+        "values": {
+          "external_osc": {
+            "name": "External Oscillator",
+            "input": "Combo",
+            "prefix": "#define AIR_POWER_",
+            "options": [
+              "EXTERNAL_32KHZ_OSC",
+              "INTERNAL_OSC"
+            ],
+            "value": "INTERNAL_OSC",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          }
+        }
+      },
+      "gpio": {
+        "name": "GPIO Driver",
+        "file": "gpio_config.h",
+        "values": {
+          "buad": {
+            "name": "ADC Sample Frequency",
+            "input": "Combo",
+            "prefix": "#define AIR_ADC_SAMPLE_FREQUENCY ",
+            "options": [
+              "ADC_SAMPLE_FREQUENCY_LOW",
+              "ADC_SAMPLE_FREQUENCY_MEDIUM_LOW",
+              "ADC_SAMPLE_FREQUENCY_MEDIUM",
+              "ADC_SAMPLE_FREQUENCY_MEDIUM_HIGH",
+              "ADC_SAMPLE_FREQUENCY_HIGH"
+            ],
+            "value": "ADC_SAMPLE_FREQUENCY_LOW",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "pwmClockSource": {
+            "name": "PWM Clock Source",
+            "input": "Combo",
+            "prefix": "#define AIR_PWM_CLOCK_SOURCE ",
+            "options": [
+              "PMU_CLK",
+              "LHL_CLK"
+            ],
+            "value": "PMU_CLK",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          }
+        }
+      },
+      "uart": {
+        "name": "AIR UART Driver",
+        "file": "uart_config.h",
+        "values": {
+          "rxBuffer": {
+            "name": "RX Circular Buffer size",
+            "input": "TextField",
+            "prefix": "#define AIR_UART_RX_CIRCULAR_BUFFER_SIZE ",
+            "value": "128",
+            "regex": "^[0-9]*$"
+          },
+          "txBuffer": {
+            "name": "TX Circular Buffer size",
+            "input": "TextField",
+            "prefix": "#define AIR_UART_TX_CIRCULAR_BUFFER_SIZE ",
+            "value": "128",
+            "regex": "^[0-9]*$"
+          },
+          "buad": {
+            "name": "Baudrate",
+            "input": "Combo",
+            "prefix": "#define ",
+            "options": [
+              "AIR_UART_BAUD_460800",
+              "AIR_UART_BAUD_230400",
+              "AIR_UART_BAUD_115200",
+              "AIR_UART_BAUD_57600",
+              "AIR_UART_BAUD_38400",
+              "AIR_UART_BAUD_19200",
+              "AIR_UART_BAUD_9600"
+            ],
+            "value": "AIR_UART_BAUD_115200",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "txPin": {
+            "name": "TX Pin",
+            "input": "Combo",
+            "prefix": "#define AIR_UART_TX_PIN ",
+            "options": [
+              "32"
+            ],
+            "value": "32",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "rxPin": {
+            "name": "RX Pin",
+            "input": "Combo",
+            "prefix": "#define AIR_UART_RX_PIN ",
+            "options": [
+              "33"
+            ],
+            "value": "33",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "rtsPin": {
+            "name": "RTS Pin",
+            "input": "Combo",
+            "prefix": "#define AIR_UART_RTS_PIN ",
+            "options": [
+              "1"
+            ],
+            "value": "1",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "ctsPin": {
+            "name": "CTS Pin",
+            "input": "Combo",
+            "prefix": "#define AIR_UART_CTS_PIN ",
+            "options": [
+              "3"
+            ],
+            "value": "3",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          }
+        }
+      },
+      "spi": {
+        "name": "AIR SPI Driver",
+        "file": "spi_config.h",
+        "values": {
+          "speed": {
+            "name": "SPI Speed",
+            "input": "Combo",
+            "prefix": "#define AIR_SPI_SPEED ",
+            "options": [
+              "1000000",
+              "500000"
+            ],
+            "value": "1000000",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "mode": {
+            "name": "SPI Mode",
+            "input": "Combo",
+            "prefix": "#define AIR_SPI_MODE ",
+            "options": [
+              "SPI_MODE_0",
+              "SPI_MODE_1",
+              "SPI_MODE_2",
+              "SPI_MODE_3"
+            ],
+            "value": "SPI_MODE_3",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          }
+        }
+      },
+      "buzzer": {
+        "name": "Buzzer Driver",
+        "file": "buzzer_config.h",
+        "values": {
+          "pin": {
+            "name": "Buzzer Pin",
+            "input": "Combo",
+            "prefix": "#define BUZZER_PWM_PIN ",
+            "options": [
+              "13",
+              "14",
+              "26",
+              "27"
+            ],
+            "value": "14",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          }
+        }
+      }
+    },
+    "meta": {
+      "version": "kieron",
+      "layoutGrid": true,
+      "layoutSnapping": false,
+      "layoutSnappingSize": 60,
+      "cloudLayoutGrid": false,
+      "cloudLayoutSnapping": false,
+      "cloudLayoutSnappingSize": 10,
+      "language": "en",
+      "enableTooltips": true,
+      "enableAutoSave": true,
+      "enableBuildSave": false,
+      "description": null,
+      "project_uuid": null,
+      "tokensEnabled": false,
+      "codeAssist": false,
+      "highlightLine": false,
+      "editorTheme": "Default",
+      "editorFontSize": 12,
+      "customEmbeddedElementLibraries": {},
+      "theme": {
+        "bg1": "#394a59",
+        "bg2": "#394a59"
+      },
+      "projectType": "bcm20737",
+      "name": "Calculator 2 advanced"
+    },
+    "type": "Header",
+    "currentLayoutName": "Default",
+    "currentCloudLayoutName": "Default"
+  },
+  "layouts": {
+    "Default": {
+      "name": "Default (768x1024)",
+      "width": 768,
+      "height": 1024,
+      "orientation": "portrait",
+      "devicename": ".*",
+      "platform": "",
+      "version": ".*",
+      "elements": {
+        "0": {
+          "x": 67,
+          "y": 872,
+          "width": 106,
+          "height": 106
+        },
+        "1": {
+          "x": 67,
+          "y": 735,
+          "width": 106,
+          "height": 106
+        },
+        "2": {
+          "x": 247,
+          "y": 735,
+          "width": 106,
+          "height": 106
+        },
+        "3": {
+          "x": 427,
+          "y": 735,
+          "width": 106,
+          "height": 106
+        },
+        "4": {
+          "x": 67,
+          "y": 598,
+          "width": 106,
+          "height": 106
+        },
+        "5": {
+          "x": 247,
+          "y": 598,
+          "width": 106,
+          "height": 106
+        },
+        "6": {
+          "x": 427,
+          "y": 598,
+          "width": 106,
+          "height": 106
+        },
+        "7": {
+          "x": 67,
+          "y": 461,
+          "width": 106,
+          "height": 106
+        },
+        "8": {
+          "x": 247,
+          "y": 461,
+          "width": 106,
+          "height": 106
+        },
+        "9": {
+          "x": 427,
+          "y": 461,
+          "width": 106,
+          "height": 106
+        },
+        "ModeLabel": {
+          "x": 71,
+          "y": 157,
+          "width": 147,
+          "height": 32
+        },
+        "DisplayBorder": {
+          "x": 67,
+          "y": 38,
+          "width": 646,
+          "height": 106
+        },
+        "Clear": {
+          "x": 67,
+          "y": 187,
+          "width": 106,
+          "height": 106
+        },
+        "Sign": {
+          "x": 427,
+          "y": 872,
+          "width": 106,
+          "height": 106
+        },
+        "Divide": {
+          "x": 607,
+          "y": 324,
+          "width": 106,
+          "height": 106
+        },
+        "Multiply": {
+          "x": 607,
+          "y": 187,
+          "width": 106,
+          "height": 106
+        },
+        "Subtract": {
+          "x": 607,
+          "y": 461,
+          "width": 106,
+          "height": 106
+        },
+        "Add": {
+          "x": 607,
+          "y": 598,
+          "width": 106,
+          "height": 106
+        },
+        "Equals": {
+          "x": 607,
+          "y": 735,
+          "width": 106,
+          "height": 243
+        },
+        "Decimal": {
+          "x": 247,
+          "y": 872,
+          "width": 106,
+          "height": 106
+        },
+        "SignModifier": {
+          "x": 67,
+          "y": 127,
+          "width": 646,
+          "height": 50
+        },
+        "Display": {
+          "x": 81,
+          "y": 59,
+          "width": 617,
+          "height": 80
+        },
+        "MemoryStore": {
+          "x": 247,
+          "y": 187,
+          "width": 106,
+          "height": 106
+        },
+        "MemoryRecall": {
+          "x": 427,
+          "y": 187,
+          "width": 106,
+          "height": 106
+        },
+        "SquareRoot": {
+          "x": 67,
+          "y": 324,
+          "width": 106,
+          "height": 106
+        },
+        "Compare": {
+          "x": 247,
+          "y": 324,
+          "width": 106,
+          "height": 106
+        },
+        "Exponent": {
+          "x": 427,
+          "y": 324,
+          "width": 106,
+          "height": 106
+        },
+        "ModeSwitchButton": {
+          "x": 66,
+          "y": 146,
+          "width": 159,
+          "height": 34
+        }
+      }
+    }
+  },
+  "cloudLayouts": {
+    "Default": {
+      "name": "Default (600x400)",
+      "width": 600,
+      "height": 400,
+      "orientation": "landscape",
+      "devicename": ".*",
+      "platform": "",
+      "version": ".*",
+      "elements": {}
+    }
+  },
+  "elements": {
+    "0": {
+      "type": "Button",
+      "properties": {
+        "label": "0",
+        "enabled": true,
+        "visible": true,
+        "border": "raised",
+        "topColor": "rgb(250, 250, 250)",
+        "bottomColor": "rgb(234, 234, 234)",
+        "pressedTopColor": "rgb(255, 255, 255)",
+        "pressedBottomColor": "rgb(255, 255, 255)",
+        "overTopColor": "rgb(234, 234, 234)",
+        "overBottomColor": "rgb(214, 214, 214)",
+        "disabledTopColor": "rgb(211, 211, 211)",
+        "disabledBottomColor": "rgb(211, 211, 211)",
+        "elementType": "element",
+        "airType": "Button",
+        "elementPanel": "designer",
+        "airID": 1
+      },
+      "triggers": {
+        "mouseReleased": [
+          {
+            "sourceTrigger": "mouseReleased",
+            "sourceValue": "Static",
+            "targetValue": "appendValue",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "0"
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": []
+            },
+            "targetName": "SignModifier"
+          },
+          {
+            "sourceTrigger": "mouseReleased",
+            "sourceValue": "Static",
+            "targetValue": "appendValue",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "0"
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": []
+            },
+            "targetName": "Display"
+          }
+        ]
+      },
+      "zindex": 2,
+      "designer": {
+        "x": 47,
+        "y": 610
+      }
+    },
+    "1": {
+      "type": "Button",
+      "properties": {
+        "label": "1",
+        "enabled": true,
+        "visible": true,
+        "border": "raised",
+        "topColor": "rgb(250, 250, 250)",
+        "bottomColor": "rgb(234, 234, 234)",
+        "pressedTopColor": "rgb(255, 255, 255)",
+        "pressedBottomColor": "rgb(255, 255, 255)",
+        "overTopColor": "rgb(234, 234, 234)",
+        "overBottomColor": "rgb(214, 214, 214)",
+        "disabledTopColor": "rgb(211, 211, 211)",
+        "disabledBottomColor": "rgb(211, 211, 211)",
+        "elementType": "element",
+        "airType": "Button",
+        "elementPanel": "designer",
+        "airID": 2
+      },
+      "triggers": {
+        "mouseReleased": [
+          {
+            "sourceTrigger": "mouseReleased",
+            "sourceValue": "Static",
+            "targetValue": "appendValue",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "1"
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": []
+            },
+            "targetName": "SignModifier"
+          },
+          {
+            "sourceTrigger": "mouseReleased",
+            "sourceValue": "Static",
+            "targetValue": "appendValue",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "1"
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": []
+            },
+            "targetName": "Display"
+          }
+        ]
+      },
+      "zindex": 3,
+      "designer": {
+        "x": 49,
+        "y": 525
+      }
+    },
+    "2": {
+      "type": "Button",
+      "properties": {
+        "label": "2",
+        "enabled": true,
+        "visible": true,
+        "border": "raised",
+        "topColor": "rgb(250, 250, 250)",
+        "bottomColor": "rgb(234, 234, 234)",
+        "pressedTopColor": "rgb(255, 255, 255)",
+        "pressedBottomColor": "rgb(255, 255, 255)",
+        "overTopColor": "rgb(234, 234, 234)",
+        "overBottomColor": "rgb(214, 214, 214)",
+        "disabledTopColor": "rgb(211, 211, 211)",
+        "disabledBottomColor": "rgb(211, 211, 211)",
+        "elementType": "element",
+        "airType": "Button",
+        "elementPanel": "designer",
+        "airID": 3
+      },
+      "triggers": {
+        "mouseReleased": [
+          {
+            "sourceTrigger": "mouseReleased",
+            "sourceValue": "Static",
+            "targetValue": "appendValue",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "2"
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": []
+            },
+            "targetName": "SignModifier"
+          },
+          {
+            "sourceTrigger": "mouseReleased",
+            "sourceValue": "Static",
+            "targetValue": "appendValue",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "2"
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": []
+            },
+            "targetName": "Display"
+          }
+        ]
+      },
+      "zindex": 4,
+      "designer": {
+        "x": 148,
+        "y": 523
+      }
+    },
+    "3": {
+      "type": "Button",
+      "properties": {
+        "label": "3",
+        "enabled": true,
+        "visible": true,
+        "border": "raised",
+        "topColor": "rgb(250, 250, 250)",
+        "bottomColor": "rgb(234, 234, 234)",
+        "pressedTopColor": "rgb(255, 255, 255)",
+        "pressedBottomColor": "rgb(255, 255, 255)",
+        "overTopColor": "rgb(234, 234, 234)",
+        "overBottomColor": "rgb(214, 214, 214)",
+        "disabledTopColor": "rgb(211, 211, 211)",
+        "disabledBottomColor": "rgb(211, 211, 211)",
+        "elementType": "element",
+        "airType": "Button",
+        "elementPanel": "designer",
+        "airID": 4
+      },
+      "triggers": {
+        "mouseReleased": [
+          {
+            "sourceTrigger": "mouseReleased",
+            "sourceValue": "Static",
+            "targetValue": "appendValue",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "3"
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": []
+            },
+            "targetName": "SignModifier"
+          },
+          {
+            "sourceTrigger": "mouseReleased",
+            "sourceValue": "Static",
+            "targetValue": "appendValue",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "3"
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": []
+            },
+            "targetName": "Display"
+          }
+        ]
+      },
+      "zindex": 5,
+      "designer": {
+        "x": 258,
+        "y": 525
+      }
+    },
+    "4": {
+      "type": "Button",
+      "properties": {
+        "label": "4",
+        "enabled": true,
+        "visible": true,
+        "border": "raised",
+        "topColor": "rgb(250, 250, 250)",
+        "bottomColor": "rgb(234, 234, 234)",
+        "pressedTopColor": "rgb(255, 255, 255)",
+        "pressedBottomColor": "rgb(255, 255, 255)",
+        "overTopColor": "rgb(234, 234, 234)",
+        "overBottomColor": "rgb(214, 214, 214)",
+        "disabledTopColor": "rgb(211, 211, 211)",
+        "disabledBottomColor": "rgb(211, 211, 211)",
+        "elementType": "element",
+        "airType": "Button",
+        "elementPanel": "designer",
+        "airID": 5
+      },
+      "triggers": {
+        "mouseReleased": [
+          {
+            "sourceTrigger": "mouseReleased",
+            "sourceValue": "Static",
+            "targetValue": "appendValue",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "4"
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": []
+            },
+            "targetName": "SignModifier"
+          },
+          {
+            "sourceTrigger": "mouseReleased",
+            "sourceValue": "Static",
+            "targetValue": "appendValue",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "4"
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": []
+            },
+            "targetName": "Display"
+          }
+        ]
+      },
+      "zindex": 6,
+      "designer": {
+        "x": 47,
+        "y": 441
+      }
+    },
+    "5": {
+      "type": "Button",
+      "properties": {
+        "label": "5",
+        "enabled": true,
+        "visible": true,
+        "border": "raised",
+        "topColor": "rgb(250, 250, 250)",
+        "bottomColor": "rgb(234, 234, 234)",
+        "pressedTopColor": "rgb(255, 255, 255)",
+        "pressedBottomColor": "rgb(255, 255, 255)",
+        "overTopColor": "rgb(234, 234, 234)",
+        "overBottomColor": "rgb(214, 214, 214)",
+        "disabledTopColor": "rgb(211, 211, 211)",
+        "disabledBottomColor": "rgb(211, 211, 211)",
+        "elementType": "element",
+        "airType": "Button",
+        "elementPanel": "designer",
+        "airID": 6
+      },
+      "triggers": {
+        "mouseReleased": [
+          {
+            "sourceTrigger": "mouseReleased",
+            "sourceValue": "Static",
+            "targetValue": "appendValue",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "5"
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": []
+            },
+            "targetName": "SignModifier"
+          },
+          {
+            "sourceTrigger": "mouseReleased",
+            "sourceValue": "Static",
+            "targetValue": "appendValue",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "5"
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": []
+            },
+            "targetName": "Display"
+          }
+        ]
+      },
+      "zindex": 7,
+      "designer": {
+        "x": 148,
+        "y": 440
+      }
+    },
+    "6": {
+      "type": "Button",
+      "properties": {
+        "label": "6",
+        "enabled": true,
+        "visible": true,
+        "border": "raised",
+        "topColor": "rgb(250, 250, 250)",
+        "bottomColor": "rgb(234, 234, 234)",
+        "pressedTopColor": "rgb(255, 255, 255)",
+        "pressedBottomColor": "rgb(255, 255, 255)",
+        "overTopColor": "rgb(234, 234, 234)",
+        "overBottomColor": "rgb(214, 214, 214)",
+        "disabledTopColor": "rgb(211, 211, 211)",
+        "disabledBottomColor": "rgb(211, 211, 211)",
+        "elementType": "element",
+        "airType": "Button",
+        "elementPanel": "designer",
+        "airID": 7
+      },
+      "triggers": {
+        "mouseReleased": [
+          {
+            "sourceTrigger": "mouseReleased",
+            "sourceValue": "Static",
+            "targetValue": "appendValue",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "6"
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": []
+            },
+            "targetName": "SignModifier"
+          },
+          {
+            "sourceTrigger": "mouseReleased",
+            "sourceValue": "Static",
+            "targetValue": "appendValue",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "6"
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": []
+            },
+            "targetName": "Display"
+          }
+        ]
+      },
+      "zindex": 8,
+      "designer": {
+        "x": 258,
+        "y": 443
+      }
+    },
+    "7": {
+      "type": "Button",
+      "properties": {
+        "label": "7",
+        "enabled": true,
+        "visible": true,
+        "border": "raised",
+        "topColor": "rgb(250, 250, 250)",
+        "bottomColor": "rgb(234, 234, 234)",
+        "pressedTopColor": "rgb(255, 255, 255)",
+        "pressedBottomColor": "rgb(255, 255, 255)",
+        "overTopColor": "rgb(234, 234, 234)",
+        "overBottomColor": "rgb(214, 214, 214)",
+        "disabledTopColor": "rgb(211, 211, 211)",
+        "disabledBottomColor": "rgb(211, 211, 211)",
+        "elementType": "element",
+        "airType": "Button",
+        "elementPanel": "designer",
+        "airID": 8
+      },
+      "triggers": {
+        "mouseReleased": [
+          {
+            "sourceTrigger": "mouseReleased",
+            "sourceValue": "Static",
+            "targetValue": "appendValue",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "7"
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": []
+            },
+            "targetName": "SignModifier"
+          },
+          {
+            "sourceTrigger": "mouseReleased",
+            "sourceValue": "Static",
+            "targetValue": "appendValue",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "7"
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": []
+            },
+            "targetName": "Display"
+          }
+        ]
+      },
+      "zindex": 9,
+      "designer": {
+        "x": 55,
+        "y": 361
+      }
+    },
+    "8": {
+      "type": "Button",
+      "properties": {
+        "label": "8",
+        "enabled": true,
+        "visible": true,
+        "border": "raised",
+        "topColor": "rgb(250, 250, 250)",
+        "bottomColor": "rgb(234, 234, 234)",
+        "pressedTopColor": "rgb(255, 255, 255)",
+        "pressedBottomColor": "rgb(255, 255, 255)",
+        "overTopColor": "rgb(234, 234, 234)",
+        "overBottomColor": "rgb(214, 214, 214)",
+        "disabledTopColor": "rgb(211, 211, 211)",
+        "disabledBottomColor": "rgb(211, 211, 211)",
+        "elementType": "element",
+        "airType": "Button",
+        "elementPanel": "designer",
+        "airID": 9
+      },
+      "triggers": {
+        "mouseReleased": [
+          {
+            "sourceTrigger": "mouseReleased",
+            "sourceValue": "Static",
+            "targetValue": "appendValue",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "8"
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": []
+            },
+            "targetName": "SignModifier"
+          },
+          {
+            "sourceTrigger": "mouseReleased",
+            "sourceValue": "Static",
+            "targetValue": "appendValue",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "8"
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": []
+            },
+            "targetName": "Display"
+          }
+        ]
+      },
+      "zindex": 10,
+      "designer": {
+        "x": 154,
+        "y": 358
+      }
+    },
+    "9": {
+      "type": "Button",
+      "properties": {
+        "label": "9",
+        "enabled": true,
+        "visible": true,
+        "border": "raised",
+        "topColor": "rgb(250, 250, 250)",
+        "bottomColor": "rgb(234, 234, 234)",
+        "pressedTopColor": "rgb(255, 255, 255)",
+        "pressedBottomColor": "rgb(255, 255, 255)",
+        "overTopColor": "rgb(234, 234, 234)",
+        "overBottomColor": "rgb(214, 214, 214)",
+        "disabledTopColor": "rgb(211, 211, 211)",
+        "disabledBottomColor": "rgb(211, 211, 211)",
+        "elementType": "element",
+        "airType": "Button",
+        "elementPanel": "designer",
+        "airID": 10
+      },
+      "triggers": {
+        "mouseReleased": [
+          {
+            "sourceTrigger": "mouseReleased",
+            "sourceValue": "Static",
+            "targetValue": "appendValue",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "9"
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": []
+            },
+            "targetName": "SignModifier"
+          },
+          {
+            "sourceTrigger": "mouseReleased",
+            "sourceValue": "Static",
+            "targetValue": "appendValue",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "9"
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": []
+            },
+            "targetName": "Display"
+          }
+        ]
+      },
+      "zindex": 11,
+      "designer": {
+        "x": 259,
+        "y": 362
+      }
+    },
+    "ModeLabel": {
+      "type": "Label",
+      "properties": {
+        "label": "",
+        "enabled": true,
+        "visible": true,
+        "font": "14px Arial",
+        "color": "Black",
+        "airType": "Label",
+        "elementPanel": "designer",
+        "airID": 35,
+        "elementType": "element",
+        "airName": "ModeLabel"
+      },
+      "triggers": {},
+      "zindex": 1,
+      "designer": {
+        "x": 319,
+        "y": 96
+      }
+    },
+    "DisplayBorder": {
+      "type": "TextField",
+      "properties": {
+        "label": "New TextField",
+        "value": "",
+        "enabled": true,
+        "visible": true,
+        "elementType": "element",
+        "airType": "TextField",
+        "elementPanel": "designer",
+        "airID": 11
+      },
+      "triggers": {},
+      "zindex": 12,
+      "designer": {
+        "x": 48,
+        "y": 0
+      }
+    },
+    "Clear": {
+      "type": "Button",
+      "properties": {
+        "label": "C",
+        "enabled": true,
+        "visible": true,
+        "border": "raised",
+        "topColor": "rgb(250, 250, 250)",
+        "bottomColor": "rgb(234, 234, 234)",
+        "pressedTopColor": "rgb(255, 255, 255)",
+        "pressedBottomColor": "rgb(255, 255, 255)",
+        "overTopColor": "rgb(234, 234, 234)",
+        "overBottomColor": "rgb(214, 214, 214)",
+        "disabledTopColor": "rgb(211, 211, 211)",
+        "disabledBottomColor": "rgb(211, 211, 211)",
+        "elementType": "element",
+        "airType": "Button",
+        "elementPanel": "designer",
+        "airID": 12
+      },
+      "triggers": {
+        "mouseReleased": [
+          {
+            "sourceTrigger": "mouseReleased",
+            "sourceValue": "Static",
+            "targetValue": "setValue",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "\"\""
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": []
+            },
+            "targetName": "SignModifier"
+          },
+          {
+            "sourceTrigger": "mouseReleased",
+            "sourceValue": "Static",
+            "targetValue": "setValue",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "\"\""
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": []
+            },
+            "targetName": "Display"
+          }
+        ],
+        "onTrigger": [
+          {
+            "sourceTrigger": "onTrigger",
+            "sourceValue": "Static",
+            "targetValue": "setValue",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "\"\""
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": []
+            },
+            "targetName": "SignModifier"
+          },
+          {
+            "sourceTrigger": "onTrigger",
+            "sourceValue": "Static",
+            "targetValue": "setValue",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "\"\""
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": []
+            },
+            "targetName": "Display"
+          }
+        ]
+      },
+      "zindex": 13,
+      "designer": {
+        "x": 57,
+        "y": 194
+      }
+    },
+    "Sign": {
+      "type": "Button",
+      "properties": {
+        "label": "+/-",
+        "enabled": true,
+        "visible": true,
+        "border": "raised",
+        "topColor": "rgb(250, 250, 250)",
+        "bottomColor": "rgb(234, 234, 234)",
+        "pressedTopColor": "rgb(255, 255, 255)",
+        "pressedBottomColor": "rgb(255, 255, 255)",
+        "overTopColor": "rgb(234, 234, 234)",
+        "overBottomColor": "rgb(214, 214, 214)",
+        "disabledTopColor": "rgb(211, 211, 211)",
+        "disabledBottomColor": "rgb(211, 211, 211)",
+        "elementType": "element",
+        "airType": "Button",
+        "elementPanel": "designer",
+        "airID": 13
+      },
+      "triggers": {
+        "mouseReleased": [
+          {
+            "sourceTrigger": "mouseReleased",
+            "sourceValue": "Static",
+            "targetValue": "trigger",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {},
+              "targetOrder": [],
+              "sourceOrder": []
+            },
+            "targetName": "SignModifier"
+          }
+        ]
+      },
+      "zindex": 14,
+      "designer": {
+        "x": 256,
+        "y": 609
+      }
+    },
+    "Divide": {
+      "type": "Button",
+      "properties": {
+        "label": "÷",
+        "enabled": true,
+        "visible": true,
+        "border": "raised",
+        "topColor": "rgb(250, 250, 250)",
+        "bottomColor": "rgb(234, 234, 234)",
+        "pressedTopColor": "rgb(255, 255, 255)",
+        "pressedBottomColor": "rgb(255, 255, 255)",
+        "overTopColor": "rgb(234, 234, 234)",
+        "overBottomColor": "rgb(214, 214, 214)",
+        "disabledTopColor": "rgb(211, 211, 211)",
+        "disabledBottomColor": "rgb(211, 211, 211)",
+        "elementType": "element",
+        "airType": "Button",
+        "elementPanel": "designer",
+        "airID": 14
+      },
+      "triggers": {
+        "mouseReleased": [
+          {
+            "sourceTrigger": "mouseReleased",
+            "sourceValue": "Static",
+            "targetValue": "execute",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "3"
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": []
+            },
+            "targetName": "SetOperator"
+          }
+        ]
+      },
+      "zindex": 15,
+      "designer": {
+        "x": 351,
+        "y": 277
+      }
+    },
+    "Multiply": {
+      "type": "Button",
+      "properties": {
+        "label": "x",
+        "enabled": true,
+        "visible": true,
+        "border": "raised",
+        "topColor": "rgb(250, 250, 250)",
+        "bottomColor": "rgb(234, 234, 234)",
+        "pressedTopColor": "rgb(255, 255, 255)",
+        "pressedBottomColor": "rgb(255, 255, 255)",
+        "overTopColor": "rgb(234, 234, 234)",
+        "overBottomColor": "rgb(214, 214, 214)",
+        "disabledTopColor": "rgb(211, 211, 211)",
+        "disabledBottomColor": "rgb(211, 211, 211)",
+        "elementType": "element",
+        "airType": "Button",
+        "elementPanel": "designer",
+        "airID": 15
+      },
+      "triggers": {
+        "mouseReleased": [
+          {
+            "sourceTrigger": "mouseReleased",
+            "sourceValue": "Static",
+            "targetValue": "execute",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "0"
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": []
+            },
+            "targetName": "SetOperator"
+          }
+        ]
+      },
+      "zindex": 16,
+      "designer": {
+        "x": 348,
+        "y": 197
+      }
+    },
+    "Subtract": {
+      "type": "Button",
+      "properties": {
+        "label": "-",
+        "enabled": true,
+        "visible": true,
+        "border": "raised",
+        "topColor": "rgb(250, 250, 250)",
+        "bottomColor": "rgb(234, 234, 234)",
+        "pressedTopColor": "rgb(255, 255, 255)",
+        "pressedBottomColor": "rgb(255, 255, 255)",
+        "overTopColor": "rgb(234, 234, 234)",
+        "overBottomColor": "rgb(214, 214, 214)",
+        "disabledTopColor": "rgb(211, 211, 211)",
+        "disabledBottomColor": "rgb(211, 211, 211)",
+        "elementType": "element",
+        "airType": "Button",
+        "elementPanel": "designer",
+        "airID": 16
+      },
+      "triggers": {
+        "mouseReleased": [
+          {
+            "sourceTrigger": "mouseReleased",
+            "sourceValue": "Static",
+            "targetValue": "execute",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "2"
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": []
+            },
+            "targetName": "SetOperator"
+          }
+        ]
+      },
+      "zindex": 17,
+      "designer": {
+        "x": 353,
+        "y": 363
+      }
+    },
+    "Add": {
+      "type": "Button",
+      "properties": {
+        "label": "+",
+        "enabled": true,
+        "visible": true,
+        "border": "raised",
+        "topColor": "rgb(250, 250, 250)",
+        "bottomColor": "rgb(234, 234, 234)",
+        "pressedTopColor": "rgb(255, 255, 255)",
+        "pressedBottomColor": "rgb(255, 255, 255)",
+        "overTopColor": "rgb(234, 234, 234)",
+        "overBottomColor": "rgb(214, 214, 214)",
+        "disabledTopColor": "rgb(211, 211, 211)",
+        "disabledBottomColor": "rgb(211, 211, 211)",
+        "elementType": "element",
+        "airType": "Button",
+        "elementPanel": "designer",
+        "airID": 17
+      },
+      "triggers": {
+        "mouseReleased": [
+          {
+            "sourceTrigger": "mouseReleased",
+            "sourceValue": "Static",
+            "targetValue": "execute",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "1"
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": []
+            },
+            "targetName": "SetOperator"
+          }
+        ]
+      },
+      "zindex": 18,
+      "designer": {
+        "x": 352,
+        "y": 444
+      }
+    },
+    "Equals": {
+      "type": "Button",
+      "properties": {
+        "label": "=",
+        "enabled": true,
+        "visible": true,
+        "border": "raised",
+        "topColor": "rgb(250, 250, 250)",
+        "bottomColor": "rgb(234, 234, 234)",
+        "pressedTopColor": "rgb(255, 255, 255)",
+        "pressedBottomColor": "rgb(255, 255, 255)",
+        "overTopColor": "rgb(234, 234, 234)",
+        "overBottomColor": "rgb(214, 214, 214)",
+        "disabledTopColor": "rgb(211, 211, 211)",
+        "disabledBottomColor": "rgb(211, 211, 211)",
+        "elementType": "element",
+        "airType": "Button",
+        "elementPanel": "designer",
+        "airID": 18
+      },
+      "triggers": {
+        "mouseReleased": [
+          {
+            "sourceTrigger": "mouseReleased",
+            "sourceValue": "Static",
+            "targetValue": "trigger",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {},
+              "targetOrder": [],
+              "sourceOrder": []
+            },
+            "targetName": "Display"
+          }
+        ]
+      },
+      "zindex": 19,
+      "designer": {
+        "x": 351,
+        "y": 605
+      }
+    },
+    "Decimal": {
+      "type": "Button",
+      "properties": {
+        "label": ".",
+        "enabled": true,
+        "visible": true,
+        "border": "raised",
+        "topColor": "rgb(250, 250, 250)",
+        "bottomColor": "rgb(234, 234, 234)",
+        "pressedTopColor": "rgb(255, 255, 255)",
+        "pressedBottomColor": "rgb(255, 255, 255)",
+        "overTopColor": "rgb(234, 234, 234)",
+        "overBottomColor": "rgb(214, 214, 214)",
+        "disabledTopColor": "rgb(211, 211, 211)",
+        "disabledBottomColor": "rgb(211, 211, 211)",
+        "elementType": "element",
+        "airType": "Button",
+        "elementPanel": "designer",
+        "airID": 19
+      },
+      "triggers": {
+        "mouseReleased": [
+          {
+            "sourceTrigger": "mouseReleased",
+            "sourceValue": "Static",
+            "targetValue": "appendValue",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "\".\""
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": []
+            },
+            "targetName": "SignModifier"
+          },
+          {
+            "sourceTrigger": "mouseReleased",
+            "sourceValue": "Static",
+            "targetValue": "appendValue",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "\".\""
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": []
+            },
+            "targetName": "Display"
+          }
+        ]
+      },
+      "zindex": 20,
+      "designer": {
+        "x": 147,
+        "y": 609
+      }
+    },
+    "SetOperator": {
+      "type": "Function",
+      "properties": {
+        "code": "    SendByte(3);\n    SendByte(operator = data);\n    operatorSet = true;\n    return operator;",
+        "length": "128",
+        "inputType": "char",
+        "returnType": "char",
+        "permission": "public",
+        "elementType": "element",
+        "elementPanel": "designer",
+        "airID": 20
+      },
+      "triggers": {
+        "valueReturned": [
+          {
+            "sourceTrigger": "valueReturned",
+            "sourceValue": "Static",
+            "targetValue": "trigger",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {},
+              "targetOrder": [],
+              "sourceOrder": []
+            },
+            "targetName": "Display"
+          }
+        ]
+      },
+      "zindex": 21,
+      "designer": {
+        "x": 498,
+        "y": 198
+      }
+    },
+    "SetValue": {
+      "type": "Function",
+      "properties": {
+        "code": "    if(!num1Set){\n        SendByte(1);\n        SendFloat(num1 = data);\n        num1Set = true;\n        if(operator == SQUARE_ROOT || operator == MEMORY_STORE){\n            return true;\n        }\n        return false;\n    } else if(!num2Set){\n        SendByte(2);\n        SendFloat(num2 = data);\n        num2Set = true;\n        return true;\n    }\n    return true;",
+        "length": "128",
+        "inputType": "float",
+        "returnType": "bool",
+        "permission": "public",
+        "elementType": "element",
+        "elementPanel": "designer",
+        "airID": 21
+      },
+      "triggers": {
+        "valueReturned": [
+          {
+            "sourceTrigger": "valueReturned",
+            "sourceValue": "getValue",
+            "targetValue": "check",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "value"
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": [
+                "value"
+              ]
+            },
+            "targetName": "Condition29"
+          }
+        ]
+      },
+      "zindex": 22,
+      "designer": {
+        "x": 321,
+        "y": 0
+      }
+    },
+    "Evaluate": {
+      "type": "Function",
+      "properties": {
+        "code": "    SendByte(4);\n    if(mode == NO_FP_MODE){\n        if(operatorSet && num1Set && num2Set){\n            operatorSet = num1Set = num2Set = false;\n            switch(operator) {\n                case MULTIPLICATION:\n                    return SendFloat(num1 * num2);\n                case ADDITION:\n                    return SendFloat(num1 + num2);\n                case SUBTRACTION:\n                    return SendFloat(num1 - num2);\n                case DIVISION:\n                    return SendFloat(num1 / num2);\n                case COMPARE:\n                    return SendFloat(operator_cmp(num1, num2));\n                case EXPONENT:\n                    return SendFloat(pow(num1, num2));\n            }\n        }\n        else if(operatorSet && num1Set && operator == SQUARE_ROOT){\n            operatorSet = num1Set = num2Set = false;\n            return SendFloat(sqrt(num1));\n        }\n        else if(operatorSet && num1Set && operator == MEMORY_STORE){\n            operatorSet = num1Set = num2Set = false;\n            return SendFloat(memory = num1);\n        }\n        operatorSet = num1Set = num2Set = false;\n        return SendFloat(0);\n    }\n    else if(mode == ALL_FP_MODE){\n        if(operatorSet && num1Set && num2Set){\n            operatorSet = num1Set = num2Set = false;\n            switch(operator) {\n                case MULTIPLICATION:\n                    return SendFloat(fp_mult(num1, num2));\n                case ADDITION:\n                    return SendFloat(fp_add(num1, num2));\n                case SUBTRACTION:\n                    return SendFloat(fp_sub(num1, num2));\n                case DIVISION:\n                    return SendFloat(fp_div(num1, num2));\n                case COMPARE:\n                    return SendFloat(fp_cmp(num1, num2));\n                case EXPONENT:\n                    return SendFloat(fp_pow(num1, num2));\n            }\n        }\n        else if(operatorSet && num1Set && operator == SQUARE_ROOT){\n            operatorSet = num1Set = num2Set = false;\n            return SendFloat(fp_sqrt(num1));\n        }\n        else if(operatorSet && num1Set && operator == MEMORY_STORE){\n            operatorSet = num1Set = num2Set = false;\n            return SendFloat(memory = num1);\n        }\n        operatorSet = num1Set = num2Set = false;\n        return SendFloat(0);\n    }\n    return SendFloat(0);",
+        "length": "128",
+        "inputType": "void",
+        "returnType": "float",
+        "permission": "public",
+        "elementType": "element",
+        "elementPanel": "designer",
+        "airID": 22
+      },
+      "triggers": {
+        "valueReturned": [
+          {
+            "sourceTrigger": "valueReturned",
+            "sourceValue": "getValue",
+            "targetValue": "setValue",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "value.toString()"
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": [
+                "value"
+              ]
+            },
+            "targetName": "SignModifier"
+          },
+          {
+            "sourceTrigger": "valueReturned",
+            "sourceValue": "getValue",
+            "targetValue": "setValue",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "value.toString()"
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": [
+                "value"
+              ]
+            },
+            "targetName": "Display"
+          }
+        ]
+      },
+      "zindex": 23,
+      "designer": {
+        "x": 502,
+        "y": 483
+      }
+    },
+    "UARTWrite": {
+      "type": "UARTWrite",
+      "properties": {
+        "code": "\tAIR_UART_Write(data, length);",
+        "length": "128",
+        "permission": "public",
+        "inputType": "json",
+        "returnType": "void",
+        "elementType": "element",
+        "elementPanel": "designer",
+        "airID": 23
+      },
+      "triggers": {},
+      "zindex": 24,
+      "designer": {
+        "x": 247,
+        "y": 707
+      }
+    },
+    "SendFloat": {
+      "type": "Function",
+      "properties": {
+        "code": "    UARTWrite(&data, 4);\n    return data;",
+        "length": "128",
+        "inputType": "float",
+        "returnType": "float",
+        "permission": "public",
+        "elementType": "element",
+        "elementPanel": "designer",
+        "airID": 24
+      },
+      "triggers": {},
+      "zindex": 25,
+      "designer": {
+        "x": 149,
+        "y": 700
+      }
+    },
+    "SendByte": {
+      "type": "Function",
+      "properties": {
+        "code": "    UARTWrite(&data, 1);",
+        "length": "128",
+        "inputType": "char",
+        "returnType": "void",
+        "permission": "public",
+        "elementType": "element",
+        "elementPanel": "designer",
+        "airID": 25
+      },
+      "triggers": {},
+      "zindex": 26,
+      "designer": {
+        "x": 54,
+        "y": 699
+      }
+    },
+    "Condition29": {
+      "type": "Condition",
+      "properties": {
+        "elementType": "element",
+        "airType": "Condition",
+        "elementPanel": "designer",
+        "airID": 26
+      },
+      "triggers": {
+        "conditionFalse": [
+          {
+            "sourceTrigger": "conditionFalse",
+            "sourceValue": "Static",
+            "targetValue": "trigger",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {},
+              "targetOrder": [],
+              "sourceOrder": []
+            },
+            "targetName": "Clear"
+          }
+        ],
+        "conditionTrue": [
+          {
+            "sourceTrigger": "conditionTrue",
+            "sourceValue": "Static",
+            "targetValue": "execute",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": ""
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": []
+            },
+            "targetName": "Evaluate"
+          }
+        ]
+      },
+      "zindex": 27,
+      "designer": {
+        "x": 427,
+        "y": 0
+      }
+    },
+    "SignModifier": {
+      "type": "TextField",
+      "properties": {
+        "label": "New TextField",
+        "value": "",
+        "enabled": true,
+        "visible": false,
+        "elementType": "element",
+        "airType": "TextField",
+        "elementPanel": "designer",
+        "airID": 27
+      },
+      "triggers": {
+        "onTrigger": [
+          {
+            "sourceTrigger": "onTrigger",
+            "sourceValue": "getValue",
+            "targetValue": "setValue",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "(function() {\n\nvar newVal; \n\nif (value.charAt(0) == \"-\") {\n\tnewVal = value.substr(1);\n}\nelse {\n\tnewVal = \"-\" + value;\n}\n\n\nreturn newVal;\n\n})();"
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": [
+                "value"
+              ]
+            },
+            "targetName": "Display"
+          },
+          {
+            "sourceTrigger": "onTrigger",
+            "sourceValue": "getValue",
+            "targetValue": "setValue",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "(function() {\n\nvar newVal; \n\nif (value.charAt(0) == \"-\") {\n\tnewVal = value.substr(1);\n}\nelse {\n\tnewVal = \"-\" + value;\n}\n\n\nreturn newVal;\n\n})();"
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": [
+                "value"
+              ]
+            },
+            "targetName": "SignModifier"
+          }
+        ]
+      },
+      "zindex": 28,
+      "designer": {
+        "x": 498,
+        "y": 297
+      }
+    },
+    "Display": {
+      "type": "Label",
+      "properties": {
+        "label": "",
+        "enabled": true,
+        "visible": true,
+        "font": "80px DBLCDTempBlack",
+        "color": "Black",
+        "elementType": "element",
+        "airType": "Label",
+        "elementPanel": "designer",
+        "airID": 28
+      },
+      "triggers": {
+        "onTrigger": [
+          {
+            "sourceTrigger": "onTrigger",
+            "sourceValue": "getValue",
+            "targetValue": "execute",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "parseFloat(labelText)"
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": [
+                "labelText"
+              ]
+            },
+            "targetName": "SetValue"
+          }
+        ]
+      },
+      "zindex": 29,
+      "designer": {
+        "x": 197,
+        "y": 0
+      }
+    },
+    "MemoryStore": {
+      "type": "Button",
+      "properties": {
+        "label": "MS",
+        "enabled": true,
+        "visible": true,
+        "border": "raised",
+        "topColor": "rgb(250, 250, 250)",
+        "bottomColor": "rgb(234, 234, 234)",
+        "pressedTopColor": "rgb(255, 255, 255)",
+        "pressedBottomColor": "rgb(255, 255, 255)",
+        "overTopColor": "rgb(234, 234, 234)",
+        "overBottomColor": "rgb(214, 214, 214)",
+        "disabledTopColor": "rgb(211, 211, 211)",
+        "disabledBottomColor": "rgb(211, 211, 211)",
+        "airType": "Button",
+        "elementPanel": "designer",
+        "airID": 29,
+        "elementType": "element",
+        "airName": "MemoryStore"
+      },
+      "triggers": {
+        "mouseReleased": [
+          {
+            "sourceTrigger": "mouseReleased",
+            "sourceValue": "Static",
+            "targetValue": "execute",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "7"
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": []
+            },
+            "targetName": "SetOperator"
+          }
+        ]
+      },
+      "zindex": 30,
+      "designer": {
+        "x": 163,
+        "y": 195
+      }
+    },
+    "MemoryRecall": {
+      "type": "Button",
+      "properties": {
+        "label": "MR",
+        "enabled": true,
+        "visible": true,
+        "border": "raised",
+        "topColor": "rgb(250, 250, 250)",
+        "bottomColor": "rgb(234, 234, 234)",
+        "pressedTopColor": "rgb(255, 255, 255)",
+        "pressedBottomColor": "rgb(255, 255, 255)",
+        "overTopColor": "rgb(234, 234, 234)",
+        "overBottomColor": "rgb(214, 214, 214)",
+        "disabledTopColor": "rgb(211, 211, 211)",
+        "disabledBottomColor": "rgb(211, 211, 211)",
+        "airType": "Button",
+        "elementPanel": "designer",
+        "airID": 30,
+        "elementType": "element",
+        "airName": "MemoryRecall"
+      },
+      "triggers": {
+        "mousePressed": [
+          {
+            "sourceTrigger": "mousePressed",
+            "sourceValue": "Static",
+            "targetValue": "execute",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": ""
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": []
+            },
+            "targetName": "GetMemory"
+          }
+        ]
+      },
+      "zindex": 31,
+      "designer": {
+        "x": 255,
+        "y": 198
+      }
+    },
+    "SquareRoot": {
+      "type": "Button",
+      "properties": {
+        "label": "Square Root",
+        "enabled": true,
+        "visible": true,
+        "border": "raised",
+        "topColor": "rgb(250, 250, 250)",
+        "bottomColor": "rgb(234, 234, 234)",
+        "pressedTopColor": "rgb(255, 255, 255)",
+        "pressedBottomColor": "rgb(255, 255, 255)",
+        "overTopColor": "rgb(234, 234, 234)",
+        "overBottomColor": "rgb(214, 214, 214)",
+        "disabledTopColor": "rgb(211, 211, 211)",
+        "disabledBottomColor": "rgb(211, 211, 211)",
+        "airType": "Button",
+        "elementPanel": "designer",
+        "airID": 31,
+        "elementType": "element",
+        "airName": "SquareRoot"
+      },
+      "triggers": {
+        "mouseReleased": [
+          {
+            "sourceTrigger": "mouseReleased",
+            "sourceValue": "Static",
+            "targetValue": "execute",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "5"
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": []
+            },
+            "targetName": "SetOperator"
+          }
+        ]
+      },
+      "zindex": 32,
+      "designer": {
+        "x": 56,
+        "y": 276
+      }
+    },
+    "Compare": {
+      "type": "Button",
+      "properties": {
+        "label": "Compare",
+        "enabled": true,
+        "visible": true,
+        "border": "raised",
+        "topColor": "rgb(250, 250, 250)",
+        "bottomColor": "rgb(234, 234, 234)",
+        "pressedTopColor": "rgb(255, 255, 255)",
+        "pressedBottomColor": "rgb(255, 255, 255)",
+        "overTopColor": "rgb(234, 234, 234)",
+        "overBottomColor": "rgb(214, 214, 214)",
+        "disabledTopColor": "rgb(211, 211, 211)",
+        "disabledBottomColor": "rgb(211, 211, 211)",
+        "airType": "Button",
+        "elementPanel": "designer",
+        "airID": 32,
+        "elementType": "element",
+        "airName": "Compare"
+      },
+      "triggers": {
+        "mouseReleased": [
+          {
+            "sourceTrigger": "mouseReleased",
+            "sourceValue": "Static",
+            "targetValue": "execute",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "4"
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": []
+            },
+            "targetName": "SetOperator"
+          }
+        ]
+      },
+      "zindex": 33,
+      "designer": {
+        "x": 154,
+        "y": 273
+      }
+    },
+    "Exponent": {
+      "type": "Button",
+      "properties": {
+        "label": "^",
+        "enabled": true,
+        "visible": true,
+        "border": "raised",
+        "topColor": "rgb(250, 250, 250)",
+        "bottomColor": "rgb(234, 234, 234)",
+        "pressedTopColor": "rgb(255, 255, 255)",
+        "pressedBottomColor": "rgb(255, 255, 255)",
+        "overTopColor": "rgb(234, 234, 234)",
+        "overBottomColor": "rgb(214, 214, 214)",
+        "disabledTopColor": "rgb(211, 211, 211)",
+        "disabledBottomColor": "rgb(211, 211, 211)",
+        "airType": "Button",
+        "elementPanel": "designer",
+        "airID": 33,
+        "elementType": "element",
+        "airName": "Exponent"
+      },
+      "triggers": {
+        "mouseReleased": [
+          {
+            "sourceTrigger": "mouseReleased",
+            "sourceValue": "Static",
+            "targetValue": "execute",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "6"
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": []
+            },
+            "targetName": "SetOperator"
+          }
+        ]
+      },
+      "zindex": 34,
+      "designer": {
+        "x": 258,
+        "y": 277
+      }
+    },
+    "GetMemory": {
+      "type": "Function",
+      "properties": {
+        "code": "    return SendFloat(memory);",
+        "length": "128",
+        "inputType": "void",
+        "returnType": "float",
+        "permission": "public",
+        "elementPanel": "designer",
+        "airID": 34,
+        "elementType": "element",
+        "airName": "GetMemory"
+      },
+      "triggers": {
+        "valueReturned": [
+          {
+            "sourceTrigger": "valueReturned",
+            "sourceValue": "getValue",
+            "targetValue": "setValue",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "value.toString()"
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": [
+                "value"
+              ]
+            },
+            "targetName": "SignModifier"
+          },
+          {
+            "sourceTrigger": "valueReturned",
+            "sourceValue": "getValue",
+            "targetValue": "setValue",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "value.toString()"
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": [
+                "value"
+              ]
+            },
+            "targetName": "Display"
+          }
+        ]
+      },
+      "zindex": 35,
+      "designer": {
+        "x": 500,
+        "y": 385
+      }
+    },
+    "Connection": {
+      "type": "Connection",
+      "properties": {
+        "elementPanel": "designer",
+        "airID": 36,
+        "elementType": "element",
+        "airName": "Connection"
+      },
+      "triggers": {
+        "connected": [
+          {
+            "sourceTrigger": "connected",
+            "sourceValue": "Static",
+            "targetValue": "execute",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "1"
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": []
+            },
+            "targetName": "Mode"
+          }
+        ]
+      },
+      "zindex": 37,
+      "designer": {
+        "x": 53,
+        "y": 99
+      }
+    },
+    "Mode": {
+      "type": "Function",
+      "properties": {
+        "code": "    if(data >= 0){\n        mode = data;\n    }\n    else{\n        mode = !mode;\n    }\n    \n    if(mode == ALL_FP_MODE){\n        return \"All fp_ mode (old)\";\n    }\n    else if(mode == NO_FP_MODE){\n        return \"No fp_ mode (new)\";\n    }\n\treturn \"error\";",
+        "length": "128",
+        "inputType": "int",
+        "returnType": "string",
+        "permission": "public",
+        "elementPanel": "designer",
+        "airID": 37,
+        "elementType": "element",
+        "airName": "Mode"
+      },
+      "triggers": {
+        "valueReturned": [
+          {
+            "sourceTrigger": "valueReturned",
+            "sourceValue": "getValue",
+            "targetValue": "setValue",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "value"
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": [
+                "value"
+              ]
+            },
+            "targetName": "ModeLabel"
+          }
+        ]
+      },
+      "zindex": 38,
+      "designer": {
+        "x": 182,
+        "y": 96
+      }
+    },
+    "ModeSwitchButton": {
+      "type": "ImagePan",
+      "properties": {
+        "image": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAYdEVYdFNvZnR3YXJlAHBhaW50Lm5ldCA0LjAuOWwzfk4AAAANSURBVBhXY/j//z8DAAj8Av6IXwbgAAAAAElFTkSuQmCC",
+        "aspectLock": false,
+        "enabled": true,
+        "visible": true,
+        "rotation": "0",
+        "background": "transparent",
+        "airType": "ImagePan",
+        "elementPanel": "designer",
+        "airID": 39,
+        "elementType": "element",
+        "airName": "ModeSwitchButton"
+      },
+      "triggers": {
+        "mousePressed": [
+          {
+            "sourceTrigger": "mousePressed",
+            "sourceValue": "Static",
+            "targetValue": "execute",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "-1"
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": []
+            },
+            "targetName": "Mode"
+          }
+        ]
+      },
+      "zindex": 39,
+      "designer": {
+        "x": 438,
+        "y": 99
+      }
+    }
+  },
+  "cloudElements": {}
+}
