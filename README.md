@@ -19,3 +19,7 @@ Board/ - EG bcm20737
  official - demos available via the IDE or from the wiki
  
  
+## Filenaming
+
+.atmo files should not use spaces, replace spaces with underscores in order for the IDE
+import link feature to work correctly.
