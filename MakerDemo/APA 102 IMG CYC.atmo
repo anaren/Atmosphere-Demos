@@ -1,0 +1,2485 @@
+{
+  "header": {
+    "data": {
+      "order": [
+        "Globals",
+        "Interval",
+        "Connected",
+        "Disconnected",
+        "Setup"
+      ],
+      "Globals": {
+        "name": "Globals",
+        "func": "#include \"callbacks.h\"",
+        "code": "#include <stdint.h>\n//#include \"apa102/apa102.h\"\n\nconst uint8_t startFrame[] = {0x00, 0x00, 0x00, 0x00};\n//const uint8_t endFrame[] = {0xff, 0xff, 0xff, 0xff};\nconst uint8_t endByte = 0x00;\n\ntypedef void (*AIR_LEDAnimateCallback_ptr)(unsigned int frame, unsigned int currentLED, unsigned int totalLEDs, void *args, uint8_t *brightness, uint8_t *red, uint8_t *green, uint8_t *blue);\n\nunsigned int Angry[]={0x0,0x0,0x0,0x0,0xff1100,0xff1100,0xff1100,0xff1100,0xff1100,0xff1100,0xff1100,0xff1100,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0xff1100,0xff1100,0xff1100,0xff1100,0xff1100,0xff1100,0xff1100,0xff1100,0xff1100,0xff1100,0x1e000c,0x0,0x0,0x0,0x22000c,0xff1100,0xff1100,0xff1100,0xff1100,0xff1100,0xff1100,0xff1100,0xff1100,0xff1100,0xff1100,0xff1100,0xff1100,0x0,0x0,0x0,0xff1100,0xff1100,0x0,0x0,0x0,0xff1100,0xff1100,0xff1100,0xff1100,0xff1100,0xff1100,0xff1100,0x0,0xff1100,0x0,0xff1100,0xff1100,0xff1100,0x0,0xff1100,0x0,0x0,0xff1100,0xff1100,0xff1100,0x0,0x0,0x0,0xff1100,0xff1100,0xff1100,0xff1100,0xff1100,0xff1100,0xff1100,0x0,0x0,0x0,0xff1100,0x0,0x0,0x0,0xff1100,0x0,0xff1100,0xff1100,0xff1100,0xff1100,0xff1100,0xff1100,0x0,0xff1100,0xff1100,0x0,0xff1100,0xff1100,0x0,0x0,0xff1100,0xff1100,0xff1100,0xff1100,0xff1100,0xff1100,0xff1100,0xff1100,0xff1100,0xff1100,0x0,0x0,0xff1100,0xff1100,0xff1100,0xff1100,0xff1100,0xff1100,0xff1100,0xff1100,0xff1100,0xff1100,0xff1100,0xff1100,0xff1100,0xff1100,0xff1100,0xff1100,0xff1100,0xff1100,0x0,0x0,0xff1100,0xff1100,0xff1100,0xff1100,0xff1100,0xff1100,0xff1100,0xff1100,0xff1100,0xff1100,0x0,0x0,0xff1100,0xff1100,0x0,0xff1100,0xff1100,0x0,0xff1100,0xff1100,0xff1100,0xff1100,0xff1100,0xff1100,0x0,0xff1100,0x0,0x0,0x0,0xff1100,0x0,0x0,0x0,0xff1100,0xff1100,0xff1100,0xff1100,0xff1100,0xff1100,0xff1100,0x0,0x0,0x0,0xff1100,0xff1100,0xff1100,0x0,0x0,0xff1100,0x0,0xff1100,0xff1100,0xff1100,0x0,0xff1100,0x0,0xff1100,0xff1100,0xff1100,0xff1100,0xff1100,0xff1100,0xff1100,0x0,0x0,0x0,0xff1100,0xff1100,0x0,0x0,0x22000c,0xff1100,0xff1100,0xff1100,0xff1100,0xff1100,0xff1100,0xff1100,0xff1100,0xff1100,0xff1100,0xff1100,0xff1100,0x26000b,0x0,0x0,0x0,0x270004,0xff1100,0xff1100,0xff1100,0xff1100,0xff1100,0xff1100,0xff1100,0xff1100,0xff1100,0xff1100,0x22000c,0x0,0x0,0x0,0x0,0x0,0x0,0xff1100,0xff1100,0xff1100,0xff1100,0xff1100,0xff1100,0xff1100,0xff1100,0x0,0x0,0x0,0x0};\nunsigned int Atn[]={0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0x0,0x0,0x0,0x0,0x0,0x0,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0x0,0x0,0xffd800,0x0,0x0,0x0,0x0,0x0,0x0,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0x0,0x0,0x0,0x0,0x0,0x0,0xffd800,0x0,0x0,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0x0,0x0,0x0,0x0,0x0,0x0,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0};\nunsigned int Black[]={0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0};\nunsigned int Go[]={0x0,0x0,0x3d06,0x7f0e,0x7f0e,0x7f0e,0x7f0e,0x7f0e,0x7f0e,0x7f0e,0x7f0e,0x7f0e,0x7f0e,0x3d06,0x0,0x0,0x0,0x3d06,0x7f0e,0xb512,0xc100,0xff21,0xff21,0xff21,0xff21,0xff21,0xff21,0xc100,0xb512,0x7f0e,0x3d06,0x0,0x3d06,0x7f0e,0xb512,0xc100,0xff21,0xff21,0xff21,0xff21,0xff21,0xff21,0xff21,0xff21,0xc100,0xb512,0x7f0e,0x3d06,0x7f0e,0xb512,0xc100,0xffffff,0xffffff,0xffffff,0xffffff,0xffffff,0xffffff,0xffffff,0xffffff,0xffffff,0xffffff,0xc100,0xb512,0x7f0e,0x7f0e,0xc100,0xff21,0xffffff,0xff21,0xff21,0xff21,0xff21,0xff21,0xff21,0xff21,0xff21,0xffffff,0xff21,0xc100,0x7f0e,0x7f0e,0xff21,0xff21,0xffffff,0xff21,0xff21,0xff21,0xffffff,0xff21,0xff21,0xff21,0xff21,0xffffff,0xff21,0xff21,0x7f0e,0x7f0e,0xff21,0xff21,0xffffff,0xff21,0xff21,0xff21,0xff21,0xffffff,0xffffff,0xffffff,0xffffff,0xffffff,0xff21,0xff21,0x7f0e,0x7f0e,0xff21,0xff21,0xff21,0xff21,0xff21,0xff21,0xff21,0xff21,0xff21,0xff21,0xff21,0xff21,0xff21,0xff21,0x7f0e,0x7f0e,0xff21,0xff21,0xff21,0xff21,0xff21,0xff21,0xff21,0xff21,0xff21,0xff21,0xff21,0xff21,0xff21,0xff21,0x7f0e,0x7f0e,0xff21,0xff21,0xffffff,0xffffff,0xffffff,0xffffff,0xffffff,0xffffff,0xffffff,0xffffff,0xffffff,0xffffff,0xff21,0xff21,0x7f0e,0x7f0e,0xff21,0xff21,0xffffff,0xff21,0xff21,0xff21,0xff21,0xff21,0xff21,0xff21,0xff21,0xffffff,0xff21,0xff21,0x7f0e,0x7f0e,0xc100,0xff21,0xffffff,0xff1d,0xff1d,0xff1d,0xff1d,0xff1d,0xff1d,0xff1d,0xff1d,0xffffff,0xff21,0xc100,0x7f0e,0x7f0e,0xb512,0xc100,0xffffff,0xffffff,0xffffff,0xffffff,0xffffff,0xffffff,0xffffff,0xffffff,0xffffff,0xffffff,0xc100,0xb512,0x7f0e,0x3d06,0x7f0e,0xb512,0xc100,0xff21,0xff21,0xff21,0xff21,0xff21,0xff21,0xff21,0xff21,0xc100,0xb512,0x7f0e,0x3d06,0x0,0x3d06,0x7f0e,0xb512,0xc100,0xff21,0xff21,0xff21,0xff21,0xff21,0xff21,0xc100,0xb512,0x7f0e,0x3d06,0x0,0x0,0x0,0x3d06,0x7f0e,0x7f0e,0x7f0e,0x7f0e,0x7f0e,0x7f0e,0x7f0e,0x7f0e,0x7f0e,0x7f0e,0x3d06,0x0,0x0};\nunsigned int Happy[]={0x0,0x0,0x0,0x0,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0x60401,0x0,0x0,0x0,0x70501,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0x0,0x0,0x0,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0x0,0xffd800,0xffd800,0xffd800,0xffd800,0x0,0x0,0xffd800,0xffd800,0xffd800,0x0,0x0,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0x0,0x0,0xffd800,0xffd800,0xffd800,0x0,0x0,0x0,0x0,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0x0,0x0,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0x0,0x0,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0x0,0x0,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0x0,0x0,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0x0,0x0,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0x0,0x0,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0x0,0x0,0x0,0x0,0xffd800,0xffd800,0xffd800,0x0,0x0,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0x0,0x0,0xffd800,0xffd800,0xffd800,0x0,0x0,0xffd800,0xffd800,0xffd800,0xffd800,0x0,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0x0,0x0,0x70500,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0x80601,0x0,0x0,0x0,0x60501,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0x70500,0x0,0x0,0x0,0x0,0x0,0x0,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0x0,0x0,0x0,0x0};\nunsigned int Laugh[]={0x0,0x0,0x0,0x0,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0x60401,0x0,0x0,0x0,0x70501,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0x0,0x0,0x0,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0x0,0xffd800,0xffd800,0xffd800,0x0,0xffd800,0xffd800,0xffd800,0xffd800,0x0,0xffd800,0xffd800,0xffd800,0xffd800,0x0,0xffd800,0xffd800,0xffd800,0xffd800,0x0,0x0,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0x0,0x0,0x0,0xffd800,0xffd800,0xffd800,0xffd800,0x0,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0x0,0xffd800,0xffd800,0xffd800,0xffd800,0x0,0x0,0x0,0x0,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0x0,0x0,0x0,0x0,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0x0,0x0,0x0,0x0,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0x0,0x0,0x0,0x0,0xffd800,0xffd800,0xffd800,0xffd800,0x0,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0x0,0xffd800,0xffd800,0xffd800,0xffd800,0x0,0x0,0x0,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0x0,0x0,0xffd800,0xffd800,0xffd800,0xffd800,0x0,0xffd800,0xffd800,0xffd800,0xffd800,0x0,0xffd800,0xffd800,0xffd800,0xffd800,0x0,0xffd800,0xffd800,0xffd800,0x0,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0x0,0x0,0x70500,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0x80601,0x0,0x0,0x0,0x60501,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0x70500,0x0,0x0,0x0,0x0,0x0,0x0,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0x0,0x0,0x0,0x0};\nunsigned int Love[]={0x0,0x0,0x0,0x0,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0x60401,0x0,0x0,0x0,0x70501,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0x0,0x0,0x0,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0x0,0xffd800,0xffd800,0xffd800,0xffd800,0xff444e,0xff1100,0xffd800,0xffd800,0x0,0xffd800,0xffd800,0xff1100,0xff1100,0xff1100,0xff1100,0xff444e,0xffd800,0xffd800,0x0,0x0,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0x0,0x0,0x0,0xffd800,0xffd800,0xff1100,0xff1100,0xff1100,0xff1100,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xff1100,0xff1100,0xff1100,0xff1100,0xff444e,0xffd800,0xffd800,0x0,0x0,0x0,0x0,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0x0,0x0,0x0,0x0,0xffd800,0xffd800,0xffd800,0xffd800,0xff444e,0xff1100,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xff1100,0xff444e,0xffd800,0xffd800,0xffd800,0xffd800,0x0,0x0,0x0,0x0,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0x0,0x0,0x0,0x0,0xffd800,0xffd800,0xff444e,0xff1100,0xff1100,0xff1100,0xff1100,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xff1100,0xff1100,0xff1100,0xff1100,0xffd800,0xffd800,0x0,0x0,0x0,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0x0,0x0,0xffd800,0xffd800,0xff444e,0xff1100,0xff1100,0xff1100,0xff1100,0xffd800,0xffd800,0x0,0xffd800,0xffd800,0xff1100,0xff444e,0xffd800,0xffd800,0xffd800,0xffd800,0x0,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0x0,0x0,0x70500,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0x80601,0x0,0x0,0x0,0x60501,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0x70500,0x0,0x0,0x0,0x0,0x0,0x0,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0xffd800,0x0,0x0,0x0,0x0};\nunsigned int Mario[]={0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x8e3e03,0x0,0x0,0xfaa475,0xfaa475,0xfaa475,0xfe0000,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x351500,0x351500,0x351500,0x0,0x0,0xfe0000,0xfe0000,0xfaa475,0xfaa475,0xfaa475,0x0,0x8f3e03,0x913d00,0x913d00,0x903d01,0x2b90,0xfaa475,0xfaa475,0xfaa475,0xfe0000,0xfe0000,0xfe0000,0x0,0x351500,0x351500,0x351500,0x351500,0xfe0000,0x0,0xfe0000,0xfe0000,0x351500,0xfaa475,0xfaa475,0x351500,0xfaa475,0xfe0000,0xfe0000,0xfe0000,0xfe0000,0xfaa475,0x2b90,0x2b90,0x903d01,0x913d00,0x8e3e04,0x8e3e05,0x2b90,0x2b90,0x2b90,0x2b90,0xfe0000,0xfe0000,0xfe0000,0xfaa475,0xfaa475,0x351500,0x351500,0x351500,0xfe0000,0xfe0000,0xfe0000,0xfe0000,0x351500,0xfaa475,0x351500,0xfaa475,0xfaa475,0x2b90,0x2b90,0x2b90,0xecf809,0x2b90,0x2b90,0x2b90,0x0,0x0,0x0,0x0,0x0,0x2b90,0x2b90,0x2b90,0x2b90,0xfe0000,0xfe0000,0xfaa475,0xfaa475,0xfaa475,0xfaa475,0xfaa475,0xfe0000,0xfe0000,0xfe0000,0xfe0000,0xfaa475,0xfaa475,0xfaa475,0xfaa475,0xfaa475,0xfe0000,0xfe0000,0x2b90,0x2b90,0x2b90,0x2b90,0x2b90,0x0,0x0,0x913d00,0x903d02,0x2b90,0x2b90,0x2b90,0xebf709,0x2b90,0x2b90,0xfe0000,0xfaa475,0x351500,0xfaa475,0x0,0x0,0xfe0000,0xfe0000,0xfe0000,0xfe0000,0xfaa475,0xfaa475,0x351500,0x351500,0x0,0x0,0xfe0000,0xfe0000,0x2b90,0x2b90,0x2b90,0x2b90,0x903d01,0x913d00,0x913d00,0x903d01,0x2b90,0x2b90,0xfaa475,0xfaa475,0xfe0000,0xfe0000,0x0,0x0,0x351500,0xfaa475,0xfaa475,0x0,0xfe0000,0x0,0x0,0xfe0000,0x0,0xfaa475,0xfaa475,0x351500,0x0,0x0,0xfe0000,0xfe0000,0xfaa475,0xfaa475,0xfaa475,0x0,0x8c3f08,0x913d00,0x8c3f09,0x0,0x0,0xfaa475,0xfaa475,0xfaa475,0xfe0000,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0};\nunsigned int Poop[]={0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x7f3300,0x7f3300,0x7f3300,0x7f3300,0x7f3300,0x7f3300,0x7f3300,0x7f3300,0x7f3300,0x7f3300,0x331400,0x7f3300,0x0,0x0,0x0,0x0,0x0,0x0,0x60401,0x0,0x0,0x0,0x70501,0x0,0x0,0x0,0x0,0x0,0x7f3300,0x7f3300,0x7f3300,0x331400,0x7f3300,0x7f3300,0x7f3300,0x7f3300,0x7f3300,0x7f3300,0x7f3300,0x7f3300,0x7f3300,0x7f3300,0x331400,0x7f3300,0x7f3300,0x7f3300,0x7f3300,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x7f3300,0xffffff,0xffffff,0x7f3300,0x7f3300,0x331400,0x7f3300,0xffffff,0x7f3300,0x7f3300,0x7f3300,0x7f3300,0x7f3300,0xffffff,0xffffff,0x7f3300,0x7f3300,0x331400,0xffffff,0xffffff,0x0,0xffffff,0x7f3300,0x0,0x0,0x0,0x0,0x0,0x0,0x7f3300,0x331400,0x7f3300,0xffffff,0x0,0x0,0xffffff,0x331400,0x7f3300,0x7f3300,0xffffff,0xffffff,0xffffff,0x331400,0x331400,0xffffff,0xffffff,0xffffff,0x7f3300,0x7f3300,0x331400,0x7f3300,0xffffff,0xffffff,0x331400,0x7f3300,0x7f3300,0x7f3300,0x7f3300,0x0,0x7f3300,0x7f3300,0x7f3300,0x7f3300,0x331400,0x7f3300,0xffffff,0xffffff,0x331400,0x7f3300,0x7f3300,0x7f3300,0xffffff,0xffffff,0xffffff,0x331400,0x7f3300,0xffffff,0xffffff,0xffffff,0x7f3300,0x7f3300,0x7f3300,0xffffff,0x0,0x0,0xffffff,0x7f3300,0x331400,0x7f3300,0x0,0x0,0x0,0x0,0x0,0x0,0x7f3300,0xffffff,0x0,0xffffff,0xffffff,0x7f3300,0x7f3300,0x7f3300,0xffffff,0xffffff,0x331400,0x7f3300,0x7f3300,0x331400,0x7f3300,0xffffff,0x7f3300,0x7f3300,0x7f3300,0x7f3300,0xffffff,0xffffff,0x7f3300,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x331400,0x7f3300,0x7f3300,0x7f3300,0x7f3300,0x7f3300,0x7f3300,0x331400,0x7f3300,0x7f3300,0x7f3300,0x7f3300,0x7f3300,0x331400,0x331400,0x7f3300,0x7f3300,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x80601,0x0,0x0,0x0,0x60501,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x7f3300,0x7f3300,0x7f3300,0x7f3300,0x7f3300,0x7f3300,0x7f3300,0x7f3300,0x7f3300,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0};\nunsigned int Rect[]={0xff0000,0xff0000,0xff0000,0xff0000,0xff0000,0xff0000,0xff0000,0xff0000,0xff0000,0xff0000,0xff0000,0xff0000,0xff0000,0xff0000,0xff0000,0xff0000,0xff0000,0xff7f00,0xff7f00,0xff7f00,0xff7f00,0xff7f00,0xff7f00,0xff7f00,0xff7f00,0xff7f00,0xff7f00,0xff7f00,0xff7f00,0xff7f00,0xff7f00,0xff0000,0xff0000,0xff7f00,0xffff00,0xffff00,0xffff00,0xffff00,0xffff00,0xffff00,0xffff00,0xffff00,0xffff00,0xffff00,0xffff00,0xffff00,0xff7f00,0xff0000,0xff0000,0xff7f00,0xffff00,0x7fff00,0x7fff00,0x7fff00,0x7fff00,0x7fff00,0x7fff00,0x7fff00,0x7fff00,0x7fff00,0x7fff00,0xffff00,0xff7f00,0xff0000,0xff0000,0xff7f00,0xffff00,0x7fff00,0xff00,0xff00,0xff00,0xff00,0xff00,0xff00,0xff00,0xff00,0x7fff00,0xffff00,0xff7f00,0xff0000,0xff0000,0xff7f00,0xffff00,0x7fff00,0xff00,0xff7f,0xff7f,0xff7f,0xff7f,0xff7f,0xff7f,0xff00,0x7fff00,0xffff00,0xff7f00,0xff0000,0xff0000,0xff7f00,0xffff00,0x7fff00,0xff00,0xff7f,0xffff,0xffff,0xffff,0xffff,0xff7f,0xff00,0x7fff00,0xffff00,0xff7f00,0xff0000,0xff0000,0xff7f00,0xffff00,0x7fff00,0xff00,0xff7f,0xffff,0xff,0xff,0xffff,0xff7f,0xff00,0x7fff00,0xffff00,0xff7f00,0xff0000,0xff0000,0xff7f00,0xffff00,0x7fff00,0xff00,0xff7f,0xffff,0xff,0xff,0xffff,0xff7f,0xff00,0x7fff00,0xffff00,0xff7f00,0xff0000,0xff0000,0xff7f00,0xffff00,0x7fff00,0xff00,0xff7f,0xffff,0xffff,0xffff,0xffff,0xff7f,0xff00,0x7fff00,0xffff00,0xff7f00,0xff0000,0xff0000,0xff7f00,0xffff00,0x7fff00,0xff00,0xff7f,0xff7f,0xff7f,0xff7f,0xff7f,0xff7f,0xff00,0x7fff00,0xffff00,0xff7f00,0xff0000,0xff0000,0xff7f00,0xffff00,0x7fff00,0xff00,0xff00,0xff00,0xff00,0xff00,0xff00,0xff00,0xff00,0x7fff00,0xffff00,0xff7f00,0xff0000,0xff0000,0xff7f00,0xffff00,0x7fff00,0x7fff00,0x7fff00,0x7fff00,0x7fff00,0x7fff00,0x7fff00,0x7fff00,0x7fff00,0x7fff00,0xffff00,0xff7f00,0xff0000,0xff0000,0xff7f00,0xffff00,0xffff00,0xffff00,0xffff00,0xffff00,0xffff00,0xffff00,0xffff00,0xffff00,0xffff00,0xffff00,0xffff00,0xff7f00,0xff0000,0xff0000,0xff7f00,0xff7f00,0xff7f00,0xff7f00,0xff7f00,0xff7f00,0xff7f00,0xff7f00,0xff7f00,0xff7f00,0xff7f00,0xff7f00,0xff7f00,0xff7f00,0xff0000,0xff0000,0xff0000,0xff0000,0xff0000,0xff0000,0xff0000,0xff0000,0xff0000,0xff0000,0xff0000,0xff0000,0xff0000,0xff0000,0xff0000,0xff0000,0xff0000};\nunsigned int Sad[]={0x0,0x0,0x0,0x0,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0x80c,0x0,0x0,0x0,0x80d,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0x0,0x0,0x0,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0x0,0xff,0xff,0xff,0xff,0x0,0x0,0xff,0xff,0xff,0xff,0xff,0x0,0x0,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0x0,0x0,0xff,0xff,0xff,0x0,0x0,0x0,0x0,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0x0,0x0,0xff,0xff,0xff,0x0,0x0,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0x0,0x0,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0x0,0x0,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0x0,0x0,0xff,0xff,0xff,0x0,0x0,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0x0,0x0,0x0,0x0,0xff,0xff,0xff,0x0,0x0,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0x0,0x0,0xff,0xff,0xff,0xff,0xff,0x0,0x0,0xff,0xff,0xff,0xff,0x0,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0x0,0x0,0x80d,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0x80e,0x0,0x0,0x0,0x40c,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0x80d,0x0,0x0,0x0,0x0,0x0,0x0,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff,0x0,0x0,0x0,0x0};\nunsigned int Stop[]={0x0,0x0,0x0,0xff1100,0xff1100,0xff1100,0xff1100,0xff1100,0xff1100,0xff1100,0xff1100,0xff1100,0xff1100,0x0,0x0,0x0,0x0,0x0,0xff1100,0xffffff,0xffffff,0xff1100,0xff1100,0xff1100,0xffffff,0xffffff,0xffffff,0xffffff,0xffffff,0xff1100,0x0,0x0,0x0,0xff1100,0xff1100,0xffffff,0xff1100,0xff1100,0xff1100,0xffffff,0xff1100,0xff1100,0xff1100,0xff1100,0xffffff,0xff1100,0xff1100,0x0,0xff1100,0xff1100,0xff1100,0xffffff,0xffffff,0xffffff,0xffffff,0xffffff,0xffffff,0xff1100,0xff1100,0xffffff,0xffffff,0xff1100,0xff1100,0xff1100,0xff1100,0xff1100,0xff1100,0xff1100,0xff1100,0xff1100,0xff1100,0xff1100,0xff1100,0xff1100,0xff1100,0xff1100,0xff1100,0xff1100,0xff1100,0xff1100,0xff1100,0xff1100,0xff1100,0xff1100,0xff1100,0xff1100,0xff1100,0xff1100,0xff1100,0xff1100,0xff1100,0xff1100,0xffffff,0xff1100,0xff1100,0xff1100,0xff1100,0xff1100,0xff1100,0xffffff,0xffffff,0xffffff,0xffffff,0xffffff,0xffffff,0xffffff,0xffffff,0xffffff,0xffffff,0xff1100,0xff1100,0xff1100,0xff1100,0xff1100,0xff1100,0xff1100,0xff1100,0xff1100,0xff1100,0xff1100,0xff1100,0xff1100,0xff1100,0xff1100,0xffffff,0xff1100,0xff1100,0xff1100,0xff1100,0xff1100,0xff1100,0xff1100,0xff1100,0xff1100,0xff1100,0xff1100,0xff1100,0xff1100,0xff1100,0xff1100,0xff1100,0xff1100,0xff1100,0xff1100,0xff1100,0xff1100,0xff1100,0xffffff,0xffffff,0xffffff,0xffffff,0xffffff,0xffffff,0xffffff,0xffffff,0xffffff,0xffffff,0xff1100,0xff1100,0xff1100,0xff1100,0xff1100,0xff1100,0xffffff,0xff1100,0xff1100,0xff1100,0xff1100,0xff1100,0xff1100,0xff1100,0xff1100,0xffffff,0xff1100,0xff1100,0xff1100,0xff1100,0xff1100,0xff1100,0xffffff,0xffffff,0xffffff,0xffffff,0xffffff,0xffffff,0xffffff,0xffffff,0xffffff,0xffffff,0xff1100,0xff1100,0xff1100,0xff1100,0xff1100,0xff1100,0xff1100,0xff1100,0xff1100,0xff1100,0xff1100,0xff1100,0xff1100,0xff1100,0xff1100,0xff1100,0xff1100,0xff1100,0xff1100,0x0,0xff1100,0xff1100,0xffffff,0xffffff,0xffffff,0xffffff,0xffffff,0xffffff,0xffffff,0xffffff,0xffffff,0xffffff,0xff1100,0xff1100,0x0,0x0,0x0,0xff1100,0xffffff,0xff1100,0xff1100,0xff1100,0xff1100,0xffffff,0xff1100,0xff1100,0xff1100,0xff1100,0xff1100,0x0,0x0,0x0,0x0,0x0,0xff1100,0xff1100,0xff1100,0xff1100,0xffffff,0xffffff,0xffffff,0xffffff,0xffffff,0xffffff,0x0,0x0,0x0};\nunsigned int Yuck[]={0x0,0x0,0x0,0x0,0xff21,0xff21,0xff21,0xff21,0xff21,0xff21,0xff21,0xff21,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0xff21,0xff21,0xff21,0xff21,0xff21,0xff21,0xff21,0xff21,0xff21,0xff21,0x60401,0x0,0x0,0x0,0x70501,0xff21,0xff21,0xff21,0xff21,0xff21,0x0,0xff21,0xff21,0xff21,0xff21,0xff21,0xff21,0x0,0x0,0x0,0xff21,0xff21,0xff21,0xff21,0xff21,0xff21,0xff21,0xff21,0x0,0xff21,0xff21,0xff21,0x0,0xff21,0x0,0xff21,0xff21,0xff21,0x0,0xff21,0x0,0x0,0x0,0xff21,0xff21,0xff21,0xff21,0xff21,0x0,0xff21,0xff21,0xff21,0xff21,0xff21,0x0,0xff21,0xff21,0xff21,0xff21,0xff21,0x0,0xff21,0xff21,0x0,0xff21,0xff21,0xff21,0xff21,0xff21,0xff21,0xff21,0x0,0xff21,0xff21,0x0,0xff21,0xff21,0xff21,0x0,0x0,0x0,0xff21,0xff21,0xff21,0x0,0xff21,0xff21,0x0,0xff21,0xff21,0xff21,0xff21,0xff21,0xff21,0xff21,0xff21,0xff21,0xff21,0xff21,0xff21,0xff21,0xff21,0xff21,0xff21,0xff21,0xff21,0xff21,0xff21,0xff21,0xff21,0x0,0xff21,0xff21,0x0,0xff21,0xff21,0xff21,0x0,0x0,0x0,0xff21,0xff21,0xff21,0x0,0xff21,0xff21,0x0,0xff21,0xff21,0xff21,0xff21,0xff21,0xff21,0xff21,0x0,0xff21,0xff21,0x0,0xff21,0xff21,0xff21,0xff21,0xff21,0x0,0xff21,0xff21,0xff21,0xff21,0xff21,0x0,0xff21,0xff21,0xff21,0xff21,0xff21,0x0,0x0,0x0,0xff21,0x0,0xff21,0xff21,0xff21,0x0,0xff21,0x0,0xff21,0xff21,0xff21,0x0,0xff21,0xff21,0xff21,0xff21,0xff21,0xff21,0xff21,0xff21,0x0,0x0,0x0,0xff21,0xff21,0xff21,0xff21,0xff21,0xff21,0x0,0xff21,0xff21,0xff21,0xff21,0xff21,0x80601,0x0,0x0,0x0,0x60501,0xff21,0xff21,0xff21,0xff21,0xff21,0xff21,0xff21,0xff21,0xff21,0xff21,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0xff21,0xff21,0xff21,0xff21,0xff21,0xff21,0xff21,0xff21,0x0,0x0,0x0,0x0};\n\nvoid APA102_WriteStartFrame()\n{\n\tAIR_SPI_Write(-1, startFrame, 4);\n}\n\n/*void APA102_WriteEndFrame()\n{\n\tAIR_SPI_Write(-1, endFrame, 4);\n}*/\n\nvoid APA102_WriteEndFrame(int numOfEnds)\n{\n    int ends = 0;\n    \n    for (ends; ends++; ends < numOfEnds)\n    {\n        AIR_SPI_Write(-1, endByte, 1);\n    }\n}\nvoid APA102_WriteLEDFrame(uint8_t brightness, uint8_t red, uint8_t green, uint8_t blue)\n{\n\t//We need to scale our 8-bit brightness to the 5-bit brightness value this led takes\n\t//brightness = ((brightness/0xff) * 0x1f);\n\tbrightness =  0xe0 | (brightness & 0x1f);\n\t\n\t//Each frame is constructed as brightness, blue, green and red.\n\t//[ 3-bit all 1s][ 5-bit for brightness ][ 8-bits for blue ][ 8-bits for green ][ 8-bits for red ]\n\tuint8_t tempData[4];\n\ttempData[0] = brightness;\n\ttempData[1] = blue;\n\ttempData[2] = green;\n\ttempData[3] = red;\n\t\n\tAIR_SPI_Write(-1, tempData, 4);\n}\n\nvoid APA102_Animate(AIR_LEDAnimateCallback_ptr animation, unsigned int frame, unsigned int numberOfLEDs, void *args)\n{\n\tAPA102_WriteStartFrame();\n\t\n\tunsigned int i = 0;\n\t\n\tint numOfEnds = (int)((numberOfLEDs - 1) / 16);\n\t\n\tfor(i; i < numberOfLEDs; i++)\n\t{\n\t\tuint8_t tempBrightness = 0;\n\t\tuint8_t tempRed = 0;\n\t\tuint8_t tempGreen = 0;\n\t\tuint8_t tempBlue = 0;\n\t\tbool gt = false;\n\t\tif (i > 255){\n\t\t    i-=1;\n\t\t    gt = true;\n\t\t}\n\t\t(*animation)(frame, i, numberOfLEDs, args, &tempBrightness, &tempRed, &tempGreen, &tempBlue);\n\t\tAPA102_WriteLEDFrame(tempBrightness, tempRed, tempGreen, tempBlue);\n\t\tif (gt == true) i+=1;\n\t}\n\t\n\tAPA102_WriteEndFrame(numOfEnds);\n}\n\nconst unsigned int LEDTotalCount = 662;\nuint8_t globalBrightness = 0xff;\n\nvoid zooming(\n    unsigned int frame, \n    unsigned int currentLED, \n    unsigned int totalLEDs, \n    void *args, \n    uint8_t *brightness, \n    uint8_t *red, \n    uint8_t *green, \n    uint8_t *blue) {\n        \n    *red = 0x00 + (((currentLED + frame) + 0xff/2) % 0xff);\n    *blue = 0xff - ((currentLED + frame) % 0xff);\n    *green = 0x00 + ((currentLED + frame) % 0xff);\n    *brightness = globalBrightness;\n\n}\n\nvoid redGreenBlueBlinking(\n    unsigned int frame, \n    unsigned int currentLED, \n    unsigned int totalLEDs, \n    void *args, \n    uint8_t *brightness, \n    uint8_t *red, \n    uint8_t *green, \n    uint8_t *blue) {\n        \n    *brightness = globalBrightness;\n    \n    if((currentLED + frame) % 3 == 0) {\n       *red = 0xff;\n       *blue = 0x00;\n       *green = 0x00;\n    }\n    \n    else if((currentLED + frame) % 2 == 0) {\n        *red = 0x00;\n        *blue = 0xff;\n        *green = 0x00;\n       \n    }\n    \n    else {\n        *red = 0x00;\n        *blue = 0x00;\n        *green = 0xff;\n    }\n}\n\nint lastCheer=0;\n\nvoid setAll(\n    unsigned int frame, \n    unsigned int currentLED, \n    unsigned int totalLEDs, \n    void *args, \n    uint8_t *brightness, \n    uint8_t *red, \n    uint8_t *green, \n    uint8_t *blue) {\n        \n    *brightness = globalBrightness;\n    \n    *blue   = (BYTE)lastCheer;\n\t*green  = (WORD)lastCheer >>8;\n\t*red = (DWORD)lastCheer >>16;\n}\n\nunsigned int *currentEmoji = &Black;\n\nvoid setFromImageDataArray(\n    unsigned int frame, \n    unsigned int currentLED, \n    unsigned int totalLEDs, \n    void *args, \n    uint8_t *brightness, \n    uint8_t *red, \n    uint8_t *green, \n    uint8_t *blue) {\n        \n    *brightness = globalBrightness;\n    \n    *blue   =  (BYTE)currentEmoji[currentLED % totalLEDs % 0xff];\n\t*green  =  (WORD)currentEmoji[currentLED % totalLEDs % 0xff] >>8;\n\t*red    = (DWORD)currentEmoji[currentLED % totalLEDs % 0xff] >>16;\t\n}\n\nvoid setOnePerFrame(\n    unsigned int frame, \n    unsigned int currentLED, \n    unsigned int totalLEDs, \n    void *args, \n    uint8_t *brightness, \n    uint8_t *red, \n    uint8_t *green, \n    uint8_t *blue) {\n        \n    *brightness = globalBrightness;\n    \n    if ((currentLED + frame) % LEDTotalCount % 0xff == 0)\n    {\n        *blue   = 0xff;\n        *red    = 0x00;\n        *green  = 0x00;        \n    }\n    else if ((currentLED + frame) % LEDTotalCount % 0x7f == 0)\n    {\n        *blue   = 0x00;\n        *red    = 0xff;\n        *green  = 0x00;        \n    }\n    else if ((currentLED + frame) % LEDTotalCount % 0x3f == 0)\n    {\n        *blue   = 0x00;\n        *red    = 0x00;\n        *green  = 0xff;        \n    }\n    else\n    {\n        *blue   = 0x00;\n        *red    = 0x00;\n        *green  = 0x00;        \n    }\n}\n\nAIR_LEDAnimateCallback_ptr currentAnimation = &setOnePerFrame;\n\n",
+        "close": "//END"
+      },
+      "Interval": {
+        "name": "Interval",
+        "func": "\nvoid interval() {",
+        "code": "    static unsigned int frame = 0;\n    \n    APA102_Animate(currentAnimation, frame, LEDTotalCount, NULL);\n    \n    frame = (frame + 1) % 0xff;",
+        "close": "}"
+      },
+      "Connected": {
+        "name": "Connected",
+        "func": "\nvoid connected() {",
+        "code": "",
+        "close": "}"
+      },
+      "Disconnected": {
+        "name": "Disconnected",
+        "func": "\nvoid disconnected() {",
+        "code": "",
+        "close": "}"
+      },
+      "Setup": {
+        "name": "Setup",
+        "func": "\nvoid setup() {",
+        "code": "\tAIR_GPIO_Init();\n\tAIR_POWER_Init();\n\tAIR_UART_Init();\n\tAIR_I2C_Init();\n\tAIR_SPI_Init();\n\tBUZZER_Init();\n\tAIR_POWER_SetMode(AIR_POWER_NOSLEEP);\t",
+        "close": "}"
+      }
+    },
+    "boardConfiguration": {
+      "ble": {
+        "name": "Bluetooth Low Energy",
+        "file": "ble_config.h",
+        "values": {
+          "localName": {
+            "name": "Local Name",
+            "input": "TextField",
+            "prefix": "#define BLE_LOCAL_NAME \"",
+            "value": "emoji",
+            "suffix": "\"",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "version": {
+            "name": "Version",
+            "input": "TextField",
+            "prefix": "#define BLE_VERSION \"",
+            "value": "1.00",
+            "suffix": "\"",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "ota": {
+            "name": "Over the Air Updating",
+            "input": "Combo",
+            "prefix": "#define BLE_",
+            "options": [
+              "OTA",
+              "NO_OTA"
+            ],
+            "value": "OTA",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "pairing": {
+            "name": "Pairing",
+            "input": "Combo",
+            "prefix": "#define ",
+            "options": [
+              "BLE_PAIRING_NONE",
+              "BLE_PAIRING_PASSKEY"
+            ],
+            "value": "BLE_PAIRING_NONE",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "txPowerLevel": {
+            "name": "TX Power Level (dbm) (Default: 4)",
+            "input": "TextField",
+            "prefix": "#define BLE_TX_POWER_LEVEL ",
+            "value": "4",
+            "regex": "^-?[0-9]d{0,2}(.d*)?$"
+          },
+          "intervalFineTimer": {
+            "name": "Interval Timer Length (ms) (Default: 1000)",
+            "input": "Combo",
+            "prefix": "#define BLE_INTERVAL_FINE_TIMER ",
+            "options": [
+              "12.5",
+              "25",
+              "50",
+              "62.5",
+              "75",
+              "87.5",
+              "100",
+              "125",
+              "137.5",
+              "162.5",
+              "200",
+              "250",
+              "325",
+              "500",
+              "1000"
+            ],
+            "value": "100",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "minInterval": {
+            "name": "BLE Min Interval (ms) (Default: 20)",
+            "input": "TextField",
+            "prefix": "#define BLE_INTERVAL_MIN ",
+            "value": "20",
+            "regex": "^[0-9]*$"
+          },
+          "maxInterval": {
+            "name": "BLE Max Interval (ms) (Default: 40)",
+            "input": "TextField",
+            "prefix": "#define BLE_INTERVAL_MAX ",
+            "value": "40",
+            "regex": "^[0-9]*$"
+          },
+          "slaveLatency": {
+            "name": "BLE Slave Latency (ms) (Default: 0)",
+            "input": "TextField",
+            "prefix": "#define BLE_SLAVE_LATENCY ",
+            "value": "0",
+            "regex": "^[0-9]*$"
+          },
+          "timeout": {
+            "name": "BLE Connection Timeout (ms) (Default: 700)",
+            "input": "TextField",
+            "prefix": "#define BLE_CONNECTION_TIMEOUT ",
+            "value": "700",
+            "regex": "^[0-9]*$"
+          }
+        }
+      },
+      "power": {
+        "name": "Power Driver",
+        "file": "power_config.h",
+        "values": {
+          "external_osc": {
+            "name": "External Oscillator",
+            "input": "Combo",
+            "prefix": "#define AIR_POWER_",
+            "options": [
+              "EXTERNAL_32KHZ_OSC",
+              "INTERNAL_OSC"
+            ],
+            "value": "INTERNAL_OSC",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          }
+        }
+      },
+      "gpio": {
+        "name": "GPIO Driver",
+        "file": "gpio_config.h",
+        "values": {
+          "buad": {
+            "name": "ADC Sample Frequency",
+            "input": "Combo",
+            "prefix": "#define AIR_ADC_SAMPLE_FREQUENCY ",
+            "options": [
+              "ADC_SAMPLE_FREQUENCY_LOW",
+              "ADC_SAMPLE_FREQUENCY_MEDIUM_LOW",
+              "ADC_SAMPLE_FREQUENCY_MEDIUM",
+              "ADC_SAMPLE_FREQUENCY_MEDIUM_HIGH",
+              "ADC_SAMPLE_FREQUENCY_HIGH"
+            ],
+            "value": "ADC_SAMPLE_FREQUENCY_LOW",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "pwmClockSource": {
+            "name": "PWM Clock Source",
+            "input": "Combo",
+            "prefix": "#define AIR_PWM_CLOCK_SOURCE ",
+            "options": [
+              "PMU_CLK",
+              "LHL_CLK"
+            ],
+            "value": "PMU_CLK",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          }
+        }
+      },
+      "uart": {
+        "name": "UART Driver",
+        "file": "uart_config.h",
+        "values": {
+          "rxBuffer": {
+            "name": "RX Circular Buffer size",
+            "input": "TextField",
+            "prefix": "#define AIR_UART_RX_CIRCULAR_BUFFER_SIZE ",
+            "value": "128",
+            "regex": "^[0-9]*$"
+          },
+          "txBuffer": {
+            "name": "TX Circular Buffer size",
+            "input": "TextField",
+            "prefix": "#define AIR_UART_TX_CIRCULAR_BUFFER_SIZE ",
+            "value": "128",
+            "regex": "^[0-9]*$"
+          },
+          "buad": {
+            "name": "Baudrate",
+            "input": "Combo",
+            "prefix": "#define ",
+            "options": [
+              "AIR_UART_BAUD_460800",
+              "AIR_UART_BAUD_230400",
+              "AIR_UART_BAUD_115200",
+              "AIR_UART_BAUD_57600",
+              "AIR_UART_BAUD_38400",
+              "AIR_UART_BAUD_19200",
+              "AIR_UART_BAUD_9600"
+            ],
+            "value": "AIR_UART_BAUD_115200",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "txPin": {
+            "name": "TX Pin",
+            "input": "Combo",
+            "prefix": "#define AIR_UART_TX_PIN ",
+            "options": [
+              "32"
+            ],
+            "value": "32",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "rxPin": {
+            "name": "RX Pin",
+            "input": "Combo",
+            "prefix": "#define AIR_UART_RX_PIN ",
+            "options": [
+              "33"
+            ],
+            "value": "33",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "rtsPin": {
+            "name": "RTS Pin",
+            "input": "Combo",
+            "prefix": "#define AIR_UART_RTS_PIN ",
+            "options": [
+              "1"
+            ],
+            "value": "1",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "ctsPin": {
+            "name": "CTS Pin",
+            "input": "Combo",
+            "prefix": "#define AIR_UART_CTS_PIN ",
+            "options": [
+              "3"
+            ],
+            "value": "3",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          }
+        }
+      },
+      "spi": {
+        "name": "SPI Driver",
+        "file": "spi_config.h",
+        "values": {
+          "speed": {
+            "name": "SPI Speed",
+            "input": "Combo",
+            "prefix": "#define AIR_SPI_SPEED ",
+            "options": [
+              "1000000",
+              "500000"
+            ],
+            "value": "1000000",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "mode": {
+            "name": "SPI Mode",
+            "input": "Combo",
+            "prefix": "#define AIR_SPI_MODE ",
+            "options": [
+              "SPI_MODE_0",
+              "SPI_MODE_1",
+              "SPI_MODE_2",
+              "SPI_MODE_3"
+            ],
+            "value": "SPI_MODE_3",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          }
+        }
+      },
+      "buzzer": {
+        "name": "Buzzer Driver",
+        "file": "buzzer_config.h",
+        "values": {
+          "pin": {
+            "name": "Buzzer Pin",
+            "input": "Combo",
+            "prefix": "#define BUZZER_PWM_PIN ",
+            "options": [
+              "13",
+              "14",
+              "26",
+              "27"
+            ],
+            "value": "14",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          }
+        }
+      }
+    },
+    "meta": {
+      "version": "1.5.1",
+      "layoutGrid": false,
+      "layoutSnapping": true,
+      "layoutSnappingSize": 10,
+      "cloudLayoutGrid": false,
+      "cloudLayoutSnapping": false,
+      "cloudLayoutSnappingSize": 10,
+      "language": "en",
+      "enableTooltips": true,
+      "enableAutoSave": true,
+      "enableBuildSave": false,
+      "description": null,
+      "project_uuid": null,
+      "tokensEnabled": false,
+      "codeAssist": false,
+      "highlightLine": false,
+      "editorTheme": "Default",
+      "editorFontSize": 12,
+      "customEmbeddedElementLibraries": {
+        "apa102": {
+          "author": "Anaren Inc.",
+          "categories": [
+            "Temperature",
+            "Sensor"
+          ],
+          "code": {
+            "connected": " \n",
+            "global": "",
+            "interval": " \n",
+            "setup": ""
+          },
+          "description": "",
+          "elements": {},
+          "files": {
+            "common": {
+              "headers": {
+                "apa102.h": "// Copyright (c) 2016, Anaren Inc.\r\n// All rights reserved.\r\n// \r\n// Redistribution and use in source and binary forms, with or without\r\n// modification, are permitted provided that the following conditions are met:\r\n// \r\n// 1. Redistributions of source code must retain the above copyright notice, this\r\n//    list of conditions and the following disclaimer. \r\n// 2. Redistributions in binary form must reproduce the above copyright notice,\r\n//    this list of conditions and the following disclaimer in the documentation\r\n//    and/or other materials provided with the distribution.\r\n// \r\n// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS \"AS IS\" AND\r\n// ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED\r\n// WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE\r\n// DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR\r\n// ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES\r\n// (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;\r\n// LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND\r\n// ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT\r\n// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS\r\n// SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.\r\n// \r\n// The views and conclusions contained in the software and documentation are those\r\n// of the authors and should not be interpreted as representing official policies, \r\n// either expressed or implied, of the FreeBSD Project.\r\n\r\n#ifndef APA102_H\r\n#define APA102_H\r\n\r\n#include \"../spi/spi.h\"\r\n#include \"apa102_config.h\"\r\n#include <stdint.h>\r\n\r\n#ifndef AIR_LED_ANIMATE_CALLBACK\r\n#define AIR_LED_ANIMATE_CALLBACK\r\ntypedef void (*AIR_LEDAnimateCallback_ptr)(unsigned int frame, unsigned int currentColumn, unsigned int currentRow, unsigned int totalColumns, unsigned int totalRows, void *args, uint8_t *brightness, uint8_t *red, uint8_t *green, uint8_t *blue);\r\n#endif\r\n\r\n//------------------------------------------------------------------------------\r\n/**\r\n *  Defines, enumerations, and structure definitions\r\n */\r\n// \r\n\r\n\r\nvoid APA102_WriteStartFrame();\r\n\r\nvoid APA102_WriteEndFrame();\r\n\r\nvoid APA102_WriteLEDFrame(uint8_t brightness, uint8_t red, uint8_t green, uint8_t blue);\r\n\r\nvoid APA102_Animate(AIR_LEDAnimateCallback_ptr animation, unsigned int frame, unsigned int numberOfLEDs, unsigned int numberOfLEDsPerRow, void *args);\r\n\r\n#endif  /* APA102_H */\r\n"
+              },
+              "objects": {
+                "apa102.c": "// Copyright (c) 2016, Anaren Inc.\r\n// All rights reserved.\r\n// \r\n// Redistribution and use in source and binary forms, with or without\r\n// modification, are permitted provided that the following conditions are met:\r\n// \r\n// 1. Redistributions of source code must retain the above copyright notice, this\r\n//    list of conditions and the following disclaimer. \r\n// 2. Redistributions in binary form must reproduce the above copyright notice,\r\n//    this list of conditions and the following disclaimer in the documentation\r\n//    and/or other materials provided with the distribution.\r\n// \r\n// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS \"AS IS\" AND\r\n// ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED\r\n// WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE\r\n// DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR\r\n// ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES\r\n// (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;\r\n// LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND\r\n// ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT\r\n// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS\r\n// SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.\r\n// \r\n// The views and conclusions contained in the software and documentation are those\r\n// of the authors and should not be interpreted as representing official policies, \r\n// either expressed or implied, of the FreeBSD Project.\r\n\r\n#include \"apa102.h\"\r\n\r\nconst uint8_t startFrame[] = {0x00, 0x00, 0x00, 0x00};\r\nconst uint8_t endFrame[] = {0xff, 0xff, 0xff, 0xff};\r\n\r\nvoid APA102_WriteStartFrame()\r\n{\r\n\tAIR_SPI_Write(-1, startFrame, 4);\r\n}\r\n\r\nvoid APA102_WriteEndFrame()\r\n{\r\n\tAIR_SPI_Write(-1, endFrame, 4);\r\n}\r\n\r\nvoid APA102_WriteLEDFrame(uint8_t brightness, uint8_t red, uint8_t green, uint8_t blue)\r\n{\r\n\t//We need to scale our 8-bit brightness to the 5-bit brightness value this led takes\r\n\tbrightness = 0xe0 | ((brightness/0xff) * 0x1f);\r\n\t\r\n\t//Each frame is constructed as brightness, blue, green and red.\r\n\t//[ 3-bit all 1s][ 5-bit for brightness ][ 8-bits for blue ][ 8-bits for green ][ 8-bits for red ]\r\n\tuint8_t tempData[4];\r\n\ttempData[0] = brightness;\r\n\ttempData[1] = blue;\r\n\ttempData[2] = green;\r\n\ttempData[3] = red;\r\n\t\r\n\tAIR_SPI_Write(-1, tempData, 4);\r\n}\r\n\r\n// typedef void (*AIR_LEDAnimateCallback_ptr)(unsigned int frame, unsigned int currentColumn, unsigned int currentRow, unsigned int totalColumns, unsigned int totalRows, void *args, uint8_t *brightness, uint8_t *red, uint8_t *green, uint8_t *blue);\r\nvoid APA102_Animate(AIR_LEDAnimateCallback_ptr animation, unsigned int frame, unsigned int numberOfLEDs, unsigned int numberOfLEDsPerRow, void *args)\r\n{\r\n\tAPA102_WriteStartFrame();\r\n\t\r\n\tunsigned int i = 0;\r\n\tunsigned int totalNumberOfRows = numberOfLEDs / numberOfLEDsPerRow;\r\n\t\r\n\tfor(i; i < numberOfLEDs; i++)\r\n\t{\r\n\t\tuint8_t tempBrightness = 0;\r\n\t\tuint8_t tempRed = 0;\r\n\t\tuint8_t tempGreen = 0;\r\n\t\tuint8_t tempBlue = 0;\r\n\t\tunsigned int currentColumn = i % numberOfLEDsPerRow;\r\n\t\tunsigned int currentRow = i / numberOfLEDsPerRow;\r\n\t\t\r\n\t\t(*animation)(frame, currentColumn, currentRow, numberOfLEDsPerRow, totalNumberOfRows, args, &tempBrightness, &tempRed, &tempGreen, &tempBlue);\r\n\t\tAPA102_WriteLEDFrame(tempBrightness, tempRed, tempGreen, tempBlue);\r\n\t}\r\n\t\r\n\tAPA102_WriteEndFrame();\r\n}\r\n"
+              },
+              "other": {
+                "apa102_config.h": " \n"
+              }
+            }
+          },
+          "label": "APA102 Driver",
+          "language": {
+            "en": {
+              "label": "APA102 Driver"
+            }
+          },
+          "links": {
+            "Datasheet": "http://",
+            "Product Page": "http://",
+            "Wiki Page": "https://atmosphere.anaren.com/wiki/APA102_Driver"
+          },
+          "manufacturer": "",
+          "name": "apa102",
+          "signature": "",
+          "type": "Embedded Library",
+          "version": "1.0.0"
+        }
+      },
+      "theme": {
+        "bg1": "#e9f3fb",
+        "bg2": "#DCEBF9"
+      },
+      "projectType": "bcm20737",
+      "name": "APA 102 IMG CYC"
+    },
+    "type": "Header",
+    "currentLayoutName": "Default"
+  },
+  "layouts": {
+    "Default": {
+      "name": "Default (768x1024)",
+      "width": 768,
+      "height": 1024,
+      "orientation": "portrait",
+      "devicename": ".*",
+      "platform": "",
+      "version": ".*",
+      "elements": {
+        "Button0": {
+          "x": 157,
+          "y": 27,
+          "width": 76,
+          "height": 106
+        },
+        "Button1": {
+          "x": 277,
+          "y": 27,
+          "width": 76,
+          "height": 106
+        },
+        "Checkbox7": {
+          "x": 247,
+          "y": 527,
+          "width": 36,
+          "height": 56
+        },
+        "ImagePan8": {
+          "x": 27,
+          "y": 537,
+          "width": 201.68627450980392,
+          "height": 36
+        },
+        "current": {
+          "x": 167,
+          "y": 487,
+          "width": 66,
+          "height": 26
+        },
+        "ImagePan13": {
+          "x": 297,
+          "y": 527,
+          "width": 56,
+          "height": 56
+        },
+        "Button18": {
+          "x": 27,
+          "y": 27,
+          "width": 76,
+          "height": 106
+        },
+        "Anger": {
+          "x": 27,
+          "y": 277,
+          "width": 76,
+          "height": 76
+        },
+        "Sad": {
+          "x": 157,
+          "y": 277,
+          "width": 76,
+          "height": 76
+        },
+        "Yuck": {
+          "x": 277,
+          "y": 277,
+          "width": 76,
+          "height": 76
+        },
+        "Happy": {
+          "x": 27,
+          "y": 167,
+          "width": 76,
+          "height": 76
+        },
+        "Laugh": {
+          "x": 157,
+          "y": 167,
+          "width": 76,
+          "height": 76
+        },
+        "Love": {
+          "x": 279,
+          "y": 167,
+          "width": 76,
+          "height": 76
+        },
+        "Poop": {
+          "x": 27,
+          "y": 387,
+          "width": 76,
+          "height": 76
+        },
+        "Rectangle": {
+          "x": 157,
+          "y": 387,
+          "width": 76,
+          "height": 76
+        },
+        "Attention": {
+          "x": 277,
+          "y": 387,
+          "width": 76,
+          "height": 76
+        },
+        "Button28": {
+          "x": 397,
+          "y": 27,
+          "width": 76,
+          "height": 106
+        },
+        "PreviousCount": {
+          "x": 377,
+          "y": 477,
+          "width": 96,
+          "height": 36
+        },
+        "CurrentCount": {
+          "x": 277,
+          "y": 477,
+          "width": 86,
+          "height": 36
+        },
+        "Cycle": {
+          "x": 27,
+          "y": 487,
+          "width": 126,
+          "height": 26
+        },
+        "Slider32": {
+          "x": 27,
+          "y": 627,
+          "width": 446,
+          "height": 76
+        },
+        "Label34": {
+          "x": 27,
+          "y": 607,
+          "width": 146,
+          "height": 26
+        },
+        "Stop": {
+          "x": 397,
+          "y": 167,
+          "width": 76,
+          "height": 76
+        },
+        "Go": {
+          "x": 397,
+          "y": 277,
+          "width": 76,
+          "height": 76
+        },
+        "Mario": {
+          "x": 397,
+          "y": 387,
+          "width": 76,
+          "height": 76
+        }
+      }
+    },
+    "iPhone6": {
+      "name": "iPhone 6",
+      "width": 375,
+      "height": 667,
+      "orientation": "portrait",
+      "devicename": ".*",
+      "platform": "iOS",
+      "version": ".*",
+      "elements": {
+        "Button0": {
+          "x": 112,
+          "y": 17,
+          "width": 76,
+          "height": 46
+        },
+        "Button1": {
+          "x": 209,
+          "y": 17,
+          "width": 76,
+          "height": 46
+        },
+        "Checkbox7": {
+          "x": 247,
+          "y": 417,
+          "width": 36,
+          "height": 56
+        },
+        "ImagePan8": {
+          "x": 17,
+          "y": 427,
+          "width": 206,
+          "height": 37
+        },
+        "current": {
+          "x": 157,
+          "y": 477,
+          "width": 66,
+          "height": 16
+        },
+        "ImagePan13": {
+          "x": 297,
+          "y": 417,
+          "width": 56,
+          "height": 56
+        },
+        "Button18": {
+          "x": 15,
+          "y": 17,
+          "width": 76,
+          "height": 46
+        },
+        "Anger": {
+          "x": 17,
+          "y": 187,
+          "width": 66,
+          "height": 66
+        },
+        "Sad": {
+          "x": 107,
+          "y": 187,
+          "width": 66,
+          "height": 66
+        },
+        "Yuck": {
+          "x": 197,
+          "y": 187,
+          "width": 66,
+          "height": 66
+        },
+        "Happy": {
+          "x": 17,
+          "y": 97,
+          "width": 66,
+          "height": 66
+        },
+        "Laugh": {
+          "x": 108,
+          "y": 97,
+          "width": 66,
+          "height": 66
+        },
+        "Love": {
+          "x": 199,
+          "y": 97,
+          "width": 66,
+          "height": 66
+        },
+        "Poop": {
+          "x": 287,
+          "y": 187,
+          "width": 66,
+          "height": 66
+        },
+        "Rectangle": {
+          "x": 290,
+          "y": 97,
+          "width": 66,
+          "height": 66
+        },
+        "Attention": {
+          "x": 107,
+          "y": 277,
+          "width": 66,
+          "height": 66
+        },
+        "Button28": {
+          "x": 305,
+          "y": 17,
+          "width": 56,
+          "height": 46
+        },
+        "PreviousCount": {
+          "x": 227,
+          "y": 367,
+          "width": 96,
+          "height": 36
+        },
+        "CurrentCount": {
+          "x": 137,
+          "y": 367,
+          "width": 86,
+          "height": 36
+        },
+        "Cycle": {
+          "x": 17,
+          "y": 367,
+          "width": 116,
+          "height": 36
+        },
+        "Slider32": {
+          "x": 17,
+          "y": 517,
+          "width": 326,
+          "height": 76
+        },
+        "Label34": {
+          "x": 17,
+          "y": 487,
+          "width": 86,
+          "height": 16
+        },
+        "Stop": {
+          "x": 17,
+          "y": 277,
+          "width": 66,
+          "height": 66
+        },
+        "Go": {
+          "x": 197,
+          "y": 277,
+          "width": 66,
+          "height": 66
+        },
+        "Mario": {
+          "x": 287,
+          "y": 277,
+          "width": 66,
+          "height": 66
+        }
+      }
+    }
+  },
+  "cloudLayouts": {},
+  "elements": {
+    "Button0": {
+      "type": "Button",
+      "properties": {
+        "label": "Zooming",
+        "enabled": true,
+        "visible": true,
+        "border": "plain",
+        "topColor": "rgb(250, 250, 250)",
+        "bottomColor": "rgb(234, 234, 234)",
+        "pressedTopColor": "rgb(255, 255, 255)",
+        "pressedBottomColor": "rgb(255, 255, 255)",
+        "overTopColor": "rgb(234, 234, 234)",
+        "overBottomColor": "rgb(214, 214, 214)",
+        "disabledTopColor": "rgb(211, 211, 211)",
+        "disabledBottomColor": "rgb(211, 211, 211)",
+        "airID": 0,
+        "elementPanel": "designer",
+        "elementType": "element"
+      },
+      "triggers": {
+        "mousePressed": [
+          {
+            "sourceTrigger": "mousePressed",
+            "sourceValue": "Static",
+            "targetValue": "execute",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": ""
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": []
+            },
+            "targetName": "setZooming"
+          },
+          {
+            "sourceTrigger": "mousePressed",
+            "sourceValue": "Static",
+            "targetValue": "setValue",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "state": "false"
+              },
+              "targetOrder": [
+                "state"
+              ],
+              "sourceOrder": []
+            },
+            "targetName": "Checkbox7"
+          },
+          {
+            "sourceTrigger": "mousePressed",
+            "sourceValue": "Static",
+            "targetValue": "setValue",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "state": "false"
+              },
+              "targetOrder": [
+                "state"
+              ],
+              "sourceOrder": []
+            },
+            "targetName": "Cycle"
+          }
+        ]
+      },
+      "zindex": 1,
+      "designer": {
+        "x": 63,
+        "y": 102
+      }
+    },
+    "Button1": {
+      "type": "Button",
+      "properties": {
+        "label": "Blinking",
+        "enabled": true,
+        "visible": true,
+        "border": "plain",
+        "topColor": "rgb(250, 250, 250)",
+        "bottomColor": "rgb(234, 234, 234)",
+        "pressedTopColor": "rgb(255, 255, 255)",
+        "pressedBottomColor": "rgb(255, 255, 255)",
+        "overTopColor": "rgb(234, 234, 234)",
+        "overBottomColor": "rgb(214, 214, 214)",
+        "disabledTopColor": "rgb(211, 211, 211)",
+        "disabledBottomColor": "rgb(211, 211, 211)",
+        "airID": 1,
+        "elementPanel": "designer",
+        "elementType": "element"
+      },
+      "triggers": {
+        "mousePressed": [
+          {
+            "sourceTrigger": "mousePressed",
+            "sourceValue": "Static",
+            "targetValue": "execute",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": ""
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": []
+            },
+            "targetName": "setBlinking"
+          },
+          {
+            "sourceTrigger": "mousePressed",
+            "sourceValue": "Static",
+            "targetValue": "setValue",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "state": "false"
+              },
+              "targetOrder": [
+                "state"
+              ],
+              "sourceOrder": []
+            },
+            "targetName": "Checkbox7"
+          },
+          {
+            "sourceTrigger": "mousePressed",
+            "sourceValue": "Static",
+            "targetValue": "setValue",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "state": "false"
+              },
+              "targetOrder": [
+                "state"
+              ],
+              "sourceOrder": []
+            },
+            "targetName": "Cycle"
+          }
+        ]
+      },
+      "zindex": 2,
+      "designer": {
+        "x": 65,
+        "y": 202
+      }
+    },
+    "setZooming": {
+      "type": "Function",
+      "properties": {
+        "code": "\n\tcurrentAnimation = &zooming;\n\t",
+        "length": "128",
+        "inputType": "void",
+        "returnType": "void",
+        "permission": "public",
+        "airID": 2,
+        "elementPanel": "designer",
+        "elementType": "element",
+        "airName": "setZooming"
+      },
+      "triggers": {},
+      "zindex": 3,
+      "designer": {
+        "x": 678,
+        "y": 104
+      }
+    },
+    "setBlinking": {
+      "type": "Function",
+      "properties": {
+        "code": "\n\tcurrentAnimation = &redGreenBlueBlinking;\n\t",
+        "length": "128",
+        "inputType": "void",
+        "returnType": "void",
+        "permission": "public",
+        "airID": 3,
+        "elementPanel": "designer",
+        "elementType": "element",
+        "airName": "setBlinking"
+      },
+      "triggers": {},
+      "zindex": 4,
+      "designer": {
+        "x": 678,
+        "y": 202
+      }
+    },
+    "WebIO5": {
+      "type": "WebIO",
+      "properties": {
+        "uri": "http://api.thingspeak.com/channels/1417/field/2/last.json",
+        "elementType": "element",
+        "airID": 4,
+        "elementPanel": "designer"
+      },
+      "triggers": {
+        "valueReturned": [
+          {
+            "sourceTrigger": "valueReturned",
+            "sourceValue": "getValue",
+            "targetValue": "addValue",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "key": "\"new\"",
+                "value": "value.field2.replace(\"#\",\"0x\");"
+              },
+              "targetOrder": [
+                "key",
+                "value"
+              ],
+              "sourceOrder": [
+                "value"
+              ]
+            },
+            "targetName": "Expression11"
+          },
+          {
+            "sourceTrigger": "valueReturned",
+            "sourceValue": "Static",
+            "targetValue": "evaluate",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "values": ""
+              },
+              "targetOrder": [
+                "values"
+              ],
+              "sourceOrder": []
+            },
+            "targetName": "Expression11"
+          }
+        ]
+      },
+      "zindex": 5,
+      "designer": {
+        "x": 409,
+        "y": 359
+      }
+    },
+    "Task6": {
+      "type": "Task",
+      "properties": {
+        "runOnStart": false,
+        "runIn": "5000",
+        "runEvery": "20000",
+        "elementType": "element",
+        "airID": 5,
+        "elementPanel": "designer"
+      },
+      "triggers": {
+        "task": [
+          {
+            "sourceTrigger": "task",
+            "sourceValue": "Static",
+            "targetValue": "get",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": ""
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": []
+            },
+            "targetName": "WebIO5"
+          },
+          {
+            "sourceTrigger": "task",
+            "sourceValue": "Static",
+            "targetValue": "trigger",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {},
+              "targetOrder": [],
+              "sourceOrder": []
+            },
+            "targetName": "current"
+          }
+        ]
+      },
+      "zindex": 6,
+      "designer": {
+        "x": 276,
+        "y": 359
+      }
+    },
+    "Checkbox7": {
+      "type": "Checkbox",
+      "properties": {
+        "label": "",
+        "value": false,
+        "enabled": true,
+        "visible": true,
+        "elementType": "element",
+        "airID": 6,
+        "elementPanel": "designer"
+      },
+      "triggers": {
+        "switched": [
+          {
+            "sourceTrigger": "switched",
+            "sourceValue": "getValue",
+            "targetValue": "check",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "state"
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": [
+                "state"
+              ]
+            },
+            "targetName": "Condition10"
+          }
+        ]
+      },
+      "zindex": 7,
+      "designer": {
+        "x": 45,
+        "y": 364
+      }
+    },
+    "ImagePan8": {
+      "type": "ImagePan",
+      "properties": {
+        "image": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAANwAAAAzCAMAAADLlpbkAAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAAL3UExURUxpcUVFRUVFRUVFRW1tbUVFRUVFRWFhYW1tbUVFRW1tbW1tbWZmZkREREVFRW1tbUVFRUVFRUVFRW1tbW1tbUVFRW1tbVZWVkVFRVlZWUVFRUVFRW1tbW1tbW1tbW1tbWlsdEVFRUVFRUVFRUVFRUVFRUVFRW1tbUVFRW1tbUVFRUVFRUVFRW1tbW1tbUVFRW1tbUVFRW1tbW1tbW1tbW1tbW1tbW1tbUVFRW9wfUVFRUVFRUVFRUVFRUVFRUVFRW1tbW1tbW1tbW1tbUVFRW1tbUVFRW1tbW1tbQD/O0VFRUVFRW1tbcf/AEVFRUVFRW1tbW1tbUVFRTb/AEVFRW1tbW1tbdoQugDf/21tbVj/AABw/2v7t0b/AJb/AEVFRV5eXm1tbQkG/wD/dQD/ff4k8vQN+P8kNf8ZLQC+//+bAP+MAG0A/ygp//8AjP8Agf8SvZkA//8a0AD/j/8SV//0VUD/78sA//T/AP75AAD/tQD/SLIA/63/AIT/AAD/FAD/2f/DAG3/AFXV/73/AB//AP9KAP8wAAD/Igj/AP8AEQD8/gCy//9iABKf/3EA/0VFRQB//wBY/zgA/1lZWaOATEVFRW1tbf///wD/fP8APf73AAT/BAUC/xwA//8Aaf8AV/0A+QD/UwP/zf8CBQAX//8Amf8Ay94D//AA/74A/9v/AP8AKP/UAAC///+WALP/AP/EAP9OAP9xAP9gA/85AAP/Jhb/AIn/AEr/AGIA/wB//wBg/y8A/wM//wAq//8Agv8AqgD/lf8AuAD/Zf8A3YQA/6EE//D/AAD/u3UA///mCACi/wTR/wD/7gD8+wT/3/+mAP8AFwD/Fnj/AP8eA/+DAKL/AP8OAGf/AACQ/1EA/0EA/wBQ/wD/rv8AhZIA/6wA/88A/wD/owDz/yf/AP8A6P7v+gCu//+2AOj/AP8qADRF/wDp//D/94D/vP+f+smf/9/t/0D/v2Dt/1C7/0D/dO7/z/+fqv/Qn//Zz5f/QG7/UJUr6/wAAACVdFJOUwAm+hnlOPYCJ+XyzAh/YxXxnuBxRFTWC/wEL+s+/qWyDmgQ1nWUIJlPuTLLi2WKhPkreCLeSS2R0By0q8ikSz2r7F5qwJ/cv8r9WkTD/cMTglK9/RY1WhD8V/v7EDD6xYPHQIBwQK9AlzCnOECnIEDfj5+A3zBAz0BAQEDPYIAgn8/PYK/vz8+fn7+f74/fv8GAYN9lBgeZMAAACQpJREFUaN7tmXd4W9UVwJ9kDQ/Zkodky9rWsCVblmRbw5Il2VY8sF3LNrHBTaB1CrS00L33HtBC16frltCmTdqUUZKwEjKANMVpAg0JBCiEhLShgxa6d/tHz73vvvck+8lWPofvy+fq/CO9c8e7P51zzzn3imGKUpSiFKUoRfm/kfd/4D1rkmvjRz79mjt+csujP/zEm9+yTDel8FXd0W684MtwVbb52nwS8cb1Pp+vzVF/3pN+9MpndrJwu07syIunLg11WrmHTndF/wWHa/xypDXSk8xD3tPaGomuP88pr/jkyT0c3Esndjx9z5dEOpV2uHUyWZfOkupmn8tRxypRtLFYLGrL1iSlGZCEePcAbisrWeRLWJZje+2zJ/dcycLtegnY7r37s5ct6tMdLkec9E2oMZwM1a4SzodXG8/WyDWgUYyKd5cooHEwF04ejUannPnprrj0AUz3zE6Aw16J4e77XG6faR1AzYVrUx3mLvg2PH1B4CoxXHWO5fD6pYnC4bR4CnteuI2f+SWmw6b77S3glYTtd0+9KbuPUYaQO6hm91otPOg6Xx04T+ugfTCSLByuBftxT164L+zejenAdARuB8v2s21vzNpuXcg/oecfOy1oQP/qwC23e0ThRglcvhEf27x5M6Z79iSG23Xiacq27Qa+i6oXofbsMVavWnBLvWrxlCr9ypo8cHqPXC730GhfonU4bKNKRt+YBG09D6dKOBxVctyjyePAcHa5PNlIliHR2mwjHn5Fn3/ySUq3Z+cdj+7acc/d92G0J564kzfdrAmNLc0uBM6aMlfoxgaEnKCaDQ/pdJasFKgMYo27fZoOC4c7IanUmsfqROBK7AaDwd5IAn+bvQGaNVPa+imNwVAjp3DpxDj+NMRcDJMw4ACUaTAYNK3w2Fhdg4cYWp2jeuIDl9x/P8G79IH//GN+fv5f92I2QLvzm9yuU88hk0i6Bjhv5zANoGaa/tRgZOQ3IWQKU003p/G3kx8oiFAdE8RRqV8MzoAXh+GSNRkqUqcdh1AKF6mUUn1rmmnJ8DIoYZJlwmMbLgQ+dAkI8G3e/d95Iv9+ahsmA3k3feGkHw3pReHah5G7YyY1AFnCTHoArKm331hXW4HQAHGOUvjmBk1qDjSYrg6hUB0MkIlbDq+vDOACWQsloqFwiiwApqVBgHPVR4SmBm0TzHbVd0EI3+9ZuPl/YrItWOgL25FotgY4vz9FrGEEQwThs96Cyvv11IKmSbw73cjUQSjVFkT2aB3yz3Shiv5Oq34ZOH2crFGxzhmvyYXDXzWUp2lUwZpRIZXaS0Yx1JStylnDJc83/BgLAP6dss3/esuWb7NCEzmsalIcjg+XM2A6+OgXAo91GFWoiJ04jVqHZN0ETsd5cX44D1m/PQm/VNonzYFTOFzrRwixJql32bDtIhKJxKV0YI8OwCRpR08jC/cNKn/g4OZfePiFh4m8jX3hGDLVicMNc4VmtwzpVIxqDHWpueZJEzamGen4YhR+gRTBRW4rswKcg1RatIBuy4FzkNxNkr0WQoqQCvBsDU4XCbrsNnrXj4icO/cX3nKHDh78PpG3cnAoD1yYj5EWJFMzIVNWxrDqoFndl+XR1i5kIXDl08xKcE52T9H8VpMFpyGrr7dTOJLEW0loHCEeWhNv4SP7VefOnTlz5siRrce5PffHR7ZvP3QICA8yvFvOiMPxSVxpxnDYNKW8uJGbMZqQl1eExpBOj+EszIpw1biFK6nre7LgaBIfXwq33k6jib0ywA784BEA27r1+LHH/0oN94PbvvMr4Nt+6O107gmTYKJl4WrBKIKYkA77Zo6mz4rhUkxhlnNwyshSuHVL4aB240NrJeuXmAzQXrz8rr/9Gdj+dPh2oAO8R7a/k84NgVvYOCvA6YZ5masYwHC6OUEzbKnHcMGV4ch5YYoWY1ppYXBwmjVweA7ivR8/fgzQXvnpXY/t2//yywf2Lhy+/Rcs3tXcXgG/9BYCN4vQrFIQKBLALYO5GgxnXBmOzc4+kkQ89kyBcDC+KjZIhhqI2d977HEwG7A9t+H0Q7ceOHX07M9Zumv4NwZNqKu7ALiQHzUvOrrLcotSplC4NJuQo1WjLb6yzEpwtHBuqmf58ACNk6hufPEVYPvNc/v2P/i9W7/1/N4Flu62q4XqECqonFVbmyfF4FRDqK8zF2UA65eHi8oFUfEVShW3e6SLKhQxOMgZ+hKVMj7OnpXwhlWwcBsvx2yP7dtwmsCdOrpwGNNdk20kOKo2C4sMAURIBI6ZMaEBvr5PhXDtYqKFGQ56HUYxuEwDL4ZAmoNjkxsr4/b8cAmS+wbj4+NpOLdKq7UBSZLEH5pHrsVsYLjTDwHcgVN7j54Fuvfl3DNMQ3017GVdM9TeB9G8WwxONQDlMdtruhfpsMYMtUspq7GgvlIxuKz6MQtO7+Cqy7gLk2g8onASrlePnK3TNAZSb76uhb7jU18Etg37HyRwz+89unD28IcX3aHA+RShriFLr2UOqq6+DquYW4K/hqGXJTzRPNSH+rwq4sFQI1vaQVOOyvGwQuFg3bZYZBBOLyoXXrbBxUiwC9YIea4B4PROOjbiqRaq6Iw9wJf6196EDUfhwHQL77hsyXHTW+GnxxvZQIj4alb1oe/l9laqi+1kmuMQvDpW4x8y8kee7AuiLFEE0uTI4+HnJadcUotF9Dm3XzivZ0ZwFImx5XS0iRmNUTNqYjk3n1/ZkAV383Vix2ZVsMNscfc2e0tpVJkhu4pesqRm6fG309tscZsngsIhSd0Pmt72IBuvu71efvd6bFU5MtKkGrFV2UbS+FornqAztpTRWqwJuti0bHGVwENJLlMmfNXVbSOEOWBri8eqHYvvYKxfvZ6F+9r11+W/xVDluS9Y3GupRnm+9yvxjKLHaWtJ2KLEMlJPoQPzvKl706ZNF8v1vtyQ67Ftq5lMXcFduZbXXgxwzly26qbVTGbk75PR3MUAJ6m0C8GvxqFa1WTK2mYq4dDF4ZglWmd0anx8XTRuk6x2rjQ9L2hsa/APOhdXxDnX4t+P6eTrQb4eWJt/GhtxCTLMFKUoRSlKUYqyVuR/OQexQjx3Nz4AAAAASUVORK5CYII=",
+        "aspectLock": true,
+        "enabled": true,
+        "visible": true,
+        "rotation": "0",
+        "background": "transparent",
+        "elementType": "element",
+        "airID": 7,
+        "elementPanel": "designer"
+      },
+      "triggers": {},
+      "zindex": 8,
+      "designer": {
+        "x": 166,
+        "y": 457
+      }
+    },
+    "Condition10": {
+      "type": "Condition",
+      "properties": {
+        "elementType": "element",
+        "airID": 8,
+        "elementPanel": "designer"
+      },
+      "triggers": {
+        "conditionTrue": [
+          {
+            "sourceTrigger": "conditionTrue",
+            "sourceValue": "Static",
+            "targetValue": "run",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "runIn": "5000",
+                "runEvery": "20000"
+              },
+              "targetOrder": [
+                "runIn",
+                "runEvery"
+              ],
+              "sourceOrder": []
+            },
+            "targetName": "Task6"
+          },
+          {
+            "sourceTrigger": "conditionTrue",
+            "sourceValue": "Static",
+            "targetValue": "setValue",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "state": "false"
+              },
+              "targetOrder": [
+                "state"
+              ],
+              "sourceOrder": []
+            },
+            "targetName": "Cycle"
+          }
+        ],
+        "conditionFalse": [
+          {
+            "sourceTrigger": "conditionFalse",
+            "sourceValue": "Static",
+            "targetValue": "pause",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {},
+              "targetOrder": [],
+              "sourceOrder": []
+            },
+            "targetName": "Task6"
+          },
+          {
+            "sourceTrigger": "conditionFalse",
+            "sourceValue": "Static",
+            "targetValue": "setValue",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "\"0x000000\""
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": []
+            },
+            "targetName": "current"
+          },
+          {
+            "sourceTrigger": "conditionFalse",
+            "sourceValue": "Static",
+            "targetValue": "trigger",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {},
+              "targetOrder": [],
+              "sourceOrder": []
+            },
+            "targetName": "current"
+          }
+        ]
+      },
+      "zindex": 9,
+      "designer": {
+        "x": 163,
+        "y": 366
+      }
+    },
+    "Expression11": {
+      "type": "Expression",
+      "properties": {
+        "expression": "values.new != values.old",
+        "elementType": "element",
+        "airID": 9,
+        "elementPanel": "designer"
+      },
+      "triggers": {
+        "expressionTrue": [
+          {
+            "sourceTrigger": "expressionTrue",
+            "sourceValue": "getValues",
+            "targetValue": "setValue",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "values.new"
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": [
+                "values"
+              ]
+            },
+            "targetName": "current"
+          },
+          {
+            "sourceTrigger": "expressionTrue",
+            "sourceValue": "getValues",
+            "targetValue": "execute",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "parseInt(values.new);"
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": [
+                "values"
+              ]
+            },
+            "targetName": "setCheer"
+          },
+          {
+            "sourceTrigger": "expressionTrue",
+            "sourceValue": "getValues",
+            "targetValue": "setBackground",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "values.new.replace(\"0x\",\"#\");"
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": [
+                "values"
+              ]
+            },
+            "targetName": "ImagePan13"
+          }
+        ]
+      },
+      "zindex": 10,
+      "designer": {
+        "x": 534,
+        "y": 358
+      }
+    },
+    "current": {
+      "type": "Label",
+      "properties": {
+        "label": "0x000000",
+        "enabled": true,
+        "visible": false,
+        "font": "14px Arial",
+        "color": "Black",
+        "elementType": "element",
+        "airID": 10,
+        "elementPanel": "designer"
+      },
+      "triggers": {
+        "onTrigger": [
+          {
+            "sourceTrigger": "onTrigger",
+            "sourceValue": "getValue",
+            "targetValue": "addValue",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "key": "\"old\"",
+                "value": "labelText"
+              },
+              "targetOrder": [
+                "key",
+                "value"
+              ],
+              "sourceOrder": [
+                "labelText"
+              ]
+            },
+            "targetName": "Expression11"
+          },
+          {
+            "sourceTrigger": "onTrigger",
+            "sourceValue": "getValue",
+            "targetValue": "setBackground",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "labelText.replace(\"0x\",\"#\");"
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": [
+                "labelText"
+              ]
+            },
+            "targetName": "ImagePan13"
+          }
+        ]
+      },
+      "zindex": 11,
+      "designer": {
+        "x": 362,
+        "y": 479
+      }
+    },
+    "setCheer": {
+      "type": "Function",
+      "properties": {
+        "code": "\n    lastCheer = data;\n\tcurrentAnimation = &setAll;\n\t",
+        "length": "128",
+        "inputType": "int",
+        "returnType": "void",
+        "permission": "public",
+        "elementType": "element",
+        "airID": 11,
+        "elementPanel": "designer"
+      },
+      "triggers": {},
+      "zindex": 12,
+      "designer": {
+        "x": 681,
+        "y": 363
+      }
+    },
+    "ImagePan13": {
+      "type": "ImagePan",
+      "properties": {
+        "image": "/dev/images/default-image.png",
+        "aspectLock": true,
+        "enabled": true,
+        "visible": true,
+        "rotation": "0",
+        "background": "#000000",
+        "elementType": "element",
+        "airID": 12,
+        "elementPanel": "designer"
+      },
+      "triggers": {},
+      "zindex": 13,
+      "designer": {
+        "x": 572,
+        "y": 470
+      }
+    },
+    "setEmoji": {
+      "type": "Function",
+      "properties": {
+        "code": "    switch (data) {\n    case 0:\n        currentEmoji = &Black;\n        break;\n    case 1:\n        currentEmoji = &Angry;\n        break;\n    case 2:    \n        currentEmoji = &Atn;\n        break;\n    case 3:    \n        currentEmoji = &Happy;\n        break;\n    case 4:    \n        currentEmoji = &Laugh;\n        break;\n    case 5:    \n        currentEmoji = &Love;\n        break;\n    case 6:    \n        currentEmoji = &Poop;\n        break;\n    case 7:    \n        currentEmoji = &Rect;\n        break;\n    case 8:    \n        currentEmoji = &Sad;\n        break;\n    case 9:    \n        currentEmoji = &Yuck;\n        break;\n    case 10:    \n        currentEmoji = &Stop;\n        break;\n    case 11:    \n        currentEmoji = &Go;\n        break;\n    case 12:    \n        currentEmoji = &Mario;\n        break;\n    }\n    currentAnimation = &setFromImageDataArray;\n\treturn NULL;\t\t",
+        "length": "128",
+        "inputType": "int",
+        "returnType": "void",
+        "permission": "public",
+        "airID": 14,
+        "elementPanel": "designer",
+        "elementType": "element",
+        "airName": "setEmoji"
+      },
+      "triggers": {},
+      "zindex": 14,
+      "designer": {
+        "x": 679,
+        "y": 741
+      }
+    },
+    "Button18": {
+      "type": "Button",
+      "properties": {
+        "label": "Chase",
+        "enabled": true,
+        "visible": true,
+        "border": "plain",
+        "topColor": "rgb(250, 250, 250)",
+        "bottomColor": "rgb(234, 234, 234)",
+        "pressedTopColor": "rgb(255, 255, 255)",
+        "pressedBottomColor": "rgb(255, 255, 255)",
+        "overTopColor": "rgb(234, 234, 234)",
+        "overBottomColor": "rgb(214, 214, 214)",
+        "disabledTopColor": "rgb(211, 211, 211)",
+        "disabledBottomColor": "rgb(211, 211, 211)",
+        "elementType": "element"
+      },
+      "triggers": {
+        "mousePressed": [
+          {
+            "sourceTrigger": "mousePressed",
+            "sourceValue": "Static",
+            "targetValue": "setValue",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "state": "false"
+              },
+              "targetOrder": [
+                "state"
+              ],
+              "sourceOrder": []
+            },
+            "targetName": "Checkbox7"
+          },
+          {
+            "sourceTrigger": "mousePressed",
+            "sourceValue": "Static",
+            "targetValue": "execute",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": ""
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": []
+            },
+            "targetName": "setChase"
+          },
+          {
+            "sourceTrigger": "mousePressed",
+            "sourceValue": "Static",
+            "targetValue": "setValue",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "state": "false"
+              },
+              "targetOrder": [
+                "state"
+              ],
+              "sourceOrder": []
+            },
+            "targetName": "Cycle"
+          }
+        ]
+      },
+      "zindex": 15,
+      "designer": {
+        "x": 63,
+        "y": 14
+      }
+    },
+    "setChase": {
+      "type": "Function",
+      "properties": {
+        "code": "\n\tcurrentAnimation = &setOnePerFrame;\n\t",
+        "length": "128",
+        "inputType": "void",
+        "returnType": "void",
+        "permission": "public",
+        "elementType": "element"
+      },
+      "triggers": {},
+      "zindex": 16,
+      "designer": {
+        "x": 678,
+        "y": 13
+      }
+    },
+    "Anger": {
+      "type": "ImagePan",
+      "properties": {
+        "image": "data:image/bmp;base64,Qk02AwAAAAAAADYAAAAoAAAAEAAAABAAAAABABgAAAAAAAAAAADDDgAAww4AAAAAAAAAAAAAAAAAAAAAAAAAAAAAABH/ABH/ABH/ABH/ABH/ABH/ABH/ABH/AAAAAAAAAAAAAAAAAAAAAAAAAAAAABH/ABH/ABH/ABH/ABH/ABH/ABH/ABH/ABH/ABH/DAAiAAAAAAAAAAAAAAAAABH/ABH/ABH/ABH/ABH/ABH/ABH/ABH/ABH/ABH/ABH/ABH/DAAiAAAAAAAAABH/ABH/AAAAAAAAABH/ABH/ABH/ABH/ABH/ABH/AAAAAAAAABH/ABH/AAAAABH/ABH/ABH/AAAAAAAAAAAAABH/ABH/ABH/ABH/AAAAAAAAAAAAABH/ABH/ABH/ABH/ABH/ABH/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABH/ABH/ABH/ABH/ABH/ABH/ABH/ABH/AAAAAAAAAAAAAAAAAAAAAAAAABH/ABH/ABH/ABH/ABH/ABH/ABH/ABH/ABH/ABH/ABH/ABH/ABH/ABH/ABH/ABH/ABH/ABH/ABH/ABH/ABH/ABH/ABH/ABH/ABH/ABH/AAAAABH/ABH/ABH/ABH/AAAAABH/ABH/ABH/ABH/ABH/ABH/ABH/ABH/ABH/AAAAAAAAAAAAABH/ABH/AAAAAAAAAAAAABH/ABH/ABH/ABH/ABH/ABH/ABH/ABH/AAAAAAAAABH/ABH/ABH/ABH/AAAAAAAAABH/ABH/ABH/ABH/ABH/ABH/ABH/ABH/ABH/ABH/ABH/ABH/ABH/ABH/ABH/ABH/ABH/ABH/ABH/ABH/AAAAABH/ABH/ABH/AAAAAAAAAAAAABH/ABH/AAAAAAAAAAAAABH/ABH/ABH/AAAAAAAADAAeABH/AAAAABH/ABH/ABH/ABH/ABH/ABH/ABH/ABH/AAAAABH/BAAnAAAAAAAAAAAADAAiABH/ABH/ABH/ABH/ABH/ABH/ABH/ABH/ABH/ABH/CwAmAAAAAAAAAAAAAAAAAAAAAAAAABH/ABH/ABH/ABH/ABH/ABH/ABH/ABH/AAAAAAAAAAAAAAAA",
+        "aspectLock": true,
+        "enabled": true,
+        "visible": true,
+        "rotation": "0",
+        "background": "transparent",
+        "elementType": "element"
+      },
+      "triggers": {
+        "mousePressed": [
+          {
+            "sourceTrigger": "mousePressed",
+            "sourceValue": "Static",
+            "targetValue": "execute",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "1"
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": []
+            },
+            "targetName": "setEmoji"
+          },
+          {
+            "sourceTrigger": "mousePressed",
+            "sourceValue": "Static",
+            "targetValue": "setValue",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "state": "false"
+              },
+              "targetOrder": [
+                "state"
+              ],
+              "sourceOrder": []
+            },
+            "targetName": "Checkbox7"
+          }
+        ]
+      },
+      "zindex": 17,
+      "designer": {
+        "x": 62,
+        "y": 748.5000610351562
+      }
+    },
+    "Sad": {
+      "type": "ImagePan",
+      "properties": {
+        "image": "data:image/bmp;base64,Qk02AwAAAAAAADYAAAAoAAAAEAAAABAAAAABABgAAAAAAAAAAADDDgAAww4AAAAAAAAAAAAAAAAAAAAAAAAAAAAA/wAA/wAA/wAA/wAA/wAA/wAA/wAA/wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA/wAA/wAA/wAA/wAA/wAA/wAA/wAA/wAA/wAA/wAADQgAAAAAAAAAAAAAAAAA/wAA/wAA/wAA/wAA/wAA/wAA/wAA/wAA/wAA/wAA/wAA/wAADQgAAAAAAAAA/wAA/wAA/wAAAAAA/wAA/wAA/wAA/wAA/wAA/wAAAAAA/wAA/wAA/wAAAAAA/wAA/wAA/wAA/wAAAAAAAAAA/wAA/wAA/wAA/wAAAAAAAAAA/wAA/wAA/wAA/wAA/wAA/wAA/wAA/wAA/wAAAAAAAAAAAAAAAAAAAAAAAAAA/wAA/wAA/wAA/wAA/wAA/wAA/wAA/wAA/wAA/wAA/wAAAAAAAAAAAAAAAAAA/wAA/wAA/wAA/wAA/wAA/wAA/wAA/wAA/wAA/wAA/wAA/wAA/wAA/wAA/wAA/wAA/wAA/wAA/wAA/wAA/wAA/wAA/wAA/wAA/wAA/wAA/wAA/wAA/wAA/wAA/wAA/wAA/wAA/wAA/wAA/wAA/wAA/wAA/wAA/wAA/wAA/wAA/wAAAAAA/wAA/wAA/wAA/wAAAAAA/wAA/wAA/wAA/wAA/wAA/wAA/wAA/wAA/wAAAAAAAAAAAAAA/wAA/wAAAAAAAAAAAAAA/wAA/wAA/wAA/wAA/wAA/wAA/wAA/wAAAAAAAAAAAAAA/wAA/wAAAAAAAAAAAAAA/wAA/wAA/wAA/wAAAAAA/wAA/wAA/wAA/wAAAAAA/wAA/wAA/wAA/wAAAAAA/wAA/wAA/wAA/wAAAAAAAAAADAgA/wAA/wAA/wAA/wAA/wAA/wAA/wAA/wAA/wAA/wAA/wAA/wAADAQAAAAAAAAAAAAADQgA/wAA/wAA/wAA/wAA/wAA/wAA/wAA/wAA/wAA/wAADggAAAAAAAAAAAAAAAAAAAAAAAAA/wAA/wAA/wAA/wAA/wAA/wAA/wAA/wAAAAAAAAAAAAAAAAAA",
+        "aspectLock": true,
+        "enabled": true,
+        "visible": true,
+        "rotation": "0",
+        "background": "transparent",
+        "elementType": "element"
+      },
+      "triggers": {
+        "mousePressed": [
+          {
+            "sourceTrigger": "mousePressed",
+            "sourceValue": "Static",
+            "targetValue": "execute",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "8"
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": []
+            },
+            "targetName": "setEmoji"
+          },
+          {
+            "sourceTrigger": "mousePressed",
+            "sourceValue": "Static",
+            "targetValue": "setValue",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "state": "false"
+              },
+              "targetOrder": [
+                "state"
+              ],
+              "sourceOrder": []
+            },
+            "targetName": "Checkbox7"
+          }
+        ]
+      },
+      "zindex": 18,
+      "designer": {
+        "x": 99,
+        "y": 814.5001831054688
+      }
+    },
+    "Yuck": {
+      "type": "ImagePan",
+      "properties": {
+        "image": "data:image/bmp;base64,Qk02AwAAAAAAADYAAAAoAAAAEAAAABAAAAABABgAAAAAAAAAAADDDgAAww4AAAAAAAAAAAAAAAAAAAAAAAAAAAAAIf8AIf8AIf8AIf8AIf8AIf8AIf8AIf8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAIf8AIf8AIf8AIf8AAAAAAAAAIf8AIf8AIf8AIf8AAAAAAAAAAAAAAAAAAAAAIf8AIf8AAAAAIf8AAAAAIf8AIf8AAAAAIf8AAAAAIf8AIf8AAAAAAAAAAAAAIf8AIf8AIf8AIf8AAAAAAAAAIf8AIf8AAAAAAAAAIf8AIf8AIf8AIf8AAAAAIf8AIf8AIf8AIf8AIf8AIf8AAAAAAAAAAAAAAAAAIf8AIf8AIf8AIf8AIf8AIf8AIf8AIf8AIf8AIf8AIf8AIf8AIf8AIf8AIf8AIf8AIf8AIf8AIf8AIf8AIf8AIf8AIf8AIf8AIf8AIf8AIf8AIf8AIf8AIf8AIf8AIf8AIf8AIf8AIf8AIf8AIf8AIf8AIf8AIf8AIf8AIf8AIf8AIf8AIf8AIf8AIf8AIf8AIf8AIf8AIf8AIf8AIf8AIf8AIf8AIf8AAAAAIf8AAAAAIf8AAAAAIf8AIf8AAAAAIf8AAAAAIf8AAAAAIf8AIf8AIf8AIf8AIf8AAAAAAAAAAAAAIf8AIf8AIf8AIf8AAAAAAAAAAAAAIf8AIf8AIf8AIf8AIf8AIf8AIf8AAAAAIf8AIf8AIf8AIf8AIf8AIf8AAAAAIf8AIf8AIf8AIf8AIf8AIf8AIf8AIf8AIf8AIf8AAAAAIf8AIf8AAAAAIf8AIf8AIf8AIf8AIf8AIf8AAAAAIf8AIf8AIf8AAAAAAAAAIf8AIf8AIf8AIf8AAAAAAAAAIf8AIf8AIf8AAAAAAAAAAQQGIf8AAAAAIf8AIf8AIf8AIf8AIf8AIf8AIf8AIf8AAAAAIf8AAQUGAAAAAAAAAAAAAQUHIf8AIf8AIf8AIf8AIf8AIf8AIf8AIf8AIf8AIf8AAQYIAAAAAAAAAAAAAAAAAAAAAAAAIf8AIf8AIf8AIf8AIf8AIf8AIf8AIf8AAAAAAAAAAAAAAAAA",
+        "aspectLock": true,
+        "enabled": true,
+        "visible": true,
+        "rotation": "0",
+        "background": "transparent",
+        "elementType": "element"
+      },
+      "triggers": {
+        "mousePressed": [
+          {
+            "sourceTrigger": "mousePressed",
+            "sourceValue": "Static",
+            "targetValue": "execute",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "9"
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": []
+            },
+            "targetName": "setEmoji"
+          },
+          {
+            "sourceTrigger": "mousePressed",
+            "sourceValue": "Static",
+            "targetValue": "setValue",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "state": "false"
+              },
+              "targetOrder": [
+                "state"
+              ],
+              "sourceOrder": []
+            },
+            "targetName": "Checkbox7"
+          }
+        ]
+      },
+      "zindex": 19,
+      "designer": {
+        "x": 137,
+        "y": 879.5001831054688
+      }
+    },
+    "Happy": {
+      "type": "ImagePan",
+      "properties": {
+        "image": "data:image/bmp;base64,Qk02AwAAAAAAADYAAAAoAAAAEAAAABAAAAABABgAAAAAAAAAAADDDgAAww4AAAAAAAAAAAAAAAAAAAAAAAAAAAAAANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/AAAAAAAAAAAAAAAAAAAAAAAAAAAAANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/AAUHAAAAAAAAAAAAAAAAANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/AAUHAAAAAAAAANj/ANj/ANj/ANj/ANj/AAAAAAAAAAAAAAAAANj/ANj/ANj/ANj/ANj/AAAAANj/ANj/ANj/ANj/ANj/AAAAAAAAAAAAAAAAAAAAAAAAANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/AAAAAAAAANj/ANj/ANj/ANj/AAAAAAAAANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/AAAAANj/ANj/ANj/ANj/ANj/ANj/AAAAANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/AAAAANj/ANj/ANj/ANj/AAAAANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/AAAAAAAAAAAAANj/ANj/AAAAAAAAAAAAANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/AAAAAAAAAAAAANj/ANj/AAAAAAAAAAAAANj/ANj/ANj/ANj/AAAAANj/ANj/ANj/ANj/AAAAANj/ANj/ANj/ANj/AAAAANj/ANj/ANj/ANj/AAAAAAAAAQQGANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/AQUGAAAAAAAAAAAAAQUHANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/AQYIAAAAAAAAAAAAAAAAAAAAAAAAANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/AAAAAAAAAAAAAAAA",
+        "aspectLock": true,
+        "enabled": true,
+        "visible": true,
+        "rotation": "0",
+        "background": "transparent",
+        "elementType": "element"
+      },
+      "triggers": {
+        "mousePressed": [
+          {
+            "sourceTrigger": "mousePressed",
+            "sourceValue": "Static",
+            "targetValue": "execute",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "3"
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": []
+            },
+            "targetName": "setEmoji"
+          },
+          {
+            "sourceTrigger": "mousePressed",
+            "sourceValue": "Static",
+            "targetValue": "setValue",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "state": "false"
+              },
+              "targetOrder": [
+                "state"
+              ],
+              "sourceOrder": []
+            },
+            "targetName": "Checkbox7"
+          }
+        ]
+      },
+      "zindex": 20,
+      "designer": {
+        "x": 229,
+        "y": 667.5001831054688
+      }
+    },
+    "Laugh": {
+      "type": "ImagePan",
+      "properties": {
+        "image": "data:image/bmp;base64,Qk02AwAAAAAAADYAAAAoAAAAEAAAABAAAAABABgAAAAAAAAAAADDDgAAww4AAAAAAAAAAAAAAAAAAAAAAAAAAAAAANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/AAAAAAAAAAAAAAAAAAAAAAAAAAAAANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/AAUHAAAAAAAAAAAAAAAAANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/AAUHAAAAAAAAANj/ANj/ANj/ANj/ANj/AAAAAAAAAAAAAAAAANj/ANj/ANj/ANj/ANj/AAAAANj/ANj/ANj/ANj/ANj/AAAAAAAAAAAAAAAAAAAAAAAAANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAANj/ANj/ANj/ANj/ANj/ANj/ANj/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/AAAAANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/AAAAANj/ANj/ANj/ANj/ANj/ANj/ANj/AAAAAAAAAAAAANj/ANj/AAAAAAAAAAAAANj/ANj/ANj/ANj/AAAAANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/AAAAAAAAAQQGANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/AQUGAAAAAAAAAAAAAQUHANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/AQYIAAAAAAAAAAAAAAAAAAAAAAAAANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/AAAAAAAAAAAAAAAA",
+        "aspectLock": true,
+        "enabled": true,
+        "visible": true,
+        "rotation": "0",
+        "background": "transparent",
+        "elementType": "element"
+      },
+      "triggers": {
+        "mousePressed": [
+          {
+            "sourceTrigger": "mousePressed",
+            "sourceValue": "Static",
+            "targetValue": "execute",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "4"
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": []
+            },
+            "targetName": "setEmoji"
+          },
+          {
+            "sourceTrigger": "mousePressed",
+            "sourceValue": "Static",
+            "targetValue": "setValue",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "state": "false"
+              },
+              "targetOrder": [
+                "state"
+              ],
+              "sourceOrder": []
+            },
+            "targetName": "Checkbox7"
+          }
+        ]
+      },
+      "zindex": 21,
+      "designer": {
+        "x": 270,
+        "y": 733.5001831054688
+      }
+    },
+    "Love": {
+      "type": "ImagePan",
+      "properties": {
+        "image": "data:image/bmp;base64,Qk02AwAAAAAAADYAAAAoAAAAEAAAABAAAAABABgAAAAAAAAAAADDDgAAww4AAAAAAAAAAAAAAAAAAAAAAAAAAAAAANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/AAAAAAAAAAAAAAAAAAAAAAAAAAAAANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/AAUHAAAAAAAAAAAAAAAAANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/AAUHAAAAAAAAANj/ANj/ANj/ANj/ANj/AAAAAAAAAAAAAAAAANj/ANj/ANj/ANj/ANj/AAAAANj/ANj/ANj/ANj/ANj/AAAAAAAAAAAAAAAAAAAAAAAAANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAANj/ANj/ANj/ANj/ANj/ANj/ANj/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/TkT/ABH/TkT/ANj/ANj/TkT/ABH/TkT/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ABH/ABH/ABH/ANj/ANj/ABH/ABH/ABH/ANj/ANj/ANj/ANj/ANj/ANj/ANj/TkT/ABH/ABH/ABH/TkT/TkT/ABH/ABH/ABH/TkT/ANj/ANj/ANj/AAAAANj/ANj/ABH/ABH/ABH/ABH/ABH/ABH/ABH/ABH/ABH/ABH/ANj/ANj/AAAAAAAAAQQGANj/ANj/ABH/ANj/ABH/ANj/ANj/ABH/ANj/ABH/ANj/ANj/AQUGAAAAAAAAAAAAAQUHANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/AQYIAAAAAAAAAAAAAAAAAAAAAAAAANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/AAAAAAAAAAAAAAAA",
+        "aspectLock": true,
+        "enabled": true,
+        "visible": true,
+        "rotation": "0",
+        "background": "transparent",
+        "elementType": "element"
+      },
+      "triggers": {
+        "mousePressed": [
+          {
+            "sourceTrigger": "mousePressed",
+            "sourceValue": "Static",
+            "targetValue": "execute",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "5"
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": []
+            },
+            "targetName": "setEmoji"
+          },
+          {
+            "sourceTrigger": "mousePressed",
+            "sourceValue": "Static",
+            "targetValue": "setValue",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "state": "false"
+              },
+              "targetOrder": [
+                "state"
+              ],
+              "sourceOrder": []
+            },
+            "targetName": "Checkbox7"
+          }
+        ]
+      },
+      "zindex": 22,
+      "designer": {
+        "x": 308,
+        "y": 798.5001831054688
+      }
+    },
+    "Poop": {
+      "type": "ImagePan",
+      "properties": {
+        "image": "data:image/bmp;base64,Qk02AwAAAAAAADYAAAAoAAAAEAAAABAAAAABABgAAAAAAAAAAADDDgAAww4AAAAAAAAAAAAAADN/ADN/ADN/ADN/ADN/ADN/ABQzABQzABQzADN/ADN/ADN/ADN/ADN/ADN/ADN/ADN/ADN/ADN/ADN/ADN/ADN/////////////////ABQzABQzADN/ADN/ADN/ADN/ADN/ADN/ADN/ADN/ADN/////////////////////////ADN/ABQzADN/ADN/ADN/ADN/ADN/ADN/ADN/////////////////////////////////ADN/ABQzADN/ADN/ADN/ADN/ADN/ADN/ADN/ADN/ADN/ADN/ADN/ADN/ADN/ADN/ADN/ABQzADN/AAAAAAAAABQzABQzABQzABQzADN/ADN/ADN/ADN/ADN/ADN/ADN/ADN/ADN/AAAAAAAAAAAAADN/ADN/ADN/ADN/ABQzABQzABQzADN/ADN/ADN/ADN/ADN/ADN/AAAAAAAAAAAAAAAAADN/ADN/ADN/////////ADN/ABQz////////ADN/ADN/AAAAAAAAAAAAAAAAAAAAADN/ADN/////////AAAA////////AAAA////////ADN/AAAAAAAAAAAAAAAAAAAAAAAAADN/////AAAAAAAA////////AAAAAAAA////ABQzAAAAAAAAAAAAAAAAAAAAAAAAAAAAADN/////////ABQzADN/////////ADN/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADN/ADN/ADN/ABQzADN/ADN/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABQzADN/ADN/ABQzAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQQGAAAAAAAAAAAAAAAAADN/ADN/ADN/ADN/AAAAAAAAAAAAAAAAAQUGAAAAAAAAAAAAAQUHAAAAAAAAAAAAAAAAADN/ADN/AAAAAAAAAAAAAAAAAQYIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADN/AAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+        "aspectLock": true,
+        "enabled": true,
+        "visible": true,
+        "rotation": "0",
+        "background": "transparent",
+        "elementType": "element"
+      },
+      "triggers": {
+        "mousePressed": [
+          {
+            "sourceTrigger": "mousePressed",
+            "sourceValue": "Static",
+            "targetValue": "execute",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "6"
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": []
+            },
+            "targetName": "setEmoji"
+          },
+          {
+            "sourceTrigger": "mousePressed",
+            "sourceValue": "Static",
+            "targetValue": "setValue",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "state": "false"
+              },
+              "targetOrder": [
+                "state"
+              ],
+              "sourceOrder": []
+            },
+            "targetName": "Checkbox7"
+          }
+        ]
+      },
+      "zindex": 23,
+      "designer": {
+        "x": 348,
+        "y": 865.5001831054688
+      }
+    },
+    "Rectangle": {
+      "type": "ImagePan",
+      "properties": {
+        "image": "data:image/bmp;base64,Qk02AwAAAAAAADYAAAAoAAAAEAAAABAAAAABABgAAAAAAAAAAADDDgAAww4AAAAAAAAAAAAAAAD/AAD/AAD/AAD/AAD/AAD/AAD/AAD/AAD/AAD/AAD/AAD/AAD/AAD/AAD/AAD/AAD/AH//AH//AH//AH//AH//AH//AH//AH//AH//AH//AH//AH//AH//AH//AAD/AAD/AH//AP//AP//AP//AP//AP//AP//AP//AP//AP//AP//AP//AP//AH//AAD/AAD/AH//AP//AP9/AP9/AP9/AP9/AP9/AP9/AP9/AP9/AP9/AP9/AP//AH//AAD/AAD/AH//AP//AP9/AP8AAP8AAP8AAP8AAP8AAP8AAP8AAP8AAP9/AP//AH//AAD/AAD/AH//AP//AP9/AP8Af/8Af/8Af/8Af/8Af/8Af/8AAP8AAP9/AP//AH//AAD/AAD/AH//AP//AP9/AP8Af/8A//8A//8A//8A//8Af/8AAP8AAP9/AP//AH//AAD/AAD/AH//AP//AP9/AP8Af/8A//8A/wAA/wAA//8Af/8AAP8AAP9/AP//AH//AAD/AAD/AH//AP//AP9/AP8Af/8A//8A/wAA/wAA//8Af/8AAP8AAP9/AP//AH//AAD/AAD/AH//AP//AP9/AP8Af/8A//8A//8A//8A//8Af/8AAP8AAP9/AP//AH//AAD/AAD/AH//AP//AP9/AP8Af/8Af/8Af/8Af/8Af/8Af/8AAP8AAP9/AP//AH//AAD/AAD/AH//AP//AP9/AP8AAP8AAP8AAP8AAP8AAP8AAP8AAP8AAP9/AP//AH//AAD/AAD/AH//AP//AP9/AP9/AP9/AP9/AP9/AP9/AP9/AP9/AP9/AP9/AP//AH//AAD/AAD/AH//AP//AP//AP//AP//AP//AP//AP//AP//AP//AP//AP//AP//AH//AAD/AAD/AH//AH//AH//AH//AH//AH//AH//AH//AH//AH//AH//AH//AH//AH//AAD/AAD/AAD/AAD/AAD/AAD/AAD/AAD/AAD/AAD/AAD/AAD/AAD/AAD/AAD/AAD/AAD/",
+        "aspectLock": true,
+        "enabled": true,
+        "visible": true,
+        "rotation": "0",
+        "background": "transparent",
+        "elementType": "element"
+      },
+      "triggers": {
+        "mousePressed": [
+          {
+            "sourceTrigger": "mousePressed",
+            "sourceValue": "Static",
+            "targetValue": "execute",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "7"
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": []
+            },
+            "targetName": "setEmoji"
+          },
+          {
+            "sourceTrigger": "mousePressed",
+            "sourceValue": "Static",
+            "targetValue": "setValue",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "state": "false"
+              },
+              "targetOrder": [
+                "state"
+              ],
+              "sourceOrder": []
+            },
+            "targetName": "Checkbox7"
+          }
+        ]
+      },
+      "zindex": 24,
+      "designer": {
+        "x": 509,
+        "y": 686.000244140625
+      }
+    },
+    "Attention": {
+      "type": "ImagePan",
+      "properties": {
+        "image": "data:image/bmp;base64,Qk02AwAAAAAAADYAAAAoAAAAEAAAABAAAAABABgAAAAAAAAAAADEDgAAxA4AAAAAAAAAAAAAANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/AAAAANj/ANj/ANj/ANj/ANj/ANj/AAAAAAAAANj/ANj/ANj/ANj/ANj/ANj/AAAAAAAAANj/ANj/ANj/ANj/ANj/ANj/AAAAAAAAANj/ANj/ANj/ANj/ANj/ANj/AAAAAAAAAAAAANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/ANj/AAAAAAAAAAAAAAAAANj/ANj/ANj/ANj/ANj/AAAAAAAAANj/ANj/ANj/ANj/ANj/AAAAAAAAAAAAAAAAAAAAANj/ANj/ANj/ANj/AAAAAAAAANj/ANj/ANj/ANj/AAAAAAAAAAAAAAAAAAAAAAAAANj/ANj/ANj/ANj/AAAAAAAAANj/ANj/ANj/ANj/AAAAAAAAAAAAAAAAAAAAAAAAAAAAANj/ANj/ANj/AAAAAAAAANj/ANj/ANj/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAANj/ANj/ANj/AAAAAAAAANj/ANj/ANj/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAANj/ANj/AAAAAAAAANj/ANj/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAANj/ANj/ANj/ANj/ANj/ANj/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAANj/ANj/ANj/ANj/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAANj/ANj/ANj/ANj/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAANj/ANj/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAANj/ANj/AAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+        "aspectLock": true,
+        "enabled": true,
+        "visible": true,
+        "rotation": "0",
+        "background": "transparent",
+        "elementType": "element"
+      },
+      "triggers": {
+        "mousePressed": [
+          {
+            "sourceTrigger": "mousePressed",
+            "sourceValue": "Static",
+            "targetValue": "execute",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "2"
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": []
+            },
+            "targetName": "setEmoji"
+          },
+          {
+            "sourceTrigger": "mousePressed",
+            "sourceValue": "Static",
+            "targetValue": "setValue",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "state": "false"
+              },
+              "targetOrder": [
+                "state"
+              ],
+              "sourceOrder": []
+            },
+            "targetName": "Checkbox7"
+          }
+        ]
+      },
+      "zindex": 25,
+      "designer": {
+        "x": 519,
+        "y": 806.5003051757812
+      }
+    },
+    "Button28": {
+      "type": "Button",
+      "properties": {
+        "label": "Off",
+        "enabled": true,
+        "visible": true,
+        "border": "plain",
+        "topColor": "rgb(250, 250, 250)",
+        "bottomColor": "rgb(234, 234, 234)",
+        "pressedTopColor": "rgb(255, 255, 255)",
+        "pressedBottomColor": "rgb(255, 255, 255)",
+        "overTopColor": "rgb(234, 234, 234)",
+        "overBottomColor": "rgb(214, 214, 214)",
+        "disabledTopColor": "rgb(211, 211, 211)",
+        "disabledBottomColor": "rgb(211, 211, 211)",
+        "elementType": "element"
+      },
+      "triggers": {
+        "mousePressed": [
+          {
+            "sourceTrigger": "mousePressed",
+            "sourceValue": "Static",
+            "targetValue": "execute",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "0"
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": []
+            },
+            "targetName": "setEmoji"
+          },
+          {
+            "sourceTrigger": "mousePressed",
+            "sourceValue": "Static",
+            "targetValue": "setValue",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "state": "false"
+              },
+              "targetOrder": [
+                "state"
+              ],
+              "sourceOrder": []
+            },
+            "targetName": "Checkbox7"
+          },
+          {
+            "sourceTrigger": "mousePressed",
+            "sourceValue": "Static",
+            "targetValue": "setValue",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "state": "false"
+              },
+              "targetOrder": [
+                "state"
+              ],
+              "sourceOrder": []
+            },
+            "targetName": "Cycle"
+          }
+        ]
+      },
+      "zindex": 26,
+      "designer": {
+        "x": 31,
+        "y": 672
+      }
+    },
+    "CycleTask": {
+      "type": "Task",
+      "properties": {
+        "runOnStart": false,
+        "runIn": "10000",
+        "runEvery": "10000",
+        "elementType": "element"
+      },
+      "triggers": {
+        "task": [
+          {
+            "sourceTrigger": "task",
+            "sourceValue": "Static",
+            "targetValue": "trigger",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {},
+              "targetOrder": [],
+              "sourceOrder": []
+            },
+            "targetName": "PreviousCount"
+          }
+        ]
+      },
+      "zindex": 27,
+      "designer": {
+        "x": 292,
+        "y": 575
+      }
+    },
+    "PreviousCount": {
+      "type": "TextField",
+      "properties": {
+        "label": "New TextField",
+        "value": "0",
+        "enabled": true,
+        "visible": false,
+        "elementType": "element"
+      },
+      "triggers": {
+        "onTrigger": [
+          {
+            "sourceTrigger": "onTrigger",
+            "sourceValue": "getValue",
+            "targetValue": "setValue",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "parseInt(value) + 1"
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": [
+                "value"
+              ]
+            },
+            "targetName": "CurrentCount"
+          },
+          {
+            "sourceTrigger": "onTrigger",
+            "sourceValue": "getValue",
+            "targetValue": "trigger",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {},
+              "targetOrder": [],
+              "sourceOrder": [
+                "value"
+              ]
+            },
+            "targetName": "CurrentCount"
+          }
+        ]
+      },
+      "zindex": 28,
+      "designer": {
+        "x": 413,
+        "y": 579
+      }
+    },
+    "CurrentCount": {
+      "type": "TextField",
+      "properties": {
+        "label": "New TextField",
+        "value": "0",
+        "enabled": true,
+        "visible": false,
+        "elementType": "element"
+      },
+      "triggers": {
+        "onTrigger": [
+          {
+            "sourceTrigger": "onTrigger",
+            "sourceValue": "getValue",
+            "targetValue": "setValue",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "(function() {\n\n if (parseInt(value) > 12) {\n  value = 0;\n }\n\nreturn value;\n\n})()"
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": [
+                "value"
+              ]
+            },
+            "targetName": "PreviousCount"
+          },
+          {
+            "sourceTrigger": "onTrigger",
+            "sourceValue": "getValue",
+            "targetValue": "execute",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "value"
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": [
+                "value"
+              ]
+            },
+            "targetName": "setEmoji"
+          }
+        ]
+      },
+      "zindex": 29,
+      "designer": {
+        "x": 571,
+        "y": 579
+      }
+    },
+    "Cycle": {
+      "type": "Checkbox",
+      "properties": {
+        "label": "Cycle",
+        "value": false,
+        "enabled": true,
+        "visible": true,
+        "elementType": "element"
+      },
+      "triggers": {
+        "switched": [
+          {
+            "sourceTrigger": "switched",
+            "sourceValue": "getValue",
+            "targetValue": "check",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "state"
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": [
+                "state"
+              ]
+            },
+            "targetName": "Condition32"
+          }
+        ]
+      },
+      "zindex": 30,
+      "designer": {
+        "x": 16,
+        "y": 566
+      }
+    },
+    "Condition32": {
+      "type": "Condition",
+      "properties": {
+        "elementType": "element"
+      },
+      "triggers": {
+        "conditionTrue": [
+          {
+            "sourceTrigger": "conditionTrue",
+            "sourceValue": "getValue",
+            "targetValue": "run",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "runIn": "0",
+                "runEvery": "10000"
+              },
+              "targetOrder": [
+                "runIn",
+                "runEvery"
+              ],
+              "sourceOrder": [
+                "value"
+              ]
+            },
+            "targetName": "CycleTask"
+          },
+          {
+            "sourceTrigger": "conditionTrue",
+            "sourceValue": "Static",
+            "targetValue": "setValue",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "state": "false"
+              },
+              "targetOrder": [
+                "state"
+              ],
+              "sourceOrder": []
+            },
+            "targetName": "Checkbox7"
+          }
+        ],
+        "conditionFalse": [
+          {
+            "sourceTrigger": "conditionFalse",
+            "sourceValue": "getValue",
+            "targetValue": "pause",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {},
+              "targetOrder": [],
+              "sourceOrder": [
+                "value"
+              ]
+            },
+            "targetName": "CycleTask"
+          }
+        ]
+      },
+      "zindex": 31,
+      "designer": {
+        "x": 167,
+        "y": 575
+      }
+    },
+    "Slider32": {
+      "type": "Slider",
+      "properties": {
+        "value": "31",
+        "maxValue": "31",
+        "minValue": "0",
+        "scaleMarkers": [
+          0,
+          31
+        ],
+        "scaleStep": "1",
+        "orientation": "Horizontal",
+        "enabled": true,
+        "visible": true,
+        "showScale": "True",
+        "showTitle": "True",
+        "elementType": "element"
+      },
+      "triggers": {
+        "changed": [
+          {
+            "sourceTrigger": "changed",
+            "sourceValue": "getValue",
+            "targetValue": "execute",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "value"
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": [
+                "value"
+              ]
+            },
+            "targetName": "setBrightness"
+          }
+        ]
+      },
+      "zindex": 32,
+      "designer": {
+        "x": 38,
+        "y": 990
+      }
+    },
+    "setBrightness": {
+      "type": "Function",
+      "properties": {
+        "code": "\n    globalBrightness = (uint8_t)(data & 0x1f);\n\t",
+        "length": "128",
+        "inputType": "int",
+        "returnType": "void",
+        "permission": "public",
+        "elementType": "element"
+      },
+      "triggers": {},
+      "zindex": 33,
+      "designer": {
+        "x": 675,
+        "y": 996
+      }
+    },
+    "Label34": {
+      "type": "Label",
+      "properties": {
+        "label": "Brightness:",
+        "enabled": true,
+        "visible": true,
+        "font": "16px Arial",
+        "color": "Black",
+        "elementType": "element"
+      },
+      "triggers": {},
+      "zindex": 34,
+      "designer": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    "Stop": {
+      "type": "ImagePan",
+      "properties": {
+        "image": "data:image/bmp;base64,Qk02AwAAAAAAADYAAAAoAAAAEAAAABAAAAABABgAAAAAAAAAAADDDgAAww4AAAAAAAAAAAAAAAAAAAAAAAAAABH/ABH/ABH/ABH/ABH/ABH/ABH/ABH/ABH/ABH/AAAAAAAAAAAAAAAAAAAAABH/ABH/ABH/ABH/ABH/ABH/ABH/ABH/ABH/ABH/ABH/ABH/AAAAAAAAAAAAABH/ABH/ABH/ABH/ABH/ABH/ABH/ABH/ABH/ABH/ABH/ABH/ABH/ABH/AAAAABH/////////////ABH/ABH/////ABH/ABH/////////////ABH/////ABH/ABH/ABH/////ABH/////ABH/ABH/////ABH/ABH/////ABH/////ABH/////ABH/ABH/ABH/ABH/ABH/////ABH/ABH/////ABH/ABH/////ABH/////ABH/////ABH/ABH/ABH/ABH/ABH/////ABH/ABH/////ABH/ABH/////ABH/////ABH/////ABH/ABH/ABH/ABH/ABH/////ABH/ABH/////ABH/ABH/////ABH/////ABH/////////////ABH/////////////ABH/ABH/////ABH/ABH/////ABH/////ABH/////ABH/////ABH/////ABH/ABH/ABH/ABH/////ABH/ABH/////ABH/////ABH/////ABH/////ABH/////ABH/ABH/ABH/ABH/////ABH/ABH/////ABH/////ABH/////ABH/////ABH/////ABH/////ABH/ABH/////ABH/ABH/////ABH/////ABH/////ABH/////ABH/////////////ABH/////////////ABH/////////////ABH/////////////AAAAABH/ABH/ABH/ABH/ABH/ABH/ABH/ABH/ABH/ABH/ABH/ABH/ABH/ABH/AAAAAAAAAAAAABH/ABH/ABH/ABH/ABH/ABH/ABH/ABH/ABH/ABH/ABH/ABH/AAAAAAAAAAAAAAAAAAAAABH/ABH/ABH/ABH/ABH/ABH/ABH/ABH/ABH/ABH/AAAAAAAAAAAA",
+        "aspectLock": true,
+        "enabled": true,
+        "visible": true,
+        "rotation": "0",
+        "background": "transparent",
+        "elementType": "element"
+      },
+      "triggers": {
+        "mousePressed": [
+          {
+            "sourceTrigger": "mousePressed",
+            "sourceValue": "Static",
+            "targetValue": "setValue",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "state": "false"
+              },
+              "targetOrder": [
+                "state"
+              ],
+              "sourceOrder": []
+            },
+            "targetName": "Checkbox7"
+          },
+          {
+            "sourceTrigger": "mousePressed",
+            "sourceValue": "Static",
+            "targetValue": "execute",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "10"
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": []
+            },
+            "targetName": "setEmoji"
+          }
+        ]
+      },
+      "zindex": 35,
+      "designer": {
+        "x": 176,
+        "y": 952
+      }
+    },
+    "Go": {
+      "type": "ImagePan",
+      "properties": {
+        "image": "data:image/bmp;base64,Qk02AwAAAAAAADYAAAAoAAAAEAAAABAAAAABABgAAAAAAAAAAADDDgAAww4AAAAAAAAAAAAAAAAAAAAABj0ADn8ADn8ADn8ADn8ADn8ADn8ADn8ADn8ADn8ADn8ABj0AAAAAAAAAAAAABj0ADn8AErUAAMEAIf8AIf8AIf8AIf8AIf8AIf8AAMEAErUADn8ABj0AAAAABj0ADn8AErUAAMEAIf8AIf8AIf8AIf8AIf8AIf8AIf8AIf8AAMEAErUADn8ABj0ADn8AErUAAMEA////////////////If8AIf8A////////////////AMEAErUADn8ADn8AAMEAIf8A////If8AIf8A////If8AIf8A////If8AHf8A////If8AAMEADn8ADn8AIf8AIf8A////If8AIf8A////If8AIf8A////If8AHf8A////If8AIf8ADn8ADn8AIf8AIf8A////If8AIf8A////If8AIf8A////If8AHf8A////If8AIf8ADn8ADn8AIf8AIf8A////If8A////////If8AIf8A////If8AHf8A////If8AIf8ADn8ADn8AIf8AIf8A////If8AIf8AIf8AIf8AIf8A////If8AHf8A////If8AIf8ADn8ADn8AIf8AIf8A////If8AIf8AIf8AIf8AIf8A////If8AHf8A////If8AIf8ADn8ADn8AIf8AIf8A////If8AIf8AIf8AIf8AIf8A////If8AHf8A////If8AIf8ADn8ADn8AAMEAIf8A////If8AIf8AIf8AIf8AIf8A////If8AHf8A////If8AAMEADn8ADn8AErUAAMEA////////////////If8AIf8A////////////////AMEAErUADn8ABj0ADn8AErUAAMEAIf8AIf8AIf8AIf8AIf8AIf8AIf8AIf8AAMEAErUADn8ABj0AAAAABj0ADn8AErUAAMEAIf8AIf8AIf8AIf8AIf8AIf8AAMEAErUADn8ABj0AAAAAAAAAAAAABj0ADn8ADn8ADn8ADn8ADn8ADn8ADn8ADn8ADn8ADn8ABj0AAAAAAAAA",
+        "aspectLock": true,
+        "enabled": true,
+        "visible": true,
+        "rotation": "0",
+        "background": "transparent",
+        "elementType": "element"
+      },
+      "triggers": {
+        "mousePressed": [
+          {
+            "sourceTrigger": "mousePressed",
+            "sourceValue": "Static",
+            "targetValue": "setValue",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "state": "false"
+              },
+              "targetOrder": [
+                "state"
+              ],
+              "sourceOrder": []
+            },
+            "targetName": "Checkbox7"
+          },
+          {
+            "sourceTrigger": "mousePressed",
+            "sourceValue": "Static",
+            "targetValue": "execute",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "11"
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": []
+            },
+            "targetName": "setEmoji"
+          }
+        ]
+      },
+      "zindex": 36,
+      "designer": {
+        "x": 379,
+        "y": 949
+      }
+    },
+    "Mario": {
+      "type": "ImagePan",
+      "properties": {
+        "image": "data:image/bmp;base64,Qk02AwAAAAAAADYAAAAoAAAAEAAAABAAAAABABgAAAAAAAAAAADEDgAAxA4AAAAAAAAAAAAAAAAAAz6OAD2RAD2RAD2RBD6OAAAAAAAAAAAAAD2RAD2RAD2RAD2RCT+MAAAAAAAAAAAAAAAAAz6PAT2QAT2QBT6OAAAAAAAAAAAAAj2QAT2QAT2QCD+MAAAAAAAAAAAAAAAAAAAAAAAAkCsAkCsAkCsAkCsAAAAAkCsAkCsAkCsAkCsAAAAAAAAAAAAAAAAAAAAAdaT6daT6daT6kCsAkCsAkCsAkCsAkCsAkCsAkCsAkCsAdaT6daT6AAAAAAAAAAAAdaT6daT6daT6daT6kCsAkCsAkCsAkCsAkCsAkCsAdaT6daT6daT6AAAAAAAAAAAAdaT6daT6daT6AAD+kCsACfjskCsAkCsACffrkCsAdaT6daT6daT6AAAAAAAAAAAAAAD+AAD+AAD+AAD+AAD+kCsAkCsAkCsAkCsAAAD+AAD+AAD+AAD+AAAAAAAAAAAAAAAAAAD+AAD+AAD+AAD+kCsAAAD+AAD+kCsAAAD+AAD+AAD+AAAAAAAAAAAAAAAAAAAAAAAAAAD+AAD+AAD+kCsAAAD+AAD+AAD+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAdaT6daT6daT6daT6daT6daT6AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABU1ABU1ABU1daT6daT6daT6daT6ABU1ABU1ABU1ABU1AAAAAAAAAAAAAAAAAAAAABU1ABU1daT6ABU1ABU1daT6daT6daT6ABU1daT6daT6AAAAAAAAAAAAAAAAAAAAABU1ABU1daT6ABU1daT6daT6daT6AAAAdaT6daT6daT6AAAAAAAAAAAAAAAAAAAAAAAAABU1ABU1ABU1ABU1daT6daT6AAAAdaT6AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD+AAD+AAD+AAD+AAD+AAD+AAD+AAD+AAD+AAD+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD+AAD+AAD+AAD+AAD+AAD+AAD+AAAAAAAAAAAAAAAAAAAA",
+        "aspectLock": true,
+        "enabled": true,
+        "visible": true,
+        "rotation": "0",
+        "background": "transparent",
+        "elementType": "element"
+      },
+      "triggers": {
+        "mousePressed": [
+          {
+            "sourceTrigger": "mousePressed",
+            "sourceValue": "Static",
+            "targetValue": "setValue",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "state": "false"
+              },
+              "targetOrder": [
+                "state"
+              ],
+              "sourceOrder": []
+            },
+            "targetName": "Checkbox7"
+          },
+          {
+            "sourceTrigger": "mousePressed",
+            "sourceValue": "Static",
+            "targetValue": "execute",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "12"
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": []
+            },
+            "targetName": "setEmoji"
+          }
+        ]
+      },
+      "zindex": 37,
+      "designer": {
+        "x": 547,
+        "y": 933
+      }
+    }
+  },
+  "cloudElements": {}
+}
