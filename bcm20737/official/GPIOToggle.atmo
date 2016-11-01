@@ -227,7 +227,7 @@
         "bg2": "#DCEBF9"
       },
       "projectType": "bcm20737",
-      "name": "WebLinkDemo"
+      "name": "GPIOToggle"
     },
     "type": "Header",
     "currentLayoutName": "Default",
