@@ -309,8 +309,8 @@
     },
     "meta": {
       "version": "2.0.0",
-      "layoutGrid": true,
-      "layoutSnapping": true,
+      "layoutGrid": false,
+      "layoutSnapping": false,
       "layoutSnappingSize": 25,
       "cloudLayoutGrid": false,
       "cloudLayoutSnapping": false,
@@ -348,117 +348,129 @@
       "platform": "",
       "version": ".*",
       "elements": {
-        "Button1": {
+        "BufferValue": {
+          "x": 32,
+          "y": 382,
+          "width": 286,
+          "height": 161
+        },
+        "PushButton": {
           "x": 32,
           "y": 32,
           "width": 86,
           "height": 36
         },
-        "Button3": {
+        "PopButton": {
           "x": 32,
           "y": 82,
           "width": 86,
           "height": 36
         },
-        "TextField5": {
+        "PushValue": {
           "x": 132,
           "y": 32,
           "width": 86,
           "height": 36
         },
-        "Button6": {
+        "getIndexButton": {
+          "x": 32,
+          "y": 182,
+          "width": 86,
+          "height": 36
+        },
+        "ClearButton": {
+          "x": 32,
+          "y": 507,
+          "width": 86,
+          "height": 36
+        },
+        "ValuePopped": {
+          "x": 132,
+          "y": 82,
+          "width": 86,
+          "height": 36
+        },
+        "getIndexValue": {
+          "x": 132,
+          "y": 182,
+          "width": 86,
+          "height": 36
+        },
+        "setIndexButton": {
           "x": 32,
           "y": 232,
           "width": 86,
           "height": 36
         },
-        "Button7": {
+        "setIndexValue": {
+          "x": 132,
+          "y": 232,
+          "width": 86,
+          "height": 36
+        },
+        "SpliceButton": {
+          "x": 32,
+          "y": 132,
+          "width": 86,
+          "height": 36
+        },
+        "spliceIndexValue": {
+          "x": 132,
+          "y": 132,
+          "width": 86,
+          "height": 36
+        },
+        "EnqueueValue": {
+          "x": 132,
+          "y": 282,
+          "width": 86,
+          "height": 36
+        },
+        "EnqueueButton": {
           "x": 32,
           "y": 282,
           "width": 86,
           "height": 36
         },
-        "Label8": {
-          "x": 132,
-          "y": 82,
-          "width": 86,
-          "height": 36
-        },
-        "TextField9": {
-          "x": 132,
-          "y": 232,
-          "width": 86,
-          "height": 36
-        },
-        "Button10": {
-          "x": 32,
-          "y": 182,
-          "width": 86,
-          "height": 36
-        },
-        "TextField11": {
-          "x": 132,
-          "y": 182,
-          "width": 86,
-          "height": 36
-        },
-        "Label12": {
+        "DequeueButton": {
           "x": 32,
           "y": 332,
-          "width": 461,
-          "height": 236
-        },
-        "Button12": {
-          "x": 32,
-          "y": 132,
           "width": 86,
           "height": 36
         },
-        "TextField13": {
+        "ValueDequeue": {
           "x": 132,
-          "y": 132,
+          "y": 332,
           "width": 86,
           "height": 36
         },
-        "TextField14": {
-          "x": 332,
-          "y": 82,
-          "width": 86,
-          "height": 36
-        },
-        "Button13": {
-          "x": 232,
-          "y": 82,
-          "width": 86,
-          "height": 36
-        },
-        "Button15": {
-          "x": 232,
-          "y": 132,
-          "width": 86,
-          "height": 36
-        },
-        "Label16": {
-          "x": 332,
-          "y": 132,
-          "width": 86,
-          "height": 36
-        },
-        "Label17": {
+        "ValuePushed": {
           "x": 232,
           "y": 32,
           "width": 86,
           "height": 36
         },
-        "Label18": {
-          "x": 432,
-          "y": 82,
+        "ValueEnqueue": {
+          "x": 232,
+          "y": 282,
           "width": 86,
           "height": 36
         },
-        "Label19": {
-          "x": 132,
-          "y": 282,
+        "BufferLength": {
+          "x": 232,
+          "y": 507,
+          "width": 86,
+          "height": 36
+        },
+        "valueGetIndex": {
+          "x": 232,
+          "y": 182,
+          "width": 86,
+          "height": 36
+        },
+        "SplicedValue": {
+          "x": 232,
+          "y": 132,
           "width": 86,
           "height": 36
         }
@@ -478,7 +490,27 @@
     }
   },
   "elements": {
-    "Button1": {
+    "BufferValue": {
+      "type": "Label",
+      "properties": {
+        "label": "",
+        "enabled": true,
+        "visible": true,
+        "font": "14px Arial",
+        "color": "Black",
+        "elementType": "element",
+        "airID": 10,
+        "elementPanel": "designer",
+        "airName": "BufferValue"
+      },
+      "triggers": {},
+      "zindex": 1,
+      "designer": {
+        "x": 526,
+        "y": 264
+      }
+    },
+    "PushButton": {
       "type": "Button",
       "properties": {
         "label": "Push",
@@ -495,7 +527,8 @@
         "disabledBottomColor": "rgb(211, 211, 211)",
         "elementType": "element",
         "airID": 0,
-        "elementPanel": "designer"
+        "elementPanel": "designer",
+        "airName": "PushButton"
       },
       "triggers": {
         "mousePressed": [
@@ -509,22 +542,23 @@
               "targetOrder": [],
               "sourceOrder": []
             },
-            "targetName": "TextField5"
+            "targetName": "PushValue"
           }
         ]
       },
-      "zindex": 1,
+      "zindex": 2,
       "designer": {
         "x": 0,
-        "y": 64
+        "y": 0
       }
     },
-    "Buffer2": {
+    "Buffer": {
       "type": "Buffer",
       "properties": {
         "elementType": "element",
         "airID": 1,
-        "elementPanel": "designer"
+        "elementPanel": "designer",
+        "airName": "Buffer"
       },
       "triggers": {
         "popped": [
@@ -535,7 +569,7 @@
             "sourceStaticValue": "",
             "arguments": {
               "mapping": {
-                "value": "value"
+                "value": "\"Popped:\\n\" +value.toString()"
               },
               "targetOrder": [
                 "value"
@@ -544,7 +578,7 @@
                 "value"
               ]
             },
-            "targetName": "Label8"
+            "targetName": "ValuePopped"
           },
           {
             "sourceTrigger": "popped",
@@ -562,7 +596,7 @@
                 "buffer"
               ]
             },
-            "targetName": "Label12"
+            "targetName": "BufferValue"
           },
           {
             "sourceTrigger": "popped",
@@ -571,7 +605,7 @@
             "sourceStaticValue": "",
             "arguments": {
               "mapping": {
-                "value": "value"
+                "value": "\"Length:\\n\" +length.toString()"
               },
               "targetOrder": [
                 "value"
@@ -580,7 +614,7 @@
                 "length"
               ]
             },
-            "targetName": "Label19"
+            "targetName": "BufferLength"
           }
         ],
         "pushed": [
@@ -600,7 +634,7 @@
                 "buffer"
               ]
             },
-            "targetName": "Label12"
+            "targetName": "BufferValue"
           },
           {
             "sourceTrigger": "pushed",
@@ -609,7 +643,7 @@
             "sourceStaticValue": "",
             "arguments": {
               "mapping": {
-                "value": "value"
+                "value": "\"Length:\\n\" +length.toString()"
               },
               "targetOrder": [
                 "value"
@@ -618,7 +652,7 @@
                 "length"
               ]
             },
-            "targetName": "Label19"
+            "targetName": "BufferLength"
           },
           {
             "sourceTrigger": "pushed",
@@ -627,7 +661,7 @@
             "sourceStaticValue": "",
             "arguments": {
               "mapping": {
-                "value": "value"
+                "value": "\"Pushed:\\n\" + value.toString()"
               },
               "targetOrder": [
                 "value"
@@ -636,7 +670,7 @@
                 "value"
               ]
             },
-            "targetName": "Label17"
+            "targetName": "ValuePushed"
           }
         ],
         "indexRetreived": [
@@ -656,7 +690,7 @@
                 "buffer"
               ]
             },
-            "targetName": "Label12"
+            "targetName": "BufferValue"
           },
           {
             "sourceTrigger": "indexRetreived",
@@ -665,7 +699,7 @@
             "sourceStaticValue": "",
             "arguments": {
               "mapping": {
-                "value": "value"
+                "value": "\"Length:\\n\" +length.toString()"
               },
               "targetOrder": [
                 "value"
@@ -674,7 +708,7 @@
                 "length"
               ]
             },
-            "targetName": "Label19"
+            "targetName": "BufferLength"
           },
           {
             "sourceTrigger": "indexRetreived",
@@ -683,7 +717,7 @@
             "sourceStaticValue": "",
             "arguments": {
               "mapping": {
-                "value": "value"
+                "value": "\"Value at Index:\\n\"+value.toString()"
               },
               "targetOrder": [
                 "value"
@@ -692,7 +726,7 @@
                 "value"
               ]
             },
-            "targetName": "TextField9"
+            "targetName": "valueGetIndex"
           }
         ],
         "indexSet": [
@@ -712,7 +746,7 @@
                 "buffer"
               ]
             },
-            "targetName": "Label12"
+            "targetName": "BufferValue"
           },
           {
             "sourceTrigger": "indexSet",
@@ -721,7 +755,7 @@
             "sourceStaticValue": "",
             "arguments": {
               "mapping": {
-                "value": "value"
+                "value": "\"Length:\\n\" +length.toString()"
               },
               "targetOrder": [
                 "value"
@@ -730,7 +764,7 @@
                 "length"
               ]
             },
-            "targetName": "Label19"
+            "targetName": "BufferLength"
           }
         ],
         "spliced": [
@@ -750,7 +784,7 @@
                 "buffer"
               ]
             },
-            "targetName": "Label12"
+            "targetName": "BufferValue"
           },
           {
             "sourceTrigger": "spliced",
@@ -759,7 +793,7 @@
             "sourceStaticValue": "",
             "arguments": {
               "mapping": {
-                "value": "value"
+                "value": "\"Length:\\n\" +length.toString()"
               },
               "targetOrder": [
                 "value"
@@ -768,7 +802,7 @@
                 "length"
               ]
             },
-            "targetName": "Label19"
+            "targetName": "BufferLength"
           },
           {
             "sourceTrigger": "spliced",
@@ -777,7 +811,7 @@
             "sourceStaticValue": "",
             "arguments": {
               "mapping": {
-                "value": "value"
+                "value": "\"Value at Splice:\\n\"+value.toString()"
               },
               "targetOrder": [
                 "value"
@@ -786,7 +820,7 @@
                 "value"
               ]
             },
-            "targetName": "TextField13"
+            "targetName": "SplicedValue"
           }
         ],
         "cleared": [
@@ -806,7 +840,7 @@
                 "buffer"
               ]
             },
-            "targetName": "Label12"
+            "targetName": "BufferValue"
           },
           {
             "sourceTrigger": "cleared",
@@ -815,7 +849,7 @@
             "sourceStaticValue": "",
             "arguments": {
               "mapping": {
-                "value": "value"
+                "value": "\"Length:\\n\" +length.toString()"
               },
               "targetOrder": [
                 "value"
@@ -824,7 +858,7 @@
                 "length"
               ]
             },
-            "targetName": "Label19"
+            "targetName": "BufferLength"
           }
         ],
         "onTrigger": [
@@ -844,7 +878,7 @@
                 "buffer"
               ]
             },
-            "targetName": "Label12"
+            "targetName": "BufferValue"
           },
           {
             "sourceTrigger": "onTrigger",
@@ -853,7 +887,7 @@
             "sourceStaticValue": "",
             "arguments": {
               "mapping": {
-                "value": "value"
+                "value": "\"Length:\\n\" +length.toString()"
               },
               "targetOrder": [
                 "value"
@@ -862,7 +896,7 @@
                 "length"
               ]
             },
-            "targetName": "Label19"
+            "targetName": "BufferLength"
           },
           {
             "sourceTrigger": "onTrigger",
@@ -871,7 +905,7 @@
             "sourceStaticValue": "",
             "arguments": {
               "mapping": {
-                "value": "buffer"
+                "value": "\"Pushed:\\n\" +buffer.toString()"
               },
               "targetOrder": [
                 "value"
@@ -880,7 +914,7 @@
                 "buffer"
               ]
             },
-            "targetName": "Label17"
+            "targetName": "ValuePushed"
           }
         ],
         "enqueued": [
@@ -900,7 +934,7 @@
                 "buffer"
               ]
             },
-            "targetName": "Label12"
+            "targetName": "BufferValue"
           },
           {
             "sourceTrigger": "enqueued",
@@ -909,7 +943,7 @@
             "sourceStaticValue": "",
             "arguments": {
               "mapping": {
-                "value": "value"
+                "value": "\"Length:\\n\" +length.toString()"
               },
               "targetOrder": [
                 "value"
@@ -918,7 +952,7 @@
                 "length"
               ]
             },
-            "targetName": "Label19"
+            "targetName": "BufferLength"
           },
           {
             "sourceTrigger": "enqueued",
@@ -927,7 +961,7 @@
             "sourceStaticValue": "",
             "arguments": {
               "mapping": {
-                "value": "value"
+                "value": "\"Enqueued:\\n\" +value.toString()"
               },
               "targetOrder": [
                 "value"
@@ -936,7 +970,7 @@
                 "value"
               ]
             },
-            "targetName": "Label18"
+            "targetName": "ValueEnqueue"
           }
         ],
         "dequeued": [
@@ -956,7 +990,7 @@
                 "buffer"
               ]
             },
-            "targetName": "Label12"
+            "targetName": "BufferValue"
           },
           {
             "sourceTrigger": "dequeued",
@@ -965,7 +999,7 @@
             "sourceStaticValue": "",
             "arguments": {
               "mapping": {
-                "value": "value"
+                "value": "\"Length:\\n\" +length.toString()"
               },
               "targetOrder": [
                 "value"
@@ -974,7 +1008,7 @@
                 "length"
               ]
             },
-            "targetName": "Label19"
+            "targetName": "BufferLength"
           },
           {
             "sourceTrigger": "dequeued",
@@ -983,7 +1017,7 @@
             "sourceStaticValue": "",
             "arguments": {
               "mapping": {
-                "value": "value"
+                "value": "\"Denqueued:\\n\" +value.toString()"
               },
               "targetOrder": [
                 "value"
@@ -992,17 +1026,17 @@
                 "value"
               ]
             },
-            "targetName": "Label16"
+            "targetName": "ValueDequeue"
           }
         ]
       },
-      "zindex": 2,
+      "zindex": 3,
       "designer": {
-        "x": 351,
-        "y": 242
+        "x": 373,
+        "y": 202
       }
     },
-    "Button3": {
+    "PopButton": {
       "type": "Button",
       "properties": {
         "label": "Pop",
@@ -1019,7 +1053,8 @@
         "disabledBottomColor": "rgb(211, 211, 211)",
         "elementType": "element",
         "airID": 2,
-        "elementPanel": "designer"
+        "elementPanel": "designer",
+        "airName": "PopButton"
       },
       "triggers": {
         "mousePressed": [
@@ -1033,17 +1068,17 @@
               "targetOrder": [],
               "sourceOrder": []
             },
-            "targetName": "Buffer2"
+            "targetName": "Buffer"
           }
         ]
       },
-      "zindex": 3,
+      "zindex": 4,
       "designer": {
         "x": 0,
-        "y": 135
+        "y": 72
       }
     },
-    "TextField5": {
+    "PushValue": {
       "type": "TextField",
       "properties": {
         "label": "New TextField",
@@ -1052,7 +1087,8 @@
         "visible": true,
         "elementType": "element",
         "airID": 3,
-        "elementPanel": "designer"
+        "elementPanel": "designer",
+        "airName": "PushValue"
       },
       "triggers": {
         "onTrigger": [
@@ -1072,17 +1108,17 @@
                 "value"
               ]
             },
-            "targetName": "Buffer2"
+            "targetName": "Buffer"
           }
         ]
       },
-      "zindex": 4,
+      "zindex": 5,
       "designer": {
-        "x": 122,
-        "y": 82
+        "x": 116,
+        "y": 0
       }
     },
-    "Button6": {
+    "getIndexButton": {
       "type": "Button",
       "properties": {
         "label": "getIndex",
@@ -1099,7 +1135,8 @@
         "disabledBottomColor": "rgb(211, 211, 211)",
         "elementType": "element",
         "airID": 4,
-        "elementPanel": "designer"
+        "elementPanel": "designer",
+        "airName": "getIndexButton"
       },
       "triggers": {
         "mousePressed": [
@@ -1113,17 +1150,17 @@
               "targetOrder": [],
               "sourceOrder": []
             },
-            "targetName": "TextField9"
+            "targetName": "getIndexValue"
           }
         ]
       },
-      "zindex": 5,
+      "zindex": 6,
       "designer": {
-        "x": 2,
-        "y": 383
+        "x": 0,
+        "y": 280
       }
     },
-    "Button7": {
+    "ClearButton": {
       "type": "Button",
       "properties": {
         "label": "Clear",
@@ -1140,7 +1177,8 @@
         "disabledBottomColor": "rgb(211, 211, 211)",
         "elementType": "element",
         "airID": 5,
-        "elementPanel": "designer"
+        "elementPanel": "designer",
+        "airName": "ClearButton"
       },
       "triggers": {
         "mousePressed": [
@@ -1154,17 +1192,17 @@
               "targetOrder": [],
               "sourceOrder": []
             },
-            "targetName": "Buffer2"
+            "targetName": "Buffer"
           }
         ]
       },
-      "zindex": 6,
+      "zindex": 7,
       "designer": {
         "x": 0,
-        "y": 498
+        "y": 348
       }
     },
-    "Label8": {
+    "ValuePopped": {
       "type": "Label",
       "properties": {
         "label": "",
@@ -1174,16 +1212,17 @@
         "color": "Black",
         "elementType": "element",
         "airID": 6,
-        "elementPanel": "designer"
+        "elementPanel": "designer",
+        "airName": "ValuePopped"
       },
       "triggers": {},
-      "zindex": 7,
+      "zindex": 8,
       "designer": {
-        "x": 577,
-        "y": 269
+        "x": 529,
+        "y": 67
       }
     },
-    "TextField9": {
+    "getIndexValue": {
       "type": "TextField",
       "properties": {
         "label": "New TextField",
@@ -1192,7 +1231,8 @@
         "visible": true,
         "elementType": "element",
         "airID": 7,
-        "elementPanel": "designer"
+        "elementPanel": "designer",
+        "airName": "getIndexValue"
       },
       "triggers": {
         "onTrigger": [
@@ -1212,17 +1252,17 @@
                 "value"
               ]
             },
-            "targetName": "Buffer2"
+            "targetName": "Buffer"
           }
         ]
       },
-      "zindex": 8,
+      "zindex": 9,
       "designer": {
-        "x": 348,
-        "y": 358
+        "x": 214,
+        "y": 342
       }
     },
-    "Button10": {
+    "setIndexButton": {
       "type": "Button",
       "properties": {
         "label": "setIndex",
@@ -1239,7 +1279,8 @@
         "disabledBottomColor": "rgb(211, 211, 211)",
         "elementType": "element",
         "airID": 8,
-        "elementPanel": "designer"
+        "elementPanel": "designer",
+        "airName": "setIndexButton"
       },
       "triggers": {
         "mousePressed": [
@@ -1253,17 +1294,17 @@
               "targetOrder": [],
               "sourceOrder": []
             },
-            "targetName": "TextField11"
+            "targetName": "setIndexValue"
           }
         ]
       },
-      "zindex": 9,
+      "zindex": 10,
       "designer": {
         "x": 0,
-        "y": 300
+        "y": 211
       }
     },
-    "TextField11": {
+    "setIndexValue": {
       "type": "TextField",
       "properties": {
         "label": "New TextField",
@@ -1272,7 +1313,8 @@
         "visible": true,
         "elementType": "element",
         "airID": 9,
-        "elementPanel": "designer"
+        "elementPanel": "designer",
+        "airName": "setIndexValue"
       },
       "triggers": {
         "onTrigger": [
@@ -1294,36 +1336,17 @@
                 "value"
               ]
             },
-            "targetName": "Buffer2"
+            "targetName": "Buffer"
           }
         ]
       },
-      "zindex": 10,
-      "designer": {
-        "x": 123,
-        "y": 313
-      }
-    },
-    "Label12": {
-      "type": "Label",
-      "properties": {
-        "label": "",
-        "enabled": true,
-        "visible": true,
-        "font": "14px Arial",
-        "color": "Black",
-        "elementType": "element",
-        "airID": 10,
-        "elementPanel": "designer"
-      },
-      "triggers": {},
       "zindex": 11,
       "designer": {
-        "x": 522,
-        "y": 542
+        "x": 115,
+        "y": 212
       }
     },
-    "Button12": {
+    "SpliceButton": {
       "type": "Button",
       "properties": {
         "label": "Splice",
@@ -1340,7 +1363,8 @@
         "disabledBottomColor": "rgb(211, 211, 211)",
         "elementType": "element",
         "airID": 11,
-        "elementPanel": "designer"
+        "elementPanel": "designer",
+        "airName": "SpliceButton"
       },
       "triggers": {
         "mousePressed": [
@@ -1354,17 +1378,17 @@
               "targetOrder": [],
               "sourceOrder": []
             },
-            "targetName": "TextField13"
+            "targetName": "spliceIndexValue"
           }
         ]
       },
       "zindex": 12,
       "designer": {
         "x": 0,
-        "y": 190
+        "y": 142
       }
     },
-    "TextField13": {
+    "spliceIndexValue": {
       "type": "TextField",
       "properties": {
         "label": "New TextField",
@@ -1373,7 +1397,8 @@
         "visible": true,
         "elementType": "element",
         "airID": 12,
-        "elementPanel": "designer"
+        "elementPanel": "designer",
+        "airName": "spliceIndexValue"
       },
       "triggers": {
         "onTrigger": [
@@ -1395,17 +1420,17 @@
                 "value"
               ]
             },
-            "targetName": "Buffer2"
+            "targetName": "Buffer"
           }
         ]
       },
       "zindex": 13,
       "designer": {
-        "x": 353,
-        "y": 137
+        "x": 112,
+        "y": 138
       }
     },
-    "TextField14": {
+    "EnqueueValue": {
       "type": "TextField",
       "properties": {
         "value": "7",
@@ -1413,7 +1438,8 @@
         "visible": true,
         "airID": 14,
         "elementPanel": "designer",
-        "elementType": "element"
+        "elementType": "element",
+        "airName": "EnqueueValue"
       },
       "triggers": {
         "onTrigger": [
@@ -1433,7 +1459,7 @@
                 "value"
               ]
             },
-            "targetName": "Buffer2"
+            "targetName": "Buffer"
           }
         ]
       },
@@ -1443,7 +1469,7 @@
         "y": 0
       }
     },
-    "Button13": {
+    "EnqueueButton": {
       "type": "Button",
       "properties": {
         "label": "Enqueue",
@@ -1460,7 +1486,8 @@
         "disabledBottomColor": "rgb(211, 211, 211)",
         "airID": 13,
         "elementPanel": "designer",
-        "elementType": "element"
+        "elementType": "element",
+        "airName": "EnqueueButton"
       },
       "triggers": {
         "mousePressed": [
@@ -1474,7 +1501,7 @@
               "targetOrder": [],
               "sourceOrder": []
             },
-            "targetName": "TextField14"
+            "targetName": "EnqueueValue"
           }
         ]
       },
@@ -1484,7 +1511,7 @@
         "y": 0
       }
     },
-    "Button15": {
+    "DequeueButton": {
       "type": "Button",
       "properties": {
         "label": "Dequeue",
@@ -1501,7 +1528,8 @@
         "disabledBottomColor": "rgb(211, 211, 211)",
         "airID": 15,
         "elementPanel": "designer",
-        "elementType": "element"
+        "elementType": "element",
+        "airName": "DequeueButton"
       },
       "triggers": {
         "mousePressed": [
@@ -1515,17 +1543,17 @@
               "targetOrder": [],
               "sourceOrder": []
             },
-            "targetName": "Buffer2"
+            "targetName": "Buffer"
           }
         ]
       },
-      "zindex": 15,
+      "zindex": 16,
       "designer": {
-        "x": 230,
-        "y": 73
+        "x": 165,
+        "y": 66
       }
     },
-    "Label16": {
+    "ValueDequeue": {
       "type": "Label",
       "properties": {
         "label": "",
@@ -1535,16 +1563,17 @@
         "color": "Black",
         "airID": 16,
         "elementPanel": "designer",
-        "elementType": "element"
+        "elementType": "element",
+        "airName": "ValueDequeue"
       },
       "triggers": {},
-      "zindex": 16,
+      "zindex": 17,
       "designer": {
-        "x": 564,
-        "y": 357
+        "x": 526,
+        "y": 200
       }
     },
-    "Label17": {
+    "ValuePushed": {
       "type": "Label",
       "properties": {
         "label": "",
@@ -1554,16 +1583,17 @@
         "color": "Black",
         "airID": 17,
         "elementPanel": "designer",
-        "elementType": "element"
+        "elementType": "element",
+        "airName": "ValuePushed"
       },
       "triggers": {},
-      "zindex": 17,
+      "zindex": 18,
       "designer": {
-        "x": 561,
-        "y": 64
+        "x": 527,
+        "y": 0
       }
     },
-    "Label18": {
+    "ValueEnqueue": {
       "type": "Label",
       "properties": {
         "label": "",
@@ -1573,16 +1603,17 @@
         "color": "Black",
         "airID": 18,
         "elementPanel": "designer",
-        "elementType": "element"
+        "elementType": "element",
+        "airName": "ValueEnqueue"
       },
       "triggers": {},
-      "zindex": 18,
+      "zindex": 19,
       "designer": {
-        "x": 567,
-        "y": 152
+        "x": 527,
+        "y": 133
       }
     },
-    "Label19": {
+    "BufferLength": {
       "type": "Label",
       "properties": {
         "label": "",
@@ -1592,13 +1623,54 @@
         "color": "Black",
         "airID": 19,
         "elementPanel": "designer",
-        "elementType": "element"
+        "elementType": "element",
+        "airName": "BufferLength"
       },
       "triggers": {},
-      "zindex": 19,
+      "zindex": 20,
       "designer": {
-        "x": 577,
-        "y": 447
+        "x": 523,
+        "y": 332
+      }
+    },
+    "valueGetIndex": {
+      "type": "Label",
+      "properties": {
+        "label": "",
+        "enabled": true,
+        "visible": true,
+        "font": "14px Arial",
+        "color": "Black",
+        "airID": 20,
+        "elementPanel": "designer",
+        "elementType": "element",
+        "airName": "valueGetIndex"
+      },
+      "triggers": {},
+      "zindex": 20,
+      "designer": {
+        "x": 359,
+        "y": 343
+      }
+    },
+    "SplicedValue": {
+      "type": "Label",
+      "properties": {
+        "label": "",
+        "enabled": true,
+        "visible": true,
+        "font": "14px Arial",
+        "color": "Black",
+        "airID": 21,
+        "elementPanel": "designer",
+        "elementType": "element",
+        "airName": "SplicedValue"
+      },
+      "triggers": {},
+      "zindex": 21,
+      "designer": {
+        "x": 322,
+        "y": 85
       }
     }
   },
