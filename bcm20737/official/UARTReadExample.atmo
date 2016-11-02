@@ -227,7 +227,7 @@
         "bg2": "#DCEBF9"
       },
       "projectType": "bcm20737",
-      "name": "UARTWriteExample"
+      "name": "UARTReadExample"
     },
     "type": "Header",
     "currentLayoutName": "Default",
