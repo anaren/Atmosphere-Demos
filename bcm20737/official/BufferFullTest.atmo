@@ -351,7 +351,7 @@
         "BufferValue": {
           "x": 32,
           "y": 382,
-          "width": 286,
+          "width": 301,
           "height": 161
         },
         "PushButton": {
@@ -447,31 +447,31 @@
         "ValuePushed": {
           "x": 232,
           "y": 32,
-          "width": 86,
+          "width": 101,
           "height": 36
         },
         "ValueEnqueue": {
           "x": 232,
           "y": 282,
-          "width": 86,
+          "width": 101,
           "height": 36
         },
         "BufferLength": {
           "x": 232,
           "y": 507,
-          "width": 86,
+          "width": 101,
           "height": 36
         },
         "valueGetIndex": {
           "x": 232,
           "y": 182,
-          "width": 86,
+          "width": 101,
           "height": 36
         },
         "SplicedValue": {
           "x": 232,
           "y": 132,
-          "width": 86,
+          "width": 101,
           "height": 36
         }
       }
