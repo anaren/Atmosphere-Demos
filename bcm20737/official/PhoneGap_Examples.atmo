@@ -124,6 +124,13 @@
             "prefix": "#define BLE_CONNECTION_TIMEOUT ",
             "value": "700",
             "regex": "^[0-9]*$"
+          },
+          "advPowerLevel": {
+            "name": "Advertising TX Power Level (dbm) (Default: 4)",
+            "input": "TextField",
+            "prefix": "#define ADV_BLE_TX_POWER_LEVEL ",
+            "value": "4",
+            "regex": "^-?[0-9]d{0,2}(.d*)?$"
           }
         }
       },
@@ -333,14 +340,14 @@
       "editorFontSize": 12,
       "customEmbeddedElementLibraries": {},
       "theme": {
-        "bg1": "#e9f3fb",
-        "bg2": "#DCEBF9"
+        "bg1": "#394a59",
+        "bg2": "#394a59"
       },
       "projectType": "bcm20737",
       "name": "PhoneGap_Examples"
     },
     "type": "Header",
-    "currentLayoutName": "Default"
+    "currentCloudLayoutName": "Default"
   },
   "layouts": {
     "Default": {
@@ -965,25 +972,25 @@
         },
         "ConfirmButton": {
           "x": 7,
-          "y": 87,
+          "y": 127,
           "width": 106,
           "height": 26
         },
         "ConfirmText": {
           "x": 127,
-          "y": 127,
+          "y": 167,
           "width": 146,
           "height": 26
         },
         "PromptButton": {
           "x": 7,
-          "y": 167,
+          "y": 207,
           "width": 106,
           "height": 26
         },
         "ValueText": {
           "x": 127,
-          "y": 167,
+          "y": 207,
           "width": 146,
           "height": 26
         },
@@ -995,7 +1002,7 @@
         },
         "ButtonPressed": {
           "x": 127,
-          "y": 207,
+          "y": 247,
           "width": 146,
           "height": 26
         },
@@ -1007,7 +1014,7 @@
         },
         "ConfirmLabel": {
           "x": 7,
-          "y": 127,
+          "y": 167,
           "width": 106,
           "height": 26
         },
@@ -1019,19 +1026,19 @@
         },
         "PromptReturn": {
           "x": 7,
-          "y": 207,
+          "y": 247,
           "width": 106,
           "height": 26
         },
         "Vibrate": {
           "x": 7,
-          "y": 247,
+          "y": 287,
           "width": 106,
           "height": 26
         },
         "VibeTime": {
           "x": 127,
-          "y": 247,
+          "y": 287,
           "width": 146,
           "height": 26
         },
@@ -1051,11 +1058,11 @@
           "x": 127,
           "y": 47,
           "width": 186,
-          "height": 66
+          "height": 106
         },
         "TestBeep": {
           "x": 7,
-          "y": 287,
+          "y": 327,
           "width": 106,
           "height": 26
         },
@@ -1067,7 +1074,7 @@
         },
         "BeepTimes": {
           "x": 127,
-          "y": 287,
+          "y": 327,
           "width": 146,
           "height": 26
         },
@@ -1096,8 +1103,8 @@
           "height": 26
         },
         "TestGeo": {
-          "x": 7,
-          "y": 327,
+          "x": 167,
+          "y": 407,
           "width": 106,
           "height": 26
         },
@@ -1152,7 +1159,18 @@
       }
     }
   },
-  "cloudLayouts": {},
+  "cloudLayouts": {
+    "Default": {
+      "name": "Default (600x400)",
+      "width": 600,
+      "height": 400,
+      "orientation": "landscape",
+      "devicename": ".*",
+      "platform": "",
+      "version": ".*",
+      "elements": {}
+    }
+  },
   "elements": {
     "Background": {
       "type": "ImagePan",
@@ -1163,7 +1181,9 @@
         "visible": true,
         "rotation": "0",
         "background": "transparent",
-        "elementType": "element"
+        "elementType": "element",
+        "airID": 0,
+        "elementPanel": "designer"
       },
       "triggers": {},
       "zindex": 1,
@@ -1187,7 +1207,9 @@
         "overBottomColor": "rgb(214, 214, 214)",
         "disabledTopColor": "rgb(211, 211, 211)",
         "disabledBottomColor": "rgb(211, 211, 211)",
-        "elementType": "element"
+        "elementType": "element",
+        "airID": 1,
+        "elementPanel": "designer"
       },
       "triggers": {
         "mousePressed": [
@@ -1226,7 +1248,9 @@
         "value": "",
         "enabled": true,
         "visible": true,
-        "elementType": "element"
+        "elementType": "element",
+        "airID": 2,
+        "elementPanel": "designer"
       },
       "triggers": {},
       "zindex": 3,
@@ -1250,7 +1274,9 @@
         "overBottomColor": "rgb(214, 214, 214)",
         "disabledTopColor": "rgb(211, 211, 211)",
         "disabledBottomColor": "rgb(211, 211, 211)",
-        "elementType": "element"
+        "elementType": "element",
+        "airID": 3,
+        "elementPanel": "designer"
       },
       "triggers": {
         "mousePressed": [
@@ -1290,7 +1316,9 @@
         "value": "",
         "enabled": true,
         "visible": true,
-        "elementType": "element"
+        "elementType": "element",
+        "airID": 4,
+        "elementPanel": "designer"
       },
       "triggers": {},
       "zindex": 5,
@@ -1308,7 +1336,9 @@
           "Yes",
           "No"
         ],
-        "elementType": "element"
+        "elementType": "element",
+        "airID": 5,
+        "elementPanel": "designer"
       },
       "triggers": {
         "confirmed": [
@@ -1348,7 +1378,9 @@
           "Ok",
           "Cancel"
         ],
-        "elementType": "element"
+        "elementType": "element",
+        "airID": 6,
+        "elementPanel": "designer"
       },
       "triggers": {
         "responded": [
@@ -1399,7 +1431,9 @@
     "NetworkInfo": {
       "type": "MobileNetwork",
       "properties": {
-        "elementType": "element"
+        "elementType": "element",
+        "airID": 7,
+        "elementPanel": "designer"
       },
       "triggers": {
         "goesOnline": [
@@ -1476,7 +1510,9 @@
         "value": "",
         "enabled": true,
         "visible": true,
-        "elementType": "element"
+        "elementType": "element",
+        "airID": 8,
+        "elementPanel": "designer"
       },
       "triggers": {},
       "zindex": 9,
@@ -1492,7 +1528,9 @@
         "value": "",
         "enabled": true,
         "visible": true,
-        "elementType": "element"
+        "elementType": "element",
+        "airID": 9,
+        "elementPanel": "designer"
       },
       "triggers": {},
       "zindex": 10,
@@ -1507,7 +1545,9 @@
         "runOnStart": true,
         "runIn": "2000",
         "runEvery": "2000",
-        "elementType": "element"
+        "elementType": "element",
+        "airID": 10,
+        "elementPanel": "designer"
       },
       "triggers": {
         "task": [
@@ -1563,7 +1603,9 @@
         "visible": true,
         "font": "14px Arial",
         "color": "Black",
-        "elementType": "element"
+        "elementType": "element",
+        "airID": 11,
+        "elementPanel": "designer"
       },
       "triggers": {},
       "zindex": 12,
@@ -1580,7 +1622,9 @@
         "visible": true,
         "font": "14px Arial",
         "color": "Black",
-        "elementType": "element"
+        "elementType": "element",
+        "airID": 12,
+        "elementPanel": "designer"
       },
       "triggers": {},
       "zindex": 13,
@@ -1597,7 +1641,9 @@
         "visible": true,
         "font": "14px Arial",
         "color": "Black",
-        "elementType": "element"
+        "elementType": "element",
+        "airID": 13,
+        "elementPanel": "designer"
       },
       "triggers": {},
       "zindex": 14,
@@ -1614,7 +1660,9 @@
         "visible": true,
         "font": "14px Arial",
         "color": "Black",
-        "elementType": "element"
+        "elementType": "element",
+        "airID": 14,
+        "elementPanel": "designer"
       },
       "triggers": {},
       "zindex": 15,
@@ -1638,7 +1686,9 @@
         "overBottomColor": "rgb(214, 214, 214)",
         "disabledTopColor": "rgb(211, 211, 211)",
         "disabledBottomColor": "rgb(211, 211, 211)",
-        "elementType": "element"
+        "elementType": "element",
+        "airID": 15,
+        "elementPanel": "designer"
       },
       "triggers": {
         "mousePressed": [
@@ -1669,7 +1719,9 @@
         "value": "1000",
         "enabled": true,
         "visible": true,
-        "elementType": "element"
+        "elementType": "element",
+        "airID": 16,
+        "elementPanel": "designer"
       },
       "triggers": {
         "onTrigger": [
@@ -1707,7 +1759,9 @@
         "visible": true,
         "font": "14px Arial",
         "color": "Black",
-        "elementType": "element"
+        "elementType": "element",
+        "airID": 17,
+        "elementPanel": "designer"
       },
       "triggers": {},
       "zindex": 18,
@@ -1720,7 +1774,9 @@
       "type": "MobileVibration",
       "properties": {
         "vibrationTime": "1000",
-        "elementType": "element"
+        "elementType": "element",
+        "airID": 18,
+        "elementPanel": "designer"
       },
       "triggers": {},
       "zindex": 19,
@@ -1732,7 +1788,9 @@
     "MobileDeviceInfo21": {
       "type": "MobileDeviceInfo",
       "properties": {
-        "elementType": "element"
+        "elementType": "element",
+        "airID": 19,
+        "elementPanel": "designer"
       },
       "triggers": {
         "onTrigger": [
@@ -1806,7 +1864,9 @@
         "visible": true,
         "font": "14px Arial",
         "color": "Black",
-        "elementType": "element"
+        "elementType": "element",
+        "airID": 20,
+        "elementPanel": "designer"
       },
       "triggers": {},
       "zindex": 21,
@@ -1823,7 +1883,9 @@
         "visible": true,
         "font": "12px Arial",
         "color": "Black",
-        "elementType": "element"
+        "elementType": "element",
+        "airID": 21,
+        "elementPanel": "designer"
       },
       "triggers": {},
       "zindex": 22,
@@ -1836,7 +1898,9 @@
       "type": "MobileBeep",
       "properties": {
         "numberOfBeeps": "1",
-        "elementType": "element"
+        "elementType": "element",
+        "airID": 22,
+        "elementPanel": "designer"
       },
       "triggers": {},
       "zindex": 23,
@@ -1860,7 +1924,9 @@
         "overBottomColor": "rgb(214, 214, 214)",
         "disabledTopColor": "rgb(211, 211, 211)",
         "disabledBottomColor": "rgb(211, 211, 211)",
-        "elementType": "element"
+        "elementType": "element",
+        "airID": 23,
+        "elementPanel": "designer"
       },
       "triggers": {
         "mousePressed": [
@@ -1892,7 +1958,9 @@
         "visible": true,
         "font": "14px Arial",
         "color": "Black",
-        "elementType": "element"
+        "elementType": "element",
+        "airID": 24,
+        "elementPanel": "designer"
       },
       "triggers": {},
       "zindex": 25,
@@ -1908,7 +1976,9 @@
         "value": "1",
         "enabled": true,
         "visible": true,
-        "elementType": "element"
+        "elementType": "element",
+        "airID": 25,
+        "elementPanel": "designer"
       },
       "triggers": {
         "onTrigger": [
@@ -1960,7 +2030,9 @@
       "type": "WebLink",
       "properties": {
         "url": "https://atmosphere.anaren.com",
-        "elementType": "element"
+        "elementType": "element",
+        "airID": 26,
+        "elementPanel": "designer"
       },
       "triggers": {},
       "zindex": 27,
@@ -1984,7 +2056,9 @@
         "overBottomColor": "rgb(214, 214, 214)",
         "disabledTopColor": "rgb(211, 211, 211)",
         "disabledBottomColor": "rgb(211, 211, 211)",
-        "elementType": "element"
+        "elementType": "element",
+        "airID": 27,
+        "elementPanel": "designer"
       },
       "triggers": {
         "mousePressed": [
@@ -2016,7 +2090,9 @@
         "visible": true,
         "font": "14px Arial",
         "color": "Black",
-        "elementType": "element"
+        "elementType": "element",
+        "airID": 28,
+        "elementPanel": "designer"
       },
       "triggers": {},
       "zindex": 29,
@@ -2032,7 +2108,9 @@
         "value": "http://www.google.com",
         "enabled": true,
         "visible": true,
-        "elementType": "element"
+        "elementType": "element",
+        "airID": 29,
+        "elementPanel": "designer"
       },
       "triggers": {
         "onTrigger": [
@@ -2095,7 +2173,9 @@
         "overBottomColor": "rgb(214, 214, 214)",
         "disabledTopColor": "rgb(211, 211, 211)",
         "disabledBottomColor": "rgb(211, 211, 211)",
-        "elementType": "element"
+        "elementType": "element",
+        "airID": 30,
+        "elementPanel": "designer"
       },
       "triggers": {
         "mousePressed": [
@@ -2150,7 +2230,9 @@
         "permission": "public",
         "inputType": "int",
         "returnType": "int",
-        "elementType": "element"
+        "elementType": "element",
+        "airID": 31,
+        "elementPanel": "designer"
       },
       "triggers": {},
       "zindex": 32,
@@ -2174,7 +2256,9 @@
         "overBottomColor": "rgb(214, 214, 214)",
         "disabledTopColor": "rgb(211, 211, 211)",
         "disabledBottomColor": "rgb(211, 211, 211)",
-        "elementType": "element"
+        "elementType": "element",
+        "airID": 32,
+        "elementPanel": "designer"
       },
       "triggers": {
         "mousePressed": [
@@ -2205,7 +2289,9 @@
         "value": "",
         "enabled": true,
         "visible": true,
-        "elementType": "element"
+        "elementType": "element",
+        "airID": 33,
+        "elementPanel": "designer"
       },
       "triggers": {},
       "zindex": 34,
@@ -2222,7 +2308,9 @@
         "visible": true,
         "font": "14px Arial",
         "color": "Black",
-        "elementType": "element"
+        "elementType": "element",
+        "airID": 34,
+        "elementPanel": "designer"
       },
       "triggers": {},
       "zindex": 35,
@@ -2234,7 +2322,9 @@
     "MobileGeolocation36": {
       "type": "MobileGeolocation",
       "properties": {
-        "elementType": "element"
+        "elementType": "element",
+        "airID": 35,
+        "elementPanel": "designer"
       },
       "triggers": {
         "positionRetrieved": [
@@ -2279,7 +2369,9 @@
         "visible": true,
         "font": "14px Arial",
         "color": "Black",
-        "elementType": "element"
+        "elementType": "element",
+        "airID": 36,
+        "elementPanel": "designer"
       },
       "triggers": {},
       "zindex": 37,
@@ -2297,7 +2389,9 @@
         "permission": "public",
         "inputType": "json",
         "returnType": "json",
-        "elementType": "element"
+        "elementType": "element",
+        "airID": 37,
+        "elementPanel": "designer"
       },
       "triggers": {},
       "zindex": 38,
@@ -2321,7 +2415,9 @@
         "overBottomColor": "rgb(214, 214, 214)",
         "disabledTopColor": "rgb(211, 211, 211)",
         "disabledBottomColor": "rgb(211, 211, 211)",
-        "elementType": "element"
+        "elementType": "element",
+        "airID": 38,
+        "elementPanel": "designer"
       },
       "triggers": {
         "mousePressed": [
@@ -2375,7 +2471,9 @@
         "visible": true,
         "font": "14px Arial",
         "color": "Black",
-        "elementType": "element"
+        "elementType": "element",
+        "airID": 39,
+        "elementPanel": "designer"
       },
       "triggers": {},
       "zindex": 40,
@@ -2390,7 +2488,9 @@
         "runOnStart": true,
         "runIn": "200",
         "runEvery": "10000",
-        "elementType": "element"
+        "elementType": "element",
+        "airID": 40,
+        "elementPanel": "designer"
       },
       "triggers": {
         "task": [
@@ -2440,7 +2540,9 @@
         "message": "Welcome to the Atmosphere Debug App. This app demos some of the mobile features available using Atmosphere.",
         "title": "Welcome",
         "buttonName": "OK",
-        "elementType": "element"
+        "elementType": "element",
+        "airID": 41,
+        "elementPanel": "designer"
       },
       "triggers": {},
       "zindex": 42,
@@ -2458,7 +2560,9 @@
         "visible": false,
         "rotation": "0",
         "background": "transparent",
-        "elementType": "element"
+        "elementType": "element",
+        "airID": 42,
+        "elementPanel": "designer"
       },
       "triggers": {},
       "zindex": 43,
@@ -2476,7 +2580,9 @@
         "visible": false,
         "rotation": "0",
         "background": "transparent",
-        "elementType": "element"
+        "elementType": "element",
+        "airID": 43,
+        "elementPanel": "designer"
       },
       "triggers": {},
       "zindex": 44,
@@ -2494,7 +2600,9 @@
         "visible": false,
         "rotation": "0",
         "background": "transparent",
-        "elementType": "element"
+        "elementType": "element",
+        "airID": 44,
+        "elementPanel": "designer"
       },
       "triggers": {},
       "zindex": 45,
@@ -2506,7 +2614,9 @@
     "ConnectedCheck": {
       "type": "Connection",
       "properties": {
-        "elementType": "element"
+        "elementType": "element",
+        "airID": 45,
+        "elementPanel": "designer"
       },
       "triggers": {
         "connected": [
