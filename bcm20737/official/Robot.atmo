@@ -34,7 +34,7 @@
       },
       "Setup": {
         "close": "}",
-        "code": "\tAIR_GPIO_Init();\n\tAIR_POWER_Init();\n\t//AIR_UART_Init();\n\t//AIR_SPI_Init();\n\t//BUZZER_Init();\n\tAIR_POWER_SetMode(AIR_POWER_NOSLEEP);\n\t\n\tAIR_GPIO_SetMode(13, AIR_GPIO_OUTPUT_OPEN_DRAIN_NO_PULL);\n\tAIR_GPIO_SetMode(14, AIR_GPIO_OUTPUT_OPEN_DRAIN_NO_PULL);\n\tAIR_GPIO_SetMode(26, AIR_GPIO_OUTPUT_OPEN_DRAIN_NO_PULL);\n\tAIR_GPIO_SetMode(27, AIR_GPIO_OUTPUT_OPEN_DRAIN_NO_PULL);\n\t",
+        "code": "\tAIR_GPIO_Init();\n\tAIR_POWER_Init();\n\t//AIR_UART_Init();\n\t//AIR_SPI_Init();\n\t//BUZZER_Init();\n\tAIR_POWER_SetMode(AIR_POWER_NOSLEEP);\n\t\n\tAIR_GPIO_SetMode(13, AIR_GPIO_OUTPUT_PUSH_PULL);\n\tAIR_GPIO_SetMode(14, AIR_GPIO_OUTPUT_PUSH_PULL);\n\tAIR_GPIO_SetMode(26, AIR_GPIO_OUTPUT_PUSH_PULL);\n\tAIR_GPIO_SetMode(27, AIR_GPIO_OUTPUT_PUSH_PULL);\n\t",
         "name": "Setup",
         "func": "\nvoid setup() {"
       }
@@ -94,6 +94,52 @@
               "BLE_POWERSAVE_OFF",
               "BLE_POWERSAVE"
             ]
+          },
+          "ota": {
+            "name": "Over the Air Updating (Default: OTA)",
+            "input": "Combo",
+            "prefix": "#define BLE_",
+            "options": [
+              "OTA",
+              "NO_OTA"
+            ],
+            "value": "OTA",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "advPowerLevel": {
+            "name": "Advertising TX Power Level (dbm) (Default: 4)",
+            "input": "TextField",
+            "prefix": "#define ADV_BLE_TX_POWER_LEVEL ",
+            "value": "4",
+            "regex": "^-?[0-9]d{0,2}(.d*)?$"
+          },
+          "minInterval": {
+            "name": "BLE Min Interval (ms) (Default: 20)",
+            "input": "TextField",
+            "prefix": "#define BLE_INTERVAL_MIN ",
+            "value": "20",
+            "regex": "^[0-9]*$"
+          },
+          "maxInterval": {
+            "name": "BLE Max Interval (ms) (Default: 40)",
+            "input": "TextField",
+            "prefix": "#define BLE_INTERVAL_MAX ",
+            "value": "40",
+            "regex": "^[0-9]*$"
+          },
+          "slaveLatency": {
+            "name": "BLE Slave Latency (ms) (Default: 0)",
+            "input": "TextField",
+            "prefix": "#define BLE_SLAVE_LATENCY ",
+            "value": "0",
+            "regex": "^[0-9]*$"
+          },
+          "timeout": {
+            "name": "BLE Connection Timeout (ms) (Default: 700)",
+            "input": "TextField",
+            "prefix": "#define BLE_CONNECTION_TIMEOUT ",
+            "value": "700",
+            "regex": "^[0-9]*$"
           }
         },
         "name": "Bluetooth Low Energy",
@@ -132,6 +178,17 @@
               "ADC_SAMPLE_FREQUENCY_HIGH"
             ],
             "value": "ADC_SAMPLE_FREQUENCY_LOW",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "pwmClockSource": {
+            "name": "PWM Clock Source (Default: PMU)",
+            "input": "Combo",
+            "prefix": "#define AIR_PWM_CLOCK_SOURCE ",
+            "options": [
+              "PMU_CLK",
+              "LHL_CLK"
+            ],
+            "value": "PMU_CLK",
             "regex": "^[a-zA-Z0-9_.]*$"
           }
         }
@@ -207,6 +264,55 @@
         },
         "name": "AIR UART Driver",
         "file": "uart_config.h"
+      },
+      "spi": {
+        "name": "SPI Driver",
+        "file": "spi_config.h",
+        "values": {
+          "speed": {
+            "name": "SPI Speed (Default: 1000000)",
+            "input": "Combo",
+            "prefix": "#define AIR_SPI_SPEED ",
+            "options": [
+              "1000000",
+              "500000"
+            ],
+            "value": "1000000",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "mode": {
+            "name": "SPI Mode (Default: SPI_MODE_3)",
+            "input": "Combo",
+            "prefix": "#define AIR_SPI_MODE ",
+            "options": [
+              "SPI_MODE_0",
+              "SPI_MODE_1",
+              "SPI_MODE_2",
+              "SPI_MODE_3"
+            ],
+            "value": "SPI_MODE_3",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          }
+        }
+      },
+      "buzzer": {
+        "name": "Buzzer Driver",
+        "file": "buzzer_config.h",
+        "values": {
+          "pin": {
+            "name": "Buzzer Pin (Default: 14)",
+            "input": "Combo",
+            "prefix": "#define BUZZER_PWM_PIN ",
+            "options": [
+              "13",
+              "14",
+              "26",
+              "27"
+            ],
+            "value": "14",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          }
+        }
       }
     },
     "meta": {
@@ -230,55 +336,55 @@
       "editorFontSize": 12,
       "customEmbeddedElementLibraries": {},
       "theme": {
-        "bg1": "#DCEBF9",
-        "bg2": "#DCEBF9"
+        "bg1": "#394a59",
+        "bg2": "#394a59"
       },
       "projectType": "bcm20737",
       "name": "Robot"
     },
     "type": "Header",
-    "currentLayoutName": "iPhone4",
+    "currentLayoutName": "Default",
     "currentCloudLayoutName": "Default"
   },
   "layouts": {
     "Default": {
       "devicename": ".*",
       "elements": {
-        "Button10": {
-          "y": 138,
-          "x": 231.5,
-          "height": 84,
-          "width": 305
+        "Button1": {
+          "x": 391,
+          "y": 376,
+          "width": 146,
+          "height": 129
         },
         "Button2": {
-          "y": 236,
           "x": 231,
-          "height": 128,
-          "width": 146
-        },
-        "Button1": {
-          "y": 376,
-          "x": 391,
-          "height": 129,
-          "width": 146
+          "y": 236,
+          "width": 146,
+          "height": 128
         },
         "leftBackButton": {
-          "y": 378,
           "x": 231,
-          "height": 128,
-          "width": 146
+          "y": 378,
+          "width": 146,
+          "height": 128
         },
         "Button4": {
-          "y": 236,
           "x": 391,
-          "height": 128,
-          "width": 146
+          "y": 236,
+          "width": 146,
+          "height": 128
         },
         "Button9": {
-          "y": 519,
           "x": 230.5,
-          "height": 84,
-          "width": 307
+          "y": 519,
+          "width": 307,
+          "height": 84
+        },
+        "Button10": {
+          "x": 231.5,
+          "y": 138,
+          "width": 305,
+          "height": 84
         }
       },
       "orientation": "portrait",
@@ -458,7 +564,9 @@
         "overBottomColor": "rgb(214, 214, 214)",
         "disabledTopColor": "rgb(211, 211, 211)",
         "disabledBottomColor": "rgb(211, 211, 211)",
-        "elementType": "element"
+        "elementType": "element",
+        "airID": 0,
+        "elementPanel": "designer"
       },
       "triggers": {
         "mouseReleased": [
@@ -519,7 +627,9 @@
         "overBottomColor": "rgb(214, 214, 214)",
         "disabledTopColor": "rgb(211, 211, 211)",
         "disabledBottomColor": "rgb(211, 211, 211)",
-        "elementType": "element"
+        "elementType": "element",
+        "airID": 1,
+        "elementPanel": "designer"
       },
       "triggers": {
         "mouseReleased": [
@@ -580,7 +690,9 @@
         "overBottomColor": "rgb(214, 214, 214)",
         "disabledTopColor": "rgb(211, 211, 211)",
         "disabledBottomColor": "rgb(211, 211, 211)",
-        "elementType": "element"
+        "elementType": "element",
+        "airID": 2,
+        "elementPanel": "designer"
       },
       "triggers": {
         "mouseReleased": [
@@ -641,7 +753,9 @@
         "overBottomColor": "rgb(214, 214, 214)",
         "disabledTopColor": "rgb(211, 211, 211)",
         "disabledBottomColor": "rgb(211, 211, 211)",
-        "elementType": "element"
+        "elementType": "element",
+        "airID": 3,
+        "elementPanel": "designer"
       },
       "triggers": {
         "mouseReleased": [
@@ -690,13 +804,15 @@
     "forwardLeft": {
       "type": "GPIOWrite",
       "properties": {
-        "code": "\n\t\n\tif(AIR_GPIO_GetMode(26) != AIR_GPIO_OUTPUT_OPEN_DRAIN_NO_PULL)\n\t{\n\t\tAIR_GPIO_SetMode(26, AIR_GPIO_OUTPUT_OPEN_DRAIN_NO_PULL);\n\t}\n\n\tif(data)\n\t{\n\t\tAIR_GPIO_Write(26, 1);\n\t}\n\t\n\telse\n\t{\n\t\tAIR_GPIO_Write(26, 0);\n\t}\n\t\n\treturn;\n\t",
+        "code": "\n\t\n\tif(AIR_GPIO_GetMode(26) != AIR_GPIO_OUTPUT_PUSH_PULL)\n\t{\n\t\tAIR_GPIO_SetMode(26, AIR_GPIO_OUTPUT_PUSH_PULL);\n\t}\n\n\tif(data)\n\t{\n\t\tAIR_GPIO_Write(26, 1);\n\t}\n\t\n\telse\n\t{\n\t\tAIR_GPIO_Write(26, 0);\n\t}\n\t\n\treturn;\n\t",
         "pin": "27",
         "permission": "public",
         "length": "128",
         "returnType": "void",
         "inputType": "bool",
-        "elementType": "element"
+        "elementType": "element",
+        "airID": 4,
+        "elementPanel": "designer"
       },
       "triggers": {},
       "zindex": 5,
@@ -708,13 +824,15 @@
     "backLeft": {
       "type": "GPIOWrite",
       "properties": {
-        "code": "\n\t\n\tif(AIR_GPIO_GetMode(27) != AIR_GPIO_OUTPUT_OPEN_DRAIN_NO_PULL)\n\t{\n\t\tAIR_GPIO_SetMode(27, AIR_GPIO_OUTPUT_OPEN_DRAIN_NO_PULL);\n\t}\n\n\tif(data)\n\t{\n\t\tAIR_GPIO_Write(27, 1);\n\t}\n\t\n\telse\n\t{\n\t\tAIR_GPIO_Write(27, 0);\n\t}\n\t\n\treturn;\n\t",
+        "code": "\n\t\n\tif(AIR_GPIO_GetMode(27) != AIR_GPIO_OUTPUT_PUSH_PULL)\n\t{\n\t\tAIR_GPIO_SetMode(27, AIR_GPIO_OUTPUT_PUSH_PULL);\n\t}\n\n\tif(data)\n\t{\n\t\tAIR_GPIO_Write(27, 1);\n\t}\n\t\n\telse\n\t{\n\t\tAIR_GPIO_Write(27, 0);\n\t}\n\t\n\treturn;\n\t",
         "pin": "26",
         "permission": "public",
         "length": "128",
         "returnType": "void",
         "inputType": "bool",
-        "elementType": "element"
+        "elementType": "element",
+        "airID": 5,
+        "elementPanel": "designer"
       },
       "triggers": {},
       "zindex": 6,
@@ -726,13 +844,15 @@
     "forwardRight": {
       "type": "GPIOWrite",
       "properties": {
-        "code": "\n\t\n\tif(AIR_GPIO_GetMode(13) != AIR_GPIO_OUTPUT_OPEN_DRAIN_NO_PULL)\n\t{\n\t\tAIR_GPIO_SetMode(13, AIR_GPIO_OUTPUT_OPEN_DRAIN_NO_PULL);\n\t}\n\n\tif(data)\n\t{\n\t\tAIR_GPIO_Write(13, 1);\n\t}\n\t\n\telse\n\t{\n\t\tAIR_GPIO_Write(13, 0);\n\t}\n\t\n\treturn;\n\t",
+        "code": "\n\t\n\tif(AIR_GPIO_GetMode(13) != AIR_GPIO_OUTPUT_PUSH_PULL)\n\t{\n\t\tAIR_GPIO_SetMode(13, AIR_GPIO_OUTPUT_PUSH_PULL);\n\t}\n\n\tif(data)\n\t{\n\t\tAIR_GPIO_Write(13, 1);\n\t}\n\t\n\telse\n\t{\n\t\tAIR_GPIO_Write(13, 0);\n\t}\n\t\n\treturn;\n\t",
         "pin": "14",
         "permission": "public",
         "length": "128",
         "returnType": "void",
         "inputType": "bool",
-        "elementType": "element"
+        "elementType": "element",
+        "airID": 6,
+        "elementPanel": "designer"
       },
       "triggers": {},
       "zindex": 7,
@@ -744,13 +864,15 @@
     "backRight": {
       "type": "GPIOWrite",
       "properties": {
-        "code": "\n\t\n\tif(AIR_GPIO_GetMode(14) != AIR_GPIO_OUTPUT_OPEN_DRAIN_NO_PULL)\n\t{\n\t\tAIR_GPIO_SetMode(14, AIR_GPIO_OUTPUT_OPEN_DRAIN_NO_PULL);\n\t}\n\n\tif(data)\n\t{\n\t\tAIR_GPIO_Write(14, 1);\n\t}\n\t\n\telse\n\t{\n\t\tAIR_GPIO_Write(14, 0);\n\t}\n\t\n\treturn;\n\t",
+        "code": "\n\t\n\tif(AIR_GPIO_GetMode(14) != AIR_GPIO_OUTPUT_PUSH_PULL)\n\t{\n\t\tAIR_GPIO_SetMode(14, AIR_GPIO_OUTPUT_PUSH_PULL);\n\t}\n\n\tif(data)\n\t{\n\t\tAIR_GPIO_Write(14, 1);\n\t}\n\t\n\telse\n\t{\n\t\tAIR_GPIO_Write(14, 0);\n\t}\n\t\n\treturn;\n\t",
         "pin": "13",
         "permission": "public",
         "length": "128",
         "returnType": "void",
         "inputType": "bool",
-        "elementType": "element"
+        "elementType": "element",
+        "airID": 7,
+        "elementPanel": "designer"
       },
       "triggers": {},
       "zindex": 8,
@@ -774,7 +896,9 @@
         "overBottomColor": "rgb(214, 214, 214)",
         "disabledTopColor": "rgb(211, 211, 211)",
         "disabledBottomColor": "rgb(211, 211, 211)",
-        "elementType": "element"
+        "elementType": "element",
+        "airID": 8,
+        "elementPanel": "designer"
       },
       "triggers": {
         "mouseReleased": [
@@ -835,7 +959,9 @@
         "overBottomColor": "rgb(214, 214, 214)",
         "disabledTopColor": "rgb(211, 211, 211)",
         "disabledBottomColor": "rgb(211, 211, 211)",
-        "elementType": "element"
+        "elementType": "element",
+        "airID": 9,
+        "elementPanel": "designer"
       },
       "triggers": {
         "mouseReleased": [
@@ -889,7 +1015,9 @@
         "code": "    backLeft(data);\n    backRight(data);",
         "inputType": "bool",
         "permission": "public",
-        "elementType": "element"
+        "elementType": "element",
+        "airID": 10,
+        "elementPanel": "designer"
       },
       "triggers": {},
       "zindex": 11,
@@ -906,7 +1034,9 @@
         "code": "    forwardLeft(data);\n    forwardRight(data);",
         "inputType": "bool",
         "permission": "public",
-        "elementType": "element"
+        "elementType": "element",
+        "airID": 11,
+        "elementPanel": "designer"
       },
       "triggers": {},
       "zindex": 12,
