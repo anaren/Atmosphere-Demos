@@ -34,7 +34,7 @@
       },
       "Setup": {
         "close": "}",
-        "code": "\tAIR_GPIO_Init();\n\tAIR_UART_Init();\n\tAIR_I2C_Init();\n\tAIR_SPI_Init();\n\tBUZZER_Init();\n\tadc_config();\n\tAIR_ADC_Enable(15);",
+        "code": "\tAIR_GPIO_Init();\n\tAIR_UART_Init();\n\tAIR_I2C_Init();\n\tAIR_SPI_Init();\n\tBUZZER_Init();\n\tAIR_ADC_Enable(15);",
         "name": "Setup",
         "func": "\nvoid setup() {"
       }
