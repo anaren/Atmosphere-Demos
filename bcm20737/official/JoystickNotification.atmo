@@ -1,0 +1,496 @@
+{
+  "header": {
+    "data": {
+      "order": [
+        "Globals",
+        "Interval",
+        "Connected",
+        "Disconnected",
+        "Setup"
+      ],
+      "Globals": {
+        "name": "Globals",
+        "func": "#include \"callbacks.h\"",
+        "code": "#include \"xra1201/xra1201.h\"\n\n#define PIN_GREEN  27\n#define PIN_RED    26\n#define PIN_BLUE   13\n",
+        "close": "//END"
+      },
+      "Interval": {
+        "name": "Interval",
+        "func": "\nvoid interval() {",
+        "code": "    static bool pushed = false;\n    static int pushedCounter = 0;\n    // Read in the 5-way switch, and process it\n    uint16 interruptStatus= XRA1201_GetInterruptStatus(17);\n    uint16 interruptEnabled = XRA1201_GetInterruptEnable(17);\n    uint16 pinStatus= XRA1201_GetGpioState(17);\n    uint16 buttonPress = interruptStatus & interruptEnabled & pinStatus & 0x1F;\n    if(pinStatus & 0x0008) {  // Left (A)\n        AIR_GPIO_Write(PIN_RED, 0); AIR_GPIO_Write(PIN_GREEN, 0); AIR_GPIO_Write(PIN_BLUE, 1);\n    }\n    if(pinStatus & 0x0010) {  // Up (B)\n        AIR_GPIO_Write(PIN_RED, 1); AIR_GPIO_Write(PIN_GREEN, 1); AIR_GPIO_Write(PIN_BLUE, 1);\n    }\n    if(pinStatus & 0x0002) {  // Down (C)\n        AIR_GPIO_Write(PIN_RED, 0); AIR_GPIO_Write(PIN_GREEN, 1); AIR_GPIO_Write(PIN_BLUE, 0);\n    }    \n    if(pinStatus & 0x0001) {  // Right (D)\n        AIR_GPIO_Write(PIN_RED, 1); AIR_GPIO_Write(PIN_GREEN, 0); AIR_GPIO_Write(PIN_BLUE, 0);\n    }    \n    if(pinStatus & 0x0004) {  // Center (E)\n        AIR_GPIO_Write(PIN_RED, 1); AIR_GPIO_Write(PIN_GREEN, 0); AIR_GPIO_Write(PIN_BLUE, 1);\n        if(!pushed){\n            char notifyString[20];\n            sprintf(notifyString, \"pushed %d times\", ++pushedCounter);\n            ATMOSPHERE_NotifyFunction(ID_DataForLabel, notifyString);\n        }\n        pushed = true;\n    }\n    else{\n        pushed = false;\n    }",
+        "close": "}"
+      },
+      "Connected": {
+        "name": "Connected",
+        "func": "\nvoid connected() {",
+        "code": "    ",
+        "close": "}"
+      },
+      "Disconnected": {
+        "name": "Disconnected",
+        "func": "\nvoid disconnected() {",
+        "code": "    ",
+        "close": "}"
+      },
+      "Setup": {
+        "name": "Setup",
+        "func": "\nvoid setup() {",
+        "code": "    AIR_GPIO_Init();\n\tAIR_UART_Init();\n\tAIR_SPI_Init();\n\tBUZZER_Init();\n\tAIR_POWER_Init();\n    AIR_POWER_SetMode(AIR_POWER_NOSLEEP);\t\n    // Initialize the JoyStick and LED's\n\tXRA1201_SetInputPolarityInversion(17, 0xFFFF);     \t// invert all pins so that the active low inputs read back as logic '1'\n    XRA1201_SetInterruptFilterEnable(17, 0xFFFF);       // enable input filter on all pins\n    XRA1201_SetInterruptEnable(17, 0x0000);             // disable all inturrupts\n    XRA1201_GetGpioState(17);\n    AIR_GPIO_SetMode(PIN_RED, AIR_GPIO_OUTPUT_OPEN_DRAIN_NO_PULL); // set as output\n    AIR_GPIO_SetMode(PIN_GREEN, AIR_GPIO_OUTPUT_OPEN_DRAIN_NO_PULL); // set as output\n    AIR_GPIO_SetMode(PIN_BLUE, AIR_GPIO_OUTPUT_OPEN_DRAIN_NO_PULL); // set as output\n \n",
+        "close": "}"
+      }
+    },
+    "boardConfiguration": {
+      "ble": {
+        "name": "Bluetooth Low Energy",
+        "file": "ble_config.h",
+        "values": {
+          "localName": {
+            "name": "Local Name",
+            "input": "TextField",
+            "prefix": "#define BLE_LOCAL_NAME \"",
+            "value": "JoyStick",
+            "suffix": "\"",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "version": {
+            "name": "Version",
+            "input": "TextField",
+            "prefix": "#define BLE_VERSION \"",
+            "value": "1.00",
+            "suffix": "\"",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "txPowerLevel": {
+            "name": "TX Power Level (dbm) (Default: 4)",
+            "input": "TextField",
+            "prefix": "#define BLE_TX_POWER_LEVEL ",
+            "value": "4",
+            "regex": "^[0-9]*$"
+          },
+          "intervalFineTimer": {
+            "name": "Interval Timer Length (ms) (Default: 1000)",
+            "input": "TextField",
+            "prefix": "#define BLE_INTERVAL_FINE_TIMER ",
+            "value": "10",
+            "regex": "^[0-9]*$"
+          },
+          "pairing": {
+            "name": "Pairing",
+            "input": "Combo",
+            "prefix": "#define ",
+            "options": [
+              "BLE_PAIRING_NONE",
+              "BLE_PAIRING_PASSKEY",
+              "BLE_PAIRING_OOB"
+            ],
+            "value": "BLE_PAIRING_NONE",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "ota": {
+            "name": "Over the Air Updating",
+            "input": "Combo",
+            "prefix": "#define BLE_",
+            "options": [
+              "OTA",
+              "NO_OTA"
+            ],
+            "value": "OTA",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "minInterval": {
+            "name": "BLE Min Interval (ms) (Default: 20)",
+            "input": "TextField",
+            "prefix": "#define BLE_INTERVAL_MIN ",
+            "value": "20",
+            "regex": "^[0-9]*$"
+          },
+          "maxInterval": {
+            "name": "BLE Max Interval (ms) (Default: 40)",
+            "input": "TextField",
+            "prefix": "#define BLE_INTERVAL_MAX ",
+            "value": "40",
+            "regex": "^[0-9]*$"
+          },
+          "slaveLatency": {
+            "name": "BLE Slave Latency (ms) (Default: 0)",
+            "input": "TextField",
+            "prefix": "#define BLE_SLAVE_LATENCY ",
+            "value": "0",
+            "regex": "^[0-9]*$"
+          },
+          "timeout": {
+            "name": "BLE Connection Timeout (ms) (Default: 700)",
+            "input": "TextField",
+            "prefix": "#define BLE_CONNECTION_TIMEOUT ",
+            "value": "700",
+            "regex": "^[0-9]*$"
+          }
+        }
+      },
+      "power": {
+        "name": "Power Driver",
+        "file": "power_config.h",
+        "values": {
+          "external_osc": {
+            "name": "External Oscillator",
+            "input": "Combo",
+            "prefix": "#define AIR_POWER_",
+            "options": [
+              "EXTERNAL_32KHZ_OSC",
+              "INTERNAL_OSC"
+            ],
+            "value": "INTERNAL_OSC",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          }
+        }
+      },
+      "gpio": {
+        "name": "GPIO Driver",
+        "file": "gpio_config.h",
+        "values": {
+          "buad": {
+            "name": "ADC Sample Frequency",
+            "input": "Combo",
+            "prefix": "#define AIR_ADC_SAMPLE_FREQUENCY ",
+            "options": [
+              "ADC_SAMPLE_FREQUENCY_LOW",
+              "ADC_SAMPLE_FREQUENCY_MEDIUM_LOW",
+              "ADC_SAMPLE_FREQUENCY_MEDIUM",
+              "ADC_SAMPLE_FREQUENCY_MEDIUM_HIGH",
+              "ADC_SAMPLE_FREQUENCY_HIGH"
+            ],
+            "value": "ADC_SAMPLE_FREQUENCY_LOW",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "pwmClockSource": {
+            "name": "PWM Clock Source",
+            "input": "Combo",
+            "prefix": "#define AIR_PWM_CLOCK_SOURCE ",
+            "options": [
+              "PMU_CLK",
+              "LHL_CLK"
+            ],
+            "value": "PMU_CLK",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          }
+        }
+      },
+      "uart": {
+        "name": "AIR UART Driver",
+        "file": "uart_config.h",
+        "values": {
+          "rxBuffer": {
+            "name": "RX Circular Buffer size",
+            "input": "TextField",
+            "prefix": "#define AIR_UART_RX_CIRCULAR_BUFFER_SIZE ",
+            "value": "128",
+            "regex": "^[0-9]*$"
+          },
+          "txBuffer": {
+            "name": "TX Circular Buffer size",
+            "input": "TextField",
+            "prefix": "#define AIR_UART_TX_CIRCULAR_BUFFER_SIZE ",
+            "value": "128",
+            "regex": "^[0-9]*$"
+          },
+          "buad": {
+            "name": "Baudrate",
+            "input": "Combo",
+            "prefix": "#define ",
+            "options": [
+              "AIR_UART_BAUD_115200",
+              "AIR_UART_BAUD_57600",
+              "AIR_UART_BAUD_9600"
+            ],
+            "value": "AIR_UART_BAUD_115200",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "txPin": {
+            "name": "TX Pin",
+            "input": "Combo",
+            "prefix": "#define AIR_UART_TX_PIN ",
+            "options": [
+              "32"
+            ],
+            "value": "32",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "rxPin": {
+            "name": "RX Pin",
+            "input": "Combo",
+            "prefix": "#define AIR_UART_RX_PIN ",
+            "options": [
+              "33"
+            ],
+            "value": "33",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "rtsPin": {
+            "name": "RTS Pin",
+            "input": "Combo",
+            "prefix": "#define AIR_UART_RTS_PIN ",
+            "options": [
+              "1"
+            ],
+            "value": "1",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "ctsPin": {
+            "name": "CTS Pin",
+            "input": "Combo",
+            "prefix": "#define AIR_UART_CTS_PIN ",
+            "options": [
+              "3"
+            ],
+            "value": "3",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          }
+        }
+      },
+      "spi": {
+        "name": "AIR SPI Driver",
+        "file": "spi_config.h",
+        "values": {
+          "speed": {
+            "name": "SPI Speed",
+            "input": "Combo",
+            "prefix": "#define AIR_SPI_SPEED ",
+            "options": [
+              "1000000",
+              "500000"
+            ],
+            "value": "1000000",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "mode": {
+            "name": "SPI Mode",
+            "input": "Combo",
+            "prefix": "#define AIR_SPI_MODE ",
+            "options": [
+              "SPI_MODE_0",
+              "SPI_MODE_1",
+              "SPI_MODE_2",
+              "SPI_MODE_3"
+            ],
+            "value": "SPI_MODE_3",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          }
+        }
+      },
+      "buzzer": {
+        "name": "Buzzer Driver",
+        "file": "buzzer_config.h",
+        "values": {
+          "pin": {
+            "name": "Buzzer Pin",
+            "input": "Combo",
+            "prefix": "#define BUZZER_PWM_PIN ",
+            "options": [
+              "13",
+              "14",
+              "26",
+              "27"
+            ],
+            "value": "14",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          }
+        }
+      }
+    },
+    "meta": {
+      "version": "1.5.1",
+      "layoutGrid": true,
+      "layoutSnapping": false,
+      "layoutSnappingSize": 20,
+      "cloudLayoutGrid": false,
+      "cloudLayoutSnapping": false,
+      "cloudLayoutSnappingSize": 10,
+      "language": "en",
+      "enableTooltips": true,
+      "enableAutoSave": true,
+      "enableBuildSave": false,
+      "description": "Joystick Example",
+      "project_uuid": null,
+      "tokensEnabled": false,
+      "codeAssist": false,
+      "highlightLine": false,
+      "editorTheme": "Default",
+      "editorFontSize": 12,
+      "customEmbeddedElementLibraries": {
+        "xra1201": {
+          "files": {
+            "common": {
+              "headers": {
+                "xra1201.h": "// Copyright (c) 2014, Anaren Inc.\r\n// All rights reserved.\r\n// \r\n// Redistribution and use in source and binary forms, with or without\r\n// modification, are permitted provided that the following conditions are met:\r\n// \r\n// 1. Redistributions of source code must retain the above copyright notice, this\r\n//    list of conditions and the following disclaimer. \r\n// 2. Redistributions in binary form must reproduce the above copyright notice,\r\n//    this list of conditions and the following disclaimer in the documentation\r\n//    and/or other materials provided with the distribution.\r\n// \r\n// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS \"AS IS\" AND\r\n// ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED\r\n// WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE\r\n// DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR\r\n// ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES\r\n// (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;\r\n// LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND\r\n// ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT\r\n// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS\r\n// SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.\r\n// \r\n// The views and conclusions contained in the software and documentation are those\r\n// of the authors and should not be interpreted as representing official policies, \r\n// either expressed or implied, of the FreeBSD Project.\r\n\r\n#ifndef XRA1201_H\r\n#define XRA1201_H\r\n\r\n#include \"types.h\"\r\n#include \"../i2c/i2c.h\"\r\n\r\n//------------------------------------------------------------------------------\r\n/**\r\n *  Defines, enumerations, and structure definitions\r\n */\r\n#ifndef bool\r\n#define bool uint8\r\n#endif\r\n\r\n#ifndef true\r\n#define true 1\r\n#endif\r\n\r\n#ifndef false\r\n#define false 0\r\n#endif\r\n\r\n\r\n/**\r\nWrite a 16-bit value to a device register.  All of the XRA1201 registers are\r\nread/write except for the GPIO State Register and Input Interrupt Status\r\nRegister.  This function does not do any form of error checking, so trying to\r\nwrite to one of the read-only registers may result in undesirable behavior.\r\n@param id device ID (0 to 31) on i2c bus\r\n@param addr device register address\r\n@param data data to be written to the specified register address\r\n*/\r\nvoid XRA1201_WriteReg(uint8 id, uint8 addr, uint16 data);\r\n\r\n/**\r\nRead a 16-bit value from a device register.\r\n@param id device ID (0 to 31) on i2c bus\r\n@param addr device register address\r\n@return data read from the specified register address\r\n*/\r\nuint16 XRA1201_ReadReg(uint8 id, uint8 addr);\r\n\r\n/**\r\nRead the current state of the GPIO pins. The value will be inverted for input\r\npins configured for Input Polarity Inversion in the PIR register.  For pins\r\nconfigured as outputs, the last value written to the OCR register will be\r\nreturned.  Calling this function clears the XRA1201 interrupt.\r\n@param id device ID (0 to 31) on i2c bus\r\n@return current value in the GSR register\r\n*/\r\nuint16 XRA1201_GetGpioState(uint8 id);\r\n\r\n/**\r\nChange the state of the GPIO output pins by writing to the OCR register.\r\n@param id device ID (0 to 31) on i2c bus\r\n@param data specifies the new state of the GPIO output pins\r\n*/\r\nvoid XRA1201_SetOutputValue(uint8 id, uint16 data);\r\n\r\n/**\r\nRead the last value written by the XRA1201_SetOutputValue() function.  The\r\ndefault value following power-up is 0xFFFF.\r\n@param id device ID (0 to 31) on i2c bus\r\n@return current value in the OCR register\r\n*/\r\nuint16 XRA1201_GetOutputValue(uint8 id);\r\n\r\n/**\r\nEnable/disable polarity inversion on GPIO input pins.  Setting a bit to '1'\r\ninverts the corresponding GPIO input pin value returned when reading the GSR\r\nregister.\r\n@param id device ID (0 to 31) on i2c bus\r\n@param data specifies which GPIO input pins to invert\r\n*/\r\nvoid XRA1201_SetInputPolarityInversion(uint8 id, uint16 data);\r\n\r\n/**\r\nRead the last value written by the XRA1201_SetInputPolarityInversion() function.\r\nThe default value following power-up is 0x0000.\r\n@param id device ID (0 to 31) on i2c bus\r\n@return current value in the PIR register\r\n*/\r\nuint16 XRA1201_GetInputPolarityInversion(uint8 id);\r\n\r\n/**\r\nSelect GPIO pin direction.  Setting a bit to '0' configures the corresponding\r\nGPIO pin as an output while setting the bit to '1' configures the GPIO pin as an\r\ninput.\r\n@param id device ID (0 to 31) on i2c bus\r\n@param data GPIO pin direction\r\n*/\r\nvoid XRA1201_SetPinDirection(uint8 id, uint16 data);\r\n\r\n/**\r\nRead the last value written by the XRA1201_SetPinDirection() function. The\r\ndefault value following power-up is 0xFFFF.\r\n@param id device ID (0 to 31) on i2c bus\r\n@return current value in the GCR register\r\n*/\r\nuint16 XRA1201_GetPinDirection(uint8 id);\r\n\r\n/**\r\nEnable/disable internal pull-up resistor on GPIO input pins.  Setting a bit to\r\n'1' enables the pull-up on the corresponding GPIO input pin.\r\n@param id device ID (0 to 31) on i2c bus\r\n@param data specifies which GPIO input pins to pull-up internally\r\n*/\r\nvoid XRA1201_SetInputPullupEnable(uint8 id, uint16 data);\r\n\r\n/**\r\nRead the last value written by the XRA1201_SetInputPullupEnable() function.  The\r\ndefault value following power-up is 0x0000 for the XRA1201 and 0xFFFF for the\r\nXRA1201P.\r\n@param id device ID (0 to 31) on i2c bus\r\n@return current value in the PUR register\r\n*/\r\nuint16 XRA1201_GetInputPullupEnable(uint8 id);\r\n\r\n/**\r\nEnable/disable interrupts on GPIO input pins.  Setting a bit to '1' enables the\r\ninterrupt on the corresponding GPIO input pin.\r\n@param id device ID (0 to 31) on i2c bus\r\n@param data specifies which GPIO input pins to configure with interrupts enabled\r\n*/\r\nvoid XRA1201_SetInterruptEnable(uint8 id, uint16 data);\r\n\r\n/**\r\nRead the last value written by the XRA1201_SetInterruptEnable() function. The\r\ndefault value following power-up is 0x0000.\r\n@param id device ID (0 to 31) on i2c bus\r\n@return current value in the IER register\r\n*/\r\nuint16 XRA1201_GetInterruptEnable(uint8 id);\r\n\r\n/**\r\nEnable/disable tri-state mode on GPIO output pins.  Setting a bit to '1' enables\r\nthe tri-state mode on the corresponding GPIO output pin.\r\n@param id device ID (0 to 31) on i2c bus\r\n@param data specifies which GPIO output pins to configure for tri-state mode\r\n*/\r\nvoid XRA1201_SetOutputThreeStateEnable(uint8 id, uint16 data);\r\n\r\n/**\r\nRead the last value written by the XRA1201_SetOutputThreeStateEnable() function.\r\nThe default value following power-up is 0x0000.\r\n@param id device ID (0 to 31) on i2c bus\r\n@return current value in the TSCR register\r\n*/\r\nuint16 XRA1201_GetOutputThreeStateEnable(uint8 id);\r\n\r\n/**\r\nRead the current status of the GPIO input pin interrupts.  A bit will be set to\r\n'1' if an interrupt occurred on the corresponding GPIO input pin.  The default\r\nvalue following power-up is 0x0000.\r\n@param id device ID (0 to 31) on i2c bus\r\n@return current value in the ISR register\r\n*/\r\nuint16 XRA1201_GetInterruptStatus(uint8 id);\r\n\r\n/**\r\nEnable/disable interrupts to be generated following the rising edge detection of\r\nthe GPIO input pins.  Setting a bit to '1' enables the interrupt to be generated\r\non the rising edge of the corresponding GPIO input pin.  See the XRA1201\r\ndatasheet for more details regarding the interrupt behavior.\r\n@param id device ID (0 to 31) on i2c bus\r\n@param data specifies which GPIO input pins are to generate interrupts on the\r\nrising edge\r\n*/\r\nvoid XRA1201_SetInterruptRisingEdgeEnable(uint8 id, uint16 data);\r\n\r\n/**\r\nRead the last value written by the XRA1201_SetInterruptRisingEdgeEnable()\r\nfunction. The default value following power-up is 0x0000.\r\n@param id device ID (0 to 31) on i2c bus\r\n@return current value in the REIR register\r\n*/\r\nuint16 XRA1201_GetInterruptRisingEdgeEnable(uint8 id);\r\n\r\n/**\r\nEnable/disable interrupts to be generated following the falling edge detection\r\nof the GPIO input pins.  Setting a bit to '1' enables the interrupt to be\r\ngenerated on the falling edge of the corresponding GPIO input pin.  See the\r\nXRA1201 datasheet for more details regarding the interrupt behavior.\r\n@param id device ID (0 to 31) on i2c bus\r\n@param data specifies which GPIO input pins are to generate interrupts on the\r\nfalling edge\r\n*/\r\nvoid XRA1201_SetInterruptFallingEdgeEnable(uint8 id, uint16 data);\r\n\r\n/**\r\nRead the last value written by the XRA1201_SetInterruptFallingEdgeEnable()\r\nfunction. The default value following power-up is 0x0000.\r\n@param id device ID (0 to 31) on i2c bus\r\n@return current value in the FEIR register\r\n*/\r\nuint16 XRA1201_GetInterruptFallingEdgeEnable(uint8 id);\r\n\r\n/**\r\nEnable/disable filtering on the GPIO input pins for generating interrupts.\r\nSetting a bit to '1' enables the interrupt filter of the corresponding GPIO\r\ninput pin.  See the XRA1201 datasheet for more details regarding the interrupt\r\nbehavior.\r\n@param id device ID (0 to 31) on i2c bus\r\n@param data specifies which GPIO input pins to configure with interrupt filters\r\n*/\r\nvoid XRA1201_SetInterruptFilterEnable(uint8 id, uint16 data);\r\n\r\n/**\r\nRead the last value written by the XRA1201_SetInterruptFilterEnable() function.\r\nThe default value following power-up is 0xFFFF.\r\n@param id device ID (0 to 31) on i2c bus\r\n@return current value in the IFR register\r\n*/\r\nuint16 XRA1201_GetInterruptFilterEnable(uint8 id);\r\n\r\n\r\n#endif  /* XRA1201_H */\r\n"
+              },
+              "objects": {
+                "xra1201_common.c": "/**\r\n *  ----------------------------------------------------------------------------\r\n *  Copyright (c) 2014, Anaren Microwave, Inc.\r\n *\r\n *  For more information on licensing, please see Anaren Microwave, Inc's\r\n *  end user software licensing agreement: EULA.txt.\r\n *\r\n *  ----------------------------------------------------------------------------\r\n *\r\n *  xra1201.h - driver interface for the Exar XRA1201 GPIO Expander.  The\r\n *  XRA1201 allows for up to 32 devices on a single i2c bus, therefore each\r\n *  function accepts a bus identifier in the range 0 - 31 to select which device\r\n *  is currently being accessed.  This ID is added to the device's base address\r\n *  of 0x10 to determine the final i2c address.\r\n *\r\n *  @version    1.0.00\r\n *  @date       09 Sep 2014\r\n *  @author     Anaren, air@anaren.com\r\n *\r\n *  assumptions\r\n *  ===========\r\n *  - The i2c driver provides the proper signaling sequences for read & write\r\n *    operations.\r\n *  - The i2c driver meets the timing requirements specified in the XRA1201\r\n *    datasheet.\r\n *\r\n *  file dependency\r\n *  ===============\r\n *  i2c.h : defines the i2c read & write interfaces.\r\n *\r\n *  revision history\r\n *  ================\r\n *  ver 1.0.00 : 09 Sep 2014\r\n *  - initial release\r\n */\r\n\r\n#include \"xra1201.h\"\r\n\r\n//------------------------------------------------------------------------------\r\n/**\r\n *  Defines, enumerations, and structure definitions\r\n */\r\n\r\n#define XRA1201_SLAVE_BASE_ADDR     0x10\r\n\r\n#define XRA1201_GSR1_REG_ADDR       0x00  // GPIO State P0-P7 (read only)\r\n#define XRA1201_GSR2_REG_ADDR       0x01  // GPIO State P8-P15 (read only)\r\n#define XRA1201_OCR1_REG_ADDR       0x02  // Output Control P0-P7\r\n#define XRA1201_OCR2_REG_ADDR       0x03  // Output Control P8-P15\r\n#define XRA1201_PIR1_REG_ADDR       0x04  // Input Polarity Inversion P0-P7\r\n#define XRA1201_PIR2_REG_ADDR       0x05  // Input Polarity Inversion P8-P15\r\n#define XRA1201_GCR1_REG_ADDR       0x06  // GPIO Configuration P0-P7\r\n#define XRA1201_GCR2_REG_ADDR       0x07  // GPIO Configuration P8-P15\r\n#define XRA1201_PUR1_REG_ADDR       0x08  // Input Internal Pull-up Enable P0-P7\r\n#define XRA1201_PUR2_REG_ADDR       0x09  // Input Internal Pull-up Enable P8-P15\r\n#define XRA1201_IER1_REG_ADDR       0x0A  // Input Interrupt Enable P0-P7\r\n#define XRA1201_IER2_REG_ADDR       0x0B  // Input Interrupt Enable P8-P15\r\n#define XRA1201_TSCR1_REG_ADDR      0x0C  // Output 3-state Control P0-P7\r\n#define XRA1201_TSCR2_REG_ADDR      0x0D  // Output 3-state Control P8-P15\r\n#define XRA1201_ISR1_REG_ADDR       0x0E  // Input Interrupt Status P0-P7 (read only)\r\n#define XRA1201_ISR2_REG_ADDR       0x0F  // Input Interrupt Status P8-P15 (read only)\r\n#define XRA1201_REIR1_REG_ADDR      0x10  // Input Rising Edge Interrupt Enable P0-P7\r\n#define XRA1201_REIR2_REG_ADDR      0x11  // Input Rising Edge Interrupt Enable P8-P15\r\n#define XRA1201_FEIR1_REG_ADDR      0x12  // Input Falling Edge Interrupt Enable P0-P7\r\n#define XRA1201_FEIR2_REG_ADDR      0x13  // Input Falling Edge Interrupt Enable P8-P15\r\n#define XRA1201_IFR1_REG_ADDR       0x14  // Input Filter Enable P0-P7\r\n#define XRA1201_IFR2_REG_ADDR       0x15  // Input Filter Enable P8-P15\r\n\r\n// -----------------------------------------------------------------------------\r\n/**\r\n *  Global data\r\n */\r\n\r\n// -----------------------------------------------------------------------------\r\n/**\r\n *  Private interface\r\n */\r\n\r\n// -----------------------------------------------------------------------------\r\n/**\r\n *  Public interface\r\n */\r\n\r\nvoid XRA1201_WriteReg(uint8 id, uint8 addr, uint16 data)\r\n{\r\n  uint8 writeBytes[2];\r\n\r\n  writeBytes[0] = addr;\r\n  writeBytes[1] = data;\r\n  AIR_I2C_Write(XRA1201_SLAVE_BASE_ADDR + id, writeBytes, 2);\r\n}\r\n\r\nuint16 XRA1201_ReadReg(uint8 id, uint8 addr)\r\n{\r\n  uint8 writeBytes[1];\r\n  uint8 readBytes[1];\r\n\r\n  writeBytes[0] = addr;\r\n  AIR_I2C_ComboRead(XRA1201_SLAVE_BASE_ADDR + id, writeBytes, 1, readBytes, 1);\r\n  return readBytes[0];\r\n}\r\n\r\nuint16 XRA1201_GetGpioState(uint8 id)\r\n{\r\n  uint16 returnValue = XRA1201_ReadReg(id, XRA1201_GSR1_REG_ADDR);\r\n  \r\n  returnValue |= (uint16)XRA1201_ReadReg(id, XRA1201_GSR2_REG_ADDR) << 8;\r\n  return returnValue;\r\n}\r\n\r\nvoid XRA1201_SetOutputValue(uint8 id, uint16 data)\r\n{\r\n  XRA1201_WriteReg(id, XRA1201_OCR1_REG_ADDR, (data >> 0) & 0xFF);\r\n  XRA1201_WriteReg(id, XRA1201_OCR2_REG_ADDR, (data >> 8) & 0xFF);\r\n}\r\n\r\nuint16 XRA1201_GetOutputValue(uint8 id)\r\n{\r\n  uint16 returnValue = XRA1201_ReadReg(id, XRA1201_OCR1_REG_ADDR);\r\n  \r\n  returnValue |= (uint16)XRA1201_ReadReg(id, XRA1201_OCR2_REG_ADDR) << 8;\r\n  return returnValue;\r\n}\r\n\r\nvoid XRA1201_SetInputPolarityInversion(uint8 id, uint16 data)\r\n{\r\n  XRA1201_WriteReg(id, XRA1201_PIR1_REG_ADDR, (data >> 0) & 0xFF);\r\n  XRA1201_WriteReg(id, XRA1201_PIR2_REG_ADDR, (data >> 8) & 0xFF);\r\n}\r\n\r\nuint16 XRA1201_GetInputPolarityInversion(uint8 id)\r\n{\r\n  uint16 returnValue = XRA1201_ReadReg(id, XRA1201_PIR1_REG_ADDR);\r\n  \r\n  returnValue |= (uint16)XRA1201_ReadReg(id, XRA1201_PIR2_REG_ADDR) << 8;\r\n  return returnValue;\r\n}\r\n\r\nvoid XRA1201_SetPinDirection(uint8 id, uint16 data)\r\n{\r\n  XRA1201_WriteReg(id, XRA1201_GCR1_REG_ADDR, (data >> 0) & 0xFF);\r\n  XRA1201_WriteReg(id, XRA1201_GCR2_REG_ADDR, (data >> 8) & 0xFF);\r\n}\r\n\r\nuint16 XRA1201_GetPinDirection(uint8 id)\r\n{\r\n  uint16 returnValue = XRA1201_ReadReg(id, XRA1201_GCR1_REG_ADDR);\r\n  \r\n  returnValue |= (uint16)XRA1201_ReadReg(id, XRA1201_GCR2_REG_ADDR) << 8;\r\n  return returnValue;\r\n}\r\n\r\nvoid XRA1201_SetInputPullupEnable(uint8 id, uint16 data)\r\n{\r\n  XRA1201_WriteReg(id, XRA1201_PUR1_REG_ADDR, (data >> 0) & 0xFF);\r\n  XRA1201_WriteReg(id, XRA1201_PUR2_REG_ADDR, (data >> 8) & 0xFF);\r\n}\r\n\r\nuint16 XRA1201_GetInputPullupEnable(uint8 id)\r\n{\r\n  uint16 returnValue = XRA1201_ReadReg(id, XRA1201_PUR1_REG_ADDR);\r\n  \r\n  returnValue |= (uint16)XRA1201_ReadReg(id, XRA1201_PUR2_REG_ADDR) << 8;\r\n  return returnValue;\r\n}\r\n\r\nvoid XRA1201_SetInterruptEnable(uint8 id, uint16 data)\r\n{\r\n  XRA1201_WriteReg(id, XRA1201_IER1_REG_ADDR, (data >> 0) & 0xFF);\r\n  XRA1201_WriteReg(id, XRA1201_IER2_REG_ADDR, (data >> 8) & 0xFF);\r\n}\r\n\r\nuint16 XRA1201_GetInterruptEnable(uint8 id)\r\n{\r\n  uint16 returnValue = XRA1201_ReadReg(id, XRA1201_IER1_REG_ADDR);\r\n  \r\n  returnValue |= (uint16)XRA1201_ReadReg(id, XRA1201_IER2_REG_ADDR) << 8;\r\n  return returnValue;\r\n}\r\n\r\nvoid XRA1201_SetOutputThreeStateEnable(uint8 id, uint16 data)\r\n{\r\n  XRA1201_WriteReg(id, XRA1201_TSCR1_REG_ADDR, (data >> 0) & 0xFF);\r\n  XRA1201_WriteReg(id, XRA1201_TSCR2_REG_ADDR, (data >> 8) & 0xFF);\r\n}\r\n\r\nuint16 XRA1201_GetOutputThreeStateEnable(uint8 id)\r\n{\r\n  uint16 returnValue = XRA1201_ReadReg(id, XRA1201_TSCR1_REG_ADDR);\r\n  \r\n  returnValue |= (uint16)XRA1201_ReadReg(id, XRA1201_TSCR2_REG_ADDR) << 8;\r\n  return returnValue;\r\n}\r\n\r\nuint16 XRA1201_GetInterruptStatus(uint8 id)\r\n{\r\n  uint16 returnValue = XRA1201_ReadReg(id, XRA1201_ISR1_REG_ADDR);\r\n  \r\n  returnValue |= (uint16)XRA1201_ReadReg(id, XRA1201_ISR2_REG_ADDR) << 8;\r\n  return returnValue;\r\n}\r\n\r\nvoid XRA1201_SetInterruptRisingEdgeEnable(uint8 id, uint16 data)\r\n{\r\n  XRA1201_WriteReg(id, XRA1201_REIR1_REG_ADDR, (data >> 0) & 0xFF);\r\n  XRA1201_WriteReg(id, XRA1201_REIR2_REG_ADDR, (data >> 8) & 0xFF);\r\n}\r\n\r\nuint16 XRA1201_GetInterruptRisingEdgeEnable(uint8 id)\r\n{\r\n  uint16 returnValue = XRA1201_ReadReg(id, XRA1201_REIR1_REG_ADDR);\r\n  \r\n  returnValue |= (uint16)XRA1201_ReadReg(id, XRA1201_REIR2_REG_ADDR) << 8;\r\n  return returnValue;\r\n}\r\n\r\nvoid XRA1201_SetInterruptFallingEdgeEnable(uint8 id, uint16 data)\r\n{\r\n  XRA1201_WriteReg(id, XRA1201_FEIR1_REG_ADDR, (data >> 0) & 0xFF);\r\n  XRA1201_WriteReg(id, XRA1201_FEIR2_REG_ADDR, (data >> 8) & 0xFF);\r\n}\r\n\r\nuint16 XRA1201_GetInterruptFallingEdgeEnable(uint8 id)\r\n{\r\n  uint16 returnValue = XRA1201_ReadReg(id, XRA1201_FEIR1_REG_ADDR);\r\n  \r\n  returnValue |= (uint16)XRA1201_ReadReg(id, XRA1201_FEIR2_REG_ADDR) << 8;\r\n  return returnValue;\r\n}\r\n\r\nvoid XRA1201_SetInterruptFilterEnable(uint8 id, uint16 data)\r\n{\r\n  XRA1201_WriteReg(id, XRA1201_IFR1_REG_ADDR, (data >> 0) & 0xFF);\r\n  XRA1201_WriteReg(id, XRA1201_IFR2_REG_ADDR, (data >> 8) & 0xFF);\r\n}\r\n\r\nuint16 XRA1201_GetInterruptFilterEnable(uint8 id)\r\n{\r\n  uint16 returnValue = XRA1201_ReadReg(id, XRA1201_IFR1_REG_ADDR);\r\n  \r\n  returnValue |= (uint16)XRA1201_ReadReg(id, XRA1201_IFR2_REG_ADDR) << 8;\r\n  return returnValue;\r\n}\r\n"
+              },
+              "other": {}
+            }
+          },
+          "code": {
+            "setup": " \n",
+            "global": "#include xra1201/xra1201.h",
+            "connected": " \n",
+            "interval": " \n"
+          },
+          "description": "The XRA1201 is a 16-bit GPIO expander with an I2C/SMBus interface. After power-up, the XRA1201 has internal 100K ohm pull-up resistors on each I/O pin that can be individually enabled.\n\nIn addition, the GPIOs on the XRA1201 can individually be controlled and configured. As outputs, the GPIOs can be outputs that are high, low or in three-state mode. The three-state mode feature is useful for applications where the power is removed from the remote devices, but they may still be connected to the GPIO expander.\n\nAs inputs, the internal pull-up resistors can be enabled or disabled and the input polarity can be inverted. The interrupt can be programmed for different behaviors. The interrupts can be programmed to generate an interrupt on the rising edge, falling edge or on both edges. The interrupt can be cleared if the input changes back to its original state or by reading the current state of the inputs.\n\nThe XRA1201 are enhanced versions of other 16-bit GPIO expanders with an I2C/SMBus interface. The XRA1201 is pin and software compatible with the PCA9535, TCA9535 and MAX7312.\n\nThe XRA1201 are available in 24-pin QFN and 24-pin TSSOP packages.",
+          "language": {
+            "en": {
+              "label": "XRA1201 Driver"
+            }
+          },
+          "author": "Anaren Inc.",
+          "label": "XRA1201 Driver",
+          "elements": {},
+          "version": "1.0.0",
+          "signature": "",
+          "type": "Embedded Library",
+          "categories": [
+            "GPIO"
+          ],
+          "name": "xra1201"
+        }
+      },
+      "theme": {
+        "bg1": "#e9f3fb",
+        "bg2": "#DCEBF9"
+      },
+      "projectType": "bcm20737",
+      "name": "Joystick notify example"
+    },
+    "type": "Header",
+    "currentLayoutName": "Default"
+  },
+  "layouts": {
+    "Default": {
+      "name": "Default (768x1024)",
+      "width": 768,
+      "height": 1024,
+      "orientation": "portrait",
+      "devicename": ".*",
+      "platform": ".*",
+      "version": ".*",
+      "elements": {
+        "instructions": {
+          "x": 35,
+          "y": 23,
+          "width": 212,
+          "height": 307
+        },
+        "Label2": {
+          "x": 35,
+          "y": 344,
+          "width": 212,
+          "height": 30
+        }
+      }
+    }
+  },
+  "cloudLayouts": {},
+  "elements": {
+    "instructions": {
+      "type": "Label",
+      "properties": {
+        "label": "JoyStick Notification Example\n\nMove the Joystick and the color\nshould change per the below.\n\nLeft -- Blue\nRight -- Red\nUp -- White\nDown -- Green\nPush -- Purple\n\nWhen the joystick is pushed,\nthis connected mobile device\nwill vibrate for 500ms, and\nthe label below will display\nhow many times the joystick\nhas been pushed.",
+        "enabled": true,
+        "visible": true,
+        "font": "14px Arial",
+        "color": "Black",
+        "elementType": "element"
+      },
+      "triggers": {},
+      "zindex": 1,
+      "designer": {
+        "x": 48,
+        "y": 123
+      }
+    },
+    "Label2": {
+      "type": "Label",
+      "properties": {
+        "label": "pushed 0 times",
+        "enabled": true,
+        "visible": true,
+        "font": "14px Arial",
+        "color": "Black",
+        "elementType": "element"
+      },
+      "triggers": {},
+      "zindex": 2,
+      "designer": {
+        "x": 282,
+        "y": 185
+      }
+    },
+    "DataForLabel": {
+      "type": "Function",
+      "properties": {
+        "code": "\treturn NULL;",
+        "length": "128",
+        "inputType": "void",
+        "returnType": "string",
+        "permission": "public",
+        "elementType": "element"
+      },
+      "triggers": {
+        "notified": [
+          {
+            "sourceTrigger": "notified",
+            "sourceValue": "getValue",
+            "targetValue": "setValue",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "value"
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": [
+                "value"
+              ]
+            },
+            "targetName": "Label2"
+          },
+          {
+            "sourceTrigger": "notified",
+            "sourceValue": "Static",
+            "targetValue": "vibrate",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "500"
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": []
+            },
+            "targetName": "MobileVibration4"
+          }
+        ]
+      },
+      "zindex": 3,
+      "designer": {
+        "x": 87,
+        "y": 235
+      }
+    },
+    "MobileVibration4": {
+      "type": "MobileVibration",
+      "properties": {
+        "vibrationTime": "1000",
+        "elementType": "element"
+      },
+      "triggers": {},
+      "zindex": 4,
+      "designer": {
+        "x": 291,
+        "y": 295
+      }
+    }
+  },
+  "cloudElements": {}
+}
