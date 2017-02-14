@@ -1,0 +1,2646 @@
+{
+  "header": {
+    "data": {
+      "order": [
+        "Globals",
+        "Interval",
+        "Connected",
+        "Disconnected",
+        "Setup"
+      ],
+      "Globals": {
+        "name": "Globals",
+        "func": "#include \"callbacks.h\"",
+        "code": "\nchar buffer[4028];\nchar devAddr[1024];\nchar userId[128];\nbool cycleScenes = false;\nint currentScene = 0;\nint cycleDelay = 0;\nint currentCycleDelay = 0;\n\n// changed indicator just 1 or 0\nunsigned int redValueChanged = 0;\nunsigned int greenValueChanged = 0;\nunsigned int blueValueChanged = 0;\nunsigned int whiteValueChanged = 0;\n\n// So, we can use 100 as a percentile, and divide/multiple our value from RGBA by 2.55 to get the percent value\nunsigned int currentRed = 0;\nunsigned int currentGreen = 0;\nunsigned int currentBlue = 0;\nunsigned int currentWhite = 0;\n\nunsigned int targetRed = 0;\nunsigned int targetGreen = 0;\nunsigned int targetBlue = 0;\nunsigned int targetWhite = 0;\n\nunsigned int scenesRed[5];\nunsigned int scenesGreen[5];\nunsigned int scenesBlue[5];\nunsigned int scenesWhite[5];\n\n",
+        "close": "//END"
+      },
+      "Interval": {
+        "name": "Interval",
+        "func": "\nvoid interval() {",
+        "code": "     \n    if(targetRed < currentRed) {\n        currentRed--;\n        redValueChanged = 1;\n    }\n    else if(targetRed > currentRed) {\n         currentRed++;\n         redValueChanged = 1;\n    }\n    else {\n        redValueChanged = 0;\n    }\n    \n    if(targetBlue < currentBlue) {\n        currentBlue--;\n        blueValueChanged = 1;\n    }\n    else if(targetBlue > currentBlue) {\n        currentBlue++;\n        blueValueChanged = 1;\n    }\n    else {\n        blueValueChanged = 0;\n    }    \n    \n    if(targetGreen < currentGreen) {\n        currentGreen--;\n        greenValueChanged = 1;\n    }\n    else if(targetGreen > currentGreen) {\n        currentGreen++;\n        greenValueChanged = 1;\n    }\n    else {\n        greenValueChanged = 0;\n    }       \n\n    if(targetWhite < currentWhite) {\n        currentWhite--;\n        whiteValueChanged = 1;\n    }\n    else if(targetWhite > currentWhite) {\n        currentWhite++;\n        whiteValueChanged = 1;\n    }\n    else {\n        whiteValueChanged = 0;\n    }       \n\n    if (redValueChanged + greenValueChanged + blueValueChanged + whiteValueChanged > 0) {\n        unsigned int step = 0x3FF/100;\n    \tunsigned int value = 0;\n    \t\n    \tvalue = 0x3FF - (step * currentRed);\n        AIR_PWM_Set(26, value);\n        \n        value = 0x3FF - (step * currentGreen);\n        AIR_PWM_Set(27, value);\n        \n        value = 0x3FF - (step * currentBlue);\n        AIR_PWM_Set(13, value);\n        \n        value = 0x3FF - (step * currentWhite);\n        AIR_PWM_Set(14, value);  \n    } \n    else if(cycleScenes) {\n        if(currentCycleDelay >= (cycleDelay * 40)) {\n            currentCycleDelay = 0;\n            currentScene = (currentScene + 1) % 5;\n            targetRed = scenesRed[currentScene];\n    \t    targetGreen = scenesGreen[currentScene];\n    \t    targetBlue = scenesBlue[currentScene];\n        \ttargetWhite = scenesWhite[currentScene];\n        \tATMOSPHERE_NotifyFunction(ID_useScene, JSON_WriteInt(currentScene));\n        }\n        else {\n            currentCycleDelay++;\n        }\n    }    ",
+        "close": "}"
+      },
+      "Connected": {
+        "name": "Connected",
+        "func": "\nvoid connected() {",
+        "code": "\n    ",
+        "close": "}"
+      },
+      "Disconnected": {
+        "name": "Disconnected",
+        "func": "\nvoid disconnected() {",
+        "code": " \n",
+        "close": "}"
+      },
+      "Setup": {
+        "name": "Setup",
+        "func": "\nvoid setup() {",
+        "code": "\tAIR_GPIO_Init();\n\tAIR_UART_Init();\n\tAIR_SPI_Init();\n\tAIR_POWER_Init();\n\tBUZZER_Init();\n\t\n\tAIR_POWER_SetMode(AIR_POWER_NOSLEEP);\n\t\n\tAIR_PWM_Enable(27);\n\tAIR_PWM_Enable(26);\n\tAIR_PWM_Enable(13);\n\tAIR_PWM_Enable(14);\n\t\n    scenesRed[0] = 100;\n    scenesGreen[0] = 0;\n    scenesBlue[0] = 0;\n    scenesWhite[0] = 0;\n    \n    scenesRed[1] = 0;\n    scenesGreen[1] = 100;\n    scenesBlue[1] = 0;\n    scenesWhite[1] = 0;\n    \n    scenesRed[2] = 0;\n    scenesGreen[2] = 0;\n    scenesBlue[2] = 100;\n    scenesWhite[2] = 0;\n    \n    scenesRed[3] = 100;\n    scenesGreen[3] = 100;\n    scenesBlue[3] = 0;\n    scenesWhite[3] = 0;\n    \n    scenesRed[4] = 100;\n    scenesGreen[4] = 0;\n    scenesBlue[4] = 100;\n    scenesWhite[4] = 0;\n    \n    cycleDelay = 0;\n    cycleScenes = false;\n    ",
+        "close": "}"
+      }
+    },
+    "boardConfiguration": {
+      "ble": {
+        "name": "Bluetooth Low Energy",
+        "file": "ble_config.h",
+        "values": {
+          "localName": {
+            "name": "Local Name",
+            "input": "TextField",
+            "prefix": "#define BLE_LOCAL_NAME \"",
+            "value": "LED_IO",
+            "suffix": "\"",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "version": {
+            "name": "Version",
+            "input": "TextField",
+            "prefix": "#define BLE_VERSION \"",
+            "value": "1.1",
+            "suffix": "\"",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "txPowerLevel": {
+            "name": "TX Power Level (dbm)",
+            "input": "TextField",
+            "prefix": "#define BLE_TX_POWER_LEVEL ",
+            "value": "4",
+            "regex": "^[0-9]*$"
+          },
+          "intervalFineTimer": {
+            "name": "Interval Timer Length (ms)",
+            "input": "TextField",
+            "prefix": "#define BLE_INTERVAL_FINE_TIMER ",
+            "value": "25",
+            "regex": "^[0-9]*$"
+          },
+          "powersave": {
+            "name": "Power Saving",
+            "input": "Combo",
+            "prefix": "#define ",
+            "options": [
+              "BLE_POWERSAVE_OFF",
+              "BLE_POWERSAVE"
+            ],
+            "value": "BLE_POWERSAVE_OFF",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "pairing": {
+            "name": "Pairing",
+            "input": "Combo",
+            "prefix": "#define ",
+            "options": [
+              "BLE_PAIRING_NONE",
+              "BLE_PAIRING_PASSKEY",
+              "BLE_PAIRING_OOB"
+            ],
+            "value": "BLE_PAIRING_NONE",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          }
+        }
+      },
+      "power": {
+        "name": "Power Driver",
+        "file": "power_config.h",
+        "values": {
+          "external_osc": {
+            "name": "External Oscillator",
+            "input": "Combo",
+            "prefix": "#define AIR_POWER_",
+            "options": [
+              "EXTERNAL_32KHZ_OSC",
+              "INTERNAL_OSC"
+            ],
+            "value": "INTERNAL_OSC",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          }
+        }
+      },
+      "gpio": {
+        "name": "GPIO Driver",
+        "file": "gpio_config.h",
+        "values": {
+          "buad": {
+            "name": "ADC Sample Frequency",
+            "input": "Combo",
+            "prefix": "#define AIR_ADC_SAMPLE_FREQUENCY ",
+            "options": [
+              "ADC_SAMPLE_FREQUENCY_LOW",
+              "ADC_SAMPLE_FREQUENCY_MEDIUM_LOW",
+              "ADC_SAMPLE_FREQUENCY_MEDIUM",
+              "ADC_SAMPLE_FREQUENCY_MEDIUM_HIGH",
+              "ADC_SAMPLE_FREQUENCY_HIGH"
+            ],
+            "value": "ADC_SAMPLE_FREQUENCY_LOW",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          }
+        }
+      },
+      "uart": {
+        "name": "AIR UART Driver",
+        "file": "uart_config.h",
+        "values": {
+          "rxBuffer": {
+            "name": "RX Circular Buffer size",
+            "input": "TextField",
+            "prefix": "#define AIR_UART_RX_CIRCULAR_BUFFER_SIZE ",
+            "value": "128",
+            "regex": "^[0-9]*$"
+          },
+          "txBuffer": {
+            "name": "TX Circular Buffer size",
+            "input": "TextField",
+            "prefix": "#define AIR_UART_TX_CIRCULAR_BUFFER_SIZE ",
+            "value": "128",
+            "regex": "^[0-9]*$"
+          },
+          "buad": {
+            "name": "Baudrate",
+            "input": "Combo",
+            "prefix": "#define ",
+            "options": [
+              "AIR_UART_BAUD_115200",
+              "AIR_UART_BAUD_57600",
+              "AIR_UART_BAUD_9600"
+            ],
+            "value": "AIR_UART_BAUD_115200",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "txPin": {
+            "name": "TX Pin",
+            "input": "Combo",
+            "prefix": "#define AIR_UART_TX_PIN ",
+            "options": [
+              "32"
+            ],
+            "value": "32",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "rxPin": {
+            "name": "RX Pin",
+            "input": "Combo",
+            "prefix": "#define AIR_UART_RX_PIN ",
+            "options": [
+              "33"
+            ],
+            "value": "33",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "rtsPin": {
+            "name": "RTS Pin",
+            "input": "Combo",
+            "prefix": "#define AIR_UART_RTS_PIN ",
+            "options": [
+              "1"
+            ],
+            "value": "1",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "ctsPin": {
+            "name": "CTS Pin",
+            "input": "Combo",
+            "prefix": "#define AIR_UART_CTS_PIN ",
+            "options": [
+              "3"
+            ],
+            "value": "3",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          }
+        }
+      },
+      "gpio_config": {
+        "name": "GPIO Driver",
+        "file": "gpio_config.h",
+        "values": {
+          "buad": {
+            "name": "ADC Sample Frequency",
+            "input": "Combo",
+            "prefix": "#define AIR_ADC_SAMPLE_FREQUENCY ",
+            "options": [
+              "ADC_SAMPLE_FREQUENCY_LOW",
+              "ADC_SAMPLE_FREQUENCY_MEDIUM_LOW",
+              "ADC_SAMPLE_FREQUENCY_MEDIUM",
+              "ADC_SAMPLE_FREQUENCY_MEDIUM_HIGH",
+              "ADC_SAMPLE_FREQUENCY_HIGH"
+            ],
+            "value": "ADC_SAMPLE_FREQUENCY_LOW",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          }
+        }
+      }
+    },
+    "meta": {
+      "version": "1.2.0",
+      "layoutGrid": true,
+      "layoutSnapping": false,
+      "layoutSnappingSize": 30,
+      "cloudLayoutGrid": false,
+      "cloudLayoutSnapping": false,
+      "cloudLayoutSnappingSize": 10,
+      "language": "en",
+      "enableTooltips": true,
+      "enableAutoSave": true,
+      "enableBuildSave": false,
+      "description": "LED Controller that uses the Atmosphere App \nand WebIO controls to manage and read data\nin real time. For iOS only!",
+      "project_uuid": null,
+      "tokensEnabled": false,
+      "codeAssist": false,
+      "highlightLine": false,
+      "editorTheme": "Default",
+      "editorFontSize": 12,
+      "customEmbeddedElementLibraries": {
+        "xra1201": {
+          "author": "Anaren Inc.",
+          "code": {
+            "global": "",
+            "setup": ""
+          },
+          "elements": {},
+          "files": {
+            "common": {
+              "headers": {
+                "xra1201.h": "// Copyright (c) 2014, Anaren Inc.\r\n// All rights reserved.\r\n// \r\n// Redistribution and use in source and binary forms, with or without\r\n// modification, are permitted provided that the following conditions are met:\r\n// \r\n// 1. Redistributions of source code must retain the above copyright notice, this\r\n//\tlist of conditions and the following disclaimer. \r\n// 2. Redistributions in binary form must reproduce the above copyright notice,\r\n//\tthis list of conditions and the following disclaimer in the documentation\r\n//\tand/or other materials provided with the distribution.\r\n// \r\n// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS \"AS IS\" AND\r\n// ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED\r\n// WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE\r\n// DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR\r\n// ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES\r\n// (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;\r\n// LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND\r\n// ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT\r\n// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS\r\n// SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.\r\n// \r\n// The views and conclusions contained in the software and documentation are those\r\n// of the authors and should not be interpreted as representing official policies, \r\n// either expressed or implied, of the FreeBSD Project.\r\n\r\n#ifndef XRA1201_H\r\n#define XRA1201_H\r\n\r\n#include \"types.h\"\r\n#include \"../i2c/i2c.h\"\r\n\r\n//------------------------------------------------------------------------------\r\n/**\r\n *  Defines, enumerations, and structure definitions\r\n */\r\n#ifndef bool\r\n#define bool uint8\r\n#endif\r\n\r\n#ifndef true\r\n#define true 1\r\n#endif\r\n\r\n#ifndef false\r\n#define false 0\r\n#endif\r\n\r\n\r\n/**\r\nWrite a 16-bit value to a device register.  All of the XRA1201 registers are\r\nread/write except for the GPIO State Register and Input Interrupt Status\r\nRegister.  This function does not do any form of error checking, so trying to\r\nwrite to one of the read-only registers may result in undesirable behavior.\r\n@param id device ID (0 to 31) on i2c bus\r\n@param addr device register address\r\n@param data data to be written to the specified register address\r\n*/\r\nvoid XRA1201_WriteReg(uint8 id, uint8 addr, uint16 data);\r\n\r\n/**\r\nRead a 16-bit value from a device register.\r\n@param id device ID (0 to 31) on i2c bus\r\n@param addr device register address\r\n@return data read from the specified register address\r\n*/\r\nuint16 XRA1201_ReadReg(uint8 id, uint8 addr);\r\n\r\n/**\r\nRead the current state of the GPIO pins. The value will be inverted for input\r\npins configured for Input Polarity Inversion in the PIR register.  For pins\r\nconfigured as outputs, the last value written to the OCR register will be\r\nreturned.  Calling this function clears the XRA1201 interrupt.\r\n@param id device ID (0 to 31) on i2c bus\r\n@return current value in the GSR register\r\n*/\r\nuint16 XRA1201_GetGpioState(uint8 id);\r\n\r\n/**\r\nChange the state of the GPIO output pins by writing to the OCR register.\r\n@param id device ID (0 to 31) on i2c bus\r\n@param data specifies the new state of the GPIO output pins\r\n*/\r\nvoid XRA1201_SetOutputValue(uint8 id, uint16 data);\r\n\r\n/**\r\nRead the last value written by the XRA1201_SetOutputValue() function.  The\r\ndefault value following power-up is 0xFFFF.\r\n@param id device ID (0 to 31) on i2c bus\r\n@return current value in the OCR register\r\n*/\r\nuint16 XRA1201_GetOutputValue(uint8 id);\r\n\r\n/**\r\nEnable/disable polarity inversion on GPIO input pins.  Setting a bit to '1'\r\ninverts the corresponding GPIO input pin value returned when reading the GSR\r\nregister.\r\n@param id device ID (0 to 31) on i2c bus\r\n@param data specifies which GPIO input pins to invert\r\n*/\r\nvoid XRA1201_SetInputPolarityInversion(uint8 id, uint16 data);\r\n\r\n/**\r\nRead the last value written by the XRA1201_SetInputPolarityInversion() function.\r\nThe default value following power-up is 0x0000.\r\n@param id device ID (0 to 31) on i2c bus\r\n@return current value in the PIR register\r\n*/\r\nuint16 XRA1201_GetInputPolarityInversion(uint8 id);\r\n\r\n/**\r\nSelect GPIO pin direction.  Setting a bit to '0' configures the corresponding\r\nGPIO pin as an output while setting the bit to '1' configures the GPIO pin as an\r\ninput.\r\n@param id device ID (0 to 31) on i2c bus\r\n@param data GPIO pin direction\r\n*/\r\nvoid XRA1201_SetPinDirection(uint8 id, uint16 data);\r\n\r\n/**\r\nRead the last value written by the XRA1201_SetPinDirection() function. The\r\ndefault value following power-up is 0xFFFF.\r\n@param id device ID (0 to 31) on i2c bus\r\n@return current value in the GCR register\r\n*/\r\nuint16 XRA1201_GetPinDirection(uint8 id);\r\n\r\n/**\r\nEnable/disable internal pull-up resistor on GPIO input pins.  Setting a bit to\r\n'1' enables the pull-up on the corresponding GPIO input pin.\r\n@param id device ID (0 to 31) on i2c bus\r\n@param data specifies which GPIO input pins to pull-up internally\r\n*/\r\nvoid XRA1201_SetInputPullupEnable(uint8 id, uint16 data);\r\n\r\n/**\r\nRead the last value written by the XRA1201_SetInputPullupEnable() function.  The\r\ndefault value following power-up is 0x0000 for the XRA1201 and 0xFFFF for the\r\nXRA1201P.\r\n@param id device ID (0 to 31) on i2c bus\r\n@return current value in the PUR register\r\n*/\r\nuint16 XRA1201_GetInputPullupEnable(uint8 id);\r\n\r\n/**\r\nEnable/disable interrupts on GPIO input pins.  Setting a bit to '1' enables the\r\ninterrupt on the corresponding GPIO input pin.\r\n@param id device ID (0 to 31) on i2c bus\r\n@param data specifies which GPIO input pins to configure with interrupts enabled\r\n*/\r\nvoid XRA1201_SetInterruptEnable(uint8 id, uint16 data);\r\n\r\n/**\r\nRead the last value written by the XRA1201_SetInterruptEnable() function. The\r\ndefault value following power-up is 0x0000.\r\n@param id device ID (0 to 31) on i2c bus\r\n@return current value in the IER register\r\n*/\r\nuint16 XRA1201_GetInterruptEnable(uint8 id);\r\n\r\n/**\r\nEnable/disable tri-state mode on GPIO output pins.  Setting a bit to '1' enables\r\nthe tri-state mode on the corresponding GPIO output pin.\r\n@param id device ID (0 to 31) on i2c bus\r\n@param data specifies which GPIO output pins to configure for tri-state mode\r\n*/\r\nvoid XRA1201_SetOutputThreeStateEnable(uint8 id, uint16 data);\r\n\r\n/**\r\nRead the last value written by the XRA1201_SetOutputThreeStateEnable() function.\r\nThe default value following power-up is 0x0000.\r\n@param id device ID (0 to 31) on i2c bus\r\n@return current value in the TSCR register\r\n*/\r\nuint16 XRA1201_GetOutputThreeStateEnable(uint8 id);\r\n\r\n/**\r\nRead the current status of the GPIO input pin interrupts.  A bit will be set to\r\n'1' if an interrupt occurred on the corresponding GPIO input pin.  The default\r\nvalue following power-up is 0x0000.\r\n@param id device ID (0 to 31) on i2c bus\r\n@return current value in the ISR register\r\n*/\r\nuint16 XRA1201_GetInterruptStatus(uint8 id);\r\n\r\n/**\r\nEnable/disable interrupts to be generated following the rising edge detection of\r\nthe GPIO input pins.  Setting a bit to '1' enables the interrupt to be generated\r\non the rising edge of the corresponding GPIO input pin.  See the XRA1201\r\ndatasheet for more details regarding the interrupt behavior.\r\n@param id device ID (0 to 31) on i2c bus\r\n@param data specifies which GPIO input pins are to generate interrupts on the\r\nrising edge\r\n*/\r\nvoid XRA1201_SetInterruptRisingEdgeEnable(uint8 id, uint16 data);\r\n\r\n/**\r\nRead the last value written by the XRA1201_SetInterruptRisingEdgeEnable()\r\nfunction. The default value following power-up is 0x0000.\r\n@param id device ID (0 to 31) on i2c bus\r\n@return current value in the REIR register\r\n*/\r\nuint16 XRA1201_GetInterruptRisingEdgeEnable(uint8 id);\r\n\r\n/**\r\nEnable/disable interrupts to be generated following the falling edge detection\r\nof the GPIO input pins.  Setting a bit to '1' enables the interrupt to be\r\ngenerated on the falling edge of the corresponding GPIO input pin.  See the\r\nXRA1201 datasheet for more details regarding the interrupt behavior.\r\n@param id device ID (0 to 31) on i2c bus\r\n@param data specifies which GPIO input pins are to generate interrupts on the\r\nfalling edge\r\n*/\r\nvoid XRA1201_SetInterruptFallingEdgeEnable(uint8 id, uint16 data);\r\n\r\n/**\r\nRead the last value written by the XRA1201_SetInterruptFallingEdgeEnable()\r\nfunction. The default value following power-up is 0x0000.\r\n@param id device ID (0 to 31) on i2c bus\r\n@return current value in the FEIR register\r\n*/\r\nuint16 XRA1201_GetInterruptFallingEdgeEnable(uint8 id);\r\n\r\n/**\r\nEnable/disable filtering on the GPIO input pins for generating interrupts.\r\nSetting a bit to '1' enables the interrupt filter of the corresponding GPIO\r\ninput pin.  See the XRA1201 datasheet for more details regarding the interrupt\r\nbehavior.\r\n@param id device ID (0 to 31) on i2c bus\r\n@param data specifies which GPIO input pins to configure with interrupt filters\r\n*/\r\nvoid XRA1201_SetInterruptFilterEnable(uint8 id, uint16 data);\r\n\r\n/**\r\nRead the last value written by the XRA1201_SetInterruptFilterEnable() function.\r\nThe default value following power-up is 0xFFFF.\r\n@param id device ID (0 to 31) on i2c bus\r\n@return current value in the IFR register\r\n*/\r\nuint16 XRA1201_GetInterruptFilterEnable(uint8 id);\r\n\r\n\r\n#endif  /* XRA1201_H */\r\n"
+              },
+              "objects": {
+                "xra1201_common.c": "/**\r\n *  ----------------------------------------------------------------------------\r\n *  Copyright (c) 2014, Anaren Microwave, Inc.\r\n *\r\n *  For more information on licensing, please see Anaren Microwave, Inc's\r\n *  end user software licensing agreement: EULA.txt.\r\n *\r\n *  ----------------------------------------------------------------------------\r\n *\r\n *  xra1201.h - driver interface for the Exar XRA1201 GPIO Expander.  The\r\n *  XRA1201 allows for up to 32 devices on a single i2c bus, therefore each\r\n *  function accepts a bus identifier in the range 0 - 31 to select which device\r\n *  is currently being accessed.  This ID is added to the device's base address\r\n *  of 0x10 to determine the final i2c address.\r\n *\r\n *  @version\t1.0.00\r\n *  @date\t   09 Sep 2014\r\n *  @author\t Anaren, air@anaren.com\r\n *\r\n *  assumptions\r\n *  ===========\r\n *  - The i2c driver provides the proper signaling sequences for read & write\r\n *\toperations.\r\n *  - The i2c driver meets the timing requirements specified in the XRA1201\r\n *\tdatasheet.\r\n *\r\n *  file dependency\r\n *  ===============\r\n *  i2c.h : defines the i2c read & write interfaces.\r\n *\r\n *  revision history\r\n *  ================\r\n *  ver 1.0.00 : 09 Sep 2014\r\n *  - initial release\r\n */\r\n\r\n#include \"xra1201.h\"\r\n\r\n//------------------------------------------------------------------------------\r\n/**\r\n *  Defines, enumerations, and structure definitions\r\n */\r\n\r\n#define XRA1201_SLAVE_BASE_ADDR\t 0x10\r\n\r\n#define XRA1201_GSR1_REG_ADDR\t   0x00  // GPIO State P0-P7 (read only)\r\n#define XRA1201_GSR2_REG_ADDR\t   0x01  // GPIO State P8-P15 (read only)\r\n#define XRA1201_OCR1_REG_ADDR\t   0x02  // Output Control P0-P7\r\n#define XRA1201_OCR2_REG_ADDR\t   0x03  // Output Control P8-P15\r\n#define XRA1201_PIR1_REG_ADDR\t   0x04  // Input Polarity Inversion P0-P7\r\n#define XRA1201_PIR2_REG_ADDR\t   0x05  // Input Polarity Inversion P8-P15\r\n#define XRA1201_GCR1_REG_ADDR\t   0x06  // GPIO Configuration P0-P7\r\n#define XRA1201_GCR2_REG_ADDR\t   0x07  // GPIO Configuration P8-P15\r\n#define XRA1201_PUR1_REG_ADDR\t   0x08  // Input Internal Pull-up Enable P0-P7\r\n#define XRA1201_PUR2_REG_ADDR\t   0x09  // Input Internal Pull-up Enable P8-P15\r\n#define XRA1201_IER1_REG_ADDR\t   0x0A  // Input Interrupt Enable P0-P7\r\n#define XRA1201_IER2_REG_ADDR\t   0x0B  // Input Interrupt Enable P8-P15\r\n#define XRA1201_TSCR1_REG_ADDR\t  0x0C  // Output 3-state Control P0-P7\r\n#define XRA1201_TSCR2_REG_ADDR\t  0x0D  // Output 3-state Control P8-P15\r\n#define XRA1201_ISR1_REG_ADDR\t   0x0E  // Input Interrupt Status P0-P7 (read only)\r\n#define XRA1201_ISR2_REG_ADDR\t   0x0F  // Input Interrupt Status P8-P15 (read only)\r\n#define XRA1201_REIR1_REG_ADDR\t  0x10  // Input Rising Edge Interrupt Enable P0-P7\r\n#define XRA1201_REIR2_REG_ADDR\t  0x11  // Input Rising Edge Interrupt Enable P8-P15\r\n#define XRA1201_FEIR1_REG_ADDR\t  0x12  // Input Falling Edge Interrupt Enable P0-P7\r\n#define XRA1201_FEIR2_REG_ADDR\t  0x13  // Input Falling Edge Interrupt Enable P8-P15\r\n#define XRA1201_IFR1_REG_ADDR\t   0x14  // Input Filter Enable P0-P7\r\n#define XRA1201_IFR2_REG_ADDR\t   0x15  // Input Filter Enable P8-P15\r\n\r\n// -----------------------------------------------------------------------------\r\n/**\r\n *  Global data\r\n */\r\n\r\n// -----------------------------------------------------------------------------\r\n/**\r\n *  Private interface\r\n */\r\n\r\n// -----------------------------------------------------------------------------\r\n/**\r\n *  Public interface\r\n */\r\n\r\nvoid XRA1201_WriteReg(uint8 id, uint8 addr, uint16 data)\r\n{\r\n  uint8 writeBytes[2];\r\n\r\n  writeBytes[0] = addr;\r\n  writeBytes[1] = data;\r\n  AIR_I2C_Write(XRA1201_SLAVE_BASE_ADDR + id, writeBytes, 2);\r\n}\r\n\r\nuint16 XRA1201_ReadReg(uint8 id, uint8 addr)\r\n{\r\n  uint8 writeBytes[1];\r\n  uint8 readBytes[1];\r\n\r\n  writeBytes[0] = addr;\r\n  AIR_I2C_ComboRead(XRA1201_SLAVE_BASE_ADDR + id, writeBytes, 1, readBytes, 1);\r\n  return readBytes[0];\r\n}\r\n\r\nuint16 XRA1201_GetGpioState(uint8 id)\r\n{\r\n  uint16 returnValue = XRA1201_ReadReg(id, XRA1201_GSR1_REG_ADDR);\r\n  \r\n  returnValue |= (uint16)XRA1201_ReadReg(id, XRA1201_GSR2_REG_ADDR) << 8;\r\n  return returnValue;\r\n}\r\n\r\nvoid XRA1201_SetOutputValue(uint8 id, uint16 data)\r\n{\r\n  XRA1201_WriteReg(id, XRA1201_OCR1_REG_ADDR, (data >> 0) & 0xFF);\r\n  XRA1201_WriteReg(id, XRA1201_OCR2_REG_ADDR, (data >> 8) & 0xFF);\r\n}\r\n\r\nuint16 XRA1201_GetOutputValue(uint8 id)\r\n{\r\n  uint16 returnValue = XRA1201_ReadReg(id, XRA1201_OCR1_REG_ADDR);\r\n  \r\n  returnValue |= (uint16)XRA1201_ReadReg(id, XRA1201_OCR2_REG_ADDR) << 8;\r\n  return returnValue;\r\n}\r\n\r\nvoid XRA1201_SetInputPolarityInversion(uint8 id, uint16 data)\r\n{\r\n  XRA1201_WriteReg(id, XRA1201_PIR1_REG_ADDR, (data >> 0) & 0xFF);\r\n  XRA1201_WriteReg(id, XRA1201_PIR2_REG_ADDR, (data >> 8) & 0xFF);\r\n}\r\n\r\nuint16 XRA1201_GetInputPolarityInversion(uint8 id)\r\n{\r\n  uint16 returnValue = XRA1201_ReadReg(id, XRA1201_PIR1_REG_ADDR);\r\n  \r\n  returnValue |= (uint16)XRA1201_ReadReg(id, XRA1201_PIR2_REG_ADDR) << 8;\r\n  return returnValue;\r\n}\r\n\r\nvoid XRA1201_SetPinDirection(uint8 id, uint16 data)\r\n{\r\n  XRA1201_WriteReg(id, XRA1201_GCR1_REG_ADDR, (data >> 0) & 0xFF);\r\n  XRA1201_WriteReg(id, XRA1201_GCR2_REG_ADDR, (data >> 8) & 0xFF);\r\n}\r\n\r\nuint16 XRA1201_GetPinDirection(uint8 id)\r\n{\r\n  uint16 returnValue = XRA1201_ReadReg(id, XRA1201_GCR1_REG_ADDR);\r\n  \r\n  returnValue |= (uint16)XRA1201_ReadReg(id, XRA1201_GCR2_REG_ADDR) << 8;\r\n  return returnValue;\r\n}\r\n\r\nvoid XRA1201_SetInputPullupEnable(uint8 id, uint16 data)\r\n{\r\n  XRA1201_WriteReg(id, XRA1201_PUR1_REG_ADDR, (data >> 0) & 0xFF);\r\n  XRA1201_WriteReg(id, XRA1201_PUR2_REG_ADDR, (data >> 8) & 0xFF);\r\n}\r\n\r\nuint16 XRA1201_GetInputPullupEnable(uint8 id)\r\n{\r\n  uint16 returnValue = XRA1201_ReadReg(id, XRA1201_PUR1_REG_ADDR);\r\n  \r\n  returnValue |= (uint16)XRA1201_ReadReg(id, XRA1201_PUR2_REG_ADDR) << 8;\r\n  return returnValue;\r\n}\r\n\r\nvoid XRA1201_SetInterruptEnable(uint8 id, uint16 data)\r\n{\r\n  XRA1201_WriteReg(id, XRA1201_IER1_REG_ADDR, (data >> 0) & 0xFF);\r\n  XRA1201_WriteReg(id, XRA1201_IER2_REG_ADDR, (data >> 8) & 0xFF);\r\n}\r\n\r\nuint16 XRA1201_GetInterruptEnable(uint8 id)\r\n{\r\n  uint16 returnValue = XRA1201_ReadReg(id, XRA1201_IER1_REG_ADDR);\r\n  \r\n  returnValue |= (uint16)XRA1201_ReadReg(id, XRA1201_IER2_REG_ADDR) << 8;\r\n  return returnValue;\r\n}\r\n\r\nvoid XRA1201_SetOutputThreeStateEnable(uint8 id, uint16 data)\r\n{\r\n  XRA1201_WriteReg(id, XRA1201_TSCR1_REG_ADDR, (data >> 0) & 0xFF);\r\n  XRA1201_WriteReg(id, XRA1201_TSCR2_REG_ADDR, (data >> 8) & 0xFF);\r\n}\r\n\r\nuint16 XRA1201_GetOutputThreeStateEnable(uint8 id)\r\n{\r\n  uint16 returnValue = XRA1201_ReadReg(id, XRA1201_TSCR1_REG_ADDR);\r\n  \r\n  returnValue |= (uint16)XRA1201_ReadReg(id, XRA1201_TSCR2_REG_ADDR) << 8;\r\n  return returnValue;\r\n}\r\n\r\nuint16 XRA1201_GetInterruptStatus(uint8 id)\r\n{\r\n  uint16 returnValue = XRA1201_ReadReg(id, XRA1201_ISR1_REG_ADDR);\r\n  \r\n  returnValue |= (uint16)XRA1201_ReadReg(id, XRA1201_ISR2_REG_ADDR) << 8;\r\n  return returnValue;\r\n}\r\n\r\nvoid XRA1201_SetInterruptRisingEdgeEnable(uint8 id, uint16 data)\r\n{\r\n  XRA1201_WriteReg(id, XRA1201_REIR1_REG_ADDR, (data >> 0) & 0xFF);\r\n  XRA1201_WriteReg(id, XRA1201_REIR2_REG_ADDR, (data >> 8) & 0xFF);\r\n}\r\n\r\nuint16 XRA1201_GetInterruptRisingEdgeEnable(uint8 id)\r\n{\r\n  uint16 returnValue = XRA1201_ReadReg(id, XRA1201_REIR1_REG_ADDR);\r\n  \r\n  returnValue |= (uint16)XRA1201_ReadReg(id, XRA1201_REIR2_REG_ADDR) << 8;\r\n  return returnValue;\r\n}\r\n\r\nvoid XRA1201_SetInterruptFallingEdgeEnable(uint8 id, uint16 data)\r\n{\r\n  XRA1201_WriteReg(id, XRA1201_FEIR1_REG_ADDR, (data >> 0) & 0xFF);\r\n  XRA1201_WriteReg(id, XRA1201_FEIR2_REG_ADDR, (data >> 8) & 0xFF);\r\n}\r\n\r\nuint16 XRA1201_GetInterruptFallingEdgeEnable(uint8 id)\r\n{\r\n  uint16 returnValue = XRA1201_ReadReg(id, XRA1201_FEIR1_REG_ADDR);\r\n  \r\n  returnValue |= (uint16)XRA1201_ReadReg(id, XRA1201_FEIR2_REG_ADDR) << 8;\r\n  return returnValue;\r\n}\r\n\r\nvoid XRA1201_SetInterruptFilterEnable(uint8 id, uint16 data)\r\n{\r\n  XRA1201_WriteReg(id, XRA1201_IFR1_REG_ADDR, (data >> 0) & 0xFF);\r\n  XRA1201_WriteReg(id, XRA1201_IFR2_REG_ADDR, (data >> 8) & 0xFF);\r\n}\r\n\r\nuint16 XRA1201_GetInterruptFilterEnable(uint8 id)\r\n{\r\n  uint16 returnValue = XRA1201_ReadReg(id, XRA1201_IFR1_REG_ADDR);\r\n  \r\n  returnValue |= (uint16)XRA1201_ReadReg(id, XRA1201_IFR2_REG_ADDR) << 8;\r\n  return returnValue;\r\n}\r\n"
+              },
+              "other": {}
+            }
+          },
+          "label": "XRA1201 Driver",
+          "language": {
+            "en": {
+              "label": "XRA1201 Driver"
+            }
+          },
+          "name": "xra1201",
+          "signature": "",
+          "type": "Embedded Library",
+          "version": "1.0.0"
+        },
+        "tmp006": {
+          "author": "Anaren Inc.",
+          "code": {
+            "global": "",
+            "setup": ""
+          },
+          "elements": {},
+          "files": {
+            "common": {
+              "headers": {
+                "tmp006.h": "// Copyright (c) 2014, Anaren Inc.\r\n// All rights reserved.\r\n// \r\n// Redistribution and use in source and binary forms, with or without\r\n// modification, are permitted provided that the following conditions are met:\r\n// \r\n// 1. Redistributions of source code must retain the above copyright notice, this\r\n//\tlist of conditions and the following disclaimer. \r\n// 2. Redistributions in binary form must reproduce the above copyright notice,\r\n//\tthis list of conditions and the following disclaimer in the documentation\r\n//\tand/or other materials provided with the distribution.\r\n// \r\n// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS \"AS IS\" AND\r\n// ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED\r\n// WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE\r\n// DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR\r\n// ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES\r\n// (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;\r\n// LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND\r\n// ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT\r\n// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS\r\n// SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.\r\n// \r\n// The views and conclusions contained in the software and documentation are those\r\n// of the authors and should not be interpreted as representing official policies, \r\n// either expressed or implied, of the FreeBSD Project.\r\n\r\n#ifndef TMP006_H\r\n#define TMP006_H\r\n\r\n#include \"../i2c/i2c.h\"\r\n#include \"tmp006_config.h\"\r\n#include \"types.h\"\r\n\r\n#define uint8 UINT8\r\n#define uint16 UINT16\r\n\r\n//------------------------------------------------------------------------------\r\n/**\r\n *  Defines, enumerations, and structure definitions\r\n */\r\n#ifndef bool\r\n#define bool uint8\r\n#endif\r\n\r\n#ifndef true\r\n#define true 1\r\n#endif\r\n\r\n#ifndef false\r\n#define false 0\r\n#endif\r\n\r\n//------------------------------------------------------------------------------\r\n/**\r\n *  Defines, enumerations, and structure definitions\r\n */\r\n\r\n#define TMP006_SLAVE_BASE_ADDR\t  0x40\r\n\r\n#define TMP006_VOBJECT_REG_ADDR\t 0x00\r\n#define TMP006_TAMBIENT_REG_ADDR\t0x01\r\n#define TMP006_CONFIG_REG_ADDR\t  0x02\r\n#define TMP006_MFG_ID_REG_ADDR\t  0xFE\r\n#define TMP006_DEVICE_ID_REG_ADDR   0xFF\r\n\r\n#define TMP006_CONFIG_REG_RST\t   0x8000\r\n#define TMP006_CONFIG_REG_MOD\t   0x7000\r\n#define TMP006_CONFIG_REG_MOD3\t  0x4000\r\n#define TMP006_CONFIG_REG_MOD2\t  0x2000\r\n#define TMP006_CONFIG_REG_MOD1\t  0x1000\r\n#define TMP006_CONFIG_REG_CR\t\t0x0E00\r\n#define TMP006_CONFIG_REG_CR3\t   0x0800\r\n#define TMP006_CONFIG_REG_CR2\t   0x0400\r\n#define TMP006_CONFIG_REG_CR1\t   0x0200\r\n#define TMP006_CONFIG_REG_EN\t\t0x0100\r\n#define TMP006_CONFIG_REG_DRDY\t  0x0080\r\n// \r\n/**\r\n *  eTMP006Mode - type indicating the operating mode of the TMP006 device.  The\r\n *  TMP006 offers two modes, Power-Down and Continuous Conversion.  When\r\n *  ultra-low power consumption is important, the application should place the\r\n *  device in Power-Down when temperature measurements are not required.  While\r\n *  in Continuous Conversion mode, the device automatically enters a low-power\r\n *  state between samples.  However, this low-power state draws significantly\r\n *  more current than when in Power-Down (240uA compared to 0.5uA typ).\r\n */\r\nenum eTMP006Mode\r\n{\r\n  PowerDown\t\t\t = 0x0000,\r\n  ContinuousConversion  = 0x7000\r\n};\r\n\r\n/**\r\n *  eTMP006Rate - type indicating the number of conversions per second performed\r\n *  by the TMP006.  Slower conversion rates result in more accurate measuremnts\r\n *  compared to the higher rates.  The default is one conversion every second.\r\n *  See the TMP006 datasheet for more information regarding the effect\r\n *  conversion rate has on accuracy of the result.\r\n */\r\nenum eTMP006Rate\r\n{\r\n  FourConvPerSecond\t = 0x0000,\r\n  TwoConvPerSecond\t  = 0x0200,\r\n  OneConvPerSecond\t  = 0x0400,\r\n  HalfConvPerSecond\t = 0x0600,\r\n  QuarterConvPerSecond  = 0x0800\r\n};\r\n\r\n\r\n/** \r\nWrite a 16-bit value to a device register.  All of the TMP006 registers are\r\nread-only except for the Configuration Register.  This function does not do any\r\nform of error checking, so trying to write to one of the read-only registers may\r\nresult in undesireable behavior.\r\n@param id device ID (0 to 7) on i2c bus\r\n@param addr device register address\r\n@param data data to be written to the specified register address\r\n*/\r\nvoid TMP006_WriteReg(uint8 id, uint8 addr, uint16 data);\r\n\r\n/** \r\nRead a 16-bit value from a device register.\r\n@param id device ID (0 to 7) on i2c bus\r\n@param addr device register address\r\n@return data read from the specified register address\r\n*/\r\nuint16 TMP006_ReadReg(uint8 id, uint8 addr);\r\n\r\n/**\r\nIssue a software reset to the sensor.\r\n@param id device ID (0 to 7) on i2c bus\r\n@note This is a self-clearing operation.  There is no need for software to clear\r\nthe reset condition.\r\n*/\r\nvoid TMP006_SoftwareReset(uint8 id);\r\n\r\n/**\r\nSelect the device operating mode.  Refer to eTMP006Mode definition for details\r\nregarding the allowed states.\r\n@param id device ID (0 to 7) on i2c bus\r\n@param mode specifies the device mode of operation\r\n*/\r\nvoid TMP006_SetOperatingMode(uint8 id, enum eTMP006Mode mode);\r\n\r\n/**\r\nRead the currently selected operating mode.  Refer to eTMP006Mode definition for\r\ndetails regarding the available states.\r\n@param id device ID (0 to 7) on i2c bus\r\n@return device mode of operation\r\n*/\r\nenum eTMP006Mode TMP006_GetOperatingMode(uint8 id);\r\n\r\n/**\r\nSelect the device conversion rate.  Refer to eTMP006Rate definition for details\r\nregarding the allowed rates.\r\n@param id device ID (0 to 7) on i2c bus\r\n@param rate specifies the conversion rate\r\n*/\r\nvoid TMP006_SetConversionRate(uint8 id, enum eTMP006Rate rate);\r\n\r\n/**\r\nRead the currently selected conversion rate.  Refer to eTMP006Rate definition\r\nfor details regarding the available rates.\r\n@param id device ID (0 to 7) on i2c bus\r\n@return device conversion rate\r\n*/\r\nenum eTMP006Rate TMP006_GetConversionRate(uint8 id);\r\n\r\n/**\r\nEnable/disable the device DRDY output pin.\r\n@param id device ID (0 to 7) on i2c bus\r\n@param en true enables the pin output, false disables the output\r\n*/\r\nvoid TMP006_SetDataReadyEnable(uint8 id, bool en);\r\n\r\n/**\r\nRead the state of the DRDY enable bit in the Configuration register.\r\n@param id device ID (0 to 7) on i2c bus\r\n@return true when the DRDY is enabled, otherwise false\r\n*/\r\nbool TMP006_GetDataReadyEnable(uint8 id);\r\n\r\n/**\r\nClear the DRDY ready status bit in the Configuration register.\r\n@param id device ID (0 to 7) on i2c bus\r\n*/\r\nvoid TMP006_ClearDataReadyStatus(uint8 id);\r\n\r\n/**\r\nRead the state of the DRDY status bit in the Configuration register.  The DRDY\r\nstatus bit is automatically cleared after reading either the device Temperature\r\nregister or Sensor Voltage register.  The TMP006GetAmbientTemperature() and\r\nTMP006GetObjectTemperature() functions access these registers, so calling either\r\nwill clear the DRDY status bit.  The DRDY status bit can also be cleared by\r\nwriting to the Configuration register or calling TMP006ClearDataReadyStatus().\r\n@param id device ID (0 to 7) on i2c bus\r\n@return true when conversion results are ready to read, otherwise false\r\n*/\r\nbool TMP006_GetDataReadyStatus(uint8 id);\r\n\r\n/**\r\nRead the ambient (die) temperature.  When set to Continuous Conversion mode, the\r\ndevice periodically performs temperature conversions at a predefined rate.  This\r\nfunction calulates the temperature using only the most recent conversion value.\r\n@param id device ID (0 to 7) on i2c bus\r\n@return temperature of the TMP006 die in Celsius\r\n*/\r\nfloat TMP006_GetAmbientTemperature(uint8 id);\r\n\r\n/**\r\nRead the temperature of an object.  When set to Continuous Conversion mode, the\r\ndevice periodically performs temperature conversions at a predefined rate.  This\r\nfunction calulates the object temperature using only the most recent conversion\r\nvalues for die temperature and sensor voltage.\r\n@param id device ID (0 to 7) on i2c bus\r\n@return temperature of an object in Celsius\r\n*/\r\nfloat TMP006_GetObjectTemperature(uint8 id);\r\n\r\n/**\r\nRead the temperature of an object.  When set to Continuous Conversion mode, the\r\ndevice periodically performs temperature conversions at a predefined rate.  This\r\nfunction calulates the object temperature using the most recent conversion value\r\nfor sensor voltage as well as the four most recent conversion values for die\r\ntemperature. This function assumes the size of tDie buffer is 4 float values and\r\nthat the application does not modify any of these values.  The application is\r\nresponsible only for providing the memory location.  The reason for this\r\napproach, as opposed to defining the buffer in the driver itself, is so the\r\napplication can control which sensors on the bus use the transient correction\r\ntechnique.  If not all sensors on the i2c bus use this method, then memory\r\nutilization is reduced.\r\n@param id device ID (0 to 7) on i2c bus\r\n@param tDie pointer to array of 4 tDie values\r\n@return temperature of an object in Celsius\r\n*/\r\nfloat TMP006_GetObjectTemperatureWithTransientCorrection(uint8 id, float *tDie);\r\n\r\n/**\r\nRead the Manufacturer ID register.\r\n@param id device ID (0 to 7) on i2c bus\r\n@return contents of the Manufacturer ID register.  Value always = 0x5449.\r\n*/\r\nuint16 TMP006_GetMfgId(uint8 id);\r\n\r\n/**\r\nRead the Device ID register.\r\n@param id device ID (0 to 7) on i2c bus\r\n@return contents of the Device ID register.  Value always = 0x0067.\r\n*/\r\nuint16 TMP006_GetDeviceId(uint8 id);\r\n\r\n\r\n#endif  /* TMP006_H */\r\n"
+              },
+              "objects": {
+                "tmp006_common.c": "/**\r\n *  ----------------------------------------------------------------------------\r\n *  Copyright (c) 2014, Anaren Microwave, Inc.\r\n *\r\n *  For more information on licensing, please see Anaren Microwave, Inc's\r\n *  end user software licensing agreement: EULA.txt.\r\n *\r\n *  ----------------------------------------------------------------------------\r\n *\r\n *  tmp006.c - driver interface for the Texas Instruments TMP006 Infrared\r\n *  Thermopile Sensor.  The TMP006 allows for up to 8 devices on a single i2c\r\n *  bus, therefore each function accepts a bus identifier in the range 0 - 7 to\r\n *  select which device is currently being accessed.  This ID is added to the\r\n *  device's base address of 0x40 to determine the final i2c address.\r\n *\r\n *  @version\t1.0.01\r\n *  @date\t   26 Sep 2014\r\n *  @author\t Anaren, air@anaren.com\r\n *\r\n *  assumptions\r\n *  ===========\r\n *  - The i2c driver provides the proper signaling sequences for read & write\r\n *\toperations.\r\n *  - The i2c driver meets the timing requirements specified in the TMP006\r\n *\tdatasheet.\r\n *\r\n *  file dependency\r\n *  ===============\r\n *  i2c.h : defines the i2c read & write interfaces.\r\n *\tmath.h : floating point calculations.\r\n *\tfp_math.h : floating point calculations using fixed point math.  Use when math.h not implemented.\r\n *\r\n *  revision history\r\n *  ================\r\n *  ver 1.0.00 : 18 Jul 2014\r\n *  - initial release\r\n *  ver 1.0.01 : 24 Sep 2014\r\n *  - added support for doing floating point calculations using fixed point math\r\n */\r\n#include \"tmp006.h\"\r\n\r\n#ifdef FLOATING_POINT_AVAILABLE\r\n#include <math.h>\r\n#else\r\n#include \"../fp_math/fp_math.h\"\r\n#endif\r\n\r\n// -----------------------------------------------------------------------------\r\n/**\r\n *  Global data\r\n */\r\n\r\n// -----------------------------------------------------------------------------\r\n/**\r\n *  Private interface\r\n */\r\n\r\n/**\r\nCalculate temperature of an object based on tdie and vobj\r\n@param tDie temperature of the die in Kelvin\r\n@param vObj object voltage converted first by multiplying 1.5625e-7\r\n@return temperature of an object in Celsius\r\n@see TMP006 datasheet and application note\r\n@note from TI TMP006 BoosterPack sample code\r\n*/\r\nstatic float TMP006_CalculateTemperature(const float *tDie, const float *vObj)\r\n{\r\n  const float S0 = 6.0E-14;\r\n  const float a1 = 1.75E-3;\r\n  const float a2 = -1.678E-5;\r\n  const float b0 = -2.94E-5;\r\n  const float b1 = -5.7E-7;\r\n  const float b2 = 4.63E-9;\r\n  const float c2 = 13.4;\r\n  const float Tref = 298.15;\r\n\r\n#ifdef FLOATING_POINT_AVAILABLE\r\n  float S = S0*((float)1.0 + a1*(*tDie - Tref) + a2*pow((*tDie - Tref),2));\r\n  float Vos = b0 + b1*(*tDie - Tref) + b2*pow((*tDie - Tref),2);\r\n  float fObj = (*vObj - Vos) + c2*pow((*vObj - Vos),2);\r\n  float Tobj = sqrt(sqrt(pow(*tDie,4) + (fObj/S)));\r\n#else\r\n  float S = S0*((float)1.0 + a1*(*tDie - Tref) + a2*fp_pow((*tDie - Tref),2));\r\n  float Vos = b0 + b1*(*tDie - Tref) + b2*fp_pow((*tDie - Tref),2);\r\n  float fObj = (*vObj - Vos) + c2*fp_pow((*vObj - Vos),2);\r\n  float Tobj = fp_sqrt(fp_sqrt(fp_pow(*tDie,4) + (fObj/S)));\r\n#endif\r\n\r\n  return (Tobj - (float)273.15);\r\n}\r\n\r\n// -----------------------------------------------------------------------------\r\n/**\r\n *  Public interface\r\n */\r\n\r\nvoid TMP006_WriteReg(uint8 id, uint8 addr, uint16 data)\r\n{\r\n  uint8 writeBytes[3];\r\n\r\n  writeBytes[0] = addr;\r\n  writeBytes[1] = data >> 8;\r\n  writeBytes[2] = data & 0xFF;\r\n  AIR_I2C_Write(TMP006_SLAVE_BASE_ADDR + id, writeBytes, 3);\r\n}\r\n\r\nuint16 TMP006_ReadReg(uint8 id, uint8 addr)\r\n{\r\n  uint8 writeBytes[1];\r\n  uint8 readBytes[2];\r\n  uint16 readData;\r\n\r\n  writeBytes[0] = addr;\r\n  AIR_I2C_ComboRead(TMP006_SLAVE_BASE_ADDR + id, writeBytes, 1, readBytes, 2);\r\n  readData = (unsigned int)readBytes[0] << 8;\r\n  readData |= readBytes[1];\r\n  return readData;\r\n}\r\n\r\nvoid TMP006_SoftwareReset(uint8 id)\r\n{\r\n  TMP006_WriteReg(id, TMP006_CONFIG_REG_ADDR, TMP006_CONFIG_REG_RST);\r\n}\r\n\r\nvoid TMP006_SetOperatingMode(uint8 id, enum eTMP006Mode mode)\r\n{\r\n  uint16 data = TMP006_ReadReg(id, TMP006_CONFIG_REG_ADDR);\r\n\r\n  data &= ~TMP006_CONFIG_REG_MOD;\r\n  data |= (uint16)mode;\r\n  TMP006_WriteReg(id, TMP006_CONFIG_REG_ADDR, data);\r\n}\r\n\r\nenum eTMP006Mode TMP006_GetOperatingMode(uint8 id)\r\n{\r\n  return (enum eTMP006Mode)(TMP006_ReadReg(id, TMP006_CONFIG_REG_ADDR) & TMP006_CONFIG_REG_MOD);\r\n}\r\n\r\nvoid TMP006_SetConversionRate(uint8 id, enum eTMP006Rate rate)\r\n{\r\n  uint16 data = TMP006_ReadReg(id, TMP006_CONFIG_REG_ADDR);\r\n\r\n  data &= ~TMP006_CONFIG_REG_CR;\r\n  data |= (UINT16)rate;\r\n  TMP006_WriteReg(id, TMP006_CONFIG_REG_ADDR, data);\r\n}\r\n\r\nenum eTMP006Rate TMP006_GetConversionRate(uint8 id)\r\n{\r\n  return (enum eTMP006Rate)(TMP006_ReadReg(id, TMP006_CONFIG_REG_ADDR) & TMP006_CONFIG_REG_CR);\r\n}\r\n\r\nvoid TMP006_SetDataReadyEnable(uint8 id, bool en)\r\n{\r\n  uint16 data = TMP006_ReadReg(id, TMP006_CONFIG_REG_ADDR);\r\n\r\n  data &= ~TMP006_CONFIG_REG_EN;\r\n  if (en) data |= TMP006_CONFIG_REG_EN;\r\n  TMP006_WriteReg(id, TMP006_CONFIG_REG_ADDR, data);\r\n}\r\n\r\nbool TMP006_GetDataReadyEnable(uint8 id)\r\n{\r\n  return (TMP006_ReadReg(id, TMP006_CONFIG_REG_ADDR) & TMP006_CONFIG_REG_EN) ? true : false;\r\n}\r\n\r\nvoid TMP006_ClearDataReadyStatus(uint8 id)\r\n{\r\n  uint16 data = TMP006_ReadReg(id, TMP006_CONFIG_REG_ADDR);\r\n\r\n  data &= ~TMP006_CONFIG_REG_DRDY;\r\n  TMP006_WriteReg(id, TMP006_CONFIG_REG_ADDR, data);\r\n}\r\n\r\nbool TMP006_GetDataReadyStatus(uint8 id)\r\n{\r\n  return (TMP006_ReadReg(id, TMP006_CONFIG_REG_ADDR) & TMP006_CONFIG_REG_DRDY) ? true : false;\r\n}\r\n\r\nfloat TMP006_GetAmbientTemperature(uint8 id)\r\n{\r\n  int16 tDieRaw = (int16)TMP006_ReadReg(id, TMP006_TAMBIENT_REG_ADDR);\r\n\r\n  return (((float)(tDieRaw >> 2)) * (float)0.03125);\r\n}\r\n\r\nfloat TMP006_GetObjectTemperature(uint8 id)\r\n{\r\n  float tDie = TMP006_GetAmbientTemperature(id) + (float)273.15;\r\n  int16 vObjRaw = (int16)TMP006_ReadReg(id, TMP006_VOBJECT_REG_ADDR);\r\n  float vObj = ((float)(vObjRaw)) * (float)156.25E-9;\r\n\r\n  return TMP006_CalculateTemperature(&tDie, &vObj);\r\n}\r\n\r\nfloat TMP006_GetObjectTemperatureWithTransientCorrection(uint8 id, float *tDie)\r\n{\r\n  int16 vObjRaw = (int16)TMP006_ReadReg(id, TMP006_VOBJECT_REG_ADDR);\r\n  float tSlope;\r\n  float vObjCorr;\r\n\r\n  tDie[0] = tDie[1];\r\n  tDie[1] = tDie[2];\r\n  tDie[2] = tDie[3];\r\n  tDie[3] = TMP006_GetAmbientTemperature(id) + (float)273.15;\r\n  tSlope = (tDie[0] != 0.0) ? -((float)0.3*tDie[0])-((float)0.1*tDie[1])+((float)0.1*tDie[2])+((float)0.3*tDie[3]) : 0.0;\r\n  vObjCorr = (((float)(vObjRaw)) * (float)156.25E-9) + (tSlope * (float)2.96E-4);\r\n\r\n  return TMP006_CalculateTemperature(&tDie[3], &vObjCorr);\r\n}\r\n\r\nuint16 TMP006_GetMfgId(uint8 id)\r\n{\r\n  return TMP006_ReadReg(id, TMP006_MFG_ID_REG_ADDR);\r\n}\r\n\r\nuint16 TMP006_GetDeviceId(uint8 id)\r\n{\r\n  return TMP006_ReadReg(id, TMP006_DEVICE_ID_REG_ADDR);\r\n}\r\n\r\n"
+              },
+              "other": {
+                "tmp006_config.h": " \n"
+              }
+            }
+          },
+          "label": "TMP006 Driver",
+          "language": {
+            "en": {
+              "label": "TMP006 Driver"
+            }
+          },
+          "name": "tmp006",
+          "signature": "",
+          "type": "Embedded Library",
+          "version": "1.0.0"
+        },
+        "lis3dh": {
+          "author": "Anaren Inc.",
+          "code": {
+            "global": "",
+            "setup": ""
+          },
+          "elements": {},
+          "files": {
+            "common": {
+              "headers": {
+                "lis3dh.h": "// Copyright (c) 2014, Anaren Inc.\n// All rights reserved.\n// \n// Redistribution and use in source and binary forms, with or without\n// modification, are permitted provided that the following conditions are met:\n// \n// 1. Redistributions of source code must retain the above copyright notice, this\n//\tlist of conditions and the following disclaimer. \n// 2. Redistributions in binary form must reproduce the above copyright notice,\n//\tthis list of conditions and the following disclaimer in the documentation\n//\tand/or other materials provided with the distribution.\n// \n// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS \"AS IS\" AND\n// ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED\n// WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE\n// DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR\n// ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES\n// (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;\n// LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND\n// ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT\n// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS\n// SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.\n// \n// The views and conclusions contained in the software and documentation are those\n// of the authors and should not be interpreted as representing official policies, \n// either expressed or implied, of the FreeBSD Project.\n\n#ifndef LIS3DH_H\n#define LIS3DH_H\n\n//------------------------------------------------------------------------------\n/**\n *  Defines, enumerations, and structure definitions\n */\n\n#include \"lis3dh_config.h\"\n#include \"../spi/spi.h\"\n#include \"types.h\"\n\n#define uint8 UINT8\n#define uint16 UINT16\n\n#ifndef bool\n#define bool uint8\n#endif\n\n#ifndef true\n#define true 1\n#endif\n\n#ifndef false\n#define false 0\n#endif\n\n//------------------------------------------------------------------------------\n/**\n *  Defines, enumerations, and structure definitions\n */\n\n#define LIS3DH_STATUS_REG_AUX_ADDR\t  0x07  // Auxiliary Status (read only)\n#define LIS3DH_OUT_ADC1_L_REG_ADDR\t  0x08  // Data Output ADC1 LSB (read only)\n#define LIS3DH_OUT_ADC1_H_REG_ADDR\t  0x09  // Data Output ADC1 MSB (read only)\n#define LIS3DH_OUT_ADC2_L_REG_ADDR\t  0x0A  // Data Output ADC2 LSB (read only)\n#define LIS3DH_OUT_ADC2_H_REG_ADDR\t  0x0B  // Data Output ADC2 MSB (read only)\n#define LIS3DH_OUT_ADC3_L_REG_ADDR\t  0x0C  // Data Output ADC3 LSB (read only)\n#define LIS3DH_OUT_ADC3_H_REG_ADDR\t  0x0D  // Data Output ADC3 MSB (read only)\n#define LIS3DH_INT_COUNTER_REG_ADDR\t 0x0E  // Interrupt Counter (read only)\n#define LIS3DH_WHO_AM_I_REG_ADDR\t\t0x0F  // Device Identification (read only)\n#define LIS3DH_TEMP_CFG_REG_ADDR\t\t0x1F  // Temperature Sensor Configuration\n#define LIS3DH_CTRL_REG1_ADDR\t\t   0x20  // Control 1\n#define LIS3DH_CTRL_REG2_ADDR\t\t   0x21  // Control 2\n#define LIS3DH_CTRL_REG3_ADDR\t\t   0x22  // Control 3\n#define LIS3DH_CTRL_REG4_ADDR\t\t   0x23  // Control 4\n#define LIS3DH_CTRL_REG5_ADDR\t\t   0x24  // Control 5\n#define LIS3DH_CTRL_REG6_ADDR\t\t   0x25  // Control 6\n#define LIS3DH_REFERENCE_REG_ADDR\t   0x26  // Reference / Data Capture\n#define LIS3DH_STATUS_REG2_ADDR\t\t 0x27  // Status 2 (read only)\n#define LIS3DH_OUT_X_L_REG_ADDR\t\t 0x28  // Data Output X LSB (read only)\n#define LIS3DH_OUT_X_H_REG_ADDR\t\t 0x29  // Data Output X MSB (read only)\n#define LIS3DH_OUT_Y_L_REG_ADDR\t\t 0x2A  // Data Output Y LSB (read only)\n#define LIS3DH_OUT_Y_H_REG_ADDR\t\t 0x2B  // Data Output Y MSB (read only)\n#define LIS3DH_OUT_Z_L_REG_ADDR\t\t 0x2C  // Data Output Z LSB (read only)\n#define LIS3DH_OUT_Z_H_REG_ADDR\t\t 0x2D  // Data Output Z MSB (read only)\n#define LIS3DH_FIFO_CTRL_REG_ADDR\t   0x2E  // FIFO Control\n#define LIS3DH_FIFP_SRC_REG_ADDR\t\t0x2F  // FIFO Source (read only)\n#define LIS3DH_INT1_CFG_REG_ADDR\t\t0x30  // Interrupt 1 Configuration\n#define LIS3DH_INT1_SRC_REG_ADDR\t\t0x31  // Interrupt 1 Source (read only)\n#define LIS3DH_INT1_THS_REG_ADDR\t\t0x32  // Interrupt 1 Threshold\n#define LIS3DH_INT1_DURATION_REG_ADDR   0x33  // Interrupt 1 Duration\n#define LIS3DH_CLICK_CFG_REG_ADDR\t   0x38  // Click Configuration\n#define LIS3DH_CLICK_SRC_REG_ADDR\t   0x39  // Click Source (read only)\n#define LIS3DH_CLICK_THS_REG_ADDR\t   0x3A  // Click Threshold\n#define LIS3DH_TIME_LIMIT_REG_ADDR\t  0x3B  // Time Limit\n#define LIS3DH_TIME_LATENCY_REG_ADDR\t0x3C  // Time Latency\n#define LIS3DH_TIME_WINDOW_REG_ADDR\t 0x3D  // Time Window\n\n/**\n *  eLIS3DHOperatingMode - type indicating the operating mode of the\n *  LIS3DH device.  The LIS3DH offers two modes; Normal and Low-power.  Refer\n *  to the LIS3DH datasheet for details regarding the different modes.\n */\nenum eLIS3DHOperatingMode\n{\n  LIS3DH_LowPower\t\t\t  = 0x00,\n  LIS3DH_Normal\t\t\t\t= 0x01\n};\n\n/**\n *  eLIS3DHDataRate - type indicating the output data rate of the LIS3DH\n *  device, specified in Hz.\n */\nenum eLIS3DHDataRate\n{\n  LIS3DH_Rate_PowerDown\t\t= 0x00, // power down mode (default)\n  LIS3DH_Rate_1Hz\t\t\t  = 0x01, // normal & low-power modes\n  LIS3DH_Rate_10Hz\t\t\t = 0x02, // normal & low-power modes\n  LIS3DH_Rate_25Hz\t\t\t = 0x03, // normal & low-power modes\n  LIS3DH_Rate_50Hz\t\t\t = 0x04, // normal & low-power modes\n  LIS3DH_Rate_100Hz\t\t\t= 0x05, // normal & low-power modes\n  LIS3DH_Rate_200Hz\t\t\t= 0x06, // normal & low-power modes\n  LIS3DH_Rate_400Hz\t\t\t= 0x07, // normal & low-power modes\n  LIS3DH_Rate_1600Hz\t\t   = 0x08, // low-power mode only\n  LIS3DH_Rate_1250Hz_5000Hz\t= 0x09  // 1.25kHz normal mode, 5kHz low-power mode\n};\n\nvoid LIS3DH_Init();\n\n/**\nWrite an 8-bit value to a device register.  All of the LIS3DH registers are\nread only except for the configuration and control registers.  This function\ndoes not do any form of error checking, so trying to write to one of the\nread-only registers may result in undesireable behavior.\n@param addr device register address\n@param data data to be written to the specified register address\n*/\nvoid LIS3DH_WriteReg(uint8 addr, uint8 data);\n\n/**\nRead an 8-bit value from a device register.\n@param addr device register address\n@return data read from the specified register address\n*/\nuint8 LIS3DH_ReadReg(uint8 addr);\n\n/**\nRead WHO_AM_I identification register.\n@return contents of WHO_AM_I register.  Value always = 0x33 (ascii '3').\n*/\nuint8 LIS3DH_GetWhoAmIReg(void);\n\n\nint16 LIS3DH_GetXaxisRaw(void);\nint16 LIS3DH_GetYaxisRaw(void);\nint16 LIS3DH_GetZaxisRaw(void);\n\nfloat LIS3DH_GetXaxis(void);\nfloat LIS3DH_GetYaxis(void);\nfloat LIS3DH_GetZaxis(void);\n\n\n#endif  /* LIS3DH_H */\n"
+              },
+              "objects": {
+                "lis3dh_common.c": "/**\n *  ----------------------------------------------------------------------------\n *  Copyright (c) 2014, Anaren Microwave, Inc.\n *\n *  For more information on licensing, please see Anaren Microwave, Inc's\n *  end user software licensing agreement: EULA.txt.\n *\n *  ----------------------------------------------------------------------------\n *\n *  lis3dh.c - driver interface for the ST Microelectronics LIS3DH 3-Axis MEMS\n *  accelerometer.\n *\n *  @version\t1.0.00\n *  @date\t   30 Sep 2014\n *  @author\t Anaren, air@anaren.com\n *\n *  assumptions\n *  ===========\n *  - The SPI driver provides the proper signaling sequences for read & write\n *\toperations.\n *  - The SPI driver meets the timing requirements specified in the LIS3DH\n *\tdatasheet.\n *\n *  file dependency\n *  ===============\n *  spi.h : defines the SPI read & write interfaces.\n *\n *  revision history\n *  ================\n *  ver 1.0.00 : 30 Sep 2014\n *  - initial release\n */\n\n#include \"lis3dh.h\"\n\n\n// -----------------------------------------------------------------------------\n/**\n *  Global data\n */\n\n// -----------------------------------------------------------------------------\n/**\n *  Private interface\n */\n\n// -----------------------------------------------------------------------------\n/**\n *  Public interface\n */\n\nvoid LIS3DH_Init()\n{\n\tAIR_SPI_SetCSPin(LIS3DH_CSPIN);\n\tLIS3DH_WriteReg(0x20, 0x77);\n}\n\nvoid LIS3DH_WriteReg(uint8 addr, uint8 data)\n{\n  uint8 writeBytes[2];\n\n  writeBytes[0] = addr;\n  writeBytes[1] = data;\n  AIR_SPI_Write(LIS3DH_CSPIN, writeBytes, 2);\n}\n\nuint8 LIS3DH_ReadReg(uint8 addr)\n{\n  uint8 writeBytes[2];\n  uint8 readBytes[2];\n\n  writeBytes[0] = addr | 0x80;  // set msb high for read operations\n  writeBytes[1] = 0xFF;\t\t // dummy byte\n\n  AIR_SPI_Exchange(LIS3DH_CSPIN, readBytes, writeBytes, 2);\n  return readBytes[1];\n}\n\n\nuint8 LIS3DH_GetWhoAmIReg(void)\n{\n  return LIS3DH_ReadReg(LIS3DH_WHO_AM_I_REG_ADDR);\n}\n\nint16 LIS3DH_GetXaxisRaw(void)\n{\n  uint16 returnData = (uint16)LIS3DH_ReadReg(LIS3DH_OUT_X_H_REG_ADDR) << 8;\n  \n  returnData |= LIS3DH_ReadReg(LIS3DH_OUT_X_L_REG_ADDR);\n  \n  return (int16)returnData;\n}\n\nint16 LIS3DH_GetYaxisRaw(void)\n{\n  uint16 returnData = (uint16)LIS3DH_ReadReg(LIS3DH_OUT_Y_H_REG_ADDR) << 8;\n  \n  returnData |= LIS3DH_ReadReg(LIS3DH_OUT_Y_L_REG_ADDR);\n  \n  return (int16)returnData;\n}\n\nint16 LIS3DH_GetZaxisRaw(void)\n{\n  uint16 returnData = (uint16)LIS3DH_ReadReg(LIS3DH_OUT_Z_H_REG_ADDR) << 8;\n  \n  returnData |= LIS3DH_ReadReg(LIS3DH_OUT_Z_L_REG_ADDR);\n  \n  return (int16)returnData;\n}\n\nfloat LIS3DH_GetXaxis(void)\n{\n  return (float)LIS3DH_GetXaxisRaw() / 16384.0;\n}\n\nfloat LIS3DH_GetYaxis(void)\n{\n  return (float)LIS3DH_GetYaxisRaw() / 16384.0;\n}\n\nfloat LIS3DH_GetZaxis(void)\n{\n  return (float)LIS3DH_GetZaxisRaw() / 16384.0;\n}\n"
+              },
+              "other": {
+                "lis3dh_config.h": "#define LIS3DH_CSPIN 0x03 \n"
+              }
+            }
+          },
+          "label": "LIS3DH Driver",
+          "language": {
+            "en": {
+              "label": "LIS3DH Driver"
+            }
+          },
+          "name": "lis3dh",
+          "signature": "",
+          "type": "Embedded Library",
+          "version": "1.0.0"
+        },
+        "hmc5883": {
+          "author": "Anaren Inc.",
+          "code": {
+            "global": "",
+            "setup": ""
+          },
+          "elements": {},
+          "files": {
+            "common": {
+              "headers": {
+                "hmc5883.h": "// Copyright (c) 2014, Anaren Inc.\r\n// All rights reserved.\r\n// \r\n// Redistribution and use in source and binary forms, with or without\r\n// modification, are permitted provided that the following conditions are met:\r\n// \r\n// 1. Redistributions of source code must retain the above copyright notice, this\r\n//\tlist of conditions and the following disclaimer. \r\n// 2. Redistributions in binary form must reproduce the above copyright notice,\r\n//\tthis list of conditions and the following disclaimer in the documentation\r\n//\tand/or other materials provided with the distribution.\r\n// \r\n// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS \"AS IS\" AND\r\n// ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED\r\n// WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE\r\n// DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR\r\n// ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES\r\n// (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;\r\n// LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND\r\n// ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT\r\n// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS\r\n// SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.\r\n// \r\n// The views and conclusions contained in the software and documentation are those\r\n// of the authors and should not be interpreted as representing official policies, \r\n// either expressed or implied, of the FreeBSD Project.\r\n\r\n#ifndef HMC5883_H\r\n#define HMC5883_H\r\n\r\n#include \"hmc5883_config.h\"\r\n#include \"types.h\"\r\n\r\n//------------------------------------------------------------------------------\r\n/**\r\n *\tDefines, enumerations, and structure definitions\r\n */\r\n#ifndef bool\r\n#define bool uint8\r\n#endif\r\n\r\n#ifndef true\r\n#define true 1\r\n#endif\r\n\r\n#ifndef false\r\n#define false 0\r\n#endif\r\n\r\n//------------------------------------------------------------------------------\r\n/**\r\n *\tDefines, enumerations, and structure definitions\r\n */\r\n\r\n#define HMC5883_SLAVE_BASE_ADDR\t\t0x1E\r\n\r\n#define HMC5883_CONFIG_A_REG_ADDR\t0x00\t// Configuration A\r\n#define HMC5883_CONFIG_B_REG_ADDR\t0x01\t// Configuration B\r\n#define HMC5883_MODE_REG_ADDR\t\t\t\t 0x02\t// Mode\r\n#define HMC5883_DATA_X_MSB_REG_ADDR\t0x03\t// Data Output X MSB (read only)\r\n#define HMC5883_DATA_X_LSB_REG_ADDR\t0x04\t// Data Output X LSB (read only)\r\n#define HMC5883_DATA_Z_MSB_REG_ADDR\t0x05\t// Data Output Z MSB (read only)\r\n#define HMC5883_DATA_Z_LSB_REG_ADDR\t0x06\t// Data Output Z LSB (read only)\r\n#define HMC5883_DATA_Y_MSB_REG_ADDR\t0x07\t// Data Output Y MSB (read only)\r\n#define HMC5883_DATA_Y_LSB_REG_ADDR\t0x08\t// Data Output Y LSB (read only)\r\n#define HMC5883_STATUS_REG_ADDR\t\t0x09\t// Status (read only)\r\n#define HMC5883_ID_A_REG_ADDR\t\t0x0A\t// Identification A (read only)\r\n#define HMC5883_ID_B_REG_ADDR\t\t0x0B\t// Identification B (read only)\r\n#define HMC5883_ID_C_REG_ADDR\t\t0x0C\t// Identification C (read only)\r\n\r\n#define HMC5883_CONFIG_A_REG_MA\t\t0x60\r\n#define HMC5883_CONFIG_A_REG_DO\t\t0x1C\r\n#define HMC5883_CONFIG_A_REG_MS\t\t0x03\r\n\r\n#define HMC5883_CONFIG_B_REG_GN\t\t0xE0\r\n\r\n#define HMC5883_MODE_REG_MD\t\t0x03\r\n#define HMC5883_MODE_REG_HS\t\t0x80\r\n\t \r\n#define HMC5883_STATUS_REG_RDY\t\t0x01\r\n#define HMC5883_STATUS_REG_LOCK\t\t0x02\r\n\r\n/**\r\n *\teHMC5883SamplesAveraged - type indicating the number of samples averaged per\r\n *\tmeasurement output.\r\n */\r\nenum eHMC5883SamplesAveraged\r\n{\r\n\tHMC5883_AVGSMPL_1\t= 0x00,\r\n\tHMC5883_AVGSMPL_2\t= 0x20,\r\n\tHMC5883_AVGSMPL_4\t= 0x40,\r\n\tHMC5883_AVGSMPL_8\t= 0x60\r\n};\r\n\r\n/**\r\n *\teHMC5883DataOutputRate - type indicating the output rate of the HMC5883\r\n *\tdevice, specified in Hz, when in continuous measurement mode.\r\n */\r\nenum eHMC5883DataOutputRate\r\n{\r\n\tHMC5883_RATE_0P75HZ\t= 0x00,\r\n\tHMC5883_RATE_1P5HZ\t= 0x04,\r\n\tHMC5883_RATE_3HZ\t= 0x08,\r\n\tHMC5883_RATE_7P5HZ\t= 0x0C,\r\n\tHMC5883_RATE_15HZ\t= 0x10,\r\n\tHMC5883_RATE_30HZ\t= 0x14,\r\n\tHMC5883_RATE_75HZ\t= 0x18\r\n};\r\n\r\n/**\r\n *\teHMC5883MeasurementMode - type indicating the measurement mode of the\r\n *\tHMC5883 device.\tThe HMC5883 offers three modes; Normal, Positive Bias, and\r\n *\tNegative Bias.\tRefer to the HMC5883 datasheet for details regarding use of\r\n *\tthe bias modes.\r\n */\r\nenum eHMC5883MeasurementMode\r\n{\r\n\tHMC5883_NORMAL\t\t= 0x00,\r\n\tHMC5883_POSITIVEBIAS\t= 0x01,\r\n\tHMC5883_NEGATIVEBIAS\t= 0x02\r\n};\r\n\r\n/**\r\n *\teHMC5883Gain - type indicating the gain setting of the HMC5883 device.\r\n */\r\nenum eHMC5883Gain\r\n{\r\n\tHMC5883_GAIN_1370\t= 0x00,\r\n\tHMC5883_GAIN_1090\t= 0x20,\r\n\tHMC5883_GAIN_820\t= 0x40,\r\n\tHMC5883_GAIN_660\t= 0x60,\r\n\tHMC5883_GAIN_440\t= 0x80,\r\n\tHMC5883_GAIN_390\t= 0xA0,\r\n\tHMC5883_GAIN_330\t= 0xC0,\r\n\tHMC5883_GAIN_230\t= 0xE0\r\n};\r\n\r\n/**\r\n *\teHMC5883OperatingMode - type indicating the operating mode of the HMC5883\r\n *\tdevice.\tThe HMC5883 offers three modes; Continuous Measurement, Single\r\n *\tMeasurement, and Idle.\tWhen ultra-low power consumption is important, the\r\n *\tapplication should place the device in Idle when measurements are not\r\n *\trequired.\tWhile in Continuous Measurement mode, the device automatically\r\n *\tenters a low-power state between samples.\tHowever, this low-power state\r\n *\tdraws significantly more current than when in Idle.\r\n */\r\nenum eHMC5883OperatingMode\r\n{\r\n\tHMC5883_CONTINUOUSMEASUREMENT \t= 0x00,\r\n\tHMC5883_SINGLEMEASUREMENT\t= 0x01,\r\n\tHMC5883_IDLE\t\t\t= 0x02\r\n};\r\n\r\n/**\r\n *\tsHMC5883Status - structure defining the HMC5883 status register.\r\n */\r\nstruct sHMC5883Status\r\n{\r\n\tbool lock;\r\n\tbool rdy;\r\n};\r\n\r\n\r\n/** \r\nWrite an 8-bit value to a device register.\tAll of the HMC5883L registers are\r\nread only except for the configuration and mode registers.\tThis function does\r\nnot do any form of error checking, so trying to write to one of the read-only\r\nregisters may result in undesireable behavior.\r\n@param addr device register address\r\n@param data data to be written to the specified register address\r\n*/\r\nvoid HMC5883_WriteReg(uint8 addr, uint8 data);\r\n\r\n/** \r\nRead an 8-bit value from a device register.\r\n@param addr device register address\r\n@return data read from the specified register address\r\n*/\r\nuint8 HMC5883_ReadReg(uint8 addr);\r\n\r\n/** \r\nRead multiple 8-bit register values from the device.\tThe HMC5883L uses an\r\naddress pointer to determine which register to start reading from.\tThis pointer\r\nis automatically incremented for each register read.\r\n@param addr device register address\r\n@param readBytes pointer to buffer for storing the values read\r\n@param numBytes number of registers to read\r\n*/\r\nvoid HMC5883_BurstReadReg(uint8 addr, uint8* readBytes, uint8 numBytes);\r\n\r\n\r\nvoid HMC5883_SetNumberSamplesAveraged(enum eHMC5883SamplesAveraged samples);\r\nenum eHMC5883SamplesAveraged HMC5883_GetNumberSamplesAveraged(void);\r\n\r\nvoid HMC5883_SetDataOutputRate(enum eHMC5883DataOutputRate rate);\r\nenum eHMC5883DataOutputRate HMC5883_GetDataOutputRate(void);\r\n\r\nvoid HMC5883_SetMeasurementMode(enum eHMC5883MeasurementMode mode);\r\nenum eHMC5883MeasurementMode HMC5883_GetMeasurementMode(void);\r\n\r\nvoid HMC5883_SetGain(enum eHMC5883Gain gain);\r\nenum eHMC5883Gain HMC5883_GetGain(void);\r\n\r\n\r\nfloat HMC5883_GetHeading(void);\r\n\r\n\r\n/**\r\nSelect the device operating mode.\tRefer to eHMC5883OperatingMode definition for\r\ndetails regarding the allowed states.\r\n@param mode specifies the device mode of operation\r\n*/\r\nvoid HMC5883_SetOperatingMode(enum eHMC5883OperatingMode mode);\r\n\r\n/**\r\nRead the currently selected operating mode.\tRefer to eHMC5883OperatingMode\r\ndefinition for details regarding the available states.\r\n@return device mode of operation\r\n*/\r\nenum eHMC5883OperatingMode HMC5883_GetOperatingMode(void);\r\n\r\n/**\r\nRead the current status of the device.\r\n@return device status\r\n*/\r\nstruct sHMC5883Status HMC5883_GetStatus(void);\r\n\r\n/**\r\nRead ID Register A.\r\n@return contents of ID Register A.\tValue always = 0x48 (ascii 'H').\r\n*/\r\nuint8 HMC5883_GetIdRegA(void);\r\n\r\n/**\r\nRead ID Register B.\r\n@return contents of ID Register B.\tValue always = 0x34 (ascii '4').\r\n*/\r\nuint8 HMC5883_GetIdRegB(void);\r\n\r\n/**\r\nRead ID Register C.\r\n@return contents of ID Register C.\tValue always = 0x33 (ascii '3').\r\n*/\r\nuint8 HMC5883_GetIdRegC(void);\r\n\r\n\r\n#endif\t/* HMC5883_H */\r\n"
+              },
+              "objects": {
+                "hmc5883_common.c": "/**\r\n *\t----------------------------------------------------------------------------\r\n *\tCopyright (c) 2014, Anaren Microwave, Inc.\r\n *\r\n *\tFor more information on licensing, please see Anaren Microwave, Inc's\r\n *\tend user software licensing agreement: EULA.txt.\r\n *\r\n *\t----------------------------------------------------------------------------\r\n *\r\n *\thmc5883.c - driver interface for the Honeywell HMC5883L 3-Axis Digital\r\n *\tCompass.\r\n *\r\n *\t@version\t\t1.0.00\r\n *\t@date\t\t\t 31 Jul 2014\r\n *\t@author\t\t Anaren, air@anaren.com\r\n *\r\n *\tassumptions\r\n *\t===========\r\n *\t- The i2c driver provides the proper signaling sequences for read & write\r\n *\t\toperations.\r\n *\t- The i2c driver meets the timing requirements specified in the HMC5883L\r\n *\t\tdatasheet.\r\n *\r\n *\tfile dependency\r\n *\t===============\r\n *\ti2c.h : defines the i2c read & write interfaces.\r\n *\r\n *\trevision history\r\n *\t================\r\n *\tver 1.0.00 : 31 Jul 2014\r\n *\t- initial release\r\n */\r\n\r\n#include \"hmc5883.h\"\r\n#include \"../i2c/i2c.h\"\r\n\r\n\r\n// -----------------------------------------------------------------------------\r\n/**\r\n *\tGlobal data\r\n */\r\n\r\n// -----------------------------------------------------------------------------\r\n/**\r\n *\tPrivate interface\r\n */\r\n\r\n// -----------------------------------------------------------------------------\r\n/**\r\n *\tPublic interface\r\n */\r\n\r\nvoid HMC5883_WriteReg(uint8 addr, uint8 data)\r\n{\r\n\tuint8 writeBytes[2];\r\n\r\n\twriteBytes[0] = addr;\r\n\twriteBytes[1] = data;\r\n\tAIR_I2C_Write(HMC5883_SLAVE_BASE_ADDR, writeBytes, 2);\r\n}\r\n\r\nuint8 HMC5883_ReadReg(uint8 addr)\r\n{\r\n\tuint8 readByte;\r\n\r\n\tAIR_I2C_Write(HMC5883_SLAVE_BASE_ADDR, &addr, 1);\r\n\tAIR_I2C_ComboRead(HMC5883_SLAVE_BASE_ADDR, NULL, 0, &readByte, 1);\r\n\treturn readByte;\r\n}\r\n\r\nvoid HMC5883_BurstReadReg(uint8 addr, uint8* readBytes, uint8 numBytes)\r\n{\r\n\tAIR_I2C_Write(HMC5883_SLAVE_BASE_ADDR, &addr, 1);\r\n\tAIR_I2C_ComboRead(HMC5883_SLAVE_BASE_ADDR, NULL, 0, readBytes, numBytes);\r\n}\r\n\r\n\r\n\r\nvoid HMC5883_SetNumberSamplesAveraged(enum eHMC5883SamplesAveraged samples)\r\n{\r\n\tuint8 data = HMC5883_ReadReg(HMC5883_CONFIG_A_REG_ADDR);\r\n\t\r\n\tdata &= ~HMC5883_CONFIG_A_REG_MA;\r\n\tdata |= (uint8)samples;\r\n\tHMC5883_WriteReg(HMC5883_CONFIG_A_REG_ADDR, data);\r\n}\r\n\r\nenum eHMC5883SamplesAveraged HMC5883_GetNumberSamplesAveraged(void)\r\n{\r\n\treturn (enum eHMC5883SamplesAveraged)(HMC5883_ReadReg(HMC5883_CONFIG_A_REG_ADDR) & HMC5883_CONFIG_A_REG_MA);\r\n}\r\n\r\nvoid HMC5883_SetDataOutputRate(enum eHMC5883DataOutputRate rate)\r\n{\r\n\tuint8 data = HMC5883_ReadReg(HMC5883_CONFIG_A_REG_ADDR);\r\n\t\r\n\tdata &= ~HMC5883_CONFIG_A_REG_DO;\r\n\tdata |= (uint8)rate;\r\n\tHMC5883_WriteReg(HMC5883_CONFIG_A_REG_ADDR, data);\r\n}\r\n\r\nenum eHMC5883DataOutputRate HMC5883_GetDataOutputRate(void)\r\n{\r\n\treturn (enum eHMC5883DataOutputRate)(HMC5883_ReadReg(HMC5883_CONFIG_A_REG_ADDR) & HMC5883_CONFIG_A_REG_DO);\r\n}\r\n\r\nvoid HMC5883_SetMeasurementMode(enum eHMC5883MeasurementMode mode)\r\n{\r\n\tuint8 data = HMC5883_ReadReg(HMC5883_CONFIG_A_REG_ADDR);\r\n\t\r\n\tdata &= ~HMC5883_CONFIG_A_REG_MS;\r\n\tdata |= (uint8)mode;\r\n\tHMC5883_WriteReg(HMC5883_CONFIG_A_REG_ADDR, data);\r\n}\r\n\r\nenum eHMC5883MeasurementMode HMC5883_GetMeasurementMode(void)\r\n{\r\n\treturn (enum eHMC5883MeasurementMode)(HMC5883_ReadReg(HMC5883_CONFIG_A_REG_ADDR) & HMC5883_CONFIG_A_REG_MS);\r\n}\r\n\r\nvoid HMC5883_SetGain(enum eHMC5883Gain gain)\r\n{\r\n\tuint8 data = HMC5883_ReadReg(HMC5883_CONFIG_B_REG_ADDR);\r\n\t\r\n\tdata &= ~HMC5883_CONFIG_B_REG_GN;\r\n\tdata |= (uint8)gain;\r\n\tHMC5883_WriteReg(HMC5883_CONFIG_B_REG_ADDR, data);\r\n}\r\n\r\nenum eHMC5883Gain HMC5883_GetGain(void)\r\n{\r\n\treturn (enum eHMC5883Gain)(HMC5883_ReadReg(HMC5883_CONFIG_B_REG_ADDR) & HMC5883_CONFIG_B_REG_GN);\r\n}\r\n\r\n\r\nvoid HMC5883_SetOperatingMode(enum eHMC5883OperatingMode mode)\r\n{\r\n\tuint8 data = HMC5883_ReadReg(HMC5883_MODE_REG_ADDR);\r\n\t\r\n\tdata &= ~HMC5883_MODE_REG_MD;\r\n\tdata |= (uint8)mode;\r\n\tHMC5883_WriteReg(HMC5883_MODE_REG_ADDR, data);\r\n}\r\n\r\nenum eHMC5883OperatingMode HMC5883_GetOperatingMode(void)\r\n{\r\n\treturn (enum eHMC5883OperatingMode)(HMC5883_ReadReg(HMC5883_MODE_REG_ADDR) & HMC5883_MODE_REG_MD);\r\n}\r\n\r\nstruct sHMC5883Status HMC5883_GetStatus(void)\r\n{\r\n\tstruct sHMC5883Status status;\r\n\tuint8 data = HMC5883_ReadReg(HMC5883_STATUS_REG_ADDR);\r\n\r\n\tstatus.rdy = (data & HMC5883_STATUS_REG_RDY) ? true : false;\r\n\tstatus.lock = (data & HMC5883_STATUS_REG_LOCK) ? true : false;\r\n\r\n\treturn status;\r\n}\r\n\r\nuint8 HMC5883_GetIdRegA(void)\r\n{\r\n\treturn HMC5883_ReadReg(HMC5883_ID_A_REG_ADDR);\r\n}\r\n\r\nuint8 HMC5883_GetIdRegB(void)\r\n{\r\n\treturn HMC5883_ReadReg(HMC5883_ID_B_REG_ADDR);\r\n}\r\n\r\nuint8 HMC5883_GetIdRegC(void)\r\n{\r\n\treturn HMC5883_ReadReg(HMC5883_ID_C_REG_ADDR);\r\n}\r\n"
+              },
+              "other": {
+                "hmc5883_config.h": ""
+              }
+            }
+          },
+          "label": "HMC5883 Driver",
+          "language": {
+            "en": {
+              "label": "HMC5883 Driver"
+            }
+          },
+          "name": "hmc5883",
+          "signature": "",
+          "type": "Embedded Library",
+          "version": "1.0.0"
+        }
+      },
+      "theme": {
+        "bg1": "#DCEBF9",
+        "bg2": "#DCEBF9"
+      },
+      "projectType": "bcm920737",
+      "name": "atmo_led_io"
+    },
+    "type": "Header",
+    "currentLayoutName": "Default",
+    "currentCloudLayoutName": "Default"
+  },
+  "layouts": {
+    "Default": {
+      "name": "Default (768x1024)",
+      "width": 768,
+      "height": 1024,
+      "orientation": "portrait",
+      "devicename": ".*",
+      "platform": ".*",
+      "version": ".*",
+      "elements": {
+        "BlueSlider": {
+          "x": 67,
+          "y": 145,
+          "width": 240,
+          "height": 66
+        },
+        "RedSlider": {
+          "x": 67,
+          "y": 26,
+          "width": 242,
+          "height": 66
+        },
+        "GreenSlider": {
+          "x": 67,
+          "y": 86,
+          "width": 241,
+          "height": 66
+        },
+        "Red": {
+          "x": 8,
+          "y": 25,
+          "width": 49,
+          "height": 26
+        },
+        "Green": {
+          "x": 7,
+          "y": 87,
+          "width": 50,
+          "height": 26
+        },
+        "Blue": {
+          "x": 9,
+          "y": 146,
+          "width": 46,
+          "height": 26
+        },
+        "RedVal": {
+          "x": 8,
+          "y": 45,
+          "width": 50,
+          "height": 26
+        },
+        "GreenVal": {
+          "x": 7,
+          "y": 106,
+          "width": 50,
+          "height": 26
+        },
+        "BlueVal": {
+          "x": 8,
+          "y": 166,
+          "width": 50,
+          "height": 26
+        },
+        "SetColorButton": {
+          "x": 97,
+          "y": 274,
+          "width": 81,
+          "height": 46
+        },
+        "WhiteSlider": {
+          "x": 67,
+          "y": 200,
+          "width": 240,
+          "height": 66
+        },
+        "WhiteVal": {
+          "x": 8,
+          "y": 226,
+          "width": 50,
+          "height": 26
+        },
+        "White": {
+          "x": 7,
+          "y": 206,
+          "width": 48,
+          "height": 24
+        },
+        "OffButton": {
+          "x": 14,
+          "y": 274,
+          "width": 54,
+          "height": 46
+        },
+        "SetScene": {
+          "x": 210,
+          "y": 273,
+          "width": 86,
+          "height": 46
+        },
+        "SceneSlider": {
+          "x": 101,
+          "y": 326,
+          "width": 203,
+          "height": 66
+        },
+        "CycleDelay": {
+          "x": 5,
+          "y": 409,
+          "width": 35,
+          "height": 23
+        },
+        "DelayLabel": {
+          "x": 11,
+          "y": 392,
+          "width": 25,
+          "height": 18
+        },
+        "RaiseDelay": {
+          "x": 47,
+          "y": 384,
+          "width": 38,
+          "height": 28
+        },
+        "LowerDelay": {
+          "x": 47,
+          "y": 420,
+          "width": 38,
+          "height": 28
+        },
+        "CycleStateField": {
+          "x": 100,
+          "y": 400,
+          "width": 58,
+          "height": 22
+        },
+        "SceneTog": {
+          "x": 14,
+          "y": 331,
+          "width": 54,
+          "height": 37
+        },
+        "CycleState": {
+          "x": 100,
+          "y": 424,
+          "width": 56,
+          "height": 15
+        },
+        "TempAddressHolder": {
+          "x": 16,
+          "y": 612.5,
+          "width": 297,
+          "height": 34
+        },
+        "DeviceAddress": {
+          "x": 173,
+          "y": 400,
+          "width": 83,
+          "height": 22
+        },
+        "ID": {
+          "x": 175,
+          "y": 425,
+          "width": 28,
+          "height": 12
+        },
+        "UserIdLabel": {
+          "x": 102,
+          "y": 447,
+          "width": 74,
+          "height": 18
+        },
+        "UserIdFielde": {
+          "x": 162,
+          "y": 441,
+          "width": 86,
+          "height": 23
+        },
+        "ImagePan49": {
+          "x": 9,
+          "y": 439,
+          "width": 26,
+          "height": 26
+        },
+        "temparea": {
+          "x": 18,
+          "y": 607,
+          "width": 301,
+          "height": 46
+        },
+        "Label51": {
+          "x": 350,
+          "y": 564,
+          "width": 146,
+          "height": 46
+        }
+      }
+    }
+  },
+  "cloudLayouts": {
+    "Default": {
+      "name": "Default (768x1024)",
+      "width": 768,
+      "height": 1024,
+      "orientation": "portrait",
+      "devicename": ".*",
+      "platform": "",
+      "version": ".*",
+      "elements": {}
+    }
+  },
+  "elements": {
+    "BlueSlider": {
+      "type": "Slider",
+      "properties": {
+        "value": "0",
+        "maxValue": "100",
+        "minValue": "0",
+        "scaleMarkers": [
+          0,
+          50,
+          50
+        ],
+        "scaleStep": "10",
+        "orientation": "Horizontal",
+        "enabled": true,
+        "visible": true,
+        "showScale": "True",
+        "showTitle": "True",
+        "elementType": "element"
+      },
+      "triggers": {
+        "changed": [
+          {
+            "sourceTrigger": "changed",
+            "sourceValue": "getValue",
+            "targetValue": "addValue",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "key": "\"blue\"",
+                "value": "value"
+              },
+              "targetOrder": [
+                "key",
+                "value"
+              ],
+              "sourceOrder": [
+                "value"
+              ]
+            },
+            "targetName": "Expression46"
+          }
+        ]
+      },
+      "zindex": 1,
+      "designer": {
+        "x": 126,
+        "y": 44
+      }
+    },
+    "RedSlider": {
+      "type": "Slider",
+      "properties": {
+        "value": "0",
+        "maxValue": "100",
+        "minValue": "0",
+        "scaleMarkers": [
+          0,
+          50,
+          50
+        ],
+        "scaleStep": "10",
+        "orientation": "Horizontal",
+        "enabled": true,
+        "visible": true,
+        "showScale": "True",
+        "showTitle": "True",
+        "elementType": "element"
+      },
+      "triggers": {
+        "changed": [
+          {
+            "sourceTrigger": "changed",
+            "sourceValue": "getValue",
+            "targetValue": "addValue",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "key": "\"red\"",
+                "value": "value"
+              },
+              "targetOrder": [
+                "key",
+                "value"
+              ],
+              "sourceOrder": [
+                "value"
+              ]
+            },
+            "targetName": "Expression46"
+          }
+        ]
+      },
+      "zindex": 2,
+      "designer": {
+        "x": 218,
+        "y": 72
+      }
+    },
+    "GreenSlider": {
+      "type": "Slider",
+      "properties": {
+        "value": "0",
+        "maxValue": "100",
+        "minValue": "0",
+        "scaleMarkers": [
+          0,
+          50,
+          50
+        ],
+        "scaleStep": "10",
+        "orientation": "Horizontal",
+        "enabled": true,
+        "visible": true,
+        "showScale": "True",
+        "showTitle": "True",
+        "elementType": "element"
+      },
+      "triggers": {
+        "changed": [
+          {
+            "sourceTrigger": "changed",
+            "sourceValue": "getValue",
+            "targetValue": "addValue",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "key": "\"green\"",
+                "value": "value"
+              },
+              "targetOrder": [
+                "key",
+                "value"
+              ],
+              "sourceOrder": [
+                "value"
+              ]
+            },
+            "targetName": "Expression46"
+          }
+        ]
+      },
+      "zindex": 3,
+      "designer": {
+        "x": 305,
+        "y": 101
+      }
+    },
+    "Red": {
+      "type": "Label",
+      "properties": {
+        "label": "Red",
+        "enabled": true,
+        "visible": true,
+        "font": "14px Arial",
+        "color": "Red",
+        "elementType": "element"
+      },
+      "triggers": {},
+      "zindex": 4,
+      "designer": {
+        "x": 1090,
+        "y": 68
+      }
+    },
+    "Green": {
+      "type": "Label",
+      "properties": {
+        "label": "Green",
+        "enabled": true,
+        "visible": true,
+        "font": "14px Arial",
+        "color": "Green",
+        "elementType": "element"
+      },
+      "triggers": {},
+      "zindex": 5,
+      "designer": {
+        "x": 1090,
+        "y": 132
+      }
+    },
+    "Blue": {
+      "type": "Label",
+      "properties": {
+        "label": "Blue",
+        "enabled": true,
+        "visible": true,
+        "font": "14px Arial",
+        "color": "Blue",
+        "elementType": "element"
+      },
+      "triggers": {},
+      "zindex": 6,
+      "designer": {
+        "x": 1090,
+        "y": 5
+      }
+    },
+    "RedVal": {
+      "type": "TextField",
+      "properties": {
+        "label": "New TextField",
+        "value": "0",
+        "enabled": false,
+        "visible": true,
+        "elementType": "element"
+      },
+      "triggers": {},
+      "zindex": 7,
+      "designer": {
+        "x": 1001,
+        "y": 67
+      }
+    },
+    "GreenVal": {
+      "type": "TextField",
+      "properties": {
+        "label": "New TextField",
+        "value": "0",
+        "enabled": false,
+        "visible": true,
+        "elementType": "element"
+      },
+      "triggers": {},
+      "zindex": 8,
+      "designer": {
+        "x": 1003,
+        "y": 132
+      }
+    },
+    "BlueVal": {
+      "type": "TextField",
+      "properties": {
+        "label": "New TextField",
+        "value": "0",
+        "enabled": false,
+        "visible": true,
+        "elementType": "element"
+      },
+      "triggers": {},
+      "zindex": 9,
+      "designer": {
+        "x": 1004,
+        "y": 3
+      }
+    },
+    "SetColorButton": {
+      "type": "Button",
+      "properties": {
+        "label": "Set Color",
+        "enabled": true,
+        "visible": true,
+        "border": "plain",
+        "topColor": "rgb(250, 250, 250)",
+        "bottomColor": "rgb(234, 234, 234)",
+        "pressedTopColor": "rgb(255, 255, 255)",
+        "pressedBottomColor": "rgb(255, 255, 255)",
+        "overTopColor": "rgb(234, 234, 234)",
+        "overBottomColor": "rgb(214, 214, 214)",
+        "disabledTopColor": "rgb(211, 211, 211)",
+        "disabledBottomColor": "rgb(211, 211, 211)",
+        "elementType": "element"
+      },
+      "triggers": {
+        "mousePressed": [
+          {
+            "sourceTrigger": "mousePressed",
+            "sourceValue": "Static",
+            "targetValue": "evaluate",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "values": ""
+              },
+              "targetOrder": [
+                "values"
+              ],
+              "sourceOrder": []
+            },
+            "targetName": "Expression46"
+          }
+        ]
+      },
+      "zindex": 10,
+      "designer": {
+        "x": 15,
+        "y": 5
+      }
+    },
+    "WhiteSlider": {
+      "type": "Slider",
+      "properties": {
+        "value": "0",
+        "maxValue": "100",
+        "minValue": "0",
+        "scaleMarkers": [
+          0,
+          50,
+          50
+        ],
+        "scaleStep": "10",
+        "orientation": "Horizontal",
+        "enabled": true,
+        "visible": true,
+        "showScale": "True",
+        "showTitle": "True",
+        "elementType": "element"
+      },
+      "triggers": {
+        "changed": [
+          {
+            "sourceTrigger": "changed",
+            "sourceValue": "getValue",
+            "targetValue": "addValue",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "key": "\"white\"",
+                "value": "value"
+              },
+              "targetOrder": [
+                "key",
+                "value"
+              ],
+              "sourceOrder": [
+                "value"
+              ]
+            },
+            "targetName": "Expression46"
+          }
+        ]
+      },
+      "zindex": 11,
+      "designer": {
+        "x": 385,
+        "y": 140
+      }
+    },
+    "WhiteVal": {
+      "type": "TextField",
+      "properties": {
+        "label": "New TextField",
+        "value": "0",
+        "enabled": false,
+        "visible": true,
+        "elementType": "element"
+      },
+      "triggers": {},
+      "zindex": 12,
+      "designer": {
+        "x": 1004,
+        "y": 195
+      }
+    },
+    "White": {
+      "type": "Label",
+      "properties": {
+        "label": "White",
+        "enabled": true,
+        "visible": true,
+        "font": "14px Arial",
+        "color": "Black",
+        "elementType": "element"
+      },
+      "triggers": {},
+      "zindex": 13,
+      "designer": {
+        "x": 1085,
+        "y": 196
+      }
+    },
+    "UpdateValues": {
+      "type": "Function",
+      "properties": {
+        "code": "\n    sprintf(buffer, \"{\\\"user\\\":%s,\\\"addr\\\":%s,\\\"red\\\":%u,\\\"green\\\":%u,\\\"blue\\\":%u,\\\"white\\\":%u,\\\"scene\\\":%u,\\\"delay\\\":%u,\\\"cycle\\\":\\\"%s\\\"}\", userId, devAddr, targetRed, targetGreen, targetBlue, targetWhite, currentScene, cycleDelay, cycleScenes ? \"true\" : \"false\");\n\treturn buffer;\n\t",
+        "length": "128",
+        "inputType": "void",
+        "returnType": "json",
+        "permission": "public",
+        "elementType": "element"
+      },
+      "triggers": {
+        "valueReturned": [
+          {
+            "sourceTrigger": "valueReturned",
+            "sourceValue": "getValue",
+            "targetValue": "pause",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {},
+              "targetOrder": [],
+              "sourceOrder": [
+                "value"
+              ]
+            },
+            "targetName": "Task22"
+          },
+          {
+            "sourceTrigger": "valueReturned",
+            "sourceValue": "getValue",
+            "targetValue": "setValue",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "value.delay.toString()"
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": [
+                "value"
+              ]
+            },
+            "targetName": "CycleDelay"
+          },
+          {
+            "sourceTrigger": "valueReturned",
+            "sourceValue": "getValue",
+            "targetValue": "post",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "value"
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": [
+                "value"
+              ]
+            },
+            "targetName": "WebIO44"
+          },
+          {
+            "sourceTrigger": "valueReturned",
+            "sourceValue": "getValue",
+            "targetValue": "setValue",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "value.cycle.toString()"
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": [
+                "value"
+              ]
+            },
+            "targetName": "CycleStateField"
+          },
+          {
+            "sourceTrigger": "valueReturned",
+            "sourceValue": "Static",
+            "targetValue": "trigger",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {},
+              "targetOrder": [],
+              "sourceOrder": []
+            },
+            "targetName": "TempAddressHolder"
+          },
+          {
+            "sourceTrigger": "valueReturned",
+            "sourceValue": "getValue",
+            "targetValue": "setValue",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "value.green"
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": [
+                "value"
+              ]
+            },
+            "targetName": "GreenSlider"
+          },
+          {
+            "sourceTrigger": "valueReturned",
+            "sourceValue": "getValue",
+            "targetValue": "setValue",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "value.white"
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": [
+                "value"
+              ]
+            },
+            "targetName": "WhiteSlider"
+          },
+          {
+            "sourceTrigger": "valueReturned",
+            "sourceValue": "getValue",
+            "targetValue": "setValue",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "value.red"
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": [
+                "value"
+              ]
+            },
+            "targetName": "RedSlider"
+          },
+          {
+            "sourceTrigger": "valueReturned",
+            "sourceValue": "getValue",
+            "targetValue": "setValue",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "value.blue"
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": [
+                "value"
+              ]
+            },
+            "targetName": "BlueSlider"
+          },
+          {
+            "sourceTrigger": "valueReturned",
+            "sourceValue": "getValue",
+            "targetValue": "setValue",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "value.white"
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": [
+                "value"
+              ]
+            },
+            "targetName": "WhiteVal"
+          },
+          {
+            "sourceTrigger": "valueReturned",
+            "sourceValue": "getValue",
+            "targetValue": "setValue",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "value.green"
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": [
+                "value"
+              ]
+            },
+            "targetName": "GreenVal"
+          },
+          {
+            "sourceTrigger": "valueReturned",
+            "sourceValue": "getValue",
+            "targetValue": "setValue",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "value.red"
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": [
+                "value"
+              ]
+            },
+            "targetName": "RedVal"
+          },
+          {
+            "sourceTrigger": "valueReturned",
+            "sourceValue": "getValue",
+            "targetValue": "setValue",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "value.blue"
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": [
+                "value"
+              ]
+            },
+            "targetName": "BlueVal"
+          }
+        ]
+      },
+      "zindex": 14,
+      "designer": {
+        "x": 584,
+        "y": 384
+      }
+    },
+    "Connection21": {
+      "type": "Connection",
+      "properties": {
+        "elementType": "element"
+      },
+      "triggers": {
+        "connected": [
+          {
+            "sourceTrigger": "connected",
+            "sourceValue": "Static",
+            "targetValue": "run",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "runIn": "10",
+                "runEvery": "0"
+              },
+              "targetOrder": [
+                "runIn",
+                "runEvery"
+              ],
+              "sourceOrder": []
+            },
+            "targetName": "Task22"
+          },
+          {
+            "sourceTrigger": "connected",
+            "sourceValue": "getDeviceAddress",
+            "targetValue": "setValue",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "address.substring(0,8)"
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": [
+                "address"
+              ]
+            },
+            "targetName": "TempAddressHolder"
+          },
+          {
+            "sourceTrigger": "connected",
+            "sourceValue": "Static",
+            "targetValue": "setValue",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "JSON.parse(zebra.io.GET(\"https://atmosphere.anaren.com/atmoapi?fn=control&sfn=get_current_user\")).user_name;"
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": []
+            },
+            "targetName": "UserIdFielde"
+          },
+          {
+            "sourceTrigger": "connected",
+            "sourceValue": "Static",
+            "targetValue": "trigger",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {},
+              "targetOrder": [],
+              "sourceOrder": []
+            },
+            "targetName": "UserIdFielde"
+          },
+          {
+            "sourceTrigger": "connected",
+            "sourceValue": "Static",
+            "targetValue": "run",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "runIn": "2000",
+                "runEvery": "2000"
+              },
+              "targetOrder": [
+                "runIn",
+                "runEvery"
+              ],
+              "sourceOrder": []
+            },
+            "targetName": "CheckWebStatus"
+          }
+        ]
+      },
+      "zindex": 15,
+      "designer": {
+        "x": 39,
+        "y": 751
+      }
+    },
+    "Task22": {
+      "type": "Task",
+      "properties": {
+        "runOnStart": false,
+        "runIn": "1000",
+        "runEvery": "1000",
+        "elementType": "element"
+      },
+      "triggers": {
+        "task": [
+          {
+            "sourceTrigger": "task",
+            "sourceValue": "Static",
+            "targetValue": "execute",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": ""
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": []
+            },
+            "targetName": "UpdateValues"
+          },
+          {
+            "sourceTrigger": "task",
+            "sourceValue": "Static",
+            "targetValue": "trigger",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {},
+              "targetOrder": [],
+              "sourceOrder": []
+            },
+            "targetName": "TempAddressHolder"
+          }
+        ]
+      },
+      "zindex": 16,
+      "designer": {
+        "x": 635,
+        "y": 534
+      }
+    },
+    "OffButton": {
+      "type": "Button",
+      "properties": {
+        "label": "Off",
+        "enabled": true,
+        "visible": true,
+        "border": "plain",
+        "topColor": "rgb(250, 250, 250)",
+        "bottomColor": "rgb(234, 234, 234)",
+        "pressedTopColor": "rgb(255, 255, 255)",
+        "pressedBottomColor": "rgb(255, 255, 255)",
+        "overTopColor": "rgb(234, 234, 234)",
+        "overBottomColor": "rgb(214, 214, 214)",
+        "disabledTopColor": "rgb(211, 211, 211)",
+        "disabledBottomColor": "rgb(211, 211, 211)",
+        "elementType": "element"
+      },
+      "triggers": {
+        "mousePressed": [
+          {
+            "sourceTrigger": "mousePressed",
+            "sourceValue": "Static",
+            "targetValue": "execute",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "false"
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": []
+            },
+            "targetName": "toggleScene"
+          },
+          {
+            "sourceTrigger": "mousePressed",
+            "sourceValue": "Static",
+            "targetValue": "execute",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "0"
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": []
+            },
+            "targetName": "setBlue"
+          },
+          {
+            "sourceTrigger": "mousePressed",
+            "sourceValue": "Static",
+            "targetValue": "execute",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "0"
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": []
+            },
+            "targetName": "setRed"
+          },
+          {
+            "sourceTrigger": "mousePressed",
+            "sourceValue": "Static",
+            "targetValue": "execute",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "0"
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": []
+            },
+            "targetName": "setGreen"
+          },
+          {
+            "sourceTrigger": "mousePressed",
+            "sourceValue": "Static",
+            "targetValue": "execute",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "0"
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": []
+            },
+            "targetName": "setWhite"
+          }
+        ]
+      },
+      "zindex": 17,
+      "designer": {
+        "x": 221,
+        "y": 246
+      }
+    },
+    "setScene": {
+      "type": "Function",
+      "properties": {
+        "code": "\n\tint targetScene = JSON_ReadInt(data);\n\t\n\tif(JSON_GetError() != JSON_NO_ERROR) {\n\t    return JSON_WriteString(\"Bad Value\");\n\t}\n\t\n\tif(targetScene > 4 || targetScene < 0) {\n\t    return JSON_WriteString(\"Out of Bounds\");\n\t}\n\t\n\tscenesRed[targetScene] = targetRed;\n\tscenesGreen[targetScene] = targetGreen;\n\tscenesBlue[targetScene] = targetBlue;\n\tscenesWhite[targetScene] = targetWhite;\n\t\n\treturn JSON_WriteInt(targetScene);\n\t",
+        "length": "128",
+        "inputType": "json",
+        "returnType": "json",
+        "permission": "public",
+        "elementType": "element"
+      },
+      "triggers": {},
+      "zindex": 18,
+      "designer": {
+        "x": 1031,
+        "y": 449
+      }
+    },
+    "useScene": {
+      "type": "Function",
+      "properties": {
+        "code": "\n\tint targetScene = JSON_ReadInt(data);\n\t\n\tif(JSON_GetError() != JSON_NO_ERROR) {\n\t    return JSON_WriteString(\"Bad Value\");\n\t}\n\t\n\tif(targetScene > 4 || targetScene < 0) {\n\t    return JSON_WriteString(\"Out of Bounds\");\n\t}\n\t\n\ttargetRed = scenesRed[targetScene];\n\ttargetGreen = scenesGreen[targetScene];\n\ttargetBlue = scenesBlue[targetScene];\n\ttargetWhite = scenesWhite[targetScene];\n\t\n\tcurrentScene = targetScene;\n\t\n\treturn JSON_WriteInt(targetScene);\n\t",
+        "length": "128",
+        "inputType": "json",
+        "returnType": "json",
+        "permission": "public",
+        "elementType": "element"
+      },
+      "triggers": {
+        "valueReturned": [
+          {
+            "sourceTrigger": "valueReturned",
+            "sourceValue": "Static",
+            "targetValue": "execute",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": ""
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": []
+            },
+            "targetName": "UpdateValues"
+          }
+        ],
+        "notified": [
+          {
+            "sourceTrigger": "notified",
+            "sourceValue": "getValue",
+            "targetValue": "setValue",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "value"
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": [
+                "value"
+              ]
+            },
+            "targetName": "SceneSlider"
+          }
+        ]
+      },
+      "zindex": 19,
+      "designer": {
+        "x": 764,
+        "y": 439
+      }
+    },
+    "SetScene": {
+      "type": "Button",
+      "properties": {
+        "label": "Set Cycle",
+        "enabled": true,
+        "visible": true,
+        "border": "plain",
+        "topColor": "rgb(250, 250, 250)",
+        "bottomColor": "rgb(234, 234, 234)",
+        "pressedTopColor": "rgb(255, 255, 255)",
+        "pressedBottomColor": "rgb(255, 255, 255)",
+        "overTopColor": "rgb(234, 234, 234)",
+        "overBottomColor": "rgb(214, 214, 214)",
+        "disabledTopColor": "rgb(211, 211, 211)",
+        "disabledBottomColor": "rgb(211, 211, 211)",
+        "elementType": "element"
+      },
+      "triggers": {
+        "mousePressed": [
+          {
+            "sourceTrigger": "mousePressed",
+            "sourceValue": "Static",
+            "targetValue": "trigger",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {},
+              "targetOrder": [],
+              "sourceOrder": []
+            },
+            "targetName": "SceneSlider"
+          }
+        ]
+      },
+      "zindex": 20,
+      "designer": {
+        "x": 772,
+        "y": 531
+      }
+    },
+    "SceneSlider": {
+      "type": "Slider",
+      "properties": {
+        "value": "0",
+        "maxValue": "4",
+        "minValue": "0",
+        "scaleMarkers": [
+          0,
+          2,
+          2
+        ],
+        "scaleStep": "1",
+        "orientation": "Horizontal",
+        "enabled": true,
+        "visible": true,
+        "showScale": "True",
+        "showTitle": "True",
+        "elementType": "element"
+      },
+      "triggers": {
+        "onTrigger": [
+          {
+            "sourceTrigger": "onTrigger",
+            "sourceValue": "getValue",
+            "targetValue": "execute",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "value"
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": [
+                "value"
+              ]
+            },
+            "targetName": "setScene"
+          }
+        ],
+        "changed": [
+          {
+            "sourceTrigger": "changed",
+            "sourceValue": "getValue",
+            "targetValue": "execute",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "value"
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": [
+                "value"
+              ]
+            },
+            "targetName": "useScene"
+          }
+        ]
+      },
+      "zindex": 21,
+      "designer": {
+        "x": 911,
+        "y": 530
+      }
+    },
+    "CycleDelay": {
+      "type": "TextField",
+      "properties": {
+        "label": "New TextField",
+        "value": "",
+        "enabled": false,
+        "visible": true,
+        "elementType": "element"
+      },
+      "triggers": {},
+      "zindex": 22,
+      "designer": {
+        "x": 1006,
+        "y": 259
+      }
+    },
+    "increaseDelay": {
+      "type": "Function",
+      "properties": {
+        "code": "\n    cycleDelay++;\n   \n    return JSON_WriteInt(cycleDelay);\n\t",
+        "length": "128",
+        "inputType": "json",
+        "returnType": "json",
+        "permission": "public",
+        "elementType": "element"
+      },
+      "triggers": {
+        "valueReturned": [
+          {
+            "sourceTrigger": "valueReturned",
+            "sourceValue": "Static",
+            "targetValue": "execute",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": ""
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": []
+            },
+            "targetName": "UpdateValues"
+          }
+        ]
+      },
+      "zindex": 23,
+      "designer": {
+        "x": 168,
+        "y": 357
+      }
+    },
+    "DelayLabel": {
+      "type": "Label",
+      "properties": {
+        "label": "Delay",
+        "enabled": true,
+        "visible": true,
+        "font": "8px Arial",
+        "color": "Black",
+        "elementType": "element"
+      },
+      "triggers": {},
+      "zindex": 24,
+      "designer": {
+        "x": 1085,
+        "y": 262
+      }
+    },
+    "RaiseDelay": {
+      "type": "Button",
+      "properties": {
+        "label": "+",
+        "enabled": true,
+        "visible": true,
+        "border": "plain",
+        "topColor": "rgb(250, 250, 250)",
+        "bottomColor": "rgb(234, 234, 234)",
+        "pressedTopColor": "rgb(255, 255, 255)",
+        "pressedBottomColor": "rgb(255, 255, 255)",
+        "overTopColor": "rgb(234, 234, 234)",
+        "overBottomColor": "rgb(214, 214, 214)",
+        "disabledTopColor": "rgb(211, 211, 211)",
+        "disabledBottomColor": "rgb(211, 211, 211)",
+        "elementType": "element"
+      },
+      "triggers": {
+        "mousePressed": [
+          {
+            "sourceTrigger": "mousePressed",
+            "sourceValue": "Static",
+            "targetValue": "execute",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": ""
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": []
+            },
+            "targetName": "increaseDelay"
+          }
+        ]
+      },
+      "zindex": 25,
+      "designer": {
+        "x": 22,
+        "y": 401
+      }
+    },
+    "LowerDelay": {
+      "type": "Button",
+      "properties": {
+        "label": "-",
+        "enabled": true,
+        "visible": true,
+        "border": "plain",
+        "topColor": "rgb(250, 250, 250)",
+        "bottomColor": "rgb(234, 234, 234)",
+        "pressedTopColor": "rgb(255, 255, 255)",
+        "pressedBottomColor": "rgb(255, 255, 255)",
+        "overTopColor": "rgb(234, 234, 234)",
+        "overBottomColor": "rgb(214, 214, 214)",
+        "disabledTopColor": "rgb(211, 211, 211)",
+        "disabledBottomColor": "rgb(211, 211, 211)",
+        "elementType": "element"
+      },
+      "triggers": {
+        "mousePressed": [
+          {
+            "sourceTrigger": "mousePressed",
+            "sourceValue": "Static",
+            "targetValue": "execute",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": ""
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": []
+            },
+            "targetName": "decreaseDelay"
+          }
+        ]
+      },
+      "zindex": 26,
+      "designer": {
+        "x": 33,
+        "y": 479
+      }
+    },
+    "decreaseDelay": {
+      "type": "Function",
+      "properties": {
+        "code": "\n    if (cycleDelay > 0) {\n        cycleDelay--;\n    }\n    \n    return JSON_WriteInt(cycleDelay);",
+        "length": "128",
+        "inputType": "json",
+        "returnType": "json",
+        "permission": "public",
+        "elementType": "element"
+      },
+      "triggers": {
+        "valueReturned": [
+          {
+            "sourceTrigger": "valueReturned",
+            "sourceValue": "Static",
+            "targetValue": "execute",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": ""
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": []
+            },
+            "targetName": "UpdateValues"
+          }
+        ]
+      },
+      "zindex": 27,
+      "designer": {
+        "x": 176,
+        "y": 438
+      }
+    },
+    "WebIO44": {
+      "type": "WebIO",
+      "properties": {
+        "uri": "https://atmosphere.anaren.com/demos/LED_IO/report.php",
+        "elementType": "element"
+      },
+      "triggers": {},
+      "zindex": 28,
+      "designer": {
+        "x": 906,
+        "y": 389
+      }
+    },
+    "CycleStateField": {
+      "type": "TextField",
+      "properties": {
+        "label": "New TextField",
+        "value": "",
+        "enabled": false,
+        "visible": true,
+        "elementType": "element"
+      },
+      "triggers": {},
+      "zindex": 29,
+      "designer": {
+        "x": 1000,
+        "y": 324
+      }
+    },
+    "SceneTog": {
+      "type": "Button",
+      "properties": {
+        "label": "Toggle",
+        "enabled": true,
+        "visible": true,
+        "border": "plain",
+        "topColor": "rgb(250, 250, 250)",
+        "bottomColor": "rgb(234, 234, 234)",
+        "pressedTopColor": "rgb(255, 255, 255)",
+        "pressedBottomColor": "rgb(255, 255, 255)",
+        "overTopColor": "rgb(234, 234, 234)",
+        "overBottomColor": "rgb(214, 214, 214)",
+        "disabledTopColor": "rgb(211, 211, 211)",
+        "disabledBottomColor": "rgb(211, 211, 211)",
+        "elementType": "element"
+      },
+      "triggers": {
+        "mousePressed": [
+          {
+            "sourceTrigger": "mousePressed",
+            "sourceValue": "Static",
+            "targetValue": "execute",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": ""
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": []
+            },
+            "targetName": "toggleScene"
+          }
+        ]
+      },
+      "zindex": 30,
+      "designer": {
+        "x": 100,
+        "y": 282
+      }
+    },
+    "CycleState": {
+      "type": "Label",
+      "properties": {
+        "label": "Cycle State",
+        "enabled": true,
+        "visible": true,
+        "font": "10px Arial",
+        "color": "Black",
+        "elementType": "element"
+      },
+      "triggers": {},
+      "zindex": 31,
+      "designer": {
+        "x": 1082,
+        "y": 328
+      }
+    },
+    "CheckWebStatus": {
+      "type": "Task",
+      "properties": {
+        "runOnStart": false,
+        "runIn": "1000",
+        "runEvery": "1000",
+        "elementType": "element"
+      },
+      "triggers": {
+        "task": [
+          {
+            "sourceTrigger": "task",
+            "sourceValue": "Static",
+            "targetValue": "trigger",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {},
+              "targetOrder": [],
+              "sourceOrder": []
+            },
+            "targetName": "Label51"
+          }
+        ]
+      },
+      "zindex": 32,
+      "designer": {
+        "x": 61,
+        "y": 648
+      }
+    },
+    "CheckWeb": {
+      "type": "WebIO",
+      "properties": {
+        "uri": "https://atmosphere.anaren.com/demos/LED_IO/control.php",
+        "elementType": "element"
+      },
+      "triggers": {
+        "valueReturned": [
+          {
+            "sourceTrigger": "valueReturned",
+            "sourceValue": "getValue",
+            "targetValue": "addValue",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "key": "\"a\"",
+                "value": "value"
+              },
+              "targetOrder": [
+                "key",
+                "value"
+              ],
+              "sourceOrder": [
+                "value"
+              ]
+            },
+            "targetName": "EvalWeb"
+          },
+          {
+            "sourceTrigger": "valueReturned",
+            "sourceValue": "Static",
+            "targetValue": "evaluate",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "values": ""
+              },
+              "targetOrder": [
+                "values"
+              ],
+              "sourceOrder": []
+            },
+            "targetName": "EvalWeb"
+          }
+        ]
+      },
+      "zindex": 33,
+      "designer": {
+        "x": 142,
+        "y": 533
+      }
+    },
+    "EvalWeb": {
+      "type": "Expression",
+      "properties": {
+        "expression": "values.a.run == \"true\"",
+        "elementType": "element"
+      },
+      "triggers": {
+        "expressionTrue": [
+          {
+            "sourceTrigger": "expressionTrue",
+            "sourceValue": "getValues",
+            "targetValue": "execute",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "values.a.delay"
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": [
+                "values"
+              ]
+            },
+            "targetName": "SetDelay"
+          },
+          {
+            "sourceTrigger": "expressionTrue",
+            "sourceValue": "getValues",
+            "targetValue": "execute",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "values.a.cycle"
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": [
+                "values"
+              ]
+            },
+            "targetName": "toggleScene"
+          },
+          {
+            "sourceTrigger": "expressionTrue",
+            "sourceValue": "getValues",
+            "targetValue": "execute",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "values.a.blue"
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": [
+                "values"
+              ]
+            },
+            "targetName": "setBlue"
+          },
+          {
+            "sourceTrigger": "expressionTrue",
+            "sourceValue": "getValues",
+            "targetValue": "execute",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "values.a.red"
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": [
+                "values"
+              ]
+            },
+            "targetName": "setRed"
+          },
+          {
+            "sourceTrigger": "expressionTrue",
+            "sourceValue": "getValues",
+            "targetValue": "execute",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "values.a.green"
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": [
+                "values"
+              ]
+            },
+            "targetName": "setGreen"
+          },
+          {
+            "sourceTrigger": "expressionTrue",
+            "sourceValue": "getValues",
+            "targetValue": "execute",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "values.a.white"
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": [
+                "values"
+              ]
+            },
+            "targetName": "setWhite"
+          }
+        ]
+      },
+      "zindex": 34,
+      "designer": {
+        "x": 269,
+        "y": 488
+      }
+    },
+    "SetDelay": {
+      "type": "Function",
+      "properties": {
+        "code": "\n    cycleDelay = data;\n\t",
+        "length": "128",
+        "inputType": "int",
+        "returnType": "void",
+        "permission": "public",
+        "elementType": "element"
+      },
+      "triggers": {},
+      "zindex": 35,
+      "designer": {
+        "x": 479,
+        "y": 478
+      }
+    },
+    "TempAddressHolder": {
+      "type": "TextField",
+      "properties": {
+        "label": "New TextField",
+        "value": "",
+        "enabled": false,
+        "visible": false,
+        "elementType": "element"
+      },
+      "triggers": {
+        "onTrigger": [
+          {
+            "sourceTrigger": "onTrigger",
+            "sourceValue": "getValue",
+            "targetValue": "execute",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "value.substring(0,8)"
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": [
+                "value"
+              ]
+            },
+            "targetName": "GetAddr"
+          }
+        ]
+      },
+      "zindex": 36,
+      "designer": {
+        "x": 527,
+        "y": 638
+      }
+    },
+    "GetAddr": {
+      "type": "Function",
+      "properties": {
+        "code": "\t\n    sprintf(devAddr, \"%s\", data);\n\treturn devAddr;\t\n\t",
+        "length": "128",
+        "inputType": "json",
+        "returnType": "json",
+        "permission": "public",
+        "elementType": "element"
+      },
+      "triggers": {
+        "valueReturned": [
+          {
+            "sourceTrigger": "valueReturned",
+            "sourceValue": "getValue",
+            "targetValue": "setValue",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "value"
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": [
+                "value"
+              ]
+            },
+            "targetName": "DeviceAddress"
+          }
+        ]
+      },
+      "zindex": 37,
+      "designer": {
+        "x": 660,
+        "y": 620
+      }
+    },
+    "DeviceAddress": {
+      "type": "TextField",
+      "properties": {
+        "label": "New TextField",
+        "value": "",
+        "enabled": false,
+        "visible": true,
+        "elementType": "element"
+      },
+      "triggers": {},
+      "zindex": 38,
+      "designer": {
+        "x": 789,
+        "y": 611
+      }
+    },
+    "ID": {
+      "type": "Label",
+      "properties": {
+        "label": "UUID",
+        "enabled": true,
+        "visible": true,
+        "font": "10px Arial",
+        "color": "Black",
+        "elementType": "element"
+      },
+      "triggers": {},
+      "zindex": 39,
+      "designer": {
+        "x": 880,
+        "y": 610
+      }
+    },
+    "UserIdLabel": {
+      "type": "Label",
+      "properties": {
+        "label": "Username:",
+        "enabled": true,
+        "visible": true,
+        "font": "10px Arial",
+        "color": "Black",
+        "elementType": "element"
+      },
+      "triggers": {},
+      "zindex": 40,
+      "designer": {
+        "x": 374,
+        "y": 773
+      }
+    },
+    "UserIdFielde": {
+      "type": "TextField",
+      "properties": {
+        "label": "New TextField",
+        "value": "",
+        "enabled": false,
+        "visible": true,
+        "elementType": "element"
+      },
+      "triggers": {
+        "onTrigger": [
+          {
+            "sourceTrigger": "onTrigger",
+            "sourceValue": "getValue",
+            "targetValue": "execute",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "value"
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": [
+                "value"
+              ]
+            },
+            "targetName": "SetUser"
+          },
+          {
+            "sourceTrigger": "onTrigger",
+            "sourceValue": "getValue",
+            "targetValue": "setValue",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "value"
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": [
+                "value"
+              ]
+            },
+            "targetName": "Label51"
+          }
+        ]
+      },
+      "zindex": 41,
+      "designer": {
+        "x": 205,
+        "y": 802
+      }
+    },
+    "SetUser": {
+      "type": "Function",
+      "properties": {
+        "code": "\n    sprintf(userId, \"%s\", data);\n\treturn userId;\n\t",
+        "length": "128",
+        "inputType": "json",
+        "returnType": "json",
+        "permission": "public",
+        "elementType": "element"
+      },
+      "triggers": {},
+      "zindex": 42,
+      "designer": {
+        "x": 463,
+        "y": 706
+      }
+    },
+    "toggleScene": {
+      "type": "Function",
+      "properties": {
+        "code": "\n\tif(data[0] == '1' || data[0] == 't') {\n\t    cycleScenes = true;\n\t}\n\telse if(data[0] == '0' || data[0] == 'f') {\n\t    cycleScenes = false;\n\t}\n\telse {\n\t    cycleScenes = !cycleScenes;\n\t}\n\t",
+        "length": "128",
+        "inputType": "json",
+        "returnType": "void",
+        "permission": "public",
+        "elementType": "element"
+      },
+      "triggers": {
+        "valueReturned": [
+          {
+            "sourceTrigger": "valueReturned",
+            "sourceValue": "Static",
+            "targetValue": "execute",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": ""
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": []
+            },
+            "targetName": "UpdateValues"
+          }
+        ]
+      },
+      "zindex": 43,
+      "designer": {
+        "x": 394,
+        "y": 319
+      }
+    },
+    "Expression46": {
+      "type": "Expression",
+      "properties": {
+        "expression": "values",
+        "elementType": "element"
+      },
+      "triggers": {
+        "evaluated": [
+          {
+            "sourceTrigger": "evaluated",
+            "sourceValue": "getValue",
+            "targetValue": "execute",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "value.blue"
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": [
+                "value"
+              ]
+            },
+            "targetName": "setBlue"
+          },
+          {
+            "sourceTrigger": "evaluated",
+            "sourceValue": "getValue",
+            "targetValue": "execute",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "value.red"
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": [
+                "value"
+              ]
+            },
+            "targetName": "setRed"
+          },
+          {
+            "sourceTrigger": "evaluated",
+            "sourceValue": "getValue",
+            "targetValue": "execute",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "value.green"
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": [
+                "value"
+              ]
+            },
+            "targetName": "setGreen"
+          },
+          {
+            "sourceTrigger": "evaluated",
+            "sourceValue": "getValue",
+            "targetValue": "execute",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "value.white"
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": [
+                "value"
+              ]
+            },
+            "targetName": "setWhite"
+          },
+          {
+            "sourceTrigger": "evaluated",
+            "sourceValue": "getValue",
+            "targetValue": "execute",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": ""
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": [
+                "value"
+              ]
+            },
+            "targetName": "UpdateValues"
+          }
+        ]
+      },
+      "zindex": 44,
+      "designer": {
+        "x": 525,
+        "y": 12
+      }
+    },
+    "setBlue": {
+      "type": "Function",
+      "properties": {
+        "code": "\n    targetBlue = data;\n\treturn;\n\t",
+        "length": "128",
+        "inputType": "int",
+        "returnType": "int",
+        "permission": "public",
+        "elementType": "element"
+      },
+      "triggers": {},
+      "zindex": 45,
+      "designer": {
+        "x": 776,
+        "y": 5
+      }
+    },
+    "setRed": {
+      "type": "Function",
+      "properties": {
+        "code": "\n    targetRed = data;\n\treturn;",
+        "length": "128",
+        "inputType": "int",
+        "returnType": "int",
+        "permission": "public",
+        "elementType": "element"
+      },
+      "triggers": {},
+      "zindex": 46,
+      "designer": {
+        "x": 775,
+        "y": 65
+      }
+    },
+    "setGreen": {
+      "type": "Function",
+      "properties": {
+        "code": "\n    targetGreen = data;\n\treturn;\n\t",
+        "length": "128",
+        "inputType": "int",
+        "returnType": "int",
+        "permission": "public",
+        "elementType": "element"
+      },
+      "triggers": {},
+      "zindex": 47,
+      "designer": {
+        "x": 766,
+        "y": 129
+      }
+    },
+    "setWhite": {
+      "type": "Function",
+      "properties": {
+        "code": "\n    targetWhite = data;\n\treturn;\n\t",
+        "length": "128",
+        "inputType": "int",
+        "returnType": "int",
+        "permission": "public",
+        "elementType": "element"
+      },
+      "triggers": {},
+      "zindex": 48,
+      "designer": {
+        "x": 753,
+        "y": 193
+      }
+    },
+    "ImagePan49": {
+      "type": "ImagePan",
+      "properties": {
+        "image": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAKnklEQVR42p1XCVRTZxb+XlYCCRC2hAABcRRkK4OITBEUdUDBFbvoQNuZ001Pd6e2Ham2VqFjp9ba2sXTRe3C0Fax4lKljnacqaJWbGurIgKyCEnYk0CSl+S9ue8Bc7Cjc9rmnJuXvPf/937/d797//8x+HkfSeizB57wMopCL+S5HM/QLQaM+IiHRAJIefcxKc8esGwo2Ew3uZ/pd8THzT+ykDWHK6Vy9ZK8pEbkTrJiyrheBCptAiYKPfzdNxSAU02hOHJRh2P1YeDctt1dL+QtpceeXwuA0T1dWehUBO67f0YP/pj9PXTyCHh5JVzcIAa9HbC6L6DJ6o/Wvgi4OQmyjEcQIs8Ey0Zj58k4fHQyCAq2a775r7cdEGn6BQCkYWv2vh2i1d63IjcdueMdCFdfgZO7iEGPF609c9Hr0MHp8cDKKuCgNX5rATSBxUg0VCBMHoMJmnycaboD5Qc0cNrNG81l80vJr/fnAJCGPfv5trAQ7b3PLcrCVH0HlIqzYDkL7G4VmrvuwpCHh8PrhoNlYCOzu2Wws0D7oA3agIeRGP4BWAoV45cEKfsXPFmZhIH+lpfMZQtW3wjEWABM2ModC9U6456Nd05DSpAcTjfNYCzwV38Ik20WLNZUuLwCAA/sLilYvgfRIY/BNDgR568tx/cWPZTyb5GgfwHGoD2IUuthkD+IB3bOhM3cvsi8qbj6p+kYC0AVtPbA0HNLpiFVr4ZWDqJcQlQDckU9VKoqmAcIhD0DQwRswAUkRc0AL2mkFdvovz+OXX4FnKQZbT0zUJCYCR8Fh2uWUkxUR+Mvu+LQs266L8Vx3AiALKy0avec9MQFc1JjkRwooeAMicsFqewHaDTbKAhLxuNqzwr4+21F79BEqHx2oa51K0IDXkaA33580/Jn9AzGod60lARrQ0J4OTQ+dUgKTkFd/RwcOqOstpQVLBlbHaMANFFlNdZnFucg2EeCGDVDNEvBMU74KE/QKlsgU+wn+p0Eyiqu2OGR0bUXg6SBH00PIE7/FFp68nD08ufwcgNwuRlYXX64a0oEgnytGK8qwfL3H0Xn2gx/imcbC0Cie/LD1ZNvSV4/KS4OC41SeDiGyk1QjJRWIjABhGhL4GbawHrsIgAPuqkE59E4K3T+e1FRy8MQuANN3Yto/hClzksakonVsjBpFtLCO/HJPytx9vuhNZaX7yjHSLMSAKh0pbuPFM/OvNWhDMDt0QpSOsDSI46XEAjSAWnXGJ4EJyujgA4CMCAKcf933UgfN42Edxnm/lzUNr9LLHEE2A43BRZEbKdSDfKtJSaK4Ogtxev7ck50lefPHtWCACBQt+5g370FObC5eeRHKCj/QpIYUMWRyeEgR3HGCLoqqB84KMgAMeOEzWmAi9VBozonOhpwBuHQD0fRT33CQ/pxiSxIxU751CwtAqUz8XxlObqez9TS8P5RAKEEwLI0bzpMQyyKYlQYIrGx3DAAt1cpAkqOjSGHlH+i1+11EQCqJzKOGzbBUXvfNCrHRyk12QTASeM5UQsDpIXi9Fsx2dCCVe+dQPe6jDAa3jUKICx83UFzQW42eqitzY5UioUq5J0VteBDCq/EuPBlGGQFfXhJZEJ6hgPz9EMY72A1ONH4Jpp65tHzQQLpFhlwEXs2tw+yYp7DoqT3sHr7aViez9DRFMsYAF+Ys7OyyQkHgx+D2AChCgQQdPX4whhWisjQcjGnHN3zCqseASDQICEvNT9+hqu9c+melea5SaxeUQ8sseCgNMilHXh8RjZe/fRrqoSsnwI4bJ45XY/EyPfx70vlGBfghY+MJwdCI1LQCrtRmB5BIiRNeIcB8BR4lPo+RwQ+PdNKf7rpmUsMzo4Ed3mHWXBQUxuiqjCyzWgtnXU9AMMLNebktAQ8ODMVb9VQ/5cPIUDJg2FIC14ZKVqDBZMjoVJeg9s9vHpx5giAmgtvod5cTKBs4urdFFgEMGoiG6DFcDC6OtC8Ov86AKHhz3x2UB+Xlf7k4lycby3BuauPEGVukVoJQ72A80OC4WXcEl0qdnJBfCcb18FsnYKkiDJ83bCJWnQ8PRJy7yGWPHS9HoCTVCv1OBEy0PxN64Y7CsaKMFC3fMuagISclb9N6qayCoB1aBzkMi8xwIjG8zICwuI3uh3ImfgM7YpT8VFtLWKCjsEYUgWFrAMXOpdiyOWLa/2pJFR2BIBXbN/Cb0EPWk8fZFfPvWJ669H1Y8tQRRZtLDtyMXxCMqR0RybhKOCwuMAIZx4J0a6gwW4Upf0OEUFXcKEjG9HB/8L6fTziCViophZtvVPxXcftVKIssUZCpEpwE4BAVT26rJEw0EGmY/WsSeS1ZWwjohMddIZVH37sH5uY6x+sg4Q4ZggJJwSWSAmAVNzIvV4FOfSFr7IZ0drDyIpdKzL22peNKEy5D2lR71HJkWiJrS57BJr70qCSdhNDFuz4x25ous9X2zbftZxcmce2YnEzIhsfteGLc9qoCZApfegcIIHa1Y/ft+6FD2ulNAwfRAU2eJ5AUYe0yI1gZuyHW+1CWsTncJE22G5qZF+uAN9roPRRBxOZpKVIPASMh1cidXT19Ka8+urmRqGI/7sdC2IMWvz4Ms3UeZtUkXHQUPDbWyqQv7AIEybGkzMh/igIoQEBDZeu4LPq4xicdRiTEvZj0OSHgYqXsHBJLibGx4pVxIhzxBkEmkP95QbsO3AQ7e1tce9se7vhugMJWWTYitfXMuPTSoq7vsCf7lyEEJ0e1Xv2oOnyJVoFdUKqCqFLJqWkoLBgLtqvmrDn6FZEPfIumjY+gZLbVlBvD0DVnio0NDRAKpzZCQRHTSM5ORn5+Xloa2vDrt1Vlk1/2xh13ZFsJBXG0JU7t9yPupmPPbUae3fvQnUng7MxBXAo/HDnle3wd3SLbVZwKiF9SBgSKFUKT5QLAuSFjZwCy2R0XpQH8NvKVwtlxxWX3L0qKytrdlFRETas34CtW7do/+dQKpRlVubUvLmF8yv+UFyC7dveQIV+MXr9jaQLBvfWPosXX9kibjScIFYxM8xwf2CGW7P4vkD35HI5Vq56Gm+/uTVeUH3KLalTFhct2XX3PffgxbIyvPvONt2NjuUKIRX33f9g40MPP4TD1XtRY+JwMWYm+tSRmFP3GnwGOigNvNiOhdiyEWVwJNzhXXI491KpVLhe/aSyIsPPz89eOG/BBykpKbcVzp+PzZs24YOd228IQLinW7asuC1vzhxZRLgeXx//CpZr7bDb7eCkcih81WJeMzMz0dvdjaNnvsXJxJIzs+veiM/Mnq7RBofg1OnTcLMsPNS7BUBqtRo6vR452dnoMJlQc+iQ9+8VHxlu9makHRc7fkbGlIyqnOk5MEbHiE1J7IyU25aWVjhdLlg6O3Gu7izOnjm9zNLT0x4WHGyYnDH1k9S0ydBTMAmNjY2NFcHypBcBSGtLC44fP47Tp08VNTc1fnUzAEoyfVSUMZPy9jGJTYqRXLucTtgHB0V6yfobLl9abjKZvqHHVkHEBoMhPS4+ocLlckk5asVKHx8Q/WJwiBLh+3784fzytrbWU/TXdNN3wxEQwq5lIPO9wRjB4yBZ58jO5vo1c/7f2zEzIkjBkfwmY+iEgCEy94jzXzznP0KxL96g5SsnAAAAAElFTkSuQmCC",
+        "aspectLock": true,
+        "enabled": true,
+        "visible": true,
+        "rotation": "0",
+        "background": "transparent",
+        "elementType": "element"
+      },
+      "triggers": {
+        "mousePressed": [
+          {
+            "sourceTrigger": "mousePressed",
+            "sourceValue": "Static",
+            "targetValue": "setValue",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "eval(window.open('https://atmosphere.anaren.com/demos/LED_IO/', '_system', 'location=yes'));"
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": []
+            },
+            "targetName": "temparea"
+          }
+        ]
+      },
+      "zindex": 49,
+      "designer": {
+        "x": 728,
+        "y": 719
+      }
+    },
+    "temparea": {
+      "type": "Label",
+      "properties": {
+        "label": "",
+        "enabled": false,
+        "visible": false,
+        "font": "14px Arial",
+        "color": "Black",
+        "elementType": "element"
+      },
+      "triggers": {},
+      "zindex": 50,
+      "designer": {
+        "x": 882,
+        "y": 718
+      }
+    },
+    "Label51": {
+      "type": "Label",
+      "properties": {
+        "label": "",
+        "enabled": true,
+        "visible": false,
+        "font": "14px Arial",
+        "color": "Black",
+        "elementType": "element"
+      },
+      "triggers": {
+        "onTrigger": [
+          {
+            "sourceTrigger": "onTrigger",
+            "sourceValue": "getValue",
+            "targetValue": "post",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "\"check_\" + labelText"
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": [
+                "labelText"
+              ]
+            },
+            "targetName": "CheckWeb"
+          }
+        ]
+      },
+      "zindex": 51,
+      "designer": {
+        "x": 233,
+        "y": 611
+      }
+    }
+  },
+  "cloudElements": {}
+}
