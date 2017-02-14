@@ -1,0 +1,449 @@
+{
+  "header": {
+    "data": {
+      "order": [
+        "Globals",
+        "Interval",
+        "Connected",
+        "Disconnected",
+        "Setup"
+      ],
+      "Globals": {
+        "name": "Globals",
+        "func": "#include \"callbacks.h\"",
+        "code": "\nconst char high[] = \"HIGH\";\nconst char low[] = \"LOW\";\nconst char mild[] = \"MILD\";\n\nchar *lvl = low;\n\nvoid CallBackFunc(Alert) {\n    if (Alert == AIR_GATT_IMMEDIATE_ALERT_HIGH_ALERT)\n    {\n        lvl = high;\n        AIR_PWM_Set(26, 0x0000);\n        AIR_PWM_Set(13, 0x03FF);\n        AIR_PWM_Set(27, 0x03FF);\n        ATMOSPHERE_NotifyFunction(ID_getLevel,getLevel(NULL,0));\n    }\n    else if (Alert == AIR_GATT_IMMEDIATE_ALERT_MILD_ALERT)\n    {\n        lvl = mild;\n        AIR_PWM_Set(26, 0x03FF);\n        AIR_PWM_Set(13, 0x0000);\n        AIR_PWM_Set(27, 0x03FF);\n        ATMOSPHERE_NotifyFunction(ID_getLevel,getLevel(NULL,0));\n    }\n    else\n    {\n        lvl = low;\n        AIR_PWM_Set(26, 0x03FF);\n        AIR_PWM_Set(13, 0x03FF);\n        AIR_PWM_Set(27, 0x0000);\n        ATMOSPHERE_NotifyFunction(ID_getLevel,getLevel(NULL,0));\n    }\n}\n\n",
+        "close": "//END"
+      },
+      "Interval": {
+        "name": "Interval",
+        "func": "\nvoid interval() {",
+        "code": "",
+        "close": "}"
+      },
+      "Connected": {
+        "name": "Connected",
+        "func": "\nvoid connected() {",
+        "code": "    AIR_GATT_IMMEDIATE_ALERT_ExecuteCallback(0);",
+        "close": "}"
+      },
+      "Disconnected": {
+        "name": "Disconnected",
+        "func": "\nvoid disconnected() {",
+        "code": "",
+        "close": "}"
+      },
+      "Setup": {
+        "name": "Setup",
+        "func": "\nvoid setup() {",
+        "code": "\tAIR_GPIO_Init();\n\tAIR_POWER_Init();\n\tAIR_UART_Init();\n\tAIR_I2C_Init();\n\tAIR_SPI_Init();\n\tBUZZER_Init();\n\tAIR_POWER_SetMode(AIR_POWER_NOSLEEP);\n\t\n\tAIR_PWM_Enable(26);\n\tAIR_PWM_Enable(13);\n\tAIR_PWM_Enable(27);\n\tAIR_GATT_IMMEDIATE_ALERT_RegisterCallback(CallBackFunc);\n\t",
+        "close": "}"
+      }
+    },
+    "boardConfiguration": {
+      "ble": {
+        "name": "Bluetooth Low Energy",
+        "file": "ble_config.h",
+        "values": {
+          "localName": {
+            "name": "Local Name",
+            "input": "TextField",
+            "prefix": "#define BLE_LOCAL_NAME \"",
+            "value": "ble_test",
+            "suffix": "\"",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "version": {
+            "name": "Version",
+            "input": "TextField",
+            "prefix": "#define BLE_VERSION \"",
+            "value": "1.00",
+            "suffix": "\"",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "pairing": {
+            "name": "Pairing",
+            "input": "Combo",
+            "prefix": "#define ",
+            "options": [
+              "BLE_PAIRING_NONE",
+              "BLE_PAIRING_PASSKEY",
+              "BLE_PAIRING_OOB"
+            ],
+            "value": "BLE_PAIRING_OOB",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "txPowerLevel": {
+            "name": "TX Power Level (dbm)",
+            "input": "TextField",
+            "prefix": "#define BLE_TX_POWER_LEVEL ",
+            "value": "4",
+            "regex": "^[0-9]*$"
+          },
+          "intervalFineTimer": {
+            "name": "Interval Timer Length (ms)",
+            "input": "TextField",
+            "prefix": "#define BLE_INTERVAL_FINE_TIMER ",
+            "value": "1000",
+            "regex": "^[0-9]*$"
+          }
+        }
+      },
+      "power": {
+        "name": "Power Driver",
+        "file": "power_config.h",
+        "values": {
+          "external_osc": {
+            "name": "External Oscillator",
+            "input": "Combo",
+            "prefix": "#define AIR_POWER_",
+            "options": [
+              "EXTERNAL_32KHZ_OSC",
+              "INTERNAL_OSC"
+            ],
+            "value": "INTERNAL_OSC",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          }
+        }
+      },
+      "gpio": {
+        "name": "GPIO Driver",
+        "file": "gpio_config.h",
+        "values": {
+          "buad": {
+            "name": "ADC Sample Frequency",
+            "input": "Combo",
+            "prefix": "#define AIR_ADC_SAMPLE_FREQUENCY ",
+            "options": [
+              "ADC_SAMPLE_FREQUENCY_LOW",
+              "ADC_SAMPLE_FREQUENCY_MEDIUM_LOW",
+              "ADC_SAMPLE_FREQUENCY_MEDIUM",
+              "ADC_SAMPLE_FREQUENCY_MEDIUM_HIGH",
+              "ADC_SAMPLE_FREQUENCY_HIGH"
+            ],
+            "value": "ADC_SAMPLE_FREQUENCY_LOW",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          }
+        }
+      },
+      "uart": {
+        "name": "AIR UART Driver",
+        "file": "uart_config.h",
+        "values": {
+          "rxBuffer": {
+            "name": "RX Circular Buffer size",
+            "input": "TextField",
+            "prefix": "#define AIR_UART_RX_CIRCULAR_BUFFER_SIZE ",
+            "value": "128",
+            "regex": "^[0-9]*$"
+          },
+          "txBuffer": {
+            "name": "TX Circular Buffer size",
+            "input": "TextField",
+            "prefix": "#define AIR_UART_TX_CIRCULAR_BUFFER_SIZE ",
+            "value": "128",
+            "regex": "^[0-9]*$"
+          },
+          "buad": {
+            "name": "Baudrate",
+            "input": "Combo",
+            "prefix": "#define ",
+            "options": [
+              "AIR_UART_BAUD_460800",
+              "AIR_UART_BAUD_230400",
+              "AIR_UART_BAUD_115200",
+              "AIR_UART_BAUD_57600",
+              "AIR_UART_BAUD_38400",
+              "AIR_UART_BAUD_19200",
+              "AIR_UART_BAUD_9600"
+            ],
+            "value": "AIR_UART_BAUD_115200",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "txPin": {
+            "name": "TX Pin",
+            "input": "Combo",
+            "prefix": "#define AIR_UART_TX_PIN ",
+            "options": [
+              "32"
+            ],
+            "value": "32",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "rxPin": {
+            "name": "RX Pin",
+            "input": "Combo",
+            "prefix": "#define AIR_UART_RX_PIN ",
+            "options": [
+              "33"
+            ],
+            "value": "33",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "rtsPin": {
+            "name": "RTS Pin",
+            "input": "Combo",
+            "prefix": "#define AIR_UART_RTS_PIN ",
+            "options": [
+              "1"
+            ],
+            "value": "1",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "ctsPin": {
+            "name": "CTS Pin",
+            "input": "Combo",
+            "prefix": "#define AIR_UART_CTS_PIN ",
+            "options": [
+              "3"
+            ],
+            "value": "3",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          }
+        }
+      }
+    },
+    "meta": {
+      "version": "1.2.0",
+      "layoutGrid": false,
+      "layoutSnapping": false,
+      "layoutSnappingSize": 10,
+      "cloudLayoutGrid": false,
+      "cloudLayoutSnapping": false,
+      "cloudLayoutSnappingSize": 10,
+      "language": "en",
+      "enableTooltips": true,
+      "enableAutoSave": true,
+      "enableBuildSave": false,
+      "description": null,
+      "project_uuid": null,
+      "tokensEnabled": false,
+      "codeAssist": false,
+      "highlightLine": false,
+      "editorTheme": "Default",
+      "editorFontSize": 12,
+      "customEmbeddedElementLibraries": {
+        "tmp006": {
+          "files": {
+            "common": {
+              "headers": {
+                "tmp006.h": "// Copyright (c) 2014, Anaren Inc.\r\n// All rights reserved.\r\n// \r\n// Redistribution and use in source and binary forms, with or without\r\n// modification, are permitted provided that the following conditions are met:\r\n// \r\n// 1. Redistributions of source code must retain the above copyright notice, this\r\n//    list of conditions and the following disclaimer. \r\n// 2. Redistributions in binary form must reproduce the above copyright notice,\r\n//    this list of conditions and the following disclaimer in the documentation\r\n//    and/or other materials provided with the distribution.\r\n// \r\n// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS \"AS IS\" AND\r\n// ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED\r\n// WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE\r\n// DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR\r\n// ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES\r\n// (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;\r\n// LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND\r\n// ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT\r\n// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS\r\n// SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.\r\n// \r\n// The views and conclusions contained in the software and documentation are those\r\n// of the authors and should not be interpreted as representing official policies, \r\n// either expressed or implied, of the FreeBSD Project.\r\n\r\n#ifndef TMP006_H\r\n#define TMP006_H\r\n\r\n#include \"../i2c/i2c.h\"\r\n#include \"tmp006_config.h\"\r\n#include \"types.h\"\r\n\r\n#define uint8 UINT8\r\n#define uint16 UINT16\r\n\r\n//------------------------------------------------------------------------------\r\n/**\r\n *  Defines, enumerations, and structure definitions\r\n */\r\n#ifndef bool\r\n#define bool uint8\r\n#endif\r\n\r\n#ifndef true\r\n#define true 1\r\n#endif\r\n\r\n#ifndef false\r\n#define false 0\r\n#endif\r\n\r\n//------------------------------------------------------------------------------\r\n/**\r\n *  Defines, enumerations, and structure definitions\r\n */\r\n\r\n#define TMP006_SLAVE_BASE_ADDR      0x40\r\n\r\n#define TMP006_VOBJECT_REG_ADDR     0x00\r\n#define TMP006_TAMBIENT_REG_ADDR    0x01\r\n#define TMP006_CONFIG_REG_ADDR      0x02\r\n#define TMP006_MFG_ID_REG_ADDR      0xFE\r\n#define TMP006_DEVICE_ID_REG_ADDR   0xFF\r\n\r\n#define TMP006_CONFIG_REG_RST       0x8000\r\n#define TMP006_CONFIG_REG_MOD       0x7000\r\n#define TMP006_CONFIG_REG_MOD3      0x4000\r\n#define TMP006_CONFIG_REG_MOD2      0x2000\r\n#define TMP006_CONFIG_REG_MOD1      0x1000\r\n#define TMP006_CONFIG_REG_CR        0x0E00\r\n#define TMP006_CONFIG_REG_CR3       0x0800\r\n#define TMP006_CONFIG_REG_CR2       0x0400\r\n#define TMP006_CONFIG_REG_CR1       0x0200\r\n#define TMP006_CONFIG_REG_EN        0x0100\r\n#define TMP006_CONFIG_REG_DRDY      0x0080\r\n// \r\n/**\r\n *  eTMP006Mode - type indicating the operating mode of the TMP006 device.  The\r\n *  TMP006 offers two modes, Power-Down and Continuous Conversion.  When\r\n *  ultra-low power consumption is important, the application should place the\r\n *  device in Power-Down when temperature measurements are not required.  While\r\n *  in Continuous Conversion mode, the device automatically enters a low-power\r\n *  state between samples.  However, this low-power state draws significantly\r\n *  more current than when in Power-Down (240uA compared to 0.5uA typ).\r\n */\r\nenum eTMP006Mode\r\n{\r\n  PowerDown             = 0x0000,\r\n  ContinuousConversion  = 0x7000\r\n};\r\n\r\n/**\r\n *  eTMP006Rate - type indicating the number of conversions per second performed\r\n *  by the TMP006.  Slower conversion rates result in more accurate measuremnts\r\n *  compared to the higher rates.  The default is one conversion every second.\r\n *  See the TMP006 datasheet for more information regarding the effect\r\n *  conversion rate has on accuracy of the result.\r\n */\r\nenum eTMP006Rate\r\n{\r\n  FourConvPerSecond     = 0x0000,\r\n  TwoConvPerSecond      = 0x0200,\r\n  OneConvPerSecond      = 0x0400,\r\n  HalfConvPerSecond     = 0x0600,\r\n  QuarterConvPerSecond  = 0x0800\r\n};\r\n\r\n\r\n/** \r\nWrite a 16-bit value to a device register.  All of the TMP006 registers are\r\nread-only except for the Configuration Register.  This function does not do any\r\nform of error checking, so trying to write to one of the read-only registers may\r\nresult in undesireable behavior.\r\n@param id device ID (0 to 7) on i2c bus\r\n@param addr device register address\r\n@param data data to be written to the specified register address\r\n*/\r\nvoid TMP006_WriteReg(uint8 id, uint8 addr, uint16 data);\r\n\r\n/** \r\nRead a 16-bit value from a device register.\r\n@param id device ID (0 to 7) on i2c bus\r\n@param addr device register address\r\n@return data read from the specified register address\r\n*/\r\nuint16 TMP006_ReadReg(uint8 id, uint8 addr);\r\n\r\n/**\r\nIssue a software reset to the sensor.\r\n@param id device ID (0 to 7) on i2c bus\r\n@note This is a self-clearing operation.  There is no need for software to clear\r\nthe reset condition.\r\n*/\r\nvoid TMP006_SoftwareReset(uint8 id);\r\n\r\n/**\r\nSelect the device operating mode.  Refer to eTMP006Mode definition for details\r\nregarding the allowed states.\r\n@param id device ID (0 to 7) on i2c bus\r\n@param mode specifies the device mode of operation\r\n*/\r\nvoid TMP006_SetOperatingMode(uint8 id, enum eTMP006Mode mode);\r\n\r\n/**\r\nRead the currently selected operating mode.  Refer to eTMP006Mode definition for\r\ndetails regarding the available states.\r\n@param id device ID (0 to 7) on i2c bus\r\n@return device mode of operation\r\n*/\r\nenum eTMP006Mode TMP006_GetOperatingMode(uint8 id);\r\n\r\n/**\r\nSelect the device conversion rate.  Refer to eTMP006Rate definition for details\r\nregarding the allowed rates.\r\n@param id device ID (0 to 7) on i2c bus\r\n@param rate specifies the conversion rate\r\n*/\r\nvoid TMP006_SetConversionRate(uint8 id, enum eTMP006Rate rate);\r\n\r\n/**\r\nRead the currently selected conversion rate.  Refer to eTMP006Rate definition\r\nfor details regarding the available rates.\r\n@param id device ID (0 to 7) on i2c bus\r\n@return device conversion rate\r\n*/\r\nenum eTMP006Rate TMP006_GetConversionRate(uint8 id);\r\n\r\n/**\r\nEnable/disable the device DRDY output pin.\r\n@param id device ID (0 to 7) on i2c bus\r\n@param en true enables the pin output, false disables the output\r\n*/\r\nvoid TMP006_SetDataReadyEnable(uint8 id, bool en);\r\n\r\n/**\r\nRead the state of the DRDY enable bit in the Configuration register.\r\n@param id device ID (0 to 7) on i2c bus\r\n@return true when the DRDY is enabled, otherwise false\r\n*/\r\nbool TMP006_GetDataReadyEnable(uint8 id);\r\n\r\n/**\r\nClear the DRDY ready status bit in the Configuration register.\r\n@param id device ID (0 to 7) on i2c bus\r\n*/\r\nvoid TMP006_ClearDataReadyStatus(uint8 id);\r\n\r\n/**\r\nRead the state of the DRDY status bit in the Configuration register.  The DRDY\r\nstatus bit is automatically cleared after reading either the device Temperature\r\nregister or Sensor Voltage register.  The TMP006GetAmbientTemperature() and\r\nTMP006GetObjectTemperature() functions access these registers, so calling either\r\nwill clear the DRDY status bit.  The DRDY status bit can also be cleared by\r\nwriting to the Configuration register or calling TMP006ClearDataReadyStatus().\r\n@param id device ID (0 to 7) on i2c bus\r\n@return true when conversion results are ready to read, otherwise false\r\n*/\r\nbool TMP006_GetDataReadyStatus(uint8 id);\r\n\r\n/**\r\nRead the ambient (die) temperature.  When set to Continuous Conversion mode, the\r\ndevice periodically performs temperature conversions at a predefined rate.  This\r\nfunction calulates the temperature using only the most recent conversion value.\r\n@param id device ID (0 to 7) on i2c bus\r\n@return temperature of the TMP006 die in Celsius\r\n*/\r\nfloat TMP006_GetAmbientTemperature(uint8 id);\r\n\r\n/**\r\nRead the temperature of an object.  When set to Continuous Conversion mode, the\r\ndevice periodically performs temperature conversions at a predefined rate.  This\r\nfunction calulates the object temperature using only the most recent conversion\r\nvalues for die temperature and sensor voltage.\r\n@param id device ID (0 to 7) on i2c bus\r\n@return temperature of an object in Celsius\r\n*/\r\nfloat TMP006_GetObjectTemperature(uint8 id);\r\n\r\n/**\r\nRead the temperature of an object.  When set to Continuous Conversion mode, the\r\ndevice periodically performs temperature conversions at a predefined rate.  This\r\nfunction calulates the object temperature using the most recent conversion value\r\nfor sensor voltage as well as the four most recent conversion values for die\r\ntemperature. This function assumes the size of tDie buffer is 4 float values and\r\nthat the application does not modify any of these values.  The application is\r\nresponsible only for providing the memory location.  The reason for this\r\napproach, as opposed to defining the buffer in the driver itself, is so the\r\napplication can control which sensors on the bus use the transient correction\r\ntechnique.  If not all sensors on the i2c bus use this method, then memory\r\nutilization is reduced.\r\n@param id device ID (0 to 7) on i2c bus\r\n@param tDie pointer to array of 4 tDie values\r\n@return temperature of an object in Celsius\r\n*/\r\nfloat TMP006_GetObjectTemperatureWithTransientCorrection(uint8 id, float *tDie);\r\n\r\n/**\r\nRead the Manufacturer ID register.\r\n@param id device ID (0 to 7) on i2c bus\r\n@return contents of the Manufacturer ID register.  Value always = 0x5449.\r\n*/\r\nuint16 TMP006_GetMfgId(uint8 id);\r\n\r\n/**\r\nRead the Device ID register.\r\n@param id device ID (0 to 7) on i2c bus\r\n@return contents of the Device ID register.  Value always = 0x0067.\r\n*/\r\nuint16 TMP006_GetDeviceId(uint8 id);\r\n\r\n\r\n#endif  /* TMP006_H */\r\n"
+              },
+              "objects": {
+                "tmp006_common.c": "/**\r\n *  ----------------------------------------------------------------------------\r\n *  Copyright (c) 2014, Anaren Microwave, Inc.\r\n *\r\n *  For more information on licensing, please see Anaren Microwave, Inc's\r\n *  end user software licensing agreement: EULA.txt.\r\n *\r\n *  ----------------------------------------------------------------------------\r\n *\r\n *  tmp006.c - driver interface for the Texas Instruments TMP006 Infrared\r\n *  Thermopile Sensor.  The TMP006 allows for up to 8 devices on a single i2c\r\n *  bus, therefore each function accepts a bus identifier in the range 0 - 7 to\r\n *  select which device is currently being accessed.  This ID is added to the\r\n *  device's base address of 0x40 to determine the final i2c address.\r\n *\r\n *  @version    1.0.01\r\n *  @date       26 Sep 2014\r\n *  @author     Anaren, air@anaren.com\r\n *\r\n *  assumptions\r\n *  ===========\r\n *  - The i2c driver provides the proper signaling sequences for read & write\r\n *    operations.\r\n *  - The i2c driver meets the timing requirements specified in the TMP006\r\n *    datasheet.\r\n *\r\n *  file dependency\r\n *  ===============\r\n *  i2c.h : defines the i2c read & write interfaces.\r\n *\tmath.h : floating point calculations.\r\n *\tfp_math.h : floating point calculations using fixed point math.  Use when math.h not implemented.\r\n *\r\n *  revision history\r\n *  ================\r\n *  ver 1.0.00 : 18 Jul 2014\r\n *  - initial release\r\n *  ver 1.0.01 : 24 Sep 2014\r\n *  - added support for doing floating point calculations using fixed point math\r\n */\r\n#include \"tmp006.h\"\r\n\r\n#ifdef FLOATING_POINT_AVAILABLE\r\n#include <math.h>\r\n#else\r\n#include \"../fp_math/fp_math.h\"\r\n#endif\r\n\r\n// -----------------------------------------------------------------------------\r\n/**\r\n *  Global data\r\n */\r\n\r\n// -----------------------------------------------------------------------------\r\n/**\r\n *  Private interface\r\n */\r\n\r\n/**\r\nCalculate temperature of an object based on tdie and vobj\r\n@param tDie temperature of the die in Kelvin\r\n@param vObj object voltage converted first by multiplying 1.5625e-7\r\n@return temperature of an object in Celsius\r\n@see TMP006 datasheet and application note\r\n@note from TI TMP006 BoosterPack sample code\r\n*/\r\nstatic float TMP006_CalculateTemperature(const float *tDie, const float *vObj)\r\n{\r\n  const float S0 = 6.0E-14;\r\n  const float a1 = 1.75E-3;\r\n  const float a2 = -1.678E-5;\r\n  const float b0 = -2.94E-5;\r\n  const float b1 = -5.7E-7;\r\n  const float b2 = 4.63E-9;\r\n  const float c2 = 13.4;\r\n  const float Tref = 298.15;\r\n\r\n#ifdef FLOATING_POINT_AVAILABLE\r\n  float S = S0*((float)1.0 + a1*(*tDie - Tref) + a2*pow((*tDie - Tref),2));\r\n  float Vos = b0 + b1*(*tDie - Tref) + b2*pow((*tDie - Tref),2);\r\n  float fObj = (*vObj - Vos) + c2*pow((*vObj - Vos),2);\r\n  float Tobj = sqrt(sqrt(pow(*tDie,4) + (fObj/S)));\r\n#else\r\n  float S = S0*((float)1.0 + a1*(*tDie - Tref) + a2*fp_pow((*tDie - Tref),2));\r\n  float Vos = b0 + b1*(*tDie - Tref) + b2*fp_pow((*tDie - Tref),2);\r\n  float fObj = (*vObj - Vos) + c2*fp_pow((*vObj - Vos),2);\r\n  float Tobj = fp_sqrt(fp_sqrt(fp_pow(*tDie,4) + (fObj/S)));\r\n#endif\r\n\r\n  return (Tobj - (float)273.15);\r\n}\r\n\r\n// -----------------------------------------------------------------------------\r\n/**\r\n *  Public interface\r\n */\r\n\r\nvoid TMP006_WriteReg(uint8 id, uint8 addr, uint16 data)\r\n{\r\n  uint8 writeBytes[3];\r\n\r\n  writeBytes[0] = addr;\r\n  writeBytes[1] = data >> 8;\r\n  writeBytes[2] = data & 0xFF;\r\n  AIR_I2C_Write(TMP006_SLAVE_BASE_ADDR + id, writeBytes, 3);\r\n}\r\n\r\nuint16 TMP006_ReadReg(uint8 id, uint8 addr)\r\n{\r\n  uint8 writeBytes[1];\r\n  uint8 readBytes[2];\r\n  uint16 readData;\r\n\r\n  writeBytes[0] = addr;\r\n  AIR_I2C_ComboRead(TMP006_SLAVE_BASE_ADDR + id, writeBytes, 1, readBytes, 2);\r\n  readData = (unsigned int)readBytes[0] << 8;\r\n  readData |= readBytes[1];\r\n  return readData;\r\n}\r\n\r\nvoid TMP006_SoftwareReset(uint8 id)\r\n{\r\n  TMP006_WriteReg(id, TMP006_CONFIG_REG_ADDR, TMP006_CONFIG_REG_RST);\r\n}\r\n\r\nvoid TMP006_SetOperatingMode(uint8 id, enum eTMP006Mode mode)\r\n{\r\n  uint16 data = TMP006_ReadReg(id, TMP006_CONFIG_REG_ADDR);\r\n\r\n  data &= ~TMP006_CONFIG_REG_MOD;\r\n  data |= (uint16)mode;\r\n  TMP006_WriteReg(id, TMP006_CONFIG_REG_ADDR, data);\r\n}\r\n\r\nenum eTMP006Mode TMP006_GetOperatingMode(uint8 id)\r\n{\r\n  return (enum eTMP006Mode)(TMP006_ReadReg(id, TMP006_CONFIG_REG_ADDR) & TMP006_CONFIG_REG_MOD);\r\n}\r\n\r\nvoid TMP006_SetConversionRate(uint8 id, enum eTMP006Rate rate)\r\n{\r\n  uint16 data = TMP006_ReadReg(id, TMP006_CONFIG_REG_ADDR);\r\n\r\n  data &= ~TMP006_CONFIG_REG_CR;\r\n  data |= (UINT16)rate;\r\n  TMP006_WriteReg(id, TMP006_CONFIG_REG_ADDR, data);\r\n}\r\n\r\nenum eTMP006Rate TMP006_GetConversionRate(uint8 id)\r\n{\r\n  return (enum eTMP006Rate)(TMP006_ReadReg(id, TMP006_CONFIG_REG_ADDR) & TMP006_CONFIG_REG_CR);\r\n}\r\n\r\nvoid TMP006_SetDataReadyEnable(uint8 id, bool en)\r\n{\r\n  uint16 data = TMP006_ReadReg(id, TMP006_CONFIG_REG_ADDR);\r\n\r\n  data &= ~TMP006_CONFIG_REG_EN;\r\n  if (en) data |= TMP006_CONFIG_REG_EN;\r\n  TMP006_WriteReg(id, TMP006_CONFIG_REG_ADDR, data);\r\n}\r\n\r\nbool TMP006_GetDataReadyEnable(uint8 id)\r\n{\r\n  return (TMP006_ReadReg(id, TMP006_CONFIG_REG_ADDR) & TMP006_CONFIG_REG_EN) ? true : false;\r\n}\r\n\r\nvoid TMP006_ClearDataReadyStatus(uint8 id)\r\n{\r\n  uint16 data = TMP006_ReadReg(id, TMP006_CONFIG_REG_ADDR);\r\n\r\n  data &= ~TMP006_CONFIG_REG_DRDY;\r\n  TMP006_WriteReg(id, TMP006_CONFIG_REG_ADDR, data);\r\n}\r\n\r\nbool TMP006_GetDataReadyStatus(uint8 id)\r\n{\r\n  return (TMP006_ReadReg(id, TMP006_CONFIG_REG_ADDR) & TMP006_CONFIG_REG_DRDY) ? true : false;\r\n}\r\n\r\nfloat TMP006_GetAmbientTemperature(uint8 id)\r\n{\r\n  int16 tDieRaw = (int16)TMP006_ReadReg(id, TMP006_TAMBIENT_REG_ADDR);\r\n\r\n  return (((float)(tDieRaw >> 2)) * (float)0.03125);\r\n}\r\n\r\nfloat TMP006_GetObjectTemperature(uint8 id)\r\n{\r\n  float tDie = TMP006_GetAmbientTemperature(id) + (float)273.15;\r\n  int16 vObjRaw = (int16)TMP006_ReadReg(id, TMP006_VOBJECT_REG_ADDR);\r\n  float vObj = ((float)(vObjRaw)) * (float)156.25E-9;\r\n\r\n  return TMP006_CalculateTemperature(&tDie, &vObj);\r\n}\r\n\r\nfloat TMP006_GetObjectTemperatureWithTransientCorrection(uint8 id, float *tDie)\r\n{\r\n  int16 vObjRaw = (int16)TMP006_ReadReg(id, TMP006_VOBJECT_REG_ADDR);\r\n  float tSlope;\r\n  float vObjCorr;\r\n\r\n  tDie[0] = tDie[1];\r\n  tDie[1] = tDie[2];\r\n  tDie[2] = tDie[3];\r\n  tDie[3] = TMP006_GetAmbientTemperature(id) + (float)273.15;\r\n  tSlope = (tDie[0] != 0.0) ? -((float)0.3*tDie[0])-((float)0.1*tDie[1])+((float)0.1*tDie[2])+((float)0.3*tDie[3]) : 0.0;\r\n  vObjCorr = (((float)(vObjRaw)) * (float)156.25E-9) + (tSlope * (float)2.96E-4);\r\n\r\n  return TMP006_CalculateTemperature(&tDie[3], &vObjCorr);\r\n}\r\n\r\nuint16 TMP006_GetMfgId(uint8 id)\r\n{\r\n  return TMP006_ReadReg(id, TMP006_MFG_ID_REG_ADDR);\r\n}\r\n\r\nuint16 TMP006_GetDeviceId(uint8 id)\r\n{\r\n  return TMP006_ReadReg(id, TMP006_DEVICE_ID_REG_ADDR);\r\n}\r\n\r\n"
+              },
+              "other": {
+                "tmp006_config.h": " \n"
+              }
+            }
+          },
+          "code": {
+            "setup": "\tTMP006_SetDataReadyEnable(0, 1);",
+            "global": "",
+            "connected": " \n",
+            "interval": " \n"
+          },
+          "description": "World's first single-chip digital IR MEMS temperature sensor\nEnables contactless temperature measurement in portable and consumer electronic applications\n\nDeveloped through TI's expertise in MEMS technology, the TMP006 is the first of a new class of ultra-small, low power, and low cost passive infrared temperature sensors. It has 90% lower power consumption and is more than 95% smaller than existing solutions, making contactless temperature measurement possible in completely new markets and applications.",
+          "language": {
+            "en": {
+              "label": "TMP006 Driver"
+            }
+          },
+          "author": "Anaren Inc.",
+          "name": "tmp006",
+          "label": "TMP006 Driver",
+          "elements": {
+            "objectTemperature": {
+              "code": "    float value;\n    \n    /**\n    Read the temperature of an object.  When set to Continuous Conversion mode, the\n    device periodically performs temperature conversions at a predefined rate.  This\n    function calulates the object temperature using only the most recent conversion\n    values for die temperature and sensor voltage.\n    @param id device ID (0 to 7) on i2c bus\n    @return temperature of an object in Celsius\n    */\n    value = TMP006_GetObjectTemperature(0);\n    \n    return value;",
+              "language": {
+                "en": {
+                  "label": "Object Temperature"
+                }
+              },
+              "label": "Object Temperature",
+              "returnType": "float",
+              "inputType": "void",
+              "icon": "data:image/png;base64,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\nrkJggg==\n"
+            },
+            "ambientTemperature": {
+              "code": "    float value;\n    \n    /**\n    Read the ambient (die) temperature.  When set to Continuous Conversion mode, the\n    device periodically performs temperature conversions at a predefined rate.  This\n    function calulates the temperature using only the most recent conversion value.\n    @param id device ID (0 to 7) on i2c bus\n    @return temperature of the TMP006 die in Celsius\n    */\n    value = TMP006_GetAmbientTemperature(0);\n    \n    return value; \n",
+              "language": {
+                "en": {
+                  "label": "Ambient Temperature"
+                }
+              },
+              "label": "Ambient Temperature",
+              "returnType": "float",
+              "inputType": "void",
+              "icon": "data:image/png;base64,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\n"
+            }
+          },
+          "version": "1.0.0",
+          "signature": "",
+          "type": "Embedded Library",
+          "categories": [
+            "Temperature",
+            "Sensor"
+          ],
+          "manufacturer": "Texas Instruments"
+        }
+      },
+      "theme": {
+        "bg1": "#DCEBF9",
+        "bg2": "#DCEBF9"
+      },
+      "projectType": "bcm20737",
+      "name": "Immediate"
+    },
+    "type": "Header",
+    "currentLayoutName": "Default",
+    "currentCloudLayoutName": "Default"
+  },
+  "layouts": {
+    "Default": {
+      "name": "Default (768x1024)",
+      "width": 768,
+      "height": 1024,
+      "orientation": "portrait",
+      "devicename": ".*",
+      "platform": "",
+      "version": ".*",
+      "elements": {
+        "Label8": {
+          "x": 29,
+          "y": 80,
+          "width": 182,
+          "height": 97
+        },
+        "Combobox7": {
+          "x": 225,
+          "y": 111,
+          "width": 114,
+          "height": 34
+        }
+      }
+    }
+  },
+  "cloudLayouts": {
+    "Default": {
+      "name": "Default (768x1024)",
+      "width": 768,
+      "height": 1024,
+      "orientation": "portrait",
+      "devicename": ".*",
+      "platform": "",
+      "version": ".*",
+      "elements": {}
+    }
+  },
+  "elements": {
+    "Label8": {
+      "type": "Label",
+      "properties": {
+        "label": "The alert system\n2 - High Alert (Red Light)\n1 - Low Alert (Blue Light)\n0 - No Alert (Green Light)\nCurrent State:",
+        "enabled": true,
+        "visible": true,
+        "font": "16px Arial",
+        "color": "BLACK",
+        "elementType": "element"
+      },
+      "triggers": {},
+      "zindex": 1,
+      "designer": {
+        "x": 271,
+        "y": 69
+      }
+    },
+    "GATTImmediateAlert11": {
+      "type": "GATTImmediateAlert",
+      "properties": {
+        "gattService": "immediate_alert",
+        "elementType": "element"
+      },
+      "triggers": {},
+      "zindex": 2,
+      "designer": {
+        "x": 271,
+        "y": 135
+      }
+    },
+    "getLevel": {
+      "type": "Function",
+      "properties": {
+        "code": "\n\treturn lvl;\n\t",
+        "length": "128",
+        "inputType": "void",
+        "returnType": "json",
+        "permission": "public",
+        "elementType": "element"
+      },
+      "triggers": {
+        "notified": [
+          {
+            "sourceTrigger": "notified",
+            "sourceValue": "getValue",
+            "targetValue": "setValue",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "\"The alert system\\n2 - High Alert (Red Light)\\n1 - Low Alert (Blue Light)\\n0 - No Alert (Green Light)\\nCurrent State: \" + value"
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": [
+                "value"
+              ]
+            },
+            "targetName": "Label8"
+          }
+        ]
+      },
+      "zindex": 3,
+      "designer": {
+        "x": 120,
+        "y": 68
+      }
+    },
+    "Combobox7": {
+      "type": "Combobox",
+      "properties": {
+        "enabled": true,
+        "visible": true,
+        "options": [
+          "0",
+          "1",
+          "2"
+        ],
+        "elementType": "element"
+      },
+      "triggers": {
+        "changed": [
+          {
+            "sourceTrigger": "changed",
+            "sourceValue": "getValue",
+            "targetValue": "writeAlertLevel",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "parseInt(value)"
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": [
+                "value"
+              ]
+            },
+            "targetName": "GATTImmediateAlert11"
+          }
+        ]
+      },
+      "zindex": 4,
+      "designer": {
+        "x": 120,
+        "y": 136
+      }
+    }
+  },
+  "cloudElements": {}
+}
