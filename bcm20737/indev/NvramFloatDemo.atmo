@@ -1,0 +1,650 @@
+{
+  "header": {
+    "data": {
+      "order": [
+        "Globals",
+        "Interval",
+        "Connected",
+        "Disconnected",
+        "Setup"
+      ],
+      "Globals": {
+        "name": "Globals",
+        "func": "#include \"callbacks.h\"",
+        "code": "",
+        "close": "//END"
+      },
+      "Interval": {
+        "name": "Interval",
+        "func": "\nvoid interval() {",
+        "code": "",
+        "close": "}"
+      },
+      "Connected": {
+        "name": "Connected",
+        "func": "\nvoid connected() {",
+        "code": "",
+        "close": "}"
+      },
+      "Disconnected": {
+        "name": "Disconnected",
+        "func": "\nvoid disconnected() {",
+        "code": "",
+        "close": "}"
+      },
+      "Setup": {
+        "name": "Setup",
+        "func": "\nvoid setup() {",
+        "code": "\tAIR_GPIO_Init();\n\tAIR_POWER_Init();\n\tAIR_UART_Init();\n\tAIR_I2C_Init();\n\tAIR_SPI_Init();\n\tAIR_NVRAM_Init();\n\tAIR_POWER_SetMode(AIR_POWER_SLEEP);\n\t",
+        "close": "}"
+      }
+    },
+    "boardConfiguration": {
+      "ble": {
+        "name": "Bluetooth Low Energy",
+        "file": "ble_config.h",
+        "values": {
+          "localName": {
+            "name": "Local Name",
+            "input": "TextField",
+            "prefix": "#define BLE_LOCAL_NAME \"",
+            "value": "ble_test",
+            "suffix": "\"",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "version": {
+            "name": "Version",
+            "input": "TextField",
+            "prefix": "#define BLE_VERSION \"",
+            "value": "1.00",
+            "suffix": "\"",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "ota": {
+            "name": "Over the Air Updating (Default: OTA)",
+            "input": "Combo",
+            "prefix": "#define BLE_",
+            "options": [
+              "OTA",
+              "NO_OTA"
+            ],
+            "value": "OTA",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "pairing": {
+            "name": "Pairing (Default: NONE)",
+            "input": "Combo",
+            "prefix": "#define ",
+            "options": [
+              "BLE_PAIRING_NONE",
+              "BLE_PAIRING_PASSKEY"
+            ],
+            "value": "BLE_PAIRING_NONE",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "txPowerLevel": {
+            "name": "TX Power Level (dbm) (Default: 4)",
+            "input": "TextField",
+            "prefix": "#define BLE_TX_POWER_LEVEL ",
+            "value": "4",
+            "regex": "^-?[0-9]d{0,2}(.d*)?$"
+          },
+          "advPowerLevel": {
+            "name": "Advertising TX Power Level (dbm) (Default: 4)",
+            "input": "TextField",
+            "prefix": "#define ADV_BLE_TX_POWER_LEVEL ",
+            "value": "4",
+            "regex": "^-?[0-9]d{0,2}(.d*)?$"
+          },
+          "intervalFineTimer": {
+            "name": "Interval Timer Length (ms) (Default: 1000)",
+            "input": "Combo",
+            "prefix": "#define BLE_INTERVAL_FINE_TIMER ",
+            "options": [
+              "12.5",
+              "25",
+              "50",
+              "62.5",
+              "75",
+              "87.5",
+              "100",
+              "125",
+              "137.5",
+              "162.5",
+              "200",
+              "250",
+              "325",
+              "500",
+              "1000"
+            ],
+            "value": "1000",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "minInterval": {
+            "name": "BLE Min Interval (ms) (Default: 20)",
+            "input": "TextField",
+            "prefix": "#define BLE_INTERVAL_MIN ",
+            "value": "20",
+            "regex": "^[0-9]*$"
+          },
+          "maxInterval": {
+            "name": "BLE Max Interval (ms) (Default: 40)",
+            "input": "TextField",
+            "prefix": "#define BLE_INTERVAL_MAX ",
+            "value": "40",
+            "regex": "^[0-9]*$"
+          },
+          "slaveLatency": {
+            "name": "BLE Slave Latency (ms) (Default: 0)",
+            "input": "TextField",
+            "prefix": "#define BLE_SLAVE_LATENCY ",
+            "value": "0",
+            "regex": "^[0-9]*$"
+          },
+          "timeout": {
+            "name": "BLE Connection Timeout (ms) (Default: 700)",
+            "input": "TextField",
+            "prefix": "#define BLE_CONNECTION_TIMEOUT ",
+            "value": "700",
+            "regex": "^[0-9]*$"
+          }
+        }
+      },
+      "power": {
+        "name": "Power Driver",
+        "file": "power_config.h",
+        "values": {
+          "external_osc": {
+            "name": "External Oscillator (Default: INTERNAL)",
+            "input": "Combo",
+            "prefix": "#define AIR_POWER_",
+            "options": [
+              "EXTERNAL_32KHZ_OSC",
+              "INTERNAL_OSC"
+            ],
+            "value": "INTERNAL_OSC",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          }
+        }
+      },
+      "gpio": {
+        "name": "GPIO Driver",
+        "file": "gpio_config.h",
+        "values": {
+          "buad": {
+            "name": "ADC Sample Frequency (Default: LOW)",
+            "input": "Combo",
+            "prefix": "#define AIR_ADC_SAMPLE_FREQUENCY ",
+            "options": [
+              "ADC_SAMPLE_FREQUENCY_LOW",
+              "ADC_SAMPLE_FREQUENCY_MEDIUM_LOW",
+              "ADC_SAMPLE_FREQUENCY_MEDIUM",
+              "ADC_SAMPLE_FREQUENCY_MEDIUM_HIGH",
+              "ADC_SAMPLE_FREQUENCY_HIGH"
+            ],
+            "value": "ADC_SAMPLE_FREQUENCY_LOW",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "pwmClockSource": {
+            "name": "PWM Clock Source (Default: PMU)",
+            "input": "Combo",
+            "prefix": "#define AIR_PWM_CLOCK_SOURCE ",
+            "options": [
+              "PMU_CLK",
+              "LHL_CLK"
+            ],
+            "value": "PMU_CLK",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          }
+        }
+      },
+      "uart": {
+        "name": "UART Driver",
+        "file": "uart_config.h",
+        "values": {
+          "rxBuffer": {
+            "name": "RX Circular Buffer size (Default: 128)",
+            "input": "TextField",
+            "prefix": "#define AIR_UART_RX_CIRCULAR_BUFFER_SIZE ",
+            "value": "128",
+            "regex": "^[0-9]*$"
+          },
+          "txBuffer": {
+            "name": "TX Circular Buffer size (Default: 128)",
+            "input": "TextField",
+            "prefix": "#define AIR_UART_TX_CIRCULAR_BUFFER_SIZE ",
+            "value": "128",
+            "regex": "^[0-9]*$"
+          },
+          "buad": {
+            "name": "Baudrate (Default: 115200)",
+            "input": "Combo",
+            "prefix": "#define ",
+            "options": [
+              "AIR_UART_BAUD_460800",
+              "AIR_UART_BAUD_230400",
+              "AIR_UART_BAUD_115200",
+              "AIR_UART_BAUD_57600",
+              "AIR_UART_BAUD_38400",
+              "AIR_UART_BAUD_19200",
+              "AIR_UART_BAUD_9600"
+            ],
+            "value": "AIR_UART_BAUD_115200",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "txPin": {
+            "name": "TX Pin (Default: 32)",
+            "input": "Combo",
+            "prefix": "#define AIR_UART_TX_PIN ",
+            "options": [
+              "32"
+            ],
+            "value": "32",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "rxPin": {
+            "name": "RX Pin (Default: 33)",
+            "input": "Combo",
+            "prefix": "#define AIR_UART_RX_PIN ",
+            "options": [
+              "33"
+            ],
+            "value": "33",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "rtsPin": {
+            "name": "RTS Pin (Default: 1)",
+            "input": "Combo",
+            "prefix": "#define AIR_UART_RTS_PIN ",
+            "options": [
+              "1"
+            ],
+            "value": "1",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "ctsPin": {
+            "name": "CTS Pin (Default: 3)",
+            "input": "Combo",
+            "prefix": "#define AIR_UART_CTS_PIN ",
+            "options": [
+              "3"
+            ],
+            "value": "3",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          }
+        }
+      },
+      "spi": {
+        "name": "SPI Driver",
+        "file": "spi_config.h",
+        "values": {
+          "speed": {
+            "name": "SPI Speed (Default: 1000000)",
+            "input": "Combo",
+            "prefix": "#define AIR_SPI_SPEED ",
+            "options": [
+              "1000000",
+              "500000"
+            ],
+            "value": "1000000",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "mode": {
+            "name": "SPI Mode (Default: SPI_MODE_3)",
+            "input": "Combo",
+            "prefix": "#define AIR_SPI_MODE ",
+            "options": [
+              "SPI_MODE_0",
+              "SPI_MODE_1",
+              "SPI_MODE_2",
+              "SPI_MODE_3"
+            ],
+            "value": "SPI_MODE_3",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          }
+        }
+      },
+      "buzzer": {
+        "name": "Buzzer Driver",
+        "file": "buzzer_config.h",
+        "values": {
+          "pin": {
+            "name": "Buzzer Pin (Default: 14)",
+            "input": "Combo",
+            "prefix": "#define BUZZER_PWM_PIN ",
+            "options": [
+              "13",
+              "14",
+              "26",
+              "27"
+            ],
+            "value": "14",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          }
+        }
+      }
+    },
+    "meta": {
+      "version": "2.0.0",
+      "layoutGrid": false,
+      "layoutSnapping": true,
+      "layoutSnappingSize": 10,
+      "cloudLayoutGrid": false,
+      "cloudLayoutSnapping": false,
+      "cloudLayoutSnappingSize": 10,
+      "language": "en",
+      "enableTooltips": true,
+      "enableAutoSave": true,
+      "enableBuildSave": false,
+      "description": null,
+      "project_uuid": null,
+      "tokensEnabled": false,
+      "codeAssist": false,
+      "highlightLine": false,
+      "editorTheme": "Default",
+      "editorFontSize": 12,
+      "customEmbeddedElementLibraries": {},
+      "theme": {},
+      "projectType": "bcm20737",
+      "name": "NVRAM float test"
+    },
+    "type": "Header",
+    "currentLayoutName": "GalaxyS7",
+    "currentCloudLayoutName": "Default"
+  },
+  "layouts": {
+    "Default": {
+      "name": "Default (768x1024)",
+      "width": 768,
+      "height": 1024,
+      "orientation": "portrait",
+      "devicename": ".*",
+      "platform": "",
+      "version": ".*",
+      "elements": {
+        "StoreButton": {
+          "x": 29,
+          "y": 49,
+          "width": 146,
+          "height": 46
+        },
+        "ToStore": {
+          "x": 203,
+          "y": 49,
+          "width": 114,
+          "height": 46
+        },
+        "RetrieveButton": {
+          "x": 7,
+          "y": 7,
+          "width": 146,
+          "height": 46
+        },
+        "RetrievedValue": {
+          "x": 7,
+          "y": 7,
+          "width": 146,
+          "height": 46
+        }
+      }
+    },
+    "GalaxyS7": {
+      "name": "Samsung Galaxy S7",
+      "width": 360,
+      "height": 640,
+      "orientation": "portrait",
+      "devicename": ".*",
+      "platform": "Android",
+      "version": ".*",
+      "elements": {
+        "StoreButton": {
+          "x": 16,
+          "y": 42,
+          "width": 146,
+          "height": 46
+        },
+        "ToStore": {
+          "x": 176,
+          "y": 42,
+          "width": 114,
+          "height": 46
+        },
+        "RetrieveButton": {
+          "x": 16,
+          "y": 117,
+          "width": 146,
+          "height": 46
+        },
+        "RetrievedValue": {
+          "x": 176,
+          "y": 117,
+          "width": 114,
+          "height": 46
+        }
+      }
+    }
+  },
+  "cloudLayouts": {
+    "Default": {
+      "name": "Default (600x400)",
+      "width": 600,
+      "height": 400,
+      "orientation": "landscape",
+      "devicename": ".*",
+      "platform": "",
+      "version": ".*",
+      "elements": {}
+    }
+  },
+  "elements": {
+    "StoreButton": {
+      "type": "Button",
+      "properties": {
+        "label": "Store",
+        "enabled": true,
+        "visible": true,
+        "border": "plain",
+        "topColor": "rgb(250, 250, 250)",
+        "bottomColor": "rgb(234, 234, 234)",
+        "pressedTopColor": "rgb(255, 255, 255)",
+        "pressedBottomColor": "rgb(255, 255, 255)",
+        "overTopColor": "rgb(234, 234, 234)",
+        "overBottomColor": "rgb(214, 214, 214)",
+        "disabledTopColor": "rgb(211, 211, 211)",
+        "disabledBottomColor": "rgb(211, 211, 211)",
+        "airID": 0,
+        "elementPanel": "designer",
+        "elementType": "element",
+        "airName": "StoreButton"
+      },
+      "triggers": {
+        "mousePressed": [
+          {
+            "sourceTrigger": "mousePressed",
+            "sourceValue": "Static",
+            "targetValue": "trigger",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {},
+              "targetOrder": [],
+              "sourceOrder": []
+            },
+            "targetName": "ToStore"
+          }
+        ]
+      },
+      "zindex": 0,
+      "designer": {
+        "x": 23,
+        "y": 63
+      }
+    },
+    "ToStore": {
+      "type": "TextField",
+      "properties": {
+        "value": "3.14",
+        "enabled": true,
+        "visible": true,
+        "airID": 1,
+        "elementPanel": "designer",
+        "elementType": "element",
+        "airName": "ToStore"
+      },
+      "triggers": {
+        "onTrigger": [
+          {
+            "sourceTrigger": "onTrigger",
+            "sourceValue": "getValue",
+            "targetValue": "execute",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "value"
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": [
+                "value"
+              ]
+            },
+            "targetName": "StoreValue"
+          }
+        ]
+      },
+      "zindex": 1,
+      "designer": {
+        "x": 230,
+        "y": 68
+      }
+    },
+    "StoreValue": {
+      "type": "Function",
+      "properties": {
+        "code": "    AIR_NVRAM_Write(17, &data, 4);",
+        "length": "128",
+        "inputType": "float",
+        "returnType": "void",
+        "permission": "public",
+        "airID": 2,
+        "elementPanel": "designer",
+        "elementType": "element",
+        "airName": "StoreValue"
+      },
+      "triggers": {},
+      "zindex": 2,
+      "designer": {
+        "x": 425,
+        "y": 67
+      }
+    },
+    "RetrieveButton": {
+      "type": "Button",
+      "properties": {
+        "label": "Retrieve",
+        "enabled": true,
+        "visible": true,
+        "border": "plain",
+        "topColor": "rgb(250, 250, 250)",
+        "bottomColor": "rgb(234, 234, 234)",
+        "pressedTopColor": "rgb(255, 255, 255)",
+        "pressedBottomColor": "rgb(255, 255, 255)",
+        "overTopColor": "rgb(234, 234, 234)",
+        "overBottomColor": "rgb(214, 214, 214)",
+        "disabledTopColor": "rgb(211, 211, 211)",
+        "disabledBottomColor": "rgb(211, 211, 211)",
+        "airID": 3,
+        "elementPanel": "designer",
+        "elementType": "element",
+        "airName": "RetrieveButton"
+      },
+      "triggers": {
+        "mousePressed": [
+          {
+            "sourceTrigger": "mousePressed",
+            "sourceValue": "Static",
+            "targetValue": "execute",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": ""
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": []
+            },
+            "targetName": "RetrieveValue"
+          }
+        ]
+      },
+      "zindex": 3,
+      "designer": {
+        "x": 31,
+        "y": 162
+      }
+    },
+    "RetrievedValue": {
+      "type": "Label",
+      "properties": {
+        "label": "",
+        "enabled": true,
+        "visible": true,
+        "font": "14px Arial",
+        "color": "Black",
+        "airID": 4,
+        "elementPanel": "designer",
+        "elementType": "element",
+        "airName": "RetrievedValue"
+      },
+      "triggers": {},
+      "zindex": 4,
+      "designer": {
+        "x": 423,
+        "y": 173
+      }
+    },
+    "RetrieveValue": {
+      "type": "Function",
+      "properties": {
+        "code": "    float data;\n    AIR_NVRAM_Read(17, &data, 4);\n\treturn data;",
+        "length": "128",
+        "inputType": "void",
+        "returnType": "float",
+        "permission": "public",
+        "airID": 5,
+        "elementPanel": "designer",
+        "elementType": "element",
+        "airName": "RetrieveValue"
+      },
+      "triggers": {
+        "valueReturned": [
+          {
+            "sourceTrigger": "valueReturned",
+            "sourceValue": "getValue",
+            "targetValue": "setValue",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "value"
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": [
+                "value"
+              ]
+            },
+            "targetName": "RetrievedValue"
+          }
+        ]
+      },
+      "zindex": 5,
+      "designer": {
+        "x": 233,
+        "y": 170
+      }
+    }
+  },
+  "cloudElements": {}
+}
