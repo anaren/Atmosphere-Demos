@@ -1,0 +1,661 @@
+{
+  "header": {
+    "data": {
+      "order": [
+        "Globals",
+        "Interval",
+        "Connected",
+        "Disconnected",
+        "Setup"
+      ],
+      "Globals": {
+        "name": "Globals",
+        "func": "#include \"callbacks.h\"",
+        "code": "\n#define LED_RED 26\n",
+        "close": "//END"
+      },
+      "Interval": {
+        "name": "Interval",
+        "func": "\nvoid interval() {",
+        "code": "",
+        "close": "}"
+      },
+      "Connected": {
+        "name": "Connected",
+        "func": "\nvoid connected() {",
+        "code": "    AIR_GPIO_Write(LED_RED, 1);",
+        "close": "}"
+      },
+      "Disconnected": {
+        "name": "Disconnected",
+        "func": "\nvoid disconnected() {",
+        "code": "    AIR_GPIO_Write(LED_RED, 0);",
+        "close": "}"
+      },
+      "Setup": {
+        "name": "Setup",
+        "func": "\nvoid setup() {",
+        "code": "\tAIR_GPIO_Init();\n\tAIR_UART_Init();\n\tAIR_I2C_Init();\n\tAIR_SPI_Init();\n\tBUZZER_Init();\n\tAIR_POWER_Init();\n    AIR_POWER_SetMode(AIR_POWER_NOSLEEP);\n    AIR_GPIO_SetMode(LED_RED, AIR_GPIO_OUTPUT_OPEN_DRAIN_NO_PULL);",
+        "close": "}"
+      }
+    },
+    "boardConfiguration": {
+      "ble": {
+        "name": "Bluetooth Low Energy",
+        "file": "ble_config.h",
+        "values": {
+          "localName": {
+            "name": "Local Name",
+            "input": "TextField",
+            "prefix": "#define BLE_LOCAL_NAME \"",
+            "value": "Connect",
+            "suffix": "\"",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "version": {
+            "name": "Version",
+            "input": "TextField",
+            "prefix": "#define BLE_VERSION \"",
+            "value": "1.00",
+            "suffix": "\"",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "txPowerLevel": {
+            "name": "TX Power Level (dbm)",
+            "input": "TextField",
+            "prefix": "#define BLE_TX_POWER_LEVEL ",
+            "value": "4",
+            "regex": "^[0-9]*$"
+          },
+          "intervalFineTimer": {
+            "name": "Interval Timer Length (ms)",
+            "input": "TextField",
+            "prefix": "#define BLE_INTERVAL_FINE_TIMER ",
+            "value": "1000",
+            "regex": "^[0-9]*$"
+          },
+          "pairing": {
+            "name": "Pairing",
+            "input": "Combo",
+            "prefix": "#define ",
+            "options": [
+              "BLE_PAIRING_NONE",
+              "BLE_PAIRING_PASSKEY",
+              "BLE_PAIRING_OOB"
+            ],
+            "value": "BLE_PAIRING_NONE",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "ota": {
+            "name": "Over the Air Updating (Default: OTA)",
+            "input": "Combo",
+            "prefix": "#define BLE_",
+            "options": [
+              "OTA",
+              "NO_OTA"
+            ],
+            "value": "OTA",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "advPowerLevel": {
+            "name": "Advertising TX Power Level (dbm) (Default: 4)",
+            "input": "TextField",
+            "prefix": "#define ADV_BLE_TX_POWER_LEVEL ",
+            "value": "4",
+            "regex": "^-?[0-9]d{0,2}(.d*)?$"
+          },
+          "minInterval": {
+            "name": "BLE Min Interval (ms) (Default: 20)",
+            "input": "TextField",
+            "prefix": "#define BLE_INTERVAL_MIN ",
+            "value": "20",
+            "regex": "^[0-9]*$"
+          },
+          "maxInterval": {
+            "name": "BLE Max Interval (ms) (Default: 40)",
+            "input": "TextField",
+            "prefix": "#define BLE_INTERVAL_MAX ",
+            "value": "40",
+            "regex": "^[0-9]*$"
+          },
+          "slaveLatency": {
+            "name": "BLE Slave Latency (ms) (Default: 0)",
+            "input": "TextField",
+            "prefix": "#define BLE_SLAVE_LATENCY ",
+            "value": "0",
+            "regex": "^[0-9]*$"
+          },
+          "timeout": {
+            "name": "BLE Connection Timeout (ms) (Default: 700)",
+            "input": "TextField",
+            "prefix": "#define BLE_CONNECTION_TIMEOUT ",
+            "value": "700",
+            "regex": "^[0-9]*$"
+          }
+        }
+      },
+      "power": {
+        "name": "Power Driver",
+        "file": "power_config.h",
+        "values": {
+          "external_osc": {
+            "name": "External Oscillator (Default: INTERNAL)",
+            "input": "Combo",
+            "prefix": "#define AIR_POWER_",
+            "options": [
+              "EXTERNAL_32KHZ_OSC",
+              "INTERNAL_OSC"
+            ],
+            "value": "INTERNAL_OSC",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          }
+        }
+      },
+      "gpio": {
+        "name": "GPIO Driver",
+        "file": "gpio_config.h",
+        "values": {
+          "buad": {
+            "name": "ADC Sample Frequency (Default: LOW)",
+            "input": "Combo",
+            "prefix": "#define AIR_ADC_SAMPLE_FREQUENCY ",
+            "options": [
+              "ADC_SAMPLE_FREQUENCY_LOW",
+              "ADC_SAMPLE_FREQUENCY_MEDIUM_LOW",
+              "ADC_SAMPLE_FREQUENCY_MEDIUM",
+              "ADC_SAMPLE_FREQUENCY_MEDIUM_HIGH",
+              "ADC_SAMPLE_FREQUENCY_HIGH"
+            ],
+            "value": "ADC_SAMPLE_FREQUENCY_LOW",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "pwmClockSource": {
+            "name": "PWM Clock Source (Default: PMU)",
+            "input": "Combo",
+            "prefix": "#define AIR_PWM_CLOCK_SOURCE ",
+            "options": [
+              "PMU_CLK",
+              "LHL_CLK"
+            ],
+            "value": "PMU_CLK",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          }
+        }
+      },
+      "uart": {
+        "name": "AIR UART Driver",
+        "file": "uart_config.h",
+        "values": {
+          "rxBuffer": {
+            "name": "RX Circular Buffer size",
+            "input": "TextField",
+            "prefix": "#define AIR_UART_RX_CIRCULAR_BUFFER_SIZE ",
+            "value": "128",
+            "regex": "^[0-9]*$"
+          },
+          "txBuffer": {
+            "name": "TX Circular Buffer size",
+            "input": "TextField",
+            "prefix": "#define AIR_UART_TX_CIRCULAR_BUFFER_SIZE ",
+            "value": "128",
+            "regex": "^[0-9]*$"
+          },
+          "buad": {
+            "name": "Baudrate",
+            "input": "Combo",
+            "prefix": "#define ",
+            "options": [
+              "AIR_UART_BAUD_115200",
+              "AIR_UART_BAUD_57600",
+              "AIR_UART_BAUD_9600"
+            ],
+            "value": "AIR_UART_BAUD_115200",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "txPin": {
+            "name": "TX Pin",
+            "input": "Combo",
+            "prefix": "#define AIR_UART_TX_PIN ",
+            "options": [
+              "32"
+            ],
+            "value": "32",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "rxPin": {
+            "name": "RX Pin",
+            "input": "Combo",
+            "prefix": "#define AIR_UART_RX_PIN ",
+            "options": [
+              "33"
+            ],
+            "value": "33",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "rtsPin": {
+            "name": "RTS Pin",
+            "input": "Combo",
+            "prefix": "#define AIR_UART_RTS_PIN ",
+            "options": [
+              "1"
+            ],
+            "value": "1",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "ctsPin": {
+            "name": "CTS Pin",
+            "input": "Combo",
+            "prefix": "#define AIR_UART_CTS_PIN ",
+            "options": [
+              "3"
+            ],
+            "value": "3",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          }
+        }
+      },
+      "spi": {
+        "name": "SPI Driver",
+        "file": "spi_config.h",
+        "values": {
+          "speed": {
+            "name": "SPI Speed (Default: 1000000)",
+            "input": "Combo",
+            "prefix": "#define AIR_SPI_SPEED ",
+            "options": [
+              "1000000",
+              "500000"
+            ],
+            "value": "1000000",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "mode": {
+            "name": "SPI Mode (Default: SPI_MODE_3)",
+            "input": "Combo",
+            "prefix": "#define AIR_SPI_MODE ",
+            "options": [
+              "SPI_MODE_0",
+              "SPI_MODE_1",
+              "SPI_MODE_2",
+              "SPI_MODE_3"
+            ],
+            "value": "SPI_MODE_3",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          }
+        }
+      },
+      "buzzer": {
+        "name": "Buzzer Driver",
+        "file": "buzzer_config.h",
+        "values": {
+          "pin": {
+            "name": "Buzzer Pin (Default: 14)",
+            "input": "Combo",
+            "prefix": "#define BUZZER_PWM_PIN ",
+            "options": [
+              "13",
+              "14",
+              "26",
+              "27"
+            ],
+            "value": "14",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          }
+        }
+      }
+    },
+    "meta": {
+      "version": "2.0.0",
+      "layoutGrid": false,
+      "layoutSnapping": false,
+      "layoutSnappingSize": 10,
+      "cloudLayoutGrid": false,
+      "cloudLayoutSnapping": false,
+      "cloudLayoutSnappingSize": 10,
+      "language": "en",
+      "enableTooltips": true,
+      "enableAutoSave": true,
+      "enableBuildSave": false,
+      "description": "Connection Element example",
+      "project_uuid": null,
+      "tokensEnabled": false,
+      "codeAssist": false,
+      "highlightLine": false,
+      "editorTheme": "Default",
+      "editorFontSize": 12,
+      "customEmbeddedElementLibraries": {},
+      "theme": {},
+      "projectType": "bcm20737",
+      "name": "ConnectionStateChangesExample"
+    },
+    "type": "Header",
+    "currentLayoutName": "Default",
+    "currentCloudLayoutName": "Default"
+  },
+  "layouts": {
+    "Default": {
+      "name": "Default (768x1024)",
+      "width": 768,
+      "height": 1024,
+      "orientation": "portrait",
+      "devicename": ".*",
+      "platform": ".*",
+      "version": ".*",
+      "elements": {
+        "connectionState": {
+          "x": 221,
+          "y": 84,
+          "width": 214,
+          "height": 34
+        },
+        "connectedName": {
+          "x": 221,
+          "y": 133.5,
+          "width": 212,
+          "height": 34
+        },
+        "connectedAddress": {
+          "x": 221,
+          "y": 183,
+          "width": 211,
+          "height": 34
+        },
+        "Label9": {
+          "x": 65,
+          "y": 84,
+          "width": 143,
+          "height": 34
+        },
+        "Label10": {
+          "x": 66,
+          "y": 132,
+          "width": 141,
+          "height": 37
+        },
+        "Label11": {
+          "x": 65.5,
+          "y": 183,
+          "width": 142,
+          "height": 34
+        },
+        "Label12": {
+          "x": 88,
+          "y": 22,
+          "width": 335,
+          "height": 34
+        }
+      }
+    }
+  },
+  "cloudLayouts": {
+    "Default": {
+      "name": "Default (600x400)",
+      "width": 600,
+      "height": 400,
+      "orientation": "landscape",
+      "devicename": ".*",
+      "platform": "",
+      "version": ".*",
+      "elements": {}
+    }
+  },
+  "elements": {
+    "Connection1": {
+      "type": "Connection",
+      "properties": {
+        "airID": 0,
+        "elementPanel": "designer",
+        "elementType": "element"
+      },
+      "triggers": {
+        "connected": [
+          {
+            "sourceTrigger": "connected",
+            "sourceValue": "Static",
+            "targetValue": "setValue",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "\"Connected\""
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": []
+            },
+            "targetName": "connectionState"
+          },
+          {
+            "sourceTrigger": "connected",
+            "sourceValue": "getDeviceName",
+            "targetValue": "setValue",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "name"
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": [
+                "name"
+              ]
+            },
+            "targetName": "connectedName"
+          },
+          {
+            "sourceTrigger": "connected",
+            "sourceValue": "getDeviceAddress",
+            "targetValue": "setValue",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "address"
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": [
+                "address"
+              ]
+            },
+            "targetName": "connectedAddress"
+          }
+        ],
+        "connecting": [
+          {
+            "sourceTrigger": "connecting",
+            "sourceValue": "Static",
+            "targetValue": "setValue",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "\"Connecting\""
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": []
+            },
+            "targetName": "connectionState"
+          }
+        ],
+        "disconnecting": [
+          {
+            "sourceTrigger": "disconnecting",
+            "sourceValue": "Static",
+            "targetValue": "setValue",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "\"Disconnecting\""
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": []
+            },
+            "targetName": "connectionState"
+          }
+        ],
+        "disconnected": [
+          {
+            "sourceTrigger": "disconnected",
+            "sourceValue": "Static",
+            "targetValue": "setValue",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "\"Disconnected\""
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": []
+            },
+            "targetName": "connectionState"
+          }
+        ]
+      },
+      "zindex": 1,
+      "designer": {
+        "x": 130,
+        "y": 190
+      }
+    },
+    "connectionState": {
+      "type": "Label",
+      "properties": {
+        "label": "",
+        "enabled": true,
+        "visible": true,
+        "font": "14px Arial",
+        "color": "Black",
+        "airID": 1,
+        "elementPanel": "designer",
+        "elementType": "element"
+      },
+      "triggers": {},
+      "zindex": 2,
+      "designer": {
+        "x": 350,
+        "y": 111
+      }
+    },
+    "connectedName": {
+      "type": "Label",
+      "properties": {
+        "label": "",
+        "enabled": true,
+        "visible": true,
+        "font": "14px Arial",
+        "color": "Black",
+        "airID": 2,
+        "elementPanel": "designer",
+        "elementType": "element"
+      },
+      "triggers": {},
+      "zindex": 3,
+      "designer": {
+        "x": 351,
+        "y": 180
+      }
+    },
+    "connectedAddress": {
+      "type": "Label",
+      "properties": {
+        "label": "",
+        "enabled": true,
+        "visible": true,
+        "font": "14px Arial",
+        "color": "Black",
+        "airID": 3,
+        "elementPanel": "designer",
+        "elementType": "element"
+      },
+      "triggers": {},
+      "zindex": 4,
+      "designer": {
+        "x": 349,
+        "y": 252
+      }
+    },
+    "Label9": {
+      "type": "Label",
+      "properties": {
+        "label": "Connection State",
+        "enabled": true,
+        "visible": true,
+        "font": "14px Arial",
+        "color": "Black",
+        "airID": 4,
+        "elementPanel": "designer",
+        "elementType": "element"
+      },
+      "triggers": {},
+      "zindex": 5,
+      "designer": {
+        "x": 4,
+        "y": 80
+      }
+    },
+    "Label10": {
+      "type": "Label",
+      "properties": {
+        "label": "Connection Name",
+        "enabled": true,
+        "visible": true,
+        "font": "14px Arial",
+        "color": "Black",
+        "airID": 5,
+        "elementPanel": "designer",
+        "elementType": "element"
+      },
+      "triggers": {},
+      "zindex": 6,
+      "designer": {
+        "x": 3,
+        "y": 150
+      }
+    },
+    "Label11": {
+      "type": "Label",
+      "properties": {
+        "label": "Connection Address",
+        "enabled": true,
+        "visible": true,
+        "font": "14px Arial",
+        "color": "Black",
+        "airID": 6,
+        "elementPanel": "designer",
+        "elementType": "element"
+      },
+      "triggers": {},
+      "zindex": 7,
+      "designer": {
+        "x": 3,
+        "y": 219
+      }
+    },
+    "Label12": {
+      "type": "Label",
+      "properties": {
+        "label": "Connection Element Demo",
+        "enabled": true,
+        "visible": true,
+        "font": "14px Arial",
+        "color": "Black",
+        "airID": 7,
+        "elementPanel": "designer",
+        "elementType": "element"
+      },
+      "triggers": {},
+      "zindex": 8,
+      "designer": {
+        "x": 4,
+        "y": 12
+      }
+    }
+  },
+  "cloudElements": {}
+}
