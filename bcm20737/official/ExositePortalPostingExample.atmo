@@ -1,0 +1,625 @@
+{
+  "header": {
+    "data": {
+      "order": [
+        "Globals",
+        "Interval",
+        "Connected",
+        "Disconnected",
+        "Setup"
+      ],
+      "Globals": {
+        "name": "Globals",
+        "func": "#include \"callbacks.h\"",
+        "code": "\n#include \"hmc5883/hmc5883.h\"\n#include \"lis3dh/lis3dh.h\"\n#include \"tmp006/tmp006.h\"\n#include \"xra1201/xra1201.h\"\n\n// Storing these WebIo element parameters here to make it easier...\n// Headers object:  {\"X-Exosite-CIK\":\"YourCikHere\", \"Accept\":\"application/x-www-form-urlencoded; charset=utf-8\"}\n// Value object:  {\"YourDataSourceAliasHere\":value}\n\n#define LED_BLUE 13\n\nchar debugString[128];\nfloat tempC;\n",
+        "close": "//END"
+      },
+      "Interval": {
+        "name": "Interval",
+        "func": "\nvoid interval() {",
+        "code": "\n    tempC = TMP006_GetObjectTemperature(0);\n",
+        "close": "}"
+      },
+      "Connected": {
+        "name": "Connected",
+        "func": "\nvoid connected() {",
+        "code": "",
+        "close": "}"
+      },
+      "Disconnected": {
+        "name": "Disconnected",
+        "func": "\nvoid disconnected() {",
+        "code": "",
+        "close": "}"
+      },
+      "Setup": {
+        "name": "Setup",
+        "func": "\nvoid setup() {",
+        "code": "    \n    AIR_GPIO_Init();\n\tAIR_UART_Init();\n\tAIR_I2C_Init();\n\tAIR_SPI_Init();\n\tBUZZER_Init();\n\tAIR_POWER_Init();\n    AIR_POWER_SetMode(AIR_POWER_NOSLEEP);\t\n\t// Initialize the IR Temp Sensor        \n\tTMP006_SetDataReadyEnable(0, 1);\n    AIR_GPIO_SetMode(LED_BLUE, AIR_GPIO_OUTPUT_OPEN_DRAIN_NO_PULL); // Setup LED output\n    ",
+        "close": "}"
+      }
+    },
+    "boardConfiguration": {
+      "ble": {
+        "name": "Bluetooth Low Energy",
+        "file": "ble_config.h",
+        "values": {
+          "localName": {
+            "name": "Local Name",
+            "input": "TextField",
+            "prefix": "#define BLE_LOCAL_NAME \"",
+            "value": "Exosite1",
+            "suffix": "\"",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "version": {
+            "name": "Version",
+            "input": "TextField",
+            "prefix": "#define BLE_VERSION \"",
+            "value": "1.00",
+            "suffix": "\"",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "txPowerLevel": {
+            "name": "TX Power Level (dbm)",
+            "input": "TextField",
+            "prefix": "#define BLE_TX_POWER_LEVEL ",
+            "value": "4",
+            "regex": "^[0-9]*$"
+          },
+          "intervalFineTimer": {
+            "name": "Interval Timer Length (ms)",
+            "input": "TextField",
+            "prefix": "#define BLE_INTERVAL_FINE_TIMER ",
+            "value": "1000",
+            "regex": "^[0-9]*$"
+          },
+          "pairing": {
+            "name": "Pairing",
+            "input": "Combo",
+            "prefix": "#define ",
+            "options": [
+              "BLE_PAIRING_NONE",
+              "BLE_PAIRING_PASSKEY",
+              "BLE_PAIRING_OOB"
+            ],
+            "value": "BLE_PAIRING_NONE",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "powersave": {
+            "name": "Power Saving",
+            "input": "Combo",
+            "prefix": "#define ",
+            "options": [
+              "BLE_POWERSAVE_OFF",
+              "BLE_POWERSAVE"
+            ],
+            "value": "BLE_POWERSAVE_OFF",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          }
+        }
+      },
+      "gpio_config": {
+        "name": "GPIO Driver",
+        "file": "gpio_config.h",
+        "values": {
+          "buad": {
+            "name": "ADC Sample Frequency",
+            "input": "Combo",
+            "prefix": "#define AIR_ADC_SAMPLE_FREQUENCY ",
+            "options": [
+              "ADC_SAMPLE_FREQUENCY_LOW",
+              "ADC_SAMPLE_FREQUENCY_MEDIUM_LOW",
+              "ADC_SAMPLE_FREQUENCY_MEDIUM",
+              "ADC_SAMPLE_FREQUENCY_MEDIUM_HIGH",
+              "ADC_SAMPLE_FREQUENCY_HIGH"
+            ],
+            "value": "ADC_SAMPLE_FREQUENCY_LOW",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          }
+        }
+      },
+      "uart": {
+        "name": "AIR UART Driver",
+        "file": "uart_config.h",
+        "values": {
+          "rxBuffer": {
+            "name": "RX Circular Buffer size",
+            "input": "TextField",
+            "prefix": "#define AIR_UART_RX_CIRCULAR_BUFFER_SIZE ",
+            "value": "128",
+            "regex": "^[0-9]*$"
+          },
+          "txBuffer": {
+            "name": "TX Circular Buffer size",
+            "input": "TextField",
+            "prefix": "#define AIR_UART_TX_CIRCULAR_BUFFER_SIZE ",
+            "value": "128",
+            "regex": "^[0-9]*$"
+          },
+          "buad": {
+            "name": "Baudrate",
+            "input": "Combo",
+            "prefix": "#define ",
+            "options": [
+              "AIR_UART_BAUD_115200",
+              "AIR_UART_BAUD_57600",
+              "AIR_UART_BAUD_9600"
+            ],
+            "value": "AIR_UART_BAUD_115200",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "txPin": {
+            "name": "TX Pin",
+            "input": "Combo",
+            "prefix": "#define AIR_UART_TX_PIN ",
+            "options": [
+              "32"
+            ],
+            "value": "32",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "rxPin": {
+            "name": "RX Pin",
+            "input": "Combo",
+            "prefix": "#define AIR_UART_RX_PIN ",
+            "options": [
+              "33"
+            ],
+            "value": "33",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "rtsPin": {
+            "name": "RTS Pin",
+            "input": "Combo",
+            "prefix": "#define AIR_UART_RTS_PIN ",
+            "options": [
+              "1"
+            ],
+            "value": "1",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "ctsPin": {
+            "name": "CTS Pin",
+            "input": "Combo",
+            "prefix": "#define AIR_UART_CTS_PIN ",
+            "options": [
+              "3"
+            ],
+            "value": "3",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          }
+        }
+      }
+    },
+    "meta": {
+      "version": "origin/1.1.0",
+      "layoutGrid": false,
+      "layoutSnapping": false,
+      "layoutSnappingSize": 10,
+      "language": "en",
+      "enableTooltips": true,
+      "enableAutoSave": true,
+      "enableBuildSave": false,
+      "description": "Writes data to Exosite",
+      "project_uuid": null,
+      "tokensEnabled": false,
+      "codeAssist": false,
+      "highlightLine": false,
+      "editorTheme": "Default",
+      "customEmbeddedElementLibraries": {
+        "xra1201": {
+          "author": "Anaren Inc.",
+          "code": {
+            "global": "",
+            "setup": ""
+          },
+          "elements": {},
+          "files": {
+            "common": {
+              "headers": {
+                "xra1201.h": "// Copyright (c) 2014, Anaren Inc.\r\n// All rights reserved.\r\n// \r\n// Redistribution and use in source and binary forms, with or without\r\n// modification, are permitted provided that the following conditions are met:\r\n// \r\n// 1. Redistributions of source code must retain the above copyright notice, this\r\n//\tlist of conditions and the following disclaimer. \r\n// 2. Redistributions in binary form must reproduce the above copyright notice,\r\n//\tthis list of conditions and the following disclaimer in the documentation\r\n//\tand/or other materials provided with the distribution.\r\n// \r\n// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS \"AS IS\" AND\r\n// ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED\r\n// WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE\r\n// DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR\r\n// ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES\r\n// (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;\r\n// LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND\r\n// ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT\r\n// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS\r\n// SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.\r\n// \r\n// The views and conclusions contained in the software and documentation are those\r\n// of the authors and should not be interpreted as representing official policies, \r\n// either expressed or implied, of the FreeBSD Project.\r\n\r\n#ifndef XRA1201_H\r\n#define XRA1201_H\r\n\r\n#include \"types.h\"\r\n#include \"../i2c/i2c.h\"\r\n\r\n//------------------------------------------------------------------------------\r\n/**\r\n *  Defines, enumerations, and structure definitions\r\n */\r\n#ifndef bool\r\n#define bool uint8\r\n#endif\r\n\r\n#ifndef true\r\n#define true 1\r\n#endif\r\n\r\n#ifndef false\r\n#define false 0\r\n#endif\r\n\r\n\r\n/**\r\nWrite a 16-bit value to a device register.  All of the XRA1201 registers are\r\nread/write except for the GPIO State Register and Input Interrupt Status\r\nRegister.  This function does not do any form of error checking, so trying to\r\nwrite to one of the read-only registers may result in undesirable behavior.\r\n@param id device ID (0 to 31) on i2c bus\r\n@param addr device register address\r\n@param data data to be written to the specified register address\r\n*/\r\nvoid XRA1201_WriteReg(uint8 id, uint8 addr, uint16 data);\r\n\r\n/**\r\nRead a 16-bit value from a device register.\r\n@param id device ID (0 to 31) on i2c bus\r\n@param addr device register address\r\n@return data read from the specified register address\r\n*/\r\nuint16 XRA1201_ReadReg(uint8 id, uint8 addr);\r\n\r\n/**\r\nRead the current state of the GPIO pins. The value will be inverted for input\r\npins configured for Input Polarity Inversion in the PIR register.  For pins\r\nconfigured as outputs, the last value written to the OCR register will be\r\nreturned.  Calling this function clears the XRA1201 interrupt.\r\n@param id device ID (0 to 31) on i2c bus\r\n@return current value in the GSR register\r\n*/\r\nuint16 XRA1201_GetGpioState(uint8 id);\r\n\r\n/**\r\nChange the state of the GPIO output pins by writing to the OCR register.\r\n@param id device ID (0 to 31) on i2c bus\r\n@param data specifies the new state of the GPIO output pins\r\n*/\r\nvoid XRA1201_SetOutputValue(uint8 id, uint16 data);\r\n\r\n/**\r\nRead the last value written by the XRA1201_SetOutputValue() function.  The\r\ndefault value following power-up is 0xFFFF.\r\n@param id device ID (0 to 31) on i2c bus\r\n@return current value in the OCR register\r\n*/\r\nuint16 XRA1201_GetOutputValue(uint8 id);\r\n\r\n/**\r\nEnable/disable polarity inversion on GPIO input pins.  Setting a bit to '1'\r\ninverts the corresponding GPIO input pin value returned when reading the GSR\r\nregister.\r\n@param id device ID (0 to 31) on i2c bus\r\n@param data specifies which GPIO input pins to invert\r\n*/\r\nvoid XRA1201_SetInputPolarityInversion(uint8 id, uint16 data);\r\n\r\n/**\r\nRead the last value written by the XRA1201_SetInputPolarityInversion() function.\r\nThe default value following power-up is 0x0000.\r\n@param id device ID (0 to 31) on i2c bus\r\n@return current value in the PIR register\r\n*/\r\nuint16 XRA1201_GetInputPolarityInversion(uint8 id);\r\n\r\n/**\r\nSelect GPIO pin direction.  Setting a bit to '0' configures the corresponding\r\nGPIO pin as an output while setting the bit to '1' configures the GPIO pin as an\r\ninput.\r\n@param id device ID (0 to 31) on i2c bus\r\n@param data GPIO pin direction\r\n*/\r\nvoid XRA1201_SetPinDirection(uint8 id, uint16 data);\r\n\r\n/**\r\nRead the last value written by the XRA1201_SetPinDirection() function. The\r\ndefault value following power-up is 0xFFFF.\r\n@param id device ID (0 to 31) on i2c bus\r\n@return current value in the GCR register\r\n*/\r\nuint16 XRA1201_GetPinDirection(uint8 id);\r\n\r\n/**\r\nEnable/disable internal pull-up resistor on GPIO input pins.  Setting a bit to\r\n'1' enables the pull-up on the corresponding GPIO input pin.\r\n@param id device ID (0 to 31) on i2c bus\r\n@param data specifies which GPIO input pins to pull-up internally\r\n*/\r\nvoid XRA1201_SetInputPullupEnable(uint8 id, uint16 data);\r\n\r\n/**\r\nRead the last value written by the XRA1201_SetInputPullupEnable() function.  The\r\ndefault value following power-up is 0x0000 for the XRA1201 and 0xFFFF for the\r\nXRA1201P.\r\n@param id device ID (0 to 31) on i2c bus\r\n@return current value in the PUR register\r\n*/\r\nuint16 XRA1201_GetInputPullupEnable(uint8 id);\r\n\r\n/**\r\nEnable/disable interrupts on GPIO input pins.  Setting a bit to '1' enables the\r\ninterrupt on the corresponding GPIO input pin.\r\n@param id device ID (0 to 31) on i2c bus\r\n@param data specifies which GPIO input pins to configure with interrupts enabled\r\n*/\r\nvoid XRA1201_SetInterruptEnable(uint8 id, uint16 data);\r\n\r\n/**\r\nRead the last value written by the XRA1201_SetInterruptEnable() function. The\r\ndefault value following power-up is 0x0000.\r\n@param id device ID (0 to 31) on i2c bus\r\n@return current value in the IER register\r\n*/\r\nuint16 XRA1201_GetInterruptEnable(uint8 id);\r\n\r\n/**\r\nEnable/disable tri-state mode on GPIO output pins.  Setting a bit to '1' enables\r\nthe tri-state mode on the corresponding GPIO output pin.\r\n@param id device ID (0 to 31) on i2c bus\r\n@param data specifies which GPIO output pins to configure for tri-state mode\r\n*/\r\nvoid XRA1201_SetOutputThreeStateEnable(uint8 id, uint16 data);\r\n\r\n/**\r\nRead the last value written by the XRA1201_SetOutputThreeStateEnable() function.\r\nThe default value following power-up is 0x0000.\r\n@param id device ID (0 to 31) on i2c bus\r\n@return current value in the TSCR register\r\n*/\r\nuint16 XRA1201_GetOutputThreeStateEnable(uint8 id);\r\n\r\n/**\r\nRead the current status of the GPIO input pin interrupts.  A bit will be set to\r\n'1' if an interrupt occurred on the corresponding GPIO input pin.  The default\r\nvalue following power-up is 0x0000.\r\n@param id device ID (0 to 31) on i2c bus\r\n@return current value in the ISR register\r\n*/\r\nuint16 XRA1201_GetInterruptStatus(uint8 id);\r\n\r\n/**\r\nEnable/disable interrupts to be generated following the rising edge detection of\r\nthe GPIO input pins.  Setting a bit to '1' enables the interrupt to be generated\r\non the rising edge of the corresponding GPIO input pin.  See the XRA1201\r\ndatasheet for more details regarding the interrupt behavior.\r\n@param id device ID (0 to 31) on i2c bus\r\n@param data specifies which GPIO input pins are to generate interrupts on the\r\nrising edge\r\n*/\r\nvoid XRA1201_SetInterruptRisingEdgeEnable(uint8 id, uint16 data);\r\n\r\n/**\r\nRead the last value written by the XRA1201_SetInterruptRisingEdgeEnable()\r\nfunction. The default value following power-up is 0x0000.\r\n@param id device ID (0 to 31) on i2c bus\r\n@return current value in the REIR register\r\n*/\r\nuint16 XRA1201_GetInterruptRisingEdgeEnable(uint8 id);\r\n\r\n/**\r\nEnable/disable interrupts to be generated following the falling edge detection\r\nof the GPIO input pins.  Setting a bit to '1' enables the interrupt to be\r\ngenerated on the falling edge of the corresponding GPIO input pin.  See the\r\nXRA1201 datasheet for more details regarding the interrupt behavior.\r\n@param id device ID (0 to 31) on i2c bus\r\n@param data specifies which GPIO input pins are to generate interrupts on the\r\nfalling edge\r\n*/\r\nvoid XRA1201_SetInterruptFallingEdgeEnable(uint8 id, uint16 data);\r\n\r\n/**\r\nRead the last value written by the XRA1201_SetInterruptFallingEdgeEnable()\r\nfunction. The default value following power-up is 0x0000.\r\n@param id device ID (0 to 31) on i2c bus\r\n@return current value in the FEIR register\r\n*/\r\nuint16 XRA1201_GetInterruptFallingEdgeEnable(uint8 id);\r\n\r\n/**\r\nEnable/disable filtering on the GPIO input pins for generating interrupts.\r\nSetting a bit to '1' enables the interrupt filter of the corresponding GPIO\r\ninput pin.  See the XRA1201 datasheet for more details regarding the interrupt\r\nbehavior.\r\n@param id device ID (0 to 31) on i2c bus\r\n@param data specifies which GPIO input pins to configure with interrupt filters\r\n*/\r\nvoid XRA1201_SetInterruptFilterEnable(uint8 id, uint16 data);\r\n\r\n/**\r\nRead the last value written by the XRA1201_SetInterruptFilterEnable() function.\r\nThe default value following power-up is 0xFFFF.\r\n@param id device ID (0 to 31) on i2c bus\r\n@return current value in the IFR register\r\n*/\r\nuint16 XRA1201_GetInterruptFilterEnable(uint8 id);\r\n\r\n\r\n#endif  /* XRA1201_H */\r\n"
+              },
+              "objects": {
+                "xra1201_common.c": "/**\r\n *  ----------------------------------------------------------------------------\r\n *  Copyright (c) 2014, Anaren Microwave, Inc.\r\n *\r\n *  For more information on licensing, please see Anaren Microwave, Inc's\r\n *  end user software licensing agreement: EULA.txt.\r\n *\r\n *  ----------------------------------------------------------------------------\r\n *\r\n *  xra1201.h - driver interface for the Exar XRA1201 GPIO Expander.  The\r\n *  XRA1201 allows for up to 32 devices on a single i2c bus, therefore each\r\n *  function accepts a bus identifier in the range 0 - 31 to select which device\r\n *  is currently being accessed.  This ID is added to the device's base address\r\n *  of 0x10 to determine the final i2c address.\r\n *\r\n *  @version\t1.0.00\r\n *  @date\t   09 Sep 2014\r\n *  @author\t Anaren, air@anaren.com\r\n *\r\n *  assumptions\r\n *  ===========\r\n *  - The i2c driver provides the proper signaling sequences for read & write\r\n *\toperations.\r\n *  - The i2c driver meets the timing requirements specified in the XRA1201\r\n *\tdatasheet.\r\n *\r\n *  file dependency\r\n *  ===============\r\n *  i2c.h : defines the i2c read & write interfaces.\r\n *\r\n *  revision history\r\n *  ================\r\n *  ver 1.0.00 : 09 Sep 2014\r\n *  - initial release\r\n */\r\n\r\n#include \"xra1201.h\"\r\n\r\n//------------------------------------------------------------------------------\r\n/**\r\n *  Defines, enumerations, and structure definitions\r\n */\r\n\r\n#define XRA1201_SLAVE_BASE_ADDR\t 0x10\r\n\r\n#define XRA1201_GSR1_REG_ADDR\t   0x00  // GPIO State P0-P7 (read only)\r\n#define XRA1201_GSR2_REG_ADDR\t   0x01  // GPIO State P8-P15 (read only)\r\n#define XRA1201_OCR1_REG_ADDR\t   0x02  // Output Control P0-P7\r\n#define XRA1201_OCR2_REG_ADDR\t   0x03  // Output Control P8-P15\r\n#define XRA1201_PIR1_REG_ADDR\t   0x04  // Input Polarity Inversion P0-P7\r\n#define XRA1201_PIR2_REG_ADDR\t   0x05  // Input Polarity Inversion P8-P15\r\n#define XRA1201_GCR1_REG_ADDR\t   0x06  // GPIO Configuration P0-P7\r\n#define XRA1201_GCR2_REG_ADDR\t   0x07  // GPIO Configuration P8-P15\r\n#define XRA1201_PUR1_REG_ADDR\t   0x08  // Input Internal Pull-up Enable P0-P7\r\n#define XRA1201_PUR2_REG_ADDR\t   0x09  // Input Internal Pull-up Enable P8-P15\r\n#define XRA1201_IER1_REG_ADDR\t   0x0A  // Input Interrupt Enable P0-P7\r\n#define XRA1201_IER2_REG_ADDR\t   0x0B  // Input Interrupt Enable P8-P15\r\n#define XRA1201_TSCR1_REG_ADDR\t  0x0C  // Output 3-state Control P0-P7\r\n#define XRA1201_TSCR2_REG_ADDR\t  0x0D  // Output 3-state Control P8-P15\r\n#define XRA1201_ISR1_REG_ADDR\t   0x0E  // Input Interrupt Status P0-P7 (read only)\r\n#define XRA1201_ISR2_REG_ADDR\t   0x0F  // Input Interrupt Status P8-P15 (read only)\r\n#define XRA1201_REIR1_REG_ADDR\t  0x10  // Input Rising Edge Interrupt Enable P0-P7\r\n#define XRA1201_REIR2_REG_ADDR\t  0x11  // Input Rising Edge Interrupt Enable P8-P15\r\n#define XRA1201_FEIR1_REG_ADDR\t  0x12  // Input Falling Edge Interrupt Enable P0-P7\r\n#define XRA1201_FEIR2_REG_ADDR\t  0x13  // Input Falling Edge Interrupt Enable P8-P15\r\n#define XRA1201_IFR1_REG_ADDR\t   0x14  // Input Filter Enable P0-P7\r\n#define XRA1201_IFR2_REG_ADDR\t   0x15  // Input Filter Enable P8-P15\r\n\r\n// -----------------------------------------------------------------------------\r\n/**\r\n *  Global data\r\n */\r\n\r\n// -----------------------------------------------------------------------------\r\n/**\r\n *  Private interface\r\n */\r\n\r\n// -----------------------------------------------------------------------------\r\n/**\r\n *  Public interface\r\n */\r\n\r\nvoid XRA1201_WriteReg(uint8 id, uint8 addr, uint16 data)\r\n{\r\n  uint8 writeBytes[2];\r\n\r\n  writeBytes[0] = addr;\r\n  writeBytes[1] = data;\r\n  AIR_I2C_Write(XRA1201_SLAVE_BASE_ADDR + id, writeBytes, 2);\r\n}\r\n\r\nuint16 XRA1201_ReadReg(uint8 id, uint8 addr)\r\n{\r\n  uint8 writeBytes[1];\r\n  uint8 readBytes[1];\r\n\r\n  writeBytes[0] = addr;\r\n  AIR_I2C_ComboRead(XRA1201_SLAVE_BASE_ADDR + id, writeBytes, 1, readBytes, 1);\r\n  return readBytes[0];\r\n}\r\n\r\nuint16 XRA1201_GetGpioState(uint8 id)\r\n{\r\n  uint16 returnValue = XRA1201_ReadReg(id, XRA1201_GSR1_REG_ADDR);\r\n  \r\n  returnValue |= (uint16)XRA1201_ReadReg(id, XRA1201_GSR2_REG_ADDR) << 8;\r\n  return returnValue;\r\n}\r\n\r\nvoid XRA1201_SetOutputValue(uint8 id, uint16 data)\r\n{\r\n  XRA1201_WriteReg(id, XRA1201_OCR1_REG_ADDR, (data >> 0) & 0xFF);\r\n  XRA1201_WriteReg(id, XRA1201_OCR2_REG_ADDR, (data >> 8) & 0xFF);\r\n}\r\n\r\nuint16 XRA1201_GetOutputValue(uint8 id)\r\n{\r\n  uint16 returnValue = XRA1201_ReadReg(id, XRA1201_OCR1_REG_ADDR);\r\n  \r\n  returnValue |= (uint16)XRA1201_ReadReg(id, XRA1201_OCR2_REG_ADDR) << 8;\r\n  return returnValue;\r\n}\r\n\r\nvoid XRA1201_SetInputPolarityInversion(uint8 id, uint16 data)\r\n{\r\n  XRA1201_WriteReg(id, XRA1201_PIR1_REG_ADDR, (data >> 0) & 0xFF);\r\n  XRA1201_WriteReg(id, XRA1201_PIR2_REG_ADDR, (data >> 8) & 0xFF);\r\n}\r\n\r\nuint16 XRA1201_GetInputPolarityInversion(uint8 id)\r\n{\r\n  uint16 returnValue = XRA1201_ReadReg(id, XRA1201_PIR1_REG_ADDR);\r\n  \r\n  returnValue |= (uint16)XRA1201_ReadReg(id, XRA1201_PIR2_REG_ADDR) << 8;\r\n  return returnValue;\r\n}\r\n\r\nvoid XRA1201_SetPinDirection(uint8 id, uint16 data)\r\n{\r\n  XRA1201_WriteReg(id, XRA1201_GCR1_REG_ADDR, (data >> 0) & 0xFF);\r\n  XRA1201_WriteReg(id, XRA1201_GCR2_REG_ADDR, (data >> 8) & 0xFF);\r\n}\r\n\r\nuint16 XRA1201_GetPinDirection(uint8 id)\r\n{\r\n  uint16 returnValue = XRA1201_ReadReg(id, XRA1201_GCR1_REG_ADDR);\r\n  \r\n  returnValue |= (uint16)XRA1201_ReadReg(id, XRA1201_GCR2_REG_ADDR) << 8;\r\n  return returnValue;\r\n}\r\n\r\nvoid XRA1201_SetInputPullupEnable(uint8 id, uint16 data)\r\n{\r\n  XRA1201_WriteReg(id, XRA1201_PUR1_REG_ADDR, (data >> 0) & 0xFF);\r\n  XRA1201_WriteReg(id, XRA1201_PUR2_REG_ADDR, (data >> 8) & 0xFF);\r\n}\r\n\r\nuint16 XRA1201_GetInputPullupEnable(uint8 id)\r\n{\r\n  uint16 returnValue = XRA1201_ReadReg(id, XRA1201_PUR1_REG_ADDR);\r\n  \r\n  returnValue |= (uint16)XRA1201_ReadReg(id, XRA1201_PUR2_REG_ADDR) << 8;\r\n  return returnValue;\r\n}\r\n\r\nvoid XRA1201_SetInterruptEnable(uint8 id, uint16 data)\r\n{\r\n  XRA1201_WriteReg(id, XRA1201_IER1_REG_ADDR, (data >> 0) & 0xFF);\r\n  XRA1201_WriteReg(id, XRA1201_IER2_REG_ADDR, (data >> 8) & 0xFF);\r\n}\r\n\r\nuint16 XRA1201_GetInterruptEnable(uint8 id)\r\n{\r\n  uint16 returnValue = XRA1201_ReadReg(id, XRA1201_IER1_REG_ADDR);\r\n  \r\n  returnValue |= (uint16)XRA1201_ReadReg(id, XRA1201_IER2_REG_ADDR) << 8;\r\n  return returnValue;\r\n}\r\n\r\nvoid XRA1201_SetOutputThreeStateEnable(uint8 id, uint16 data)\r\n{\r\n  XRA1201_WriteReg(id, XRA1201_TSCR1_REG_ADDR, (data >> 0) & 0xFF);\r\n  XRA1201_WriteReg(id, XRA1201_TSCR2_REG_ADDR, (data >> 8) & 0xFF);\r\n}\r\n\r\nuint16 XRA1201_GetOutputThreeStateEnable(uint8 id)\r\n{\r\n  uint16 returnValue = XRA1201_ReadReg(id, XRA1201_TSCR1_REG_ADDR);\r\n  \r\n  returnValue |= (uint16)XRA1201_ReadReg(id, XRA1201_TSCR2_REG_ADDR) << 8;\r\n  return returnValue;\r\n}\r\n\r\nuint16 XRA1201_GetInterruptStatus(uint8 id)\r\n{\r\n  uint16 returnValue = XRA1201_ReadReg(id, XRA1201_ISR1_REG_ADDR);\r\n  \r\n  returnValue |= (uint16)XRA1201_ReadReg(id, XRA1201_ISR2_REG_ADDR) << 8;\r\n  return returnValue;\r\n}\r\n\r\nvoid XRA1201_SetInterruptRisingEdgeEnable(uint8 id, uint16 data)\r\n{\r\n  XRA1201_WriteReg(id, XRA1201_REIR1_REG_ADDR, (data >> 0) & 0xFF);\r\n  XRA1201_WriteReg(id, XRA1201_REIR2_REG_ADDR, (data >> 8) & 0xFF);\r\n}\r\n\r\nuint16 XRA1201_GetInterruptRisingEdgeEnable(uint8 id)\r\n{\r\n  uint16 returnValue = XRA1201_ReadReg(id, XRA1201_REIR1_REG_ADDR);\r\n  \r\n  returnValue |= (uint16)XRA1201_ReadReg(id, XRA1201_REIR2_REG_ADDR) << 8;\r\n  return returnValue;\r\n}\r\n\r\nvoid XRA1201_SetInterruptFallingEdgeEnable(uint8 id, uint16 data)\r\n{\r\n  XRA1201_WriteReg(id, XRA1201_FEIR1_REG_ADDR, (data >> 0) & 0xFF);\r\n  XRA1201_WriteReg(id, XRA1201_FEIR2_REG_ADDR, (data >> 8) & 0xFF);\r\n}\r\n\r\nuint16 XRA1201_GetInterruptFallingEdgeEnable(uint8 id)\r\n{\r\n  uint16 returnValue = XRA1201_ReadReg(id, XRA1201_FEIR1_REG_ADDR);\r\n  \r\n  returnValue |= (uint16)XRA1201_ReadReg(id, XRA1201_FEIR2_REG_ADDR) << 8;\r\n  return returnValue;\r\n}\r\n\r\nvoid XRA1201_SetInterruptFilterEnable(uint8 id, uint16 data)\r\n{\r\n  XRA1201_WriteReg(id, XRA1201_IFR1_REG_ADDR, (data >> 0) & 0xFF);\r\n  XRA1201_WriteReg(id, XRA1201_IFR2_REG_ADDR, (data >> 8) & 0xFF);\r\n}\r\n\r\nuint16 XRA1201_GetInterruptFilterEnable(uint8 id)\r\n{\r\n  uint16 returnValue = XRA1201_ReadReg(id, XRA1201_IFR1_REG_ADDR);\r\n  \r\n  returnValue |= (uint16)XRA1201_ReadReg(id, XRA1201_IFR2_REG_ADDR) << 8;\r\n  return returnValue;\r\n}\r\n"
+              },
+              "other": {}
+            }
+          },
+          "label": "XRA1201 Driver",
+          "language": {
+            "en": {
+              "label": "XRA1201 Driver"
+            }
+          },
+          "name": "xra1201",
+          "signature": "",
+          "type": "Embedded Library",
+          "version": "1.0.0"
+        },
+        "tmp006": {
+          "author": "Anaren Inc.",
+          "code": {
+            "global": "",
+            "setup": ""
+          },
+          "elements": {},
+          "files": {
+            "common": {
+              "headers": {
+                "tmp006.h": "// Copyright (c) 2014, Anaren Inc.\r\n// All rights reserved.\r\n// \r\n// Redistribution and use in source and binary forms, with or without\r\n// modification, are permitted provided that the following conditions are met:\r\n// \r\n// 1. Redistributions of source code must retain the above copyright notice, this\r\n//\tlist of conditions and the following disclaimer. \r\n// 2. Redistributions in binary form must reproduce the above copyright notice,\r\n//\tthis list of conditions and the following disclaimer in the documentation\r\n//\tand/or other materials provided with the distribution.\r\n// \r\n// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS \"AS IS\" AND\r\n// ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED\r\n// WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE\r\n// DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR\r\n// ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES\r\n// (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;\r\n// LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND\r\n// ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT\r\n// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS\r\n// SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.\r\n// \r\n// The views and conclusions contained in the software and documentation are those\r\n// of the authors and should not be interpreted as representing official policies, \r\n// either expressed or implied, of the FreeBSD Project.\r\n\r\n#ifndef TMP006_H\r\n#define TMP006_H\r\n\r\n#include \"../i2c/i2c.h\"\r\n#include \"tmp006_config.h\"\r\n#include \"types.h\"\r\n\r\n#define uint8 UINT8\r\n#define uint16 UINT16\r\n\r\n//------------------------------------------------------------------------------\r\n/**\r\n *  Defines, enumerations, and structure definitions\r\n */\r\n#ifndef bool\r\n#define bool uint8\r\n#endif\r\n\r\n#ifndef true\r\n#define true 1\r\n#endif\r\n\r\n#ifndef false\r\n#define false 0\r\n#endif\r\n\r\n//------------------------------------------------------------------------------\r\n/**\r\n *  Defines, enumerations, and structure definitions\r\n */\r\n\r\n#define TMP006_SLAVE_BASE_ADDR\t  0x40\r\n\r\n#define TMP006_VOBJECT_REG_ADDR\t 0x00\r\n#define TMP006_TAMBIENT_REG_ADDR\t0x01\r\n#define TMP006_CONFIG_REG_ADDR\t  0x02\r\n#define TMP006_MFG_ID_REG_ADDR\t  0xFE\r\n#define TMP006_DEVICE_ID_REG_ADDR   0xFF\r\n\r\n#define TMP006_CONFIG_REG_RST\t   0x8000\r\n#define TMP006_CONFIG_REG_MOD\t   0x7000\r\n#define TMP006_CONFIG_REG_MOD3\t  0x4000\r\n#define TMP006_CONFIG_REG_MOD2\t  0x2000\r\n#define TMP006_CONFIG_REG_MOD1\t  0x1000\r\n#define TMP006_CONFIG_REG_CR\t\t0x0E00\r\n#define TMP006_CONFIG_REG_CR3\t   0x0800\r\n#define TMP006_CONFIG_REG_CR2\t   0x0400\r\n#define TMP006_CONFIG_REG_CR1\t   0x0200\r\n#define TMP006_CONFIG_REG_EN\t\t0x0100\r\n#define TMP006_CONFIG_REG_DRDY\t  0x0080\r\n// \r\n/**\r\n *  eTMP006Mode - type indicating the operating mode of the TMP006 device.  The\r\n *  TMP006 offers two modes, Power-Down and Continuous Conversion.  When\r\n *  ultra-low power consumption is important, the application should place the\r\n *  device in Power-Down when temperature measurements are not required.  While\r\n *  in Continuous Conversion mode, the device automatically enters a low-power\r\n *  state between samples.  However, this low-power state draws significantly\r\n *  more current than when in Power-Down (240uA compared to 0.5uA typ).\r\n */\r\nenum eTMP006Mode\r\n{\r\n  PowerDown\t\t\t = 0x0000,\r\n  ContinuousConversion  = 0x7000\r\n};\r\n\r\n/**\r\n *  eTMP006Rate - type indicating the number of conversions per second performed\r\n *  by the TMP006.  Slower conversion rates result in more accurate measuremnts\r\n *  compared to the higher rates.  The default is one conversion every second.\r\n *  See the TMP006 datasheet for more information regarding the effect\r\n *  conversion rate has on accuracy of the result.\r\n */\r\nenum eTMP006Rate\r\n{\r\n  FourConvPerSecond\t = 0x0000,\r\n  TwoConvPerSecond\t  = 0x0200,\r\n  OneConvPerSecond\t  = 0x0400,\r\n  HalfConvPerSecond\t = 0x0600,\r\n  QuarterConvPerSecond  = 0x0800\r\n};\r\n\r\n\r\n/** \r\nWrite a 16-bit value to a device register.  All of the TMP006 registers are\r\nread-only except for the Configuration Register.  This function does not do any\r\nform of error checking, so trying to write to one of the read-only registers may\r\nresult in undesireable behavior.\r\n@param id device ID (0 to 7) on i2c bus\r\n@param addr device register address\r\n@param data data to be written to the specified register address\r\n*/\r\nvoid TMP006_WriteReg(uint8 id, uint8 addr, uint16 data);\r\n\r\n/** \r\nRead a 16-bit value from a device register.\r\n@param id device ID (0 to 7) on i2c bus\r\n@param addr device register address\r\n@return data read from the specified register address\r\n*/\r\nuint16 TMP006_ReadReg(uint8 id, uint8 addr);\r\n\r\n/**\r\nIssue a software reset to the sensor.\r\n@param id device ID (0 to 7) on i2c bus\r\n@note This is a self-clearing operation.  There is no need for software to clear\r\nthe reset condition.\r\n*/\r\nvoid TMP006_SoftwareReset(uint8 id);\r\n\r\n/**\r\nSelect the device operating mode.  Refer to eTMP006Mode definition for details\r\nregarding the allowed states.\r\n@param id device ID (0 to 7) on i2c bus\r\n@param mode specifies the device mode of operation\r\n*/\r\nvoid TMP006_SetOperatingMode(uint8 id, enum eTMP006Mode mode);\r\n\r\n/**\r\nRead the currently selected operating mode.  Refer to eTMP006Mode definition for\r\ndetails regarding the available states.\r\n@param id device ID (0 to 7) on i2c bus\r\n@return device mode of operation\r\n*/\r\nenum eTMP006Mode TMP006_GetOperatingMode(uint8 id);\r\n\r\n/**\r\nSelect the device conversion rate.  Refer to eTMP006Rate definition for details\r\nregarding the allowed rates.\r\n@param id device ID (0 to 7) on i2c bus\r\n@param rate specifies the conversion rate\r\n*/\r\nvoid TMP006_SetConversionRate(uint8 id, enum eTMP006Rate rate);\r\n\r\n/**\r\nRead the currently selected conversion rate.  Refer to eTMP006Rate definition\r\nfor details regarding the available rates.\r\n@param id device ID (0 to 7) on i2c bus\r\n@return device conversion rate\r\n*/\r\nenum eTMP006Rate TMP006_GetConversionRate(uint8 id);\r\n\r\n/**\r\nEnable/disable the device DRDY output pin.\r\n@param id device ID (0 to 7) on i2c bus\r\n@param en true enables the pin output, false disables the output\r\n*/\r\nvoid TMP006_SetDataReadyEnable(uint8 id, bool en);\r\n\r\n/**\r\nRead the state of the DRDY enable bit in the Configuration register.\r\n@param id device ID (0 to 7) on i2c bus\r\n@return true when the DRDY is enabled, otherwise false\r\n*/\r\nbool TMP006_GetDataReadyEnable(uint8 id);\r\n\r\n/**\r\nClear the DRDY ready status bit in the Configuration register.\r\n@param id device ID (0 to 7) on i2c bus\r\n*/\r\nvoid TMP006_ClearDataReadyStatus(uint8 id);\r\n\r\n/**\r\nRead the state of the DRDY status bit in the Configuration register.  The DRDY\r\nstatus bit is automatically cleared after reading either the device Temperature\r\nregister or Sensor Voltage register.  The TMP006GetAmbientTemperature() and\r\nTMP006GetObjectTemperature() functions access these registers, so calling either\r\nwill clear the DRDY status bit.  The DRDY status bit can also be cleared by\r\nwriting to the Configuration register or calling TMP006ClearDataReadyStatus().\r\n@param id device ID (0 to 7) on i2c bus\r\n@return true when conversion results are ready to read, otherwise false\r\n*/\r\nbool TMP006_GetDataReadyStatus(uint8 id);\r\n\r\n/**\r\nRead the ambient (die) temperature.  When set to Continuous Conversion mode, the\r\ndevice periodically performs temperature conversions at a predefined rate.  This\r\nfunction calulates the temperature using only the most recent conversion value.\r\n@param id device ID (0 to 7) on i2c bus\r\n@return temperature of the TMP006 die in Celsius\r\n*/\r\nfloat TMP006_GetAmbientTemperature(uint8 id);\r\n\r\n/**\r\nRead the temperature of an object.  When set to Continuous Conversion mode, the\r\ndevice periodically performs temperature conversions at a predefined rate.  This\r\nfunction calulates the object temperature using only the most recent conversion\r\nvalues for die temperature and sensor voltage.\r\n@param id device ID (0 to 7) on i2c bus\r\n@return temperature of an object in Celsius\r\n*/\r\nfloat TMP006_GetObjectTemperature(uint8 id);\r\n\r\n/**\r\nRead the temperature of an object.  When set to Continuous Conversion mode, the\r\ndevice periodically performs temperature conversions at a predefined rate.  This\r\nfunction calulates the object temperature using the most recent conversion value\r\nfor sensor voltage as well as the four most recent conversion values for die\r\ntemperature. This function assumes the size of tDie buffer is 4 float values and\r\nthat the application does not modify any of these values.  The application is\r\nresponsible only for providing the memory location.  The reason for this\r\napproach, as opposed to defining the buffer in the driver itself, is so the\r\napplication can control which sensors on the bus use the transient correction\r\ntechnique.  If not all sensors on the i2c bus use this method, then memory\r\nutilization is reduced.\r\n@param id device ID (0 to 7) on i2c bus\r\n@param tDie pointer to array of 4 tDie values\r\n@return temperature of an object in Celsius\r\n*/\r\nfloat TMP006_GetObjectTemperatureWithTransientCorrection(uint8 id, float *tDie);\r\n\r\n/**\r\nRead the Manufacturer ID register.\r\n@param id device ID (0 to 7) on i2c bus\r\n@return contents of the Manufacturer ID register.  Value always = 0x5449.\r\n*/\r\nuint16 TMP006_GetMfgId(uint8 id);\r\n\r\n/**\r\nRead the Device ID register.\r\n@param id device ID (0 to 7) on i2c bus\r\n@return contents of the Device ID register.  Value always = 0x0067.\r\n*/\r\nuint16 TMP006_GetDeviceId(uint8 id);\r\n\r\n\r\n#endif  /* TMP006_H */\r\n"
+              },
+              "objects": {
+                "tmp006_common.c": "/**\r\n *  ----------------------------------------------------------------------------\r\n *  Copyright (c) 2014, Anaren Microwave, Inc.\r\n *\r\n *  For more information on licensing, please see Anaren Microwave, Inc's\r\n *  end user software licensing agreement: EULA.txt.\r\n *\r\n *  ----------------------------------------------------------------------------\r\n *\r\n *  tmp006.c - driver interface for the Texas Instruments TMP006 Infrared\r\n *  Thermopile Sensor.  The TMP006 allows for up to 8 devices on a single i2c\r\n *  bus, therefore each function accepts a bus identifier in the range 0 - 7 to\r\n *  select which device is currently being accessed.  This ID is added to the\r\n *  device's base address of 0x40 to determine the final i2c address.\r\n *\r\n *  @version\t1.0.01\r\n *  @date\t   26 Sep 2014\r\n *  @author\t Anaren, air@anaren.com\r\n *\r\n *  assumptions\r\n *  ===========\r\n *  - The i2c driver provides the proper signaling sequences for read & write\r\n *\toperations.\r\n *  - The i2c driver meets the timing requirements specified in the TMP006\r\n *\tdatasheet.\r\n *\r\n *  file dependency\r\n *  ===============\r\n *  i2c.h : defines the i2c read & write interfaces.\r\n *\tmath.h : floating point calculations.\r\n *\tfp_math.h : floating point calculations using fixed point math.  Use when math.h not implemented.\r\n *\r\n *  revision history\r\n *  ================\r\n *  ver 1.0.00 : 18 Jul 2014\r\n *  - initial release\r\n *  ver 1.0.01 : 24 Sep 2014\r\n *  - added support for doing floating point calculations using fixed point math\r\n */\r\n#include \"tmp006.h\"\r\n\r\n#ifdef FLOATING_POINT_AVAILABLE\r\n#include <math.h>\r\n#else\r\n#include \"../fp_math/fp_math.h\"\r\n#endif\r\n\r\n// -----------------------------------------------------------------------------\r\n/**\r\n *  Global data\r\n */\r\n\r\n// -----------------------------------------------------------------------------\r\n/**\r\n *  Private interface\r\n */\r\n\r\n/**\r\nCalculate temperature of an object based on tdie and vobj\r\n@param tDie temperature of the die in Kelvin\r\n@param vObj object voltage converted first by multiplying 1.5625e-7\r\n@return temperature of an object in Celsius\r\n@see TMP006 datasheet and application note\r\n@note from TI TMP006 BoosterPack sample code\r\n*/\r\nstatic float TMP006_CalculateTemperature(const float *tDie, const float *vObj)\r\n{\r\n  const float S0 = 6.0E-14;\r\n  const float a1 = 1.75E-3;\r\n  const float a2 = -1.678E-5;\r\n  const float b0 = -2.94E-5;\r\n  const float b1 = -5.7E-7;\r\n  const float b2 = 4.63E-9;\r\n  const float c2 = 13.4;\r\n  const float Tref = 298.15;\r\n\r\n#ifdef FLOATING_POINT_AVAILABLE\r\n  float S = S0*((float)1.0 + a1*(*tDie - Tref) + a2*pow((*tDie - Tref),2));\r\n  float Vos = b0 + b1*(*tDie - Tref) + b2*pow((*tDie - Tref),2);\r\n  float fObj = (*vObj - Vos) + c2*pow((*vObj - Vos),2);\r\n  float Tobj = sqrt(sqrt(pow(*tDie,4) + (fObj/S)));\r\n#else\r\n  float S = S0*((float)1.0 + a1*(*tDie - Tref) + a2*fp_pow((*tDie - Tref),2));\r\n  float Vos = b0 + b1*(*tDie - Tref) + b2*fp_pow((*tDie - Tref),2);\r\n  float fObj = (*vObj - Vos) + c2*fp_pow((*vObj - Vos),2);\r\n  float Tobj = fp_sqrt(fp_sqrt(fp_pow(*tDie,4) + (fObj/S)));\r\n#endif\r\n\r\n  return (Tobj - (float)273.15);\r\n}\r\n\r\n// -----------------------------------------------------------------------------\r\n/**\r\n *  Public interface\r\n */\r\n\r\nvoid TMP006_WriteReg(uint8 id, uint8 addr, uint16 data)\r\n{\r\n  uint8 writeBytes[3];\r\n\r\n  writeBytes[0] = addr;\r\n  writeBytes[1] = data >> 8;\r\n  writeBytes[2] = data & 0xFF;\r\n  AIR_I2C_Write(TMP006_SLAVE_BASE_ADDR + id, writeBytes, 3);\r\n}\r\n\r\nuint16 TMP006_ReadReg(uint8 id, uint8 addr)\r\n{\r\n  uint8 writeBytes[1];\r\n  uint8 readBytes[2];\r\n  uint16 readData;\r\n\r\n  writeBytes[0] = addr;\r\n  AIR_I2C_ComboRead(TMP006_SLAVE_BASE_ADDR + id, writeBytes, 1, readBytes, 2);\r\n  readData = (unsigned int)readBytes[0] << 8;\r\n  readData |= readBytes[1];\r\n  return readData;\r\n}\r\n\r\nvoid TMP006_SoftwareReset(uint8 id)\r\n{\r\n  TMP006_WriteReg(id, TMP006_CONFIG_REG_ADDR, TMP006_CONFIG_REG_RST);\r\n}\r\n\r\nvoid TMP006_SetOperatingMode(uint8 id, enum eTMP006Mode mode)\r\n{\r\n  uint16 data = TMP006_ReadReg(id, TMP006_CONFIG_REG_ADDR);\r\n\r\n  data &= ~TMP006_CONFIG_REG_MOD;\r\n  data |= (uint16)mode;\r\n  TMP006_WriteReg(id, TMP006_CONFIG_REG_ADDR, data);\r\n}\r\n\r\nenum eTMP006Mode TMP006_GetOperatingMode(uint8 id)\r\n{\r\n  return (enum eTMP006Mode)(TMP006_ReadReg(id, TMP006_CONFIG_REG_ADDR) & TMP006_CONFIG_REG_MOD);\r\n}\r\n\r\nvoid TMP006_SetConversionRate(uint8 id, enum eTMP006Rate rate)\r\n{\r\n  uint16 data = TMP006_ReadReg(id, TMP006_CONFIG_REG_ADDR);\r\n\r\n  data &= ~TMP006_CONFIG_REG_CR;\r\n  data |= (UINT16)rate;\r\n  TMP006_WriteReg(id, TMP006_CONFIG_REG_ADDR, data);\r\n}\r\n\r\nenum eTMP006Rate TMP006_GetConversionRate(uint8 id)\r\n{\r\n  return (enum eTMP006Rate)(TMP006_ReadReg(id, TMP006_CONFIG_REG_ADDR) & TMP006_CONFIG_REG_CR);\r\n}\r\n\r\nvoid TMP006_SetDataReadyEnable(uint8 id, bool en)\r\n{\r\n  uint16 data = TMP006_ReadReg(id, TMP006_CONFIG_REG_ADDR);\r\n\r\n  data &= ~TMP006_CONFIG_REG_EN;\r\n  if (en) data |= TMP006_CONFIG_REG_EN;\r\n  TMP006_WriteReg(id, TMP006_CONFIG_REG_ADDR, data);\r\n}\r\n\r\nbool TMP006_GetDataReadyEnable(uint8 id)\r\n{\r\n  return (TMP006_ReadReg(id, TMP006_CONFIG_REG_ADDR) & TMP006_CONFIG_REG_EN) ? true : false;\r\n}\r\n\r\nvoid TMP006_ClearDataReadyStatus(uint8 id)\r\n{\r\n  uint16 data = TMP006_ReadReg(id, TMP006_CONFIG_REG_ADDR);\r\n\r\n  data &= ~TMP006_CONFIG_REG_DRDY;\r\n  TMP006_WriteReg(id, TMP006_CONFIG_REG_ADDR, data);\r\n}\r\n\r\nbool TMP006_GetDataReadyStatus(uint8 id)\r\n{\r\n  return (TMP006_ReadReg(id, TMP006_CONFIG_REG_ADDR) & TMP006_CONFIG_REG_DRDY) ? true : false;\r\n}\r\n\r\nfloat TMP006_GetAmbientTemperature(uint8 id)\r\n{\r\n  int16 tDieRaw = (int16)TMP006_ReadReg(id, TMP006_TAMBIENT_REG_ADDR);\r\n\r\n  return (((float)(tDieRaw >> 2)) * (float)0.03125);\r\n}\r\n\r\nfloat TMP006_GetObjectTemperature(uint8 id)\r\n{\r\n  float tDie = TMP006_GetAmbientTemperature(id) + (float)273.15;\r\n  int16 vObjRaw = (int16)TMP006_ReadReg(id, TMP006_VOBJECT_REG_ADDR);\r\n  float vObj = ((float)(vObjRaw)) * (float)156.25E-9;\r\n\r\n  return TMP006_CalculateTemperature(&tDie, &vObj);\r\n}\r\n\r\nfloat TMP006_GetObjectTemperatureWithTransientCorrection(uint8 id, float *tDie)\r\n{\r\n  int16 vObjRaw = (int16)TMP006_ReadReg(id, TMP006_VOBJECT_REG_ADDR);\r\n  float tSlope;\r\n  float vObjCorr;\r\n\r\n  tDie[0] = tDie[1];\r\n  tDie[1] = tDie[2];\r\n  tDie[2] = tDie[3];\r\n  tDie[3] = TMP006_GetAmbientTemperature(id) + (float)273.15;\r\n  tSlope = (tDie[0] != 0.0) ? -((float)0.3*tDie[0])-((float)0.1*tDie[1])+((float)0.1*tDie[2])+((float)0.3*tDie[3]) : 0.0;\r\n  vObjCorr = (((float)(vObjRaw)) * (float)156.25E-9) + (tSlope * (float)2.96E-4);\r\n\r\n  return TMP006_CalculateTemperature(&tDie[3], &vObjCorr);\r\n}\r\n\r\nuint16 TMP006_GetMfgId(uint8 id)\r\n{\r\n  return TMP006_ReadReg(id, TMP006_MFG_ID_REG_ADDR);\r\n}\r\n\r\nuint16 TMP006_GetDeviceId(uint8 id)\r\n{\r\n  return TMP006_ReadReg(id, TMP006_DEVICE_ID_REG_ADDR);\r\n}\r\n\r\n"
+              },
+              "other": {
+                "tmp006_config.h": " \n"
+              }
+            }
+          },
+          "label": "TMP006 Driver",
+          "language": {
+            "en": {
+              "label": "TMP006 Driver"
+            }
+          },
+          "name": "tmp006",
+          "signature": "",
+          "type": "Embedded Library",
+          "version": "1.0.0"
+        },
+        "lis3dh": {
+          "author": "Anaren Inc.",
+          "code": {
+            "global": "",
+            "setup": ""
+          },
+          "elements": {},
+          "files": {
+            "common": {
+              "headers": {
+                "lis3dh.h": "// Copyright (c) 2014, Anaren Inc.\n// All rights reserved.\n// \n// Redistribution and use in source and binary forms, with or without\n// modification, are permitted provided that the following conditions are met:\n// \n// 1. Redistributions of source code must retain the above copyright notice, this\n//\tlist of conditions and the following disclaimer. \n// 2. Redistributions in binary form must reproduce the above copyright notice,\n//\tthis list of conditions and the following disclaimer in the documentation\n//\tand/or other materials provided with the distribution.\n// \n// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS \"AS IS\" AND\n// ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED\n// WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE\n// DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR\n// ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES\n// (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;\n// LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND\n// ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT\n// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS\n// SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.\n// \n// The views and conclusions contained in the software and documentation are those\n// of the authors and should not be interpreted as representing official policies, \n// either expressed or implied, of the FreeBSD Project.\n\n#ifndef LIS3DH_H\n#define LIS3DH_H\n\n//------------------------------------------------------------------------------\n/**\n *  Defines, enumerations, and structure definitions\n */\n\n#include \"lis3dh_config.h\"\n#include \"../spi/spi.h\"\n#include \"types.h\"\n\n#define uint8 UINT8\n#define uint16 UINT16\n\n#ifndef bool\n#define bool uint8\n#endif\n\n#ifndef true\n#define true 1\n#endif\n\n#ifndef false\n#define false 0\n#endif\n\n//------------------------------------------------------------------------------\n/**\n *  Defines, enumerations, and structure definitions\n */\n\n#define LIS3DH_STATUS_REG_AUX_ADDR\t  0x07  // Auxiliary Status (read only)\n#define LIS3DH_OUT_ADC1_L_REG_ADDR\t  0x08  // Data Output ADC1 LSB (read only)\n#define LIS3DH_OUT_ADC1_H_REG_ADDR\t  0x09  // Data Output ADC1 MSB (read only)\n#define LIS3DH_OUT_ADC2_L_REG_ADDR\t  0x0A  // Data Output ADC2 LSB (read only)\n#define LIS3DH_OUT_ADC2_H_REG_ADDR\t  0x0B  // Data Output ADC2 MSB (read only)\n#define LIS3DH_OUT_ADC3_L_REG_ADDR\t  0x0C  // Data Output ADC3 LSB (read only)\n#define LIS3DH_OUT_ADC3_H_REG_ADDR\t  0x0D  // Data Output ADC3 MSB (read only)\n#define LIS3DH_INT_COUNTER_REG_ADDR\t 0x0E  // Interrupt Counter (read only)\n#define LIS3DH_WHO_AM_I_REG_ADDR\t\t0x0F  // Device Identification (read only)\n#define LIS3DH_TEMP_CFG_REG_ADDR\t\t0x1F  // Temperature Sensor Configuration\n#define LIS3DH_CTRL_REG1_ADDR\t\t   0x20  // Control 1\n#define LIS3DH_CTRL_REG2_ADDR\t\t   0x21  // Control 2\n#define LIS3DH_CTRL_REG3_ADDR\t\t   0x22  // Control 3\n#define LIS3DH_CTRL_REG4_ADDR\t\t   0x23  // Control 4\n#define LIS3DH_CTRL_REG5_ADDR\t\t   0x24  // Control 5\n#define LIS3DH_CTRL_REG6_ADDR\t\t   0x25  // Control 6\n#define LIS3DH_REFERENCE_REG_ADDR\t   0x26  // Reference / Data Capture\n#define LIS3DH_STATUS_REG2_ADDR\t\t 0x27  // Status 2 (read only)\n#define LIS3DH_OUT_X_L_REG_ADDR\t\t 0x28  // Data Output X LSB (read only)\n#define LIS3DH_OUT_X_H_REG_ADDR\t\t 0x29  // Data Output X MSB (read only)\n#define LIS3DH_OUT_Y_L_REG_ADDR\t\t 0x2A  // Data Output Y LSB (read only)\n#define LIS3DH_OUT_Y_H_REG_ADDR\t\t 0x2B  // Data Output Y MSB (read only)\n#define LIS3DH_OUT_Z_L_REG_ADDR\t\t 0x2C  // Data Output Z LSB (read only)\n#define LIS3DH_OUT_Z_H_REG_ADDR\t\t 0x2D  // Data Output Z MSB (read only)\n#define LIS3DH_FIFO_CTRL_REG_ADDR\t   0x2E  // FIFO Control\n#define LIS3DH_FIFP_SRC_REG_ADDR\t\t0x2F  // FIFO Source (read only)\n#define LIS3DH_INT1_CFG_REG_ADDR\t\t0x30  // Interrupt 1 Configuration\n#define LIS3DH_INT1_SRC_REG_ADDR\t\t0x31  // Interrupt 1 Source (read only)\n#define LIS3DH_INT1_THS_REG_ADDR\t\t0x32  // Interrupt 1 Threshold\n#define LIS3DH_INT1_DURATION_REG_ADDR   0x33  // Interrupt 1 Duration\n#define LIS3DH_CLICK_CFG_REG_ADDR\t   0x38  // Click Configuration\n#define LIS3DH_CLICK_SRC_REG_ADDR\t   0x39  // Click Source (read only)\n#define LIS3DH_CLICK_THS_REG_ADDR\t   0x3A  // Click Threshold\n#define LIS3DH_TIME_LIMIT_REG_ADDR\t  0x3B  // Time Limit\n#define LIS3DH_TIME_LATENCY_REG_ADDR\t0x3C  // Time Latency\n#define LIS3DH_TIME_WINDOW_REG_ADDR\t 0x3D  // Time Window\n\n/**\n *  eLIS3DHOperatingMode - type indicating the operating mode of the\n *  LIS3DH device.  The LIS3DH offers two modes; Normal and Low-power.  Refer\n *  to the LIS3DH datasheet for details regarding the different modes.\n */\nenum eLIS3DHOperatingMode\n{\n  LIS3DH_LowPower\t\t\t  = 0x00,\n  LIS3DH_Normal\t\t\t\t= 0x01\n};\n\n/**\n *  eLIS3DHDataRate - type indicating the output data rate of the LIS3DH\n *  device, specified in Hz.\n */\nenum eLIS3DHDataRate\n{\n  LIS3DH_Rate_PowerDown\t\t= 0x00, // power down mode (default)\n  LIS3DH_Rate_1Hz\t\t\t  = 0x01, // normal & low-power modes\n  LIS3DH_Rate_10Hz\t\t\t = 0x02, // normal & low-power modes\n  LIS3DH_Rate_25Hz\t\t\t = 0x03, // normal & low-power modes\n  LIS3DH_Rate_50Hz\t\t\t = 0x04, // normal & low-power modes\n  LIS3DH_Rate_100Hz\t\t\t= 0x05, // normal & low-power modes\n  LIS3DH_Rate_200Hz\t\t\t= 0x06, // normal & low-power modes\n  LIS3DH_Rate_400Hz\t\t\t= 0x07, // normal & low-power modes\n  LIS3DH_Rate_1600Hz\t\t   = 0x08, // low-power mode only\n  LIS3DH_Rate_1250Hz_5000Hz\t= 0x09  // 1.25kHz normal mode, 5kHz low-power mode\n};\n\nvoid LIS3DH_Init();\n\n/**\nWrite an 8-bit value to a device register.  All of the LIS3DH registers are\nread only except for the configuration and control registers.  This function\ndoes not do any form of error checking, so trying to write to one of the\nread-only registers may result in undesireable behavior.\n@param addr device register address\n@param data data to be written to the specified register address\n*/\nvoid LIS3DH_WriteReg(uint8 addr, uint8 data);\n\n/**\nRead an 8-bit value from a device register.\n@param addr device register address\n@return data read from the specified register address\n*/\nuint8 LIS3DH_ReadReg(uint8 addr);\n\n/**\nRead WHO_AM_I identification register.\n@return contents of WHO_AM_I register.  Value always = 0x33 (ascii '3').\n*/\nuint8 LIS3DH_GetWhoAmIReg(void);\n\n\nint16 LIS3DH_GetXaxisRaw(void);\nint16 LIS3DH_GetYaxisRaw(void);\nint16 LIS3DH_GetZaxisRaw(void);\n\nfloat LIS3DH_GetXaxis(void);\nfloat LIS3DH_GetYaxis(void);\nfloat LIS3DH_GetZaxis(void);\n\n\n#endif  /* LIS3DH_H */\n"
+              },
+              "objects": {
+                "lis3dh_common.c": "/**\n *  ----------------------------------------------------------------------------\n *  Copyright (c) 2014, Anaren Microwave, Inc.\n *\n *  For more information on licensing, please see Anaren Microwave, Inc's\n *  end user software licensing agreement: EULA.txt.\n *\n *  ----------------------------------------------------------------------------\n *\n *  lis3dh.c - driver interface for the ST Microelectronics LIS3DH 3-Axis MEMS\n *  accelerometer.\n *\n *  @version\t1.0.00\n *  @date\t   30 Sep 2014\n *  @author\t Anaren, air@anaren.com\n *\n *  assumptions\n *  ===========\n *  - The SPI driver provides the proper signaling sequences for read & write\n *\toperations.\n *  - The SPI driver meets the timing requirements specified in the LIS3DH\n *\tdatasheet.\n *\n *  file dependency\n *  ===============\n *  spi.h : defines the SPI read & write interfaces.\n *\n *  revision history\n *  ================\n *  ver 1.0.00 : 30 Sep 2014\n *  - initial release\n */\n\n#include \"lis3dh.h\"\n\n\n// -----------------------------------------------------------------------------\n/**\n *  Global data\n */\n\n// -----------------------------------------------------------------------------\n/**\n *  Private interface\n */\n\n// -----------------------------------------------------------------------------\n/**\n *  Public interface\n */\n\nvoid LIS3DH_Init()\n{\n\tAIR_SPI_SetCSPin(LIS3DH_CSPIN);\n\tLIS3DH_WriteReg(0x20, 0x77);\n}\n\nvoid LIS3DH_WriteReg(uint8 addr, uint8 data)\n{\n  uint8 writeBytes[2];\n\n  writeBytes[0] = addr;\n  writeBytes[1] = data;\n  AIR_SPI_Write(LIS3DH_CSPIN, writeBytes, 2);\n}\n\nuint8 LIS3DH_ReadReg(uint8 addr)\n{\n  uint8 writeBytes[2];\n  uint8 readBytes[2];\n\n  writeBytes[0] = addr | 0x80;  // set msb high for read operations\n  writeBytes[1] = 0xFF;\t\t // dummy byte\n\n  AIR_SPI_Exchange(LIS3DH_CSPIN, readBytes, writeBytes, 2);\n  return readBytes[1];\n}\n\n\nuint8 LIS3DH_GetWhoAmIReg(void)\n{\n  return LIS3DH_ReadReg(LIS3DH_WHO_AM_I_REG_ADDR);\n}\n\nint16 LIS3DH_GetXaxisRaw(void)\n{\n  uint16 returnData = (uint16)LIS3DH_ReadReg(LIS3DH_OUT_X_H_REG_ADDR) << 8;\n  \n  returnData |= LIS3DH_ReadReg(LIS3DH_OUT_X_L_REG_ADDR);\n  \n  return (int16)returnData;\n}\n\nint16 LIS3DH_GetYaxisRaw(void)\n{\n  uint16 returnData = (uint16)LIS3DH_ReadReg(LIS3DH_OUT_Y_H_REG_ADDR) << 8;\n  \n  returnData |= LIS3DH_ReadReg(LIS3DH_OUT_Y_L_REG_ADDR);\n  \n  return (int16)returnData;\n}\n\nint16 LIS3DH_GetZaxisRaw(void)\n{\n  uint16 returnData = (uint16)LIS3DH_ReadReg(LIS3DH_OUT_Z_H_REG_ADDR) << 8;\n  \n  returnData |= LIS3DH_ReadReg(LIS3DH_OUT_Z_L_REG_ADDR);\n  \n  return (int16)returnData;\n}\n\nfloat LIS3DH_GetXaxis(void)\n{\n  return (float)LIS3DH_GetXaxisRaw() / 16384.0;\n}\n\nfloat LIS3DH_GetYaxis(void)\n{\n  return (float)LIS3DH_GetYaxisRaw() / 16384.0;\n}\n\nfloat LIS3DH_GetZaxis(void)\n{\n  return (float)LIS3DH_GetZaxisRaw() / 16384.0;\n}\n"
+              },
+              "other": {
+                "lis3dh_config.h": "#define LIS3DH_CSPIN 0x03 \n"
+              }
+            }
+          },
+          "label": "LIS3DH Driver",
+          "language": {
+            "en": {
+              "label": "LIS3DH Driver"
+            }
+          },
+          "name": "lis3dh",
+          "signature": "",
+          "type": "Embedded Library",
+          "version": "1.0.0"
+        },
+        "hmc5883": {
+          "author": "Anaren Inc.",
+          "code": {
+            "global": "",
+            "setup": ""
+          },
+          "elements": {},
+          "files": {
+            "common": {
+              "headers": {
+                "hmc5883.h": "// Copyright (c) 2014, Anaren Inc.\r\n// All rights reserved.\r\n// \r\n// Redistribution and use in source and binary forms, with or without\r\n// modification, are permitted provided that the following conditions are met:\r\n// \r\n// 1. Redistributions of source code must retain the above copyright notice, this\r\n//\tlist of conditions and the following disclaimer. \r\n// 2. Redistributions in binary form must reproduce the above copyright notice,\r\n//\tthis list of conditions and the following disclaimer in the documentation\r\n//\tand/or other materials provided with the distribution.\r\n// \r\n// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS \"AS IS\" AND\r\n// ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED\r\n// WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE\r\n// DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR\r\n// ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES\r\n// (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;\r\n// LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND\r\n// ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT\r\n// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS\r\n// SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.\r\n// \r\n// The views and conclusions contained in the software and documentation are those\r\n// of the authors and should not be interpreted as representing official policies, \r\n// either expressed or implied, of the FreeBSD Project.\r\n\r\n#ifndef HMC5883_H\r\n#define HMC5883_H\r\n\r\n#include \"hmc5883_config.h\"\r\n#include \"types.h\"\r\n\r\n//------------------------------------------------------------------------------\r\n/**\r\n *\tDefines, enumerations, and structure definitions\r\n */\r\n#ifndef bool\r\n#define bool uint8\r\n#endif\r\n\r\n#ifndef true\r\n#define true 1\r\n#endif\r\n\r\n#ifndef false\r\n#define false 0\r\n#endif\r\n\r\n//------------------------------------------------------------------------------\r\n/**\r\n *\tDefines, enumerations, and structure definitions\r\n */\r\n\r\n#define HMC5883_SLAVE_BASE_ADDR\t\t0x1E\r\n\r\n#define HMC5883_CONFIG_A_REG_ADDR\t0x00\t// Configuration A\r\n#define HMC5883_CONFIG_B_REG_ADDR\t0x01\t// Configuration B\r\n#define HMC5883_MODE_REG_ADDR\t\t\t\t 0x02\t// Mode\r\n#define HMC5883_DATA_X_MSB_REG_ADDR\t0x03\t// Data Output X MSB (read only)\r\n#define HMC5883_DATA_X_LSB_REG_ADDR\t0x04\t// Data Output X LSB (read only)\r\n#define HMC5883_DATA_Z_MSB_REG_ADDR\t0x05\t// Data Output Z MSB (read only)\r\n#define HMC5883_DATA_Z_LSB_REG_ADDR\t0x06\t// Data Output Z LSB (read only)\r\n#define HMC5883_DATA_Y_MSB_REG_ADDR\t0x07\t// Data Output Y MSB (read only)\r\n#define HMC5883_DATA_Y_LSB_REG_ADDR\t0x08\t// Data Output Y LSB (read only)\r\n#define HMC5883_STATUS_REG_ADDR\t\t0x09\t// Status (read only)\r\n#define HMC5883_ID_A_REG_ADDR\t\t0x0A\t// Identification A (read only)\r\n#define HMC5883_ID_B_REG_ADDR\t\t0x0B\t// Identification B (read only)\r\n#define HMC5883_ID_C_REG_ADDR\t\t0x0C\t// Identification C (read only)\r\n\r\n#define HMC5883_CONFIG_A_REG_MA\t\t0x60\r\n#define HMC5883_CONFIG_A_REG_DO\t\t0x1C\r\n#define HMC5883_CONFIG_A_REG_MS\t\t0x03\r\n\r\n#define HMC5883_CONFIG_B_REG_GN\t\t0xE0\r\n\r\n#define HMC5883_MODE_REG_MD\t\t0x03\r\n#define HMC5883_MODE_REG_HS\t\t0x80\r\n\t \r\n#define HMC5883_STATUS_REG_RDY\t\t0x01\r\n#define HMC5883_STATUS_REG_LOCK\t\t0x02\r\n\r\n/**\r\n *\teHMC5883SamplesAveraged - type indicating the number of samples averaged per\r\n *\tmeasurement output.\r\n */\r\nenum eHMC5883SamplesAveraged\r\n{\r\n\tHMC5883_AVGSMPL_1\t= 0x00,\r\n\tHMC5883_AVGSMPL_2\t= 0x20,\r\n\tHMC5883_AVGSMPL_4\t= 0x40,\r\n\tHMC5883_AVGSMPL_8\t= 0x60\r\n};\r\n\r\n/**\r\n *\teHMC5883DataOutputRate - type indicating the output rate of the HMC5883\r\n *\tdevice, specified in Hz, when in continuous measurement mode.\r\n */\r\nenum eHMC5883DataOutputRate\r\n{\r\n\tHMC5883_RATE_0P75HZ\t= 0x00,\r\n\tHMC5883_RATE_1P5HZ\t= 0x04,\r\n\tHMC5883_RATE_3HZ\t= 0x08,\r\n\tHMC5883_RATE_7P5HZ\t= 0x0C,\r\n\tHMC5883_RATE_15HZ\t= 0x10,\r\n\tHMC5883_RATE_30HZ\t= 0x14,\r\n\tHMC5883_RATE_75HZ\t= 0x18\r\n};\r\n\r\n/**\r\n *\teHMC5883MeasurementMode - type indicating the measurement mode of the\r\n *\tHMC5883 device.\tThe HMC5883 offers three modes; Normal, Positive Bias, and\r\n *\tNegative Bias.\tRefer to the HMC5883 datasheet for details regarding use of\r\n *\tthe bias modes.\r\n */\r\nenum eHMC5883MeasurementMode\r\n{\r\n\tHMC5883_NORMAL\t\t= 0x00,\r\n\tHMC5883_POSITIVEBIAS\t= 0x01,\r\n\tHMC5883_NEGATIVEBIAS\t= 0x02\r\n};\r\n\r\n/**\r\n *\teHMC5883Gain - type indicating the gain setting of the HMC5883 device.\r\n */\r\nenum eHMC5883Gain\r\n{\r\n\tHMC5883_GAIN_1370\t= 0x00,\r\n\tHMC5883_GAIN_1090\t= 0x20,\r\n\tHMC5883_GAIN_820\t= 0x40,\r\n\tHMC5883_GAIN_660\t= 0x60,\r\n\tHMC5883_GAIN_440\t= 0x80,\r\n\tHMC5883_GAIN_390\t= 0xA0,\r\n\tHMC5883_GAIN_330\t= 0xC0,\r\n\tHMC5883_GAIN_230\t= 0xE0\r\n};\r\n\r\n/**\r\n *\teHMC5883OperatingMode - type indicating the operating mode of the HMC5883\r\n *\tdevice.\tThe HMC5883 offers three modes; Continuous Measurement, Single\r\n *\tMeasurement, and Idle.\tWhen ultra-low power consumption is important, the\r\n *\tapplication should place the device in Idle when measurements are not\r\n *\trequired.\tWhile in Continuous Measurement mode, the device automatically\r\n *\tenters a low-power state between samples.\tHowever, this low-power state\r\n *\tdraws significantly more current than when in Idle.\r\n */\r\nenum eHMC5883OperatingMode\r\n{\r\n\tHMC5883_CONTINUOUSMEASUREMENT \t= 0x00,\r\n\tHMC5883_SINGLEMEASUREMENT\t= 0x01,\r\n\tHMC5883_IDLE\t\t\t= 0x02\r\n};\r\n\r\n/**\r\n *\tsHMC5883Status - structure defining the HMC5883 status register.\r\n */\r\nstruct sHMC5883Status\r\n{\r\n\tbool lock;\r\n\tbool rdy;\r\n};\r\n\r\n\r\n/** \r\nWrite an 8-bit value to a device register.\tAll of the HMC5883L registers are\r\nread only except for the configuration and mode registers.\tThis function does\r\nnot do any form of error checking, so trying to write to one of the read-only\r\nregisters may result in undesireable behavior.\r\n@param addr device register address\r\n@param data data to be written to the specified register address\r\n*/\r\nvoid HMC5883_WriteReg(uint8 addr, uint8 data);\r\n\r\n/** \r\nRead an 8-bit value from a device register.\r\n@param addr device register address\r\n@return data read from the specified register address\r\n*/\r\nuint8 HMC5883_ReadReg(uint8 addr);\r\n\r\n/** \r\nRead multiple 8-bit register values from the device.\tThe HMC5883L uses an\r\naddress pointer to determine which register to start reading from.\tThis pointer\r\nis automatically incremented for each register read.\r\n@param addr device register address\r\n@param readBytes pointer to buffer for storing the values read\r\n@param numBytes number of registers to read\r\n*/\r\nvoid HMC5883_BurstReadReg(uint8 addr, uint8* readBytes, uint8 numBytes);\r\n\r\n\r\nvoid HMC5883_SetNumberSamplesAveraged(enum eHMC5883SamplesAveraged samples);\r\nenum eHMC5883SamplesAveraged HMC5883_GetNumberSamplesAveraged(void);\r\n\r\nvoid HMC5883_SetDataOutputRate(enum eHMC5883DataOutputRate rate);\r\nenum eHMC5883DataOutputRate HMC5883_GetDataOutputRate(void);\r\n\r\nvoid HMC5883_SetMeasurementMode(enum eHMC5883MeasurementMode mode);\r\nenum eHMC5883MeasurementMode HMC5883_GetMeasurementMode(void);\r\n\r\nvoid HMC5883_SetGain(enum eHMC5883Gain gain);\r\nenum eHMC5883Gain HMC5883_GetGain(void);\r\n\r\n\r\nfloat HMC5883_GetHeading(void);\r\n\r\n\r\n/**\r\nSelect the device operating mode.\tRefer to eHMC5883OperatingMode definition for\r\ndetails regarding the allowed states.\r\n@param mode specifies the device mode of operation\r\n*/\r\nvoid HMC5883_SetOperatingMode(enum eHMC5883OperatingMode mode);\r\n\r\n/**\r\nRead the currently selected operating mode.\tRefer to eHMC5883OperatingMode\r\ndefinition for details regarding the available states.\r\n@return device mode of operation\r\n*/\r\nenum eHMC5883OperatingMode HMC5883_GetOperatingMode(void);\r\n\r\n/**\r\nRead the current status of the device.\r\n@return device status\r\n*/\r\nstruct sHMC5883Status HMC5883_GetStatus(void);\r\n\r\n/**\r\nRead ID Register A.\r\n@return contents of ID Register A.\tValue always = 0x48 (ascii 'H').\r\n*/\r\nuint8 HMC5883_GetIdRegA(void);\r\n\r\n/**\r\nRead ID Register B.\r\n@return contents of ID Register B.\tValue always = 0x34 (ascii '4').\r\n*/\r\nuint8 HMC5883_GetIdRegB(void);\r\n\r\n/**\r\nRead ID Register C.\r\n@return contents of ID Register C.\tValue always = 0x33 (ascii '3').\r\n*/\r\nuint8 HMC5883_GetIdRegC(void);\r\n\r\n\r\n#endif\t/* HMC5883_H */\r\n"
+              },
+              "objects": {
+                "hmc5883_common.c": "/**\r\n *\t----------------------------------------------------------------------------\r\n *\tCopyright (c) 2014, Anaren Microwave, Inc.\r\n *\r\n *\tFor more information on licensing, please see Anaren Microwave, Inc's\r\n *\tend user software licensing agreement: EULA.txt.\r\n *\r\n *\t----------------------------------------------------------------------------\r\n *\r\n *\thmc5883.c - driver interface for the Honeywell HMC5883L 3-Axis Digital\r\n *\tCompass.\r\n *\r\n *\t@version\t\t1.0.00\r\n *\t@date\t\t\t 31 Jul 2014\r\n *\t@author\t\t Anaren, air@anaren.com\r\n *\r\n *\tassumptions\r\n *\t===========\r\n *\t- The i2c driver provides the proper signaling sequences for read & write\r\n *\t\toperations.\r\n *\t- The i2c driver meets the timing requirements specified in the HMC5883L\r\n *\t\tdatasheet.\r\n *\r\n *\tfile dependency\r\n *\t===============\r\n *\ti2c.h : defines the i2c read & write interfaces.\r\n *\r\n *\trevision history\r\n *\t================\r\n *\tver 1.0.00 : 31 Jul 2014\r\n *\t- initial release\r\n */\r\n\r\n#include \"hmc5883.h\"\r\n#include \"../i2c/i2c.h\"\r\n\r\n\r\n// -----------------------------------------------------------------------------\r\n/**\r\n *\tGlobal data\r\n */\r\n\r\n// -----------------------------------------------------------------------------\r\n/**\r\n *\tPrivate interface\r\n */\r\n\r\n// -----------------------------------------------------------------------------\r\n/**\r\n *\tPublic interface\r\n */\r\n\r\nvoid HMC5883_WriteReg(uint8 addr, uint8 data)\r\n{\r\n\tuint8 writeBytes[2];\r\n\r\n\twriteBytes[0] = addr;\r\n\twriteBytes[1] = data;\r\n\tAIR_I2C_Write(HMC5883_SLAVE_BASE_ADDR, writeBytes, 2);\r\n}\r\n\r\nuint8 HMC5883_ReadReg(uint8 addr)\r\n{\r\n\tuint8 readByte;\r\n\r\n\tAIR_I2C_Write(HMC5883_SLAVE_BASE_ADDR, &addr, 1);\r\n\tAIR_I2C_ComboRead(HMC5883_SLAVE_BASE_ADDR, NULL, 0, &readByte, 1);\r\n\treturn readByte;\r\n}\r\n\r\nvoid HMC5883_BurstReadReg(uint8 addr, uint8* readBytes, uint8 numBytes)\r\n{\r\n\tAIR_I2C_Write(HMC5883_SLAVE_BASE_ADDR, &addr, 1);\r\n\tAIR_I2C_ComboRead(HMC5883_SLAVE_BASE_ADDR, NULL, 0, readBytes, numBytes);\r\n}\r\n\r\n\r\n\r\nvoid HMC5883_SetNumberSamplesAveraged(enum eHMC5883SamplesAveraged samples)\r\n{\r\n\tuint8 data = HMC5883_ReadReg(HMC5883_CONFIG_A_REG_ADDR);\r\n\t\r\n\tdata &= ~HMC5883_CONFIG_A_REG_MA;\r\n\tdata |= (uint8)samples;\r\n\tHMC5883_WriteReg(HMC5883_CONFIG_A_REG_ADDR, data);\r\n}\r\n\r\nenum eHMC5883SamplesAveraged HMC5883_GetNumberSamplesAveraged(void)\r\n{\r\n\treturn (enum eHMC5883SamplesAveraged)(HMC5883_ReadReg(HMC5883_CONFIG_A_REG_ADDR) & HMC5883_CONFIG_A_REG_MA);\r\n}\r\n\r\nvoid HMC5883_SetDataOutputRate(enum eHMC5883DataOutputRate rate)\r\n{\r\n\tuint8 data = HMC5883_ReadReg(HMC5883_CONFIG_A_REG_ADDR);\r\n\t\r\n\tdata &= ~HMC5883_CONFIG_A_REG_DO;\r\n\tdata |= (uint8)rate;\r\n\tHMC5883_WriteReg(HMC5883_CONFIG_A_REG_ADDR, data);\r\n}\r\n\r\nenum eHMC5883DataOutputRate HMC5883_GetDataOutputRate(void)\r\n{\r\n\treturn (enum eHMC5883DataOutputRate)(HMC5883_ReadReg(HMC5883_CONFIG_A_REG_ADDR) & HMC5883_CONFIG_A_REG_DO);\r\n}\r\n\r\nvoid HMC5883_SetMeasurementMode(enum eHMC5883MeasurementMode mode)\r\n{\r\n\tuint8 data = HMC5883_ReadReg(HMC5883_CONFIG_A_REG_ADDR);\r\n\t\r\n\tdata &= ~HMC5883_CONFIG_A_REG_MS;\r\n\tdata |= (uint8)mode;\r\n\tHMC5883_WriteReg(HMC5883_CONFIG_A_REG_ADDR, data);\r\n}\r\n\r\nenum eHMC5883MeasurementMode HMC5883_GetMeasurementMode(void)\r\n{\r\n\treturn (enum eHMC5883MeasurementMode)(HMC5883_ReadReg(HMC5883_CONFIG_A_REG_ADDR) & HMC5883_CONFIG_A_REG_MS);\r\n}\r\n\r\nvoid HMC5883_SetGain(enum eHMC5883Gain gain)\r\n{\r\n\tuint8 data = HMC5883_ReadReg(HMC5883_CONFIG_B_REG_ADDR);\r\n\t\r\n\tdata &= ~HMC5883_CONFIG_B_REG_GN;\r\n\tdata |= (uint8)gain;\r\n\tHMC5883_WriteReg(HMC5883_CONFIG_B_REG_ADDR, data);\r\n}\r\n\r\nenum eHMC5883Gain HMC5883_GetGain(void)\r\n{\r\n\treturn (enum eHMC5883Gain)(HMC5883_ReadReg(HMC5883_CONFIG_B_REG_ADDR) & HMC5883_CONFIG_B_REG_GN);\r\n}\r\n\r\n\r\nvoid HMC5883_SetOperatingMode(enum eHMC5883OperatingMode mode)\r\n{\r\n\tuint8 data = HMC5883_ReadReg(HMC5883_MODE_REG_ADDR);\r\n\t\r\n\tdata &= ~HMC5883_MODE_REG_MD;\r\n\tdata |= (uint8)mode;\r\n\tHMC5883_WriteReg(HMC5883_MODE_REG_ADDR, data);\r\n}\r\n\r\nenum eHMC5883OperatingMode HMC5883_GetOperatingMode(void)\r\n{\r\n\treturn (enum eHMC5883OperatingMode)(HMC5883_ReadReg(HMC5883_MODE_REG_ADDR) & HMC5883_MODE_REG_MD);\r\n}\r\n\r\nstruct sHMC5883Status HMC5883_GetStatus(void)\r\n{\r\n\tstruct sHMC5883Status status;\r\n\tuint8 data = HMC5883_ReadReg(HMC5883_STATUS_REG_ADDR);\r\n\r\n\tstatus.rdy = (data & HMC5883_STATUS_REG_RDY) ? true : false;\r\n\tstatus.lock = (data & HMC5883_STATUS_REG_LOCK) ? true : false;\r\n\r\n\treturn status;\r\n}\r\n\r\nuint8 HMC5883_GetIdRegA(void)\r\n{\r\n\treturn HMC5883_ReadReg(HMC5883_ID_A_REG_ADDR);\r\n}\r\n\r\nuint8 HMC5883_GetIdRegB(void)\r\n{\r\n\treturn HMC5883_ReadReg(HMC5883_ID_B_REG_ADDR);\r\n}\r\n\r\nuint8 HMC5883_GetIdRegC(void)\r\n{\r\n\treturn HMC5883_ReadReg(HMC5883_ID_C_REG_ADDR);\r\n}\r\n"
+              },
+              "other": {
+                "hmc5883_config.h": ""
+              }
+            }
+          },
+          "label": "HMC5883 Driver",
+          "language": {
+            "en": {
+              "label": "HMC5883 Driver"
+            }
+          },
+          "name": "hmc5883",
+          "signature": "",
+          "type": "Embedded Library",
+          "version": "1.0.0"
+        }
+      },
+      "theme": {
+        "bg1": "#DCEBF9",
+        "bg2": "#DCEBF9"
+      },
+      "projectType": "bcm920737",
+      "name": "ExositePostExample"
+    },
+    "type": "Header",
+    "currentLayoutName": "Default"
+  },
+  "layouts": {
+    "Default": {
+      "name": "Default (768x1024)",
+      "width": 768,
+      "height": 1024,
+      "orientation": "portrait",
+      "devicename": ".*",
+      "platform": ".*",
+      "version": ".*",
+      "elements": {
+        "errorReturned": {
+          "x": 164,
+          "y": 114,
+          "width": 227,
+          "height": 34
+        },
+        "Label8": {
+          "x": 35,
+          "y": 55,
+          "width": 355,
+          "height": 34
+        },
+        "tempSent": {
+          "x": 36,
+          "y": 210,
+          "width": 266,
+          "height": 372
+        },
+        "Label7": {
+          "x": 36,
+          "y": 114,
+          "width": 114,
+          "height": 34
+        },
+        "Label12": {
+          "x": 36,
+          "y": 162,
+          "width": 266,
+          "height": 34
+        }
+      }
+    }
+  },
+  "elements": {
+    "WebIO1": {
+      "type": "WebIO",
+      "properties": {
+        "uri": "http://m2.exosite.com/api:v1/stack/alias"
+      },
+      "triggers": {
+        "errorReturned": [
+          {
+            "sourceTrigger": "errorReturned",
+            "sourceValue": "getValue",
+            "targetValue": "setValue",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "JSON.stringify(value)"
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": [
+                "value"
+              ]
+            },
+            "targetName": "errorReturned"
+          }
+        ]
+      },
+      "zindex": 1,
+      "designer": {
+        "x": 406,
+        "y": 114
+      }
+    },
+    "errorReturned": {
+      "type": "Label",
+      "properties": {
+        "label": "",
+        "enabled": true,
+        "visible": true,
+        "font": "14px Arial",
+        "color": "Black"
+      },
+      "triggers": {},
+      "zindex": 2,
+      "designer": {
+        "x": 510,
+        "y": 114
+      }
+    },
+    "Label8": {
+      "type": "Label",
+      "properties": {
+        "label": "Exosite Post Demo",
+        "enabled": true,
+        "visible": true,
+        "font": "14px Arial",
+        "color": "Black"
+      },
+      "triggers": {},
+      "zindex": 3,
+      "designer": {
+        "x": 12,
+        "y": 12
+      }
+    },
+    "getTemp": {
+      "type": "Function",
+      "properties": {
+        "code": "  \n    char *json;\n\tAIR_GPIO_Write(LED_BLUE, 1);                        // Blink the blue LED\n\tjson = JSON_WriteInt((int)(tempC + 0.5f));          // Round it, fix it, JSONify it\n\tAIR_UART_Print(json);                               // output to PUART port for debug\n\tAIR_UART_Print(\" \");\n\tAIR_GPIO_Write(LED_BLUE, 0);\n\treturn json;\t                                    // send value back to caller\n\t",
+        "length": "128",
+        "inputType": "json",
+        "returnType": "json",
+        "permission": "public"
+      },
+      "triggers": {
+        "valueReturned": [
+          {
+            "sourceTrigger": "valueReturned",
+            "sourceValue": "getValue",
+            "targetValue": "advancedPost",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "{\"YourDataSourceAliasHere\":value}",
+                "headers": "{\"X-Exosite-CIK\":\"YourCikHere\", \"Accept\":\"application/x-www-form-urlencoded; charset=utf-8\"}"
+              },
+              "targetOrder": [
+                "value",
+                "headers"
+              ],
+              "sourceOrder": [
+                "value"
+              ]
+            },
+            "targetName": "WebIO1"
+          },
+          {
+            "sourceTrigger": "valueReturned",
+            "sourceValue": "getValue",
+            "targetValue": "appendValue",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "new Date().toLocaleTimeString() + \":  \" + value + \" °F\\r\\n\""
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": [
+                "value"
+              ]
+            },
+            "targetName": "tempSent"
+          }
+        ]
+      },
+      "zindex": 4,
+      "designer": {
+        "x": 266,
+        "y": 114
+      }
+    },
+    "Every2sec": {
+      "type": "Task",
+      "properties": {
+        "runOnStart": true,
+        "runIn": "2000",
+        "runEvery": "2000"
+      },
+      "triggers": {
+        "task": [
+          {
+            "sourceTrigger": "task",
+            "sourceValue": "Static",
+            "targetValue": "execute",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": ""
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": []
+            },
+            "targetName": "getTemp"
+          }
+        ]
+      },
+      "zindex": 5,
+      "designer": {
+        "x": 142,
+        "y": 114
+      }
+    },
+    "tempSent": {
+      "type": "Label",
+      "properties": {
+        "label": "",
+        "enabled": true,
+        "visible": true,
+        "font": "14px Arial",
+        "color": "Black"
+      },
+      "triggers": {},
+      "zindex": 6,
+      "designer": {
+        "x": 404,
+        "y": 42
+      }
+    },
+    "Every30sec": {
+      "type": "Task",
+      "properties": {
+        "runOnStart": true,
+        "runIn": "30000",
+        "runEvery": "30000"
+      },
+      "triggers": {
+        "task": [
+          {
+            "sourceTrigger": "task",
+            "sourceValue": "Static",
+            "targetValue": "setValue",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "\"\""
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": []
+            },
+            "targetName": "tempSent"
+          }
+        ]
+      },
+      "zindex": 7,
+      "designer": {
+        "x": 141,
+        "y": 42
+      }
+    },
+    "Label7": {
+      "type": "Label",
+      "properties": {
+        "label": "Error Returned:",
+        "enabled": true,
+        "visible": true,
+        "font": "14px Arial",
+        "color": "Black"
+      },
+      "triggers": {},
+      "zindex": 8,
+      "designer": {
+        "x": 28,
+        "y": 25
+      }
+    },
+    "Label12": {
+      "type": "Label",
+      "properties": {
+        "label": "Uploading to Exosite Portal:\n** using CIK ??",
+        "enabled": true,
+        "visible": true,
+        "font": "14px Arial",
+        "color": "Black"
+      },
+      "triggers": {},
+      "zindex": 9,
+      "designer": {
+        "x": 43,
+        "y": 39
+      }
+    }
+  }
+}
