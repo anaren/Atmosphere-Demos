@@ -35,7 +35,7 @@
       "Setup": {
         "name": "Setup",
         "func": "\nvoid setup() {",
-        "code": "\tAIR_GPIO_Init();\n\tAIR_UART_Init();\n\tAIR_I2C_Init();\n\tAIR_SPI_Init();\n\tBUZZER_Init();\n\tAIR_POWER_Init();\n    AIR_POWER_SetMode(AIR_POWER_NOSLEEP);\n    AIR_GPIO_SetMode(LED_RED, AIR_GPIO_OUTPUT_OPEN_DRAIN_NO_PULL);",
+        "code": "\tAIR_GPIO_Init();\n\tAIR_UART_Init();\n\tAIR_I2C_Init();\n\tAIR_SPI_Init();\n\tBUZZER_Init();\n\tAIR_POWER_Init();\n    AIR_POWER_SetMode(AIR_POWER_NOSLEEP);\n    AIR_GPIO_SetMode(LED_RED, AIR_GPIO_OUTPUT_PUSH_PULL);",
         "close": "}"
       }
     },
@@ -305,7 +305,7 @@
       }
     },
     "meta": {
-      "version": "2.0.0",
+      "version": "2.0.1",
       "layoutGrid": false,
       "layoutSnapping": false,
       "layoutSnappingSize": 10,
