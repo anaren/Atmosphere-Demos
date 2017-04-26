@@ -35,7 +35,7 @@
       "Setup": {
         "name": "Setup",
         "func": "\nvoid setup() {",
-        "code": "    \n    AIR_GPIO_Init();\n\tAIR_UART_Init();\n\tAIR_I2C_Init();\n\tAIR_SPI_Init();\n\tBUZZER_Init();\n\tAIR_POWER_Init();\n    AIR_POWER_SetMode(AIR_POWER_NOSLEEP);\t\n\t// Initialize the IR Temp Sensor        \n\tTMP006_SetDataReadyEnable(0, 1);\n    AIR_GPIO_SetMode(LED_BLUE, AIR_GPIO_OUTPUT_OPEN_DRAIN_NO_PULL); // Setup LED output\n    ",
+        "code": "    \n    AIR_GPIO_Init();\n\tAIR_UART_Init();\n\tAIR_I2C_Init();\n\tAIR_SPI_Init();\n\tBUZZER_Init();\n\tAIR_POWER_Init();\n    AIR_POWER_SetMode(AIR_POWER_NOSLEEP);\t\n\t// Initialize the IR Temp Sensor        \n\tTMP006_SetDataReadyEnable(0, 1);\n    AIR_GPIO_SetMode(LED_BLUE, AIR_GPIO_OUTPUT_PUSH_PULL); // Setup LED output\n    ",
         "close": "}"
       }
     },
@@ -96,15 +96,78 @@
             ],
             "value": "BLE_POWERSAVE_OFF",
             "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "ota": {
+            "name": "Over the Air Updating (Default: OTA)",
+            "input": "Combo",
+            "prefix": "#define BLE_",
+            "options": [
+              "OTA",
+              "NO_OTA"
+            ],
+            "value": "OTA",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "advPowerLevel": {
+            "name": "Advertising TX Power Level (dbm) (Default: 4)",
+            "input": "TextField",
+            "prefix": "#define ADV_BLE_TX_POWER_LEVEL ",
+            "value": "4",
+            "regex": "^-?[0-9]d{0,2}(.d*)?$"
+          },
+          "minInterval": {
+            "name": "BLE Min Interval (ms) (Default: 20)",
+            "input": "TextField",
+            "prefix": "#define BLE_INTERVAL_MIN ",
+            "value": "20",
+            "regex": "^[0-9]*$"
+          },
+          "maxInterval": {
+            "name": "BLE Max Interval (ms) (Default: 40)",
+            "input": "TextField",
+            "prefix": "#define BLE_INTERVAL_MAX ",
+            "value": "40",
+            "regex": "^[0-9]*$"
+          },
+          "slaveLatency": {
+            "name": "BLE Slave Latency (ms) (Default: 0)",
+            "input": "TextField",
+            "prefix": "#define BLE_SLAVE_LATENCY ",
+            "value": "0",
+            "regex": "^[0-9]*$"
+          },
+          "timeout": {
+            "name": "BLE Connection Timeout (ms) (Default: 700)",
+            "input": "TextField",
+            "prefix": "#define BLE_CONNECTION_TIMEOUT ",
+            "value": "700",
+            "regex": "^[0-9]*$"
           }
         }
       },
-      "gpio_config": {
+      "power": {
+        "name": "Power Driver",
+        "file": "power_config.h",
+        "values": {
+          "external_osc": {
+            "name": "External Oscillator (Default: INTERNAL)",
+            "input": "Combo",
+            "prefix": "#define AIR_POWER_",
+            "options": [
+              "EXTERNAL_32KHZ_OSC",
+              "INTERNAL_OSC"
+            ],
+            "value": "INTERNAL_OSC",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          }
+        }
+      },
+      "gpio": {
         "name": "GPIO Driver",
         "file": "gpio_config.h",
         "values": {
           "buad": {
-            "name": "ADC Sample Frequency",
+            "name": "ADC Sample Frequency (Default: LOW)",
             "input": "Combo",
             "prefix": "#define AIR_ADC_SAMPLE_FREQUENCY ",
             "options": [
@@ -115,6 +178,17 @@
               "ADC_SAMPLE_FREQUENCY_HIGH"
             ],
             "value": "ADC_SAMPLE_FREQUENCY_LOW",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "pwmClockSource": {
+            "name": "PWM Clock Source (Default: PMU)",
+            "input": "Combo",
+            "prefix": "#define AIR_PWM_CLOCK_SOURCE ",
+            "options": [
+              "PMU_CLK",
+              "LHL_CLK"
+            ],
+            "value": "PMU_CLK",
             "regex": "^[a-zA-Z0-9_.]*$"
           }
         }
@@ -190,13 +264,65 @@
             "regex": "^[a-zA-Z0-9_.]*$"
           }
         }
+      },
+      "spi": {
+        "name": "SPI Driver",
+        "file": "spi_config.h",
+        "values": {
+          "speed": {
+            "name": "SPI Speed (Default: 1000000)",
+            "input": "Combo",
+            "prefix": "#define AIR_SPI_SPEED ",
+            "options": [
+              "1000000",
+              "500000"
+            ],
+            "value": "1000000",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "mode": {
+            "name": "SPI Mode (Default: SPI_MODE_3)",
+            "input": "Combo",
+            "prefix": "#define AIR_SPI_MODE ",
+            "options": [
+              "SPI_MODE_0",
+              "SPI_MODE_1",
+              "SPI_MODE_2",
+              "SPI_MODE_3"
+            ],
+            "value": "SPI_MODE_3",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          }
+        }
+      },
+      "buzzer": {
+        "name": "Buzzer Driver",
+        "file": "buzzer_config.h",
+        "values": {
+          "pin": {
+            "name": "Buzzer Pin (Default: 14)",
+            "input": "Combo",
+            "prefix": "#define BUZZER_PWM_PIN ",
+            "options": [
+              "13",
+              "14",
+              "26",
+              "27"
+            ],
+            "value": "14",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          }
+        }
       }
     },
     "meta": {
-      "version": "origin/1.1.0",
+      "version": "2.0.1",
       "layoutGrid": false,
       "layoutSnapping": false,
       "layoutSnappingSize": 10,
+      "cloudLayoutGrid": false,
+      "cloudLayoutSnapping": false,
+      "cloudLayoutSnappingSize": 10,
       "language": "en",
       "enableTooltips": true,
       "enableAutoSave": true,
@@ -207,6 +333,7 @@
       "codeAssist": false,
       "highlightLine": false,
       "editorTheme": "Default",
+      "editorFontSize": 12,
       "customEmbeddedElementLibraries": {
         "xra1201": {
           "author": "Anaren Inc.",
@@ -335,11 +462,12 @@
         "bg1": "#DCEBF9",
         "bg2": "#DCEBF9"
       },
-      "projectType": "bcm920737",
+      "projectType": "bcm20737",
       "name": "ExositePostExample"
     },
     "type": "Header",
-    "currentLayoutName": "Default"
+    "currentLayoutName": "Default",
+    "currentCloudLayoutName": "Default"
   },
   "layouts": {
     "Default": {
@@ -384,11 +512,26 @@
       }
     }
   },
+  "cloudLayouts": {
+    "Default": {
+      "name": "Default (600x400)",
+      "width": 600,
+      "height": 400,
+      "orientation": "landscape",
+      "devicename": ".*",
+      "platform": "",
+      "version": ".*",
+      "elements": {}
+    }
+  },
   "elements": {
     "WebIO1": {
       "type": "WebIO",
       "properties": {
-        "uri": "http://m2.exosite.com/api:v1/stack/alias"
+        "uri": "http://m2.exosite.com/api:v1/stack/alias",
+        "airID": 0,
+        "elementPanel": "designer",
+        "elementType": "element"
       },
       "triggers": {
         "errorReturned": [
@@ -425,7 +568,10 @@
         "enabled": true,
         "visible": true,
         "font": "14px Arial",
-        "color": "Black"
+        "color": "Black",
+        "airID": 1,
+        "elementPanel": "designer",
+        "elementType": "element"
       },
       "triggers": {},
       "zindex": 2,
@@ -441,7 +587,10 @@
         "enabled": true,
         "visible": true,
         "font": "14px Arial",
-        "color": "Black"
+        "color": "Black",
+        "airID": 2,
+        "elementPanel": "designer",
+        "elementType": "element"
       },
       "triggers": {},
       "zindex": 3,
@@ -457,7 +606,10 @@
         "length": "128",
         "inputType": "json",
         "returnType": "json",
-        "permission": "public"
+        "permission": "public",
+        "airID": 3,
+        "elementPanel": "designer",
+        "elementType": "element"
       },
       "triggers": {
         "valueReturned": [
@@ -512,7 +664,10 @@
       "properties": {
         "runOnStart": true,
         "runIn": "2000",
-        "runEvery": "2000"
+        "runEvery": "2000",
+        "airID": 4,
+        "elementPanel": "designer",
+        "elementType": "element"
       },
       "triggers": {
         "task": [
@@ -547,7 +702,10 @@
         "enabled": true,
         "visible": true,
         "font": "14px Arial",
-        "color": "Black"
+        "color": "Black",
+        "airID": 5,
+        "elementPanel": "designer",
+        "elementType": "element"
       },
       "triggers": {},
       "zindex": 6,
@@ -561,7 +719,10 @@
       "properties": {
         "runOnStart": true,
         "runIn": "30000",
-        "runEvery": "30000"
+        "runEvery": "30000",
+        "airID": 6,
+        "elementPanel": "designer",
+        "elementType": "element"
       },
       "triggers": {
         "task": [
@@ -596,7 +757,10 @@
         "enabled": true,
         "visible": true,
         "font": "14px Arial",
-        "color": "Black"
+        "color": "Black",
+        "airID": 7,
+        "elementPanel": "designer",
+        "elementType": "element"
       },
       "triggers": {},
       "zindex": 8,
@@ -612,7 +776,10 @@
         "enabled": true,
         "visible": true,
         "font": "14px Arial",
-        "color": "Black"
+        "color": "Black",
+        "airID": 8,
+        "elementPanel": "designer",
+        "elementType": "element"
       },
       "triggers": {},
       "zindex": 9,
@@ -621,5 +788,6 @@
         "y": 39
       }
     }
-  }
+  },
+  "cloudElements": {}
 }
