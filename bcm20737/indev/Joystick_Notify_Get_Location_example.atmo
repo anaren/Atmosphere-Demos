@@ -17,7 +17,7 @@
       "Interval": {
         "name": "Interval",
         "func": "\nvoid interval() {",
-        "code": "    // Read in the 5-way switch, and process it\n    uint16 interruptStatus= XRA1201_GetInterruptStatus(17);\n    uint16 interruptEnabled = XRA1201_GetInterruptEnable(17);\n    uint16 pinStatus= XRA1201_GetGpioState(17);\n    uint16 buttonPress = interruptStatus & interruptEnabled & pinStatus & 0x1F;\n    if(pinStatus & 0x0008) {  // Left (A)\n        AIR_GPIO_Write(PIN_RED, 0); AIR_GPIO_Write(PIN_GREEN, 0); AIR_GPIO_Write(PIN_BLUE, 1);\n    }\n    if(pinStatus & 0x0010) {  // Up (B)\n        AIR_GPIO_Write(PIN_RED, 1); AIR_GPIO_Write(PIN_GREEN, 1); AIR_GPIO_Write(PIN_BLUE, 1);\n    }\n    if(pinStatus & 0x0002) {  // Down (C)\n        AIR_GPIO_Write(PIN_RED, 0); AIR_GPIO_Write(PIN_GREEN, 1); AIR_GPIO_Write(PIN_BLUE, 0);\n    }    \n    if(pinStatus & 0x0001) {  // Right (D)\n        AIR_GPIO_Write(PIN_RED, 1); AIR_GPIO_Write(PIN_GREEN, 0); AIR_GPIO_Write(PIN_BLUE, 0);\n    }    \n    if(pinStatus & 0x0004) {  // Center (E)\n        AIR_GPIO_Write(PIN_RED, 1); AIR_GPIO_Write(PIN_GREEN, 0); AIR_GPIO_Write(PIN_BLUE, 1);\n    }",
+        "code": "    static bool pushed = false;\n    static int pushedCounter = 0;\n    // Read in the 5-way switch, and process it\n    uint16 interruptStatus= XRA1201_GetInterruptStatus(17);\n    uint16 interruptEnabled = XRA1201_GetInterruptEnable(17);\n    uint16 pinStatus= XRA1201_GetGpioState(17);\n    uint16 buttonPress = interruptStatus & interruptEnabled & pinStatus & 0x1F;\n    if(pinStatus & 0x0008) {  // Left (A)\n        AIR_GPIO_Write(PIN_RED, 0); AIR_GPIO_Write(PIN_GREEN, 0); AIR_GPIO_Write(PIN_BLUE, 1);\n    }\n    if(pinStatus & 0x0010) {  // Up (B)\n        AIR_GPIO_Write(PIN_RED, 1); AIR_GPIO_Write(PIN_GREEN, 1); AIR_GPIO_Write(PIN_BLUE, 1);\n    }\n    if(pinStatus & 0x0002) {  // Down (C)\n        AIR_GPIO_Write(PIN_RED, 0); AIR_GPIO_Write(PIN_GREEN, 1); AIR_GPIO_Write(PIN_BLUE, 0);\n    }    \n    if(pinStatus & 0x0001) {  // Right (D)\n        AIR_GPIO_Write(PIN_RED, 1); AIR_GPIO_Write(PIN_GREEN, 0); AIR_GPIO_Write(PIN_BLUE, 0);\n    }    \n    if(pinStatus & 0x0004) {  // Center (E)\n        AIR_GPIO_Write(PIN_RED, 1); AIR_GPIO_Write(PIN_GREEN, 0); AIR_GPIO_Write(PIN_BLUE, 1);\n        if(!pushed){\n            char notifyString[20];\n            sprintf(notifyString, \"pushed %d times\", ++pushedCounter);\n            ATMOSPHERE_NotifyFunction(ID_DataForLabel, notifyString);\n        }\n        pushed = true;\n    }\n    else{\n        pushed = false;\n    }",
         "close": "}"
       },
       "Connected": {
@@ -35,7 +35,7 @@
       "Setup": {
         "name": "Setup",
         "func": "\nvoid setup() {",
-        "code": "    AIR_GPIO_Init();\n\tAIR_UART_Init();\n\tAIR_SPI_Init();\n\tBUZZER_Init();\n\tAIR_POWER_Init();\n    AIR_POWER_SetMode(AIR_POWER_NOSLEEP);\t\n    // Initialize the JoyStick and LED's\n\tXRA1201_SetInputPolarityInversion(17, 0xFFFF);     \t// invert all pins so that the active low inputs read back as logic '1'\n    XRA1201_SetInterruptFilterEnable(17, 0xFFFF);       // enable input filter on all pins\n    XRA1201_SetInterruptEnable(17, 0x0000);             // disable all inturrupts\n    XRA1201_GetGpioState(17);\n    AIR_GPIO_SetMode(PIN_RED, AIR_GPIO_OUTPUT_PUSH_PULL); // set as output\n    AIR_GPIO_SetMode(PIN_GREEN, AIR_GPIO_OUTPUT_PUSH_PULL); // set as output\n    AIR_GPIO_SetMode(PIN_BLUE, AIR_GPIO_OUTPUT_PUSH_PULL); // set as output\n \n",
+        "code": "    AIR_GPIO_Init();\n\tAIR_UART_Init();\n\tAIR_SPI_Init();\n\tBUZZER_Init();\n\tAIR_POWER_Init();\n    AIR_POWER_SetMode(AIR_POWER_NOSLEEP);\t\n    // Initialize the JoyStick and LED's\n\tXRA1201_SetInputPolarityInversion(17, 0xFFFF);     \t// invert all pins so that the active low inputs read back as logic '1'\n    XRA1201_SetInterruptFilterEnable(17, 0xFFFF);       // enable input filter on all pins\n    XRA1201_SetInterruptEnable(17, 0x0000);             // disable all inturrupts\n    XRA1201_GetGpioState(17);\n    AIR_GPIO_SetMode(PIN_RED, AIR_GPIO_OUTPUT_PUSH_PULL); // set as output\n    AIR_GPIO_SetMode(PIN_GREEN, AIR_GPIO_OUTPUT_PUSH_PULL); // set as output\n    AIR_GPIO_SetMode(PIN_BLUE, AIR_GPIO_OUTPUT_PUSH_PULL); // set as output\n",
         "close": "}"
       }
     },
@@ -61,21 +61,21 @@
             "regex": "^[a-zA-Z0-9_.]*$"
           },
           "txPowerLevel": {
-            "name": "TX Power Level (dbm)",
+            "name": "TX Power Level (dbm) (Default: 4)",
             "input": "TextField",
             "prefix": "#define BLE_TX_POWER_LEVEL ",
             "value": "4",
             "regex": "^[0-9]*$"
           },
           "intervalFineTimer": {
-            "name": "Interval Timer Length (ms)",
+            "name": "Interval Timer Length (ms) (Default: 1000)",
             "input": "TextField",
             "prefix": "#define BLE_INTERVAL_FINE_TIMER ",
-            "value": "100",
+            "value": "10",
             "regex": "^[0-9]*$"
           },
           "pairing": {
-            "name": "Pairing",
+            "name": "Pairing (Default: NONE)",
             "input": "Combo",
             "prefix": "#define ",
             "options": [
@@ -96,13 +96,6 @@
             ],
             "value": "OTA",
             "regex": "^[a-zA-Z0-9_.]*$"
-          },
-          "advPowerLevel": {
-            "name": "Advertising TX Power Level (dbm) (Default: 4)",
-            "input": "TextField",
-            "prefix": "#define ADV_BLE_TX_POWER_LEVEL ",
-            "value": "4",
-            "regex": "^-?[0-9]d{0,2}(.d*)?$"
           },
           "minInterval": {
             "name": "BLE Min Interval (ms) (Default: 20)",
@@ -131,6 +124,13 @@
             "prefix": "#define BLE_CONNECTION_TIMEOUT ",
             "value": "700",
             "regex": "^[0-9]*$"
+          },
+          "advPowerLevel": {
+            "name": "Advertising TX Power Level (dbm) (Default: 4)",
+            "input": "TextField",
+            "prefix": "#define ADV_BLE_TX_POWER_LEVEL ",
+            "value": "4",
+            "regex": "^-?[0-9]d{0,2}(.d*)?$"
           }
         }
       },
@@ -139,7 +139,7 @@
         "file": "power_config.h",
         "values": {
           "external_osc": {
-            "name": "External Oscillator",
+            "name": "External Oscillator (Default: INTERNAL)",
             "input": "Combo",
             "prefix": "#define AIR_POWER_",
             "options": [
@@ -156,7 +156,7 @@
         "file": "gpio_config.h",
         "values": {
           "buad": {
-            "name": "ADC Sample Frequency",
+            "name": "ADC Sample Frequency (Default: LOW)",
             "input": "Combo",
             "prefix": "#define AIR_ADC_SAMPLE_FREQUENCY ",
             "options": [
@@ -187,21 +187,21 @@
         "file": "uart_config.h",
         "values": {
           "rxBuffer": {
-            "name": "RX Circular Buffer size",
+            "name": "RX Circular Buffer size (Default: 128)",
             "input": "TextField",
             "prefix": "#define AIR_UART_RX_CIRCULAR_BUFFER_SIZE ",
             "value": "128",
             "regex": "^[0-9]*$"
           },
           "txBuffer": {
-            "name": "TX Circular Buffer size",
+            "name": "TX Circular Buffer size (Default: 128)",
             "input": "TextField",
             "prefix": "#define AIR_UART_TX_CIRCULAR_BUFFER_SIZE ",
             "value": "128",
             "regex": "^[0-9]*$"
           },
           "buad": {
-            "name": "Baudrate",
+            "name": "Baudrate (Default: 115200)",
             "input": "Combo",
             "prefix": "#define ",
             "options": [
@@ -213,7 +213,7 @@
             "regex": "^[a-zA-Z0-9_.]*$"
           },
           "txPin": {
-            "name": "TX Pin",
+            "name": "TX Pin (Default: 32)",
             "input": "Combo",
             "prefix": "#define AIR_UART_TX_PIN ",
             "options": [
@@ -223,7 +223,7 @@
             "regex": "^[a-zA-Z0-9_.]*$"
           },
           "rxPin": {
-            "name": "RX Pin",
+            "name": "RX Pin (Default: 33)",
             "input": "Combo",
             "prefix": "#define AIR_UART_RX_PIN ",
             "options": [
@@ -233,7 +233,7 @@
             "regex": "^[a-zA-Z0-9_.]*$"
           },
           "rtsPin": {
-            "name": "RTS Pin",
+            "name": "RTS Pin (Default: 1)",
             "input": "Combo",
             "prefix": "#define AIR_UART_RTS_PIN ",
             "options": [
@@ -243,7 +243,7 @@
             "regex": "^[a-zA-Z0-9_.]*$"
           },
           "ctsPin": {
-            "name": "CTS Pin",
+            "name": "CTS Pin (Default: 3)",
             "input": "Combo",
             "prefix": "#define AIR_UART_CTS_PIN ",
             "options": [
@@ -255,7 +255,7 @@
         }
       },
       "spi": {
-        "name": "SPI Driver",
+        "name": "AIR SPI Driver",
         "file": "spi_config.h",
         "values": {
           "speed": {
@@ -306,8 +306,8 @@
     },
     "meta": {
       "version": "2.0.1",
-      "layoutGrid": true,
-      "layoutSnapping": false,
+      "layoutGrid": false,
+      "layoutSnapping": true,
       "layoutSnappingSize": 20,
       "cloudLayoutGrid": false,
       "cloudLayoutSnapping": false,
@@ -361,11 +361,11 @@
         }
       },
       "theme": {
-        "bg1": "#DCEBF9",
+        "bg1": "#e9f3fb",
         "bg2": "#DCEBF9"
       },
       "projectType": "bcm20737",
-      "name": "JoyStickExample"
+      "name": "Joystick Notify GetLocation example"
     },
     "type": "Header",
     "currentLayoutName": "Default",
@@ -382,20 +382,32 @@
       "version": ".*",
       "elements": {
         "instructions": {
-          "x": 34,
-          "y": 48,
-          "width": 212,
-          "height": 241
+          "x": 35,
+          "y": 23,
+          "width": 202,
+          "height": 297
+        },
+        "Label2": {
+          "x": 35,
+          "y": 399,
+          "width": 202,
+          "height": 26
+        },
+        "Label5": {
+          "x": 35,
+          "y": 334,
+          "width": 202,
+          "height": 51
         }
       }
     }
   },
   "cloudLayouts": {
     "Default": {
-      "name": "Default (768x1024)",
-      "width": 768,
-      "height": 1024,
-      "orientation": "portrait",
+      "name": "Default (600x400)",
+      "width": 600,
+      "height": 400,
+      "orientation": "landscape",
       "devicename": ".*",
       "platform": "",
       "version": ".*",
@@ -406,7 +418,7 @@
     "instructions": {
       "type": "Label",
       "properties": {
-        "label": "JoyStick Example\n\nPush the Joystick and the color\nshould change per the below.\n\nLeft -- Blue\nRight -- Red\nUp -- White\nDown -- Green\nPush -- Purple",
+        "label": "JoyStick Notification Example\n\nMove the Joystick and the color\nshould change per the below.\n\nLeft -- Blue\nRight -- Red\nUp -- White\nDown -- Green\nPush -- Purple\n\nWhen the joystick is pushed,\nthis connected mobile device\nwill vibrate for 500ms, and\nthe label below will display\nhow many times the joystick\nhas been pushed.",
         "enabled": true,
         "visible": true,
         "font": "14px Arial",
@@ -418,8 +430,171 @@
       "triggers": {},
       "zindex": 1,
       "designer": {
-        "x": 48,
-        "y": 123
+        "x": 72,
+        "y": 116
+      }
+    },
+    "Label2": {
+      "type": "Label",
+      "properties": {
+        "label": "pushed 0 times",
+        "enabled": true,
+        "visible": true,
+        "font": "14px Arial",
+        "color": "Black",
+        "elementType": "element",
+        "airID": 1,
+        "elementPanel": "designer"
+      },
+      "triggers": {},
+      "zindex": 2,
+      "designer": {
+        "x": 282,
+        "y": 185
+      }
+    },
+    "DataForLabel": {
+      "type": "Function",
+      "properties": {
+        "code": "\treturn NULL;",
+        "length": "128",
+        "inputType": "void",
+        "returnType": "string",
+        "permission": "public",
+        "elementType": "element",
+        "airID": 2,
+        "elementPanel": "designer"
+      },
+      "triggers": {
+        "notified": [
+          {
+            "sourceTrigger": "notified",
+            "sourceValue": "getValue",
+            "targetValue": "setValue",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "value"
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": [
+                "value"
+              ]
+            },
+            "targetName": "Label2"
+          },
+          {
+            "sourceTrigger": "notified",
+            "sourceValue": "Static",
+            "targetValue": "vibrate",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "500"
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": []
+            },
+            "targetName": "MobileVibration4"
+          },
+          {
+            "sourceTrigger": "notified",
+            "sourceValue": "Static",
+            "targetValue": "retrievePosition",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {},
+              "targetOrder": [],
+              "sourceOrder": []
+            },
+            "targetName": "MobileGeolocation4"
+          }
+        ]
+      },
+      "zindex": 3,
+      "designer": {
+        "x": 87,
+        "y": 235
+      }
+    },
+    "MobileVibration4": {
+      "type": "MobileVibration",
+      "properties": {
+        "vibrationTime": "1000",
+        "elementType": "element",
+        "airID": 3,
+        "elementPanel": "designer"
+      },
+      "triggers": {},
+      "zindex": 4,
+      "designer": {
+        "x": 291,
+        "y": 295
+      }
+    },
+    "MobileGeolocation4": {
+      "type": "MobileGeolocation",
+      "properties": {
+        "airID": 4,
+        "elementPanel": "designer",
+        "elementType": "element"
+      },
+      "triggers": {
+        "positionRetrieved": [
+          {
+            "sourceTrigger": "positionRetrieved",
+            "sourceValue": "getPositionData",
+            "targetValue": "setValue",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "\"latitude: \" + latitude + \"\\nlongitude: \" + longitude"
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": [
+                "latitude",
+                "longitude",
+                "altitude",
+                "accuracy",
+                "altitudeAccuracy",
+                "heading",
+                "speed",
+                "timestamp"
+              ]
+            },
+            "targetName": "Label5"
+          }
+        ]
+      },
+      "zindex": 4,
+      "designer": {
+        "x": 298,
+        "y": 383
+      }
+    },
+    "Label5": {
+      "type": "Label",
+      "properties": {
+        "label": "Waiting...",
+        "enabled": true,
+        "visible": true,
+        "font": "14px Arial",
+        "color": "Black",
+        "airID": 5,
+        "elementPanel": "designer",
+        "elementType": "element"
+      },
+      "triggers": {},
+      "zindex": 5,
+      "designer": {
+        "x": 508,
+        "y": 383
       }
     }
   },

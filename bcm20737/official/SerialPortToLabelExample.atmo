@@ -35,7 +35,7 @@
       "Setup": {
         "name": "Setup",
         "func": "\nvoid setup() {",
-        "code": "\tAIR_GPIO_Init();\n\tAIR_UART_Init();\n\tAIR_I2C_Init();\n\tAIR_SPI_Init();\n\tBUZZER_Init();\n\tAIR_POWER_Init();\n    AIR_POWER_SetMode(AIR_POWER_NOSLEEP);\t\n    AIR_GPIO_SetMode(PIN_GREEN, AIR_GPIO_OUTPUT_OPEN_DRAIN_NO_PULL);    // Enable green LED\n    AIR_UART_RegisterRXCallback(byteReceivedCallback);                  // Register the callback",
+        "code": "\tAIR_GPIO_Init();\n\tAIR_UART_Init();\n\tAIR_I2C_Init();\n\tAIR_SPI_Init();\n\tBUZZER_Init();\n\tAIR_POWER_Init();\n    AIR_POWER_SetMode(AIR_POWER_NOSLEEP);\t\n    AIR_GPIO_SetMode(PIN_GREEN, AIR_GPIO_OUTPUT_PUSH_PULL);    // Enable green LED\n    AIR_UART_RegisterRXCallback(byteReceivedCallback);         // Register the callback",
         "close": "}"
       }
     },
@@ -124,6 +124,13 @@
             "prefix": "#define BLE_CONNECTION_TIMEOUT ",
             "value": "700",
             "regex": "^[0-9]*$"
+          },
+          "advPowerLevel": {
+            "name": "Advertising TX Power Level (dbm) (Default: 4)",
+            "input": "TextField",
+            "prefix": "#define ADV_BLE_TX_POWER_LEVEL ",
+            "value": "4",
+            "regex": "^-?[0-9]d{0,2}(.d*)?$"
           }
         }
       },
@@ -298,7 +305,7 @@
       }
     },
     "meta": {
-      "version": "1.5.1",
+      "version": "2.0.1",
       "layoutGrid": false,
       "layoutSnapping": false,
       "layoutSnappingSize": 10,
@@ -325,7 +332,8 @@
       "name": "SerialPortToLabelExample"
     },
     "type": "Header",
-    "currentLayoutName": "Default"
+    "currentLayoutName": "Default",
+    "currentCloudLayoutName": "Default"
   },
   "layouts": {
     "Default": {
@@ -352,7 +360,18 @@
       }
     }
   },
-  "cloudLayouts": {},
+  "cloudLayouts": {
+    "Default": {
+      "name": "Default (600x400)",
+      "width": 600,
+      "height": 400,
+      "orientation": "landscape",
+      "devicename": ".*",
+      "platform": "",
+      "version": ".*",
+      "elements": {}
+    }
+  },
   "elements": {
     "Label1": {
       "type": "Label",
@@ -362,7 +381,9 @@
         "visible": true,
         "font": "14px Arial",
         "color": "Black",
-        "elementType": "element"
+        "elementType": "element",
+        "airID": 0,
+        "elementPanel": "designer"
       },
       "triggers": {},
       "zindex": 1,
@@ -379,7 +400,9 @@
         "inputType": "string",
         "returnType": "string",
         "permission": "public",
-        "elementType": "element"
+        "elementType": "element",
+        "airID": 1,
+        "elementPanel": "designer"
       },
       "triggers": {
         "notified": [
@@ -417,7 +440,9 @@
         "visible": true,
         "font": "14px Arial",
         "color": "Black",
-        "elementType": "element"
+        "elementType": "element",
+        "airID": 2,
+        "elementPanel": "designer"
       },
       "triggers": {},
       "zindex": 3,

@@ -35,7 +35,7 @@
       "Setup": {
         "name": "Setup",
         "func": "\nvoid setup() {",
-        "code": "    AIR_GPIO_Init();\n\tAIR_UART_Init();\n\tAIR_SPI_Init();\n\tBUZZER_Init();\n\tAIR_POWER_Init();\n    AIR_POWER_SetMode(AIR_POWER_NOSLEEP);\t\n    // Initialize the JoyStick and LED's\n\tXRA1201_SetInputPolarityInversion(17, 0xFFFF);     \t// invert all pins so that the active low inputs read back as logic '1'\n    XRA1201_SetInterruptFilterEnable(17, 0xFFFF);       // enable input filter on all pins\n    XRA1201_SetInterruptEnable(17, 0x0000);             // disable all inturrupts\n    XRA1201_GetGpioState(17);\n    AIR_GPIO_SetMode(PIN_RED, AIR_GPIO_OUTPUT_OPEN_DRAIN_NO_PULL); // set as output\n    AIR_GPIO_SetMode(PIN_GREEN, AIR_GPIO_OUTPUT_OPEN_DRAIN_NO_PULL); // set as output\n    AIR_GPIO_SetMode(PIN_BLUE, AIR_GPIO_OUTPUT_OPEN_DRAIN_NO_PULL); // set as output\n \n",
+        "code": "    AIR_GPIO_Init();\n\tAIR_UART_Init();\n\tAIR_SPI_Init();\n\tBUZZER_Init();\n\tAIR_POWER_Init();\n    AIR_POWER_SetMode(AIR_POWER_NOSLEEP);\t\n    // Initialize the JoyStick and LED's\n\tXRA1201_SetInputPolarityInversion(17, 0xFFFF);     \t// invert all pins so that the active low inputs read back as logic '1'\n    XRA1201_SetInterruptFilterEnable(17, 0xFFFF);       // enable input filter on all pins\n    XRA1201_SetInterruptEnable(17, 0x0000);             // disable all inturrupts\n    XRA1201_GetGpioState(17);\n    AIR_GPIO_SetMode(PIN_RED, AIR_GPIO_OUTPUT_PUSH_PULL); // set as output\n    AIR_GPIO_SetMode(PIN_GREEN, AIR_GPIO_OUTPUT_PUSH_PULL); // set as output\n    AIR_GPIO_SetMode(PIN_BLUE, AIR_GPIO_OUTPUT_PUSH_PULL); // set as output\n \n",
         "close": "}"
       }
     },
@@ -124,6 +124,13 @@
             "prefix": "#define BLE_CONNECTION_TIMEOUT ",
             "value": "700",
             "regex": "^[0-9]*$"
+          },
+          "advPowerLevel": {
+            "name": "Advertising TX Power Level (dbm) (Default: 4)",
+            "input": "TextField",
+            "prefix": "#define ADV_BLE_TX_POWER_LEVEL ",
+            "value": "4",
+            "regex": "^-?[0-9]d{0,2}(.d*)?$"
           }
         }
       },
@@ -298,7 +305,7 @@
       }
     },
     "meta": {
-      "version": "1.5.1",
+      "version": "2.0.1",
       "layoutGrid": true,
       "layoutSnapping": false,
       "layoutSnappingSize": 20,
@@ -361,7 +368,8 @@
       "name": "Joystick notify example"
     },
     "type": "Header",
-    "currentLayoutName": "Default"
+    "currentLayoutName": "Default",
+    "currentCloudLayoutName": "Default"
   },
   "layouts": {
     "Default": {
@@ -388,7 +396,18 @@
       }
     }
   },
-  "cloudLayouts": {},
+  "cloudLayouts": {
+    "Default": {
+      "name": "Default (600x400)",
+      "width": 600,
+      "height": 400,
+      "orientation": "landscape",
+      "devicename": ".*",
+      "platform": "",
+      "version": ".*",
+      "elements": {}
+    }
+  },
   "elements": {
     "instructions": {
       "type": "Label",
@@ -398,7 +417,9 @@
         "visible": true,
         "font": "14px Arial",
         "color": "Black",
-        "elementType": "element"
+        "elementType": "element",
+        "airID": 0,
+        "elementPanel": "designer"
       },
       "triggers": {},
       "zindex": 1,
@@ -415,7 +436,9 @@
         "visible": true,
         "font": "14px Arial",
         "color": "Black",
-        "elementType": "element"
+        "elementType": "element",
+        "airID": 1,
+        "elementPanel": "designer"
       },
       "triggers": {},
       "zindex": 2,
@@ -432,7 +455,9 @@
         "inputType": "void",
         "returnType": "string",
         "permission": "public",
-        "elementType": "element"
+        "elementType": "element",
+        "airID": 2,
+        "elementPanel": "designer"
       },
       "triggers": {
         "notified": [
@@ -482,7 +507,9 @@
       "type": "MobileVibration",
       "properties": {
         "vibrationTime": "1000",
-        "elementType": "element"
+        "elementType": "element",
+        "airID": 3,
+        "elementPanel": "designer"
       },
       "triggers": {},
       "zindex": 4,
