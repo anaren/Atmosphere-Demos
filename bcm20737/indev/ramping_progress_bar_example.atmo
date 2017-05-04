@@ -349,7 +349,7 @@
       "name": "ramping progress bar example"
     },
     "type": "Header",
-    "currentLayoutName": "GalaxyS7",
+    "currentLayoutName": "Default",
     "currentCloudLayoutName": "Default"
   },
   "layouts": {
@@ -365,13 +365,13 @@
         "Slider0": {
           "x": 22,
           "y": 52,
-          "width": 252,
+          "width": 470,
           "height": 86
         },
         "ProgressBar1": {
-          "x": 71,
-          "y": 314,
-          "width": 114,
+          "x": 22,
+          "y": 187,
+          "width": 470,
           "height": 18
         }
       }
