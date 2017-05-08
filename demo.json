@@ -1,0 +1,71 @@
+{
+  "rows": [
+    {
+      "version": "1.5.0",
+      "description": "This example shows how to read an analog voltage \n using the module's Analog to Digital Converter (ADC).",
+      "projectType": "bcm20737",
+      "name": "ADC Example",
+      "url": "https://raw.githubusercontent.com/anaren/atmosphere_demos/master/bcm20737/official/ADC_Example.atmo"
+	},
+	{
+
+      "version": "1.5.0",
+      "description": "This project similar to the one that comes preloaded \n onto every Anaren Development Board with a few \n enhancements.",
+      "projectType": "bcm20737",
+      "name": "Atmosphere Demo",
+      "url": "https://raw.githubusercontent.com/anaren/atmosphere_demos/master/bcm20737/official/Atmosphere_Demo.atmo"
+
+	},
+	{
+      "version": "1.5.0",
+      "description": "An example that uses the accelerometer to allow \n the user to move a bubble around on the screen.",
+      "projectType": "bcm20737",
+      "name": "Bubble Demo",
+      "url": "https://raw.githubusercontent.com/anaren/atmosphere_demos/master/bcm20737/official/Bubble_Demo.atmo"
+
+	},
+    {
+      "version": "1.2.0",
+      "description": "This demo shows how to use deepsleep with A20737.",
+      "projectType": "bcm20737",
+      "name": "Deepsleep",
+      "url": "https://raw.githubusercontent.com/anaren/atmosphere_demos/master/bcm20737/official/Deepsleep.atmo" 
+    },
+    {
+      "version": "1.5.0",
+      "description": "An example application to demonstrate some of \nthe PhoneGap plugin capabilities added in \nAtmosphere 1.5.0",
+      "projectType": "bcm20737",
+      "name": "PhoneGap_Examples",
+      "url": "https://raw.githubusercontent.com/anaren/atmosphere_demos/master/bcm20737/official/PhoneGap_Examples.atmo" 
+    },
+    {
+      "version": "1.5.0",
+      "description": "Makes a simple piano app using the buzzer.",
+      "projectType": "bcm20737",
+      "name": "Piano_Demo",
+      "url": "https://raw.githubusercontent.com/anaren/atmosphere_demos/master/bcm20737/official/Piano_Demo.atmo" 
+
+    },
+    {
+      "version": "1.5.0",
+      "description": "Getting the temperature from the 20737",
+      "projectType": "bcm20737",
+      "name": "Temperature_Demo",
+      "url": "https://raw.githubusercontent.com/anaren/atmosphere_demos/master/bcm20737/official/Temperature_Demo.atmo" 
+    },
+    {
+      "version": "1.5.0",
+      "description": "Demonstration of a various methods for enhancing \nthe app user interface, stateful buttons, pages, and \nother goodies",
+      "projectType": "bcm20737",
+      "name": "UI_Demo",
+      "url": "https://raw.githubusercontent.com/anaren/atmosphere_demos/master/bcm20737/official/UI_Demo.atmo" 
+    },
+    {
+      "version": "2.0.0",
+      "description": "Factory demo for A43364",
+      "projectType": "bcm43364",
+      "name": "A43364 Factory Demo",
+      "url": "https://raw.githubusercontent.com/anaren/atmosphere_demos/master/bcm43364/official/A43364_Factory_Demo.atmo" 
+    }
+  ]
+ }
