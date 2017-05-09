@@ -1,5 +1,4 @@
-{
-  "rows": [
+[
     {
       "version": "1.5.0",
       "description": "This example shows how to read an analog voltage \n using the module's Analog to Digital Converter (ADC).",
@@ -67,5 +66,4 @@
       "name": "A43364 Factory Demo",
       "url": "https://raw.githubusercontent.com/anaren/atmosphere_demos/master/bcm43364/official/A43364_Factory_Demo.atmo" 
     }
-  ]
- }
+]
