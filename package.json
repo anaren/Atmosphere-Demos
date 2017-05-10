@@ -1,0 +1,21 @@
+{
+  "name": "Atmosphere_Demos",
+  "version": "2.0.1",
+  "description": "Atmosphere Demos",
+  "main": "gulpfile.js",
+  "author": "Anaren",
+  "license": "Apache",
+  "homepage": "https://atmosphere.anaren.com",
+  "devDependencies": {
+    "del": "latest",
+    "gulp": "latest",
+    "gulp-concat": "latest",
+    "gulp-jshint": "latest",
+    "gulp-rename": "latest",
+    "gulp-uglify": "latest",
+    "gulp-webserver": "latest",
+    "gulp-zip": "latest",
+    "jshint": "latest",
+    "merge": "latest"
+  }
+}
