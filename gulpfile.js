@@ -62,7 +62,7 @@ gulp.task('compile', function() {
                         description: data[d].header.meta.description,
                         projectType: data[d].header.meta.projectType,
                         name: data[d].header.meta.name,
-                        url: demoUrl + data[d].header.meta.projectType + "/official/" + d+".atmo"
+                        url: demoUrl + d +".atmo"
                     });
                 
                 }
