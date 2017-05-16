@@ -72,7 +72,7 @@ gulp.task('compile', function() {
             return new Buffer(JSON.stringify(newData));
             
         }))
-        .pipe(gulp.dest('./build'));
+        .pipe(gulp.dest('./'));
     
 });
 
