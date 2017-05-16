@@ -16,6 +16,7 @@
     "gulp-webserver": "latest",
     "gulp-zip": "latest",
     "jshint": "latest",
-    "merge": "latest"
+    "merge": "latest",
+    "gulp-json-concat": "latest"
   }
 }
