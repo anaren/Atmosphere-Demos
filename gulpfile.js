@@ -21,8 +21,8 @@ var projectTypes = ["bcm20737", "bcm43364", "intelCurie"];
 
 var versions = ["1.5.0", "1.5.1", "2.0.0", "2.0.1", "2.0.2"];
 
-// Get the */offical/*.atmo files and load up sufficient data for a demos.json file to serve the IDE
-gulp.task('compile', function() {
+// Production alldemos.json - cleanses the output based on projectTypes and versions defined above.
+gulp.task('prod', function() {
     
     return gulp.src('**/official/*.atmo')
         .pipe(jsonConcat('alldemos.json', function(data){
@@ -52,5 +52,30 @@ gulp.task('compile', function() {
     
 });
 
+
+// Development devdemos.json - useful for viewing out of date versions and projectTypes that need to be updated
+gulp.task('dev', function() {
+    
+    return gulp.src('**/official/*.atmo')
+        .pipe(jsonConcat('devdemos.json', function(data){
+            
+            var newData = [];
+            
+            for (d in data) {                           
+                newData.push({version: data[d].header.meta.version,
+                    description: data[d].header.meta.description,
+                    projectType: data[d].header.meta.projectType,
+                    name: data[d].header.meta.name,
+                    url: demoUrl + d +".atmo"
+                }); 
+            }
+            
+            return new Buffer(JSON.stringify(newData));
+            
+        }))
+        .pipe(gulp.dest('./'));
+    
+});
+
 // The default tasks is scripts, so run scripts clean, which then runs scripts
-gulp.task('default', ['compile']);
+gulp.task('default', ['prod']);
