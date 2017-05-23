@@ -65,6 +65,67 @@
             "prefix": "#define CLOUD_CMD_INTERVAL_FINE_TIMER ",
             "value": "1000",
             "regex": "^[0-9]*$"
+          },
+          "softAPChannel": {
+            "name": "SoftAP Broadcast Channel",
+            "input": "Combo",
+            "prefix": "#define WIFI_SOFTAP_CHANNEL ",
+            "options": [
+              "1",
+              "2",
+              "3",
+              "4",
+              "5",
+              "6",
+              "7",
+              "8",
+              "9",
+              "10",
+              "11"
+            ],
+            "value": "6",
+            "regex": "^[0-9]*$"
+          },
+          "wakeBtnFactoryReset": {
+            "name": "Use Wake Button For Factory Reset (Default Not Enabled)",
+            "input": "Combo",
+            "prefix": "#define WAKE_BUTTON_FACTORY_RESET_",
+            "options": [
+              "NOT_ENABLED",
+              "ENABLED"
+            ],
+            "value": "NOT_ENABLED",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "httpsEnabled": {
+            "name": "HTTPS Enabled (Default Not Enabled)",
+            "input": "Combo",
+            "prefix": "#define HTTPS_",
+            "options": [
+              "NOT_ENABLED",
+              "ENABLED"
+            ],
+            "value": "NOT_ENABLED",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "localSecurityEnabled": {
+            "name": "Local Security Enabled (Default Not Enabled)",
+            "input": "Combo",
+            "prefix": "#define WIFI_LOCAL_SECURITY_",
+            "options": [
+              "NOT_ENABLED",
+              "ENABLED"
+            ],
+            "value": "NOT_ENABLED",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "localSecurityPassword": {
+            "name": "Local Security Password (Default admin)",
+            "input": "TextField",
+            "prefix": "#define WIFI_LOCAL_SECURITY_PASSWORD \"",
+            "value": "admin",
+            "suffix": "\"",
+            "regex": "^([a-zA-Z0-9_.]){8,}$"
           }
         }
       },
@@ -73,7 +134,7 @@
         "file": "power_config.h",
         "values": {
           "external_osc": {
-            "name": "External Oscillator (Default: EXTERNAL)",
+            "name": "External Oscillator (Default: INTERNAL)",
             "input": "Combo",
             "prefix": "#define AIR_POWER_RTC_CLOCK_SOURCE_",
             "options": [
@@ -258,7 +319,7 @@
       }
     },
     "meta": {
-      "version": "kieron",
+      "version": "2.0.1",
       "layoutGrid": false,
       "layoutSnapping": false,
       "layoutSnappingSize": 10,
@@ -269,7 +330,7 @@
       "enableTooltips": true,
       "enableAutoSave": true,
       "enableBuildSave": false,
-      "description": null,
+      "description": "A43364 Factory Demo with Atmosphere Cloud View",
       "project_uuid": null,
       "tokensEnabled": false,
       "codeAssist": false,
