@@ -7,16 +7,7 @@
   "license": "Apache",
   "homepage": "https://atmosphere.anaren.com",
   "devDependencies": {
-    "del": "latest",
     "gulp": "latest",
-    "gulp-concat": "latest",
-    "gulp-jshint": "latest",
-    "gulp-rename": "latest",
-    "gulp-uglify": "latest",
-    "gulp-webserver": "latest",
-    "gulp-zip": "latest",
-    "jshint": "latest",
-    "merge": "latest",
     "gulp-json-concat": "latest"
   }
 }
