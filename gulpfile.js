@@ -78,4 +78,4 @@ gulp.task('dev', function() {
 });
 
 // The default tasks is scripts, so run scripts clean, which then runs scripts
-gulp.task('default', ['prod']);
+gulp.task('default', ['prod', 'dev']);
