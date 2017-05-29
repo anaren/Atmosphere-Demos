@@ -46,7 +46,7 @@
             "regex": "^[0-9]*$",
             "input": "TextField",
             "prefix": "#define BLE_TX_POWER_LEVEL ",
-            "name": "TX Power Level (dbm)",
+            "name": "TX Power Level (dbm) (Default: 4)",
             "value": "4"
           },
           "minInterval": {
@@ -60,12 +60,12 @@
             "regex": "^[0-9]*$",
             "input": "TextField",
             "prefix": "#define BLE_SLAVE_LATENCY ",
-            "name": "BLE Slave Latency (ms) (Default: 04)",
+            "name": "BLE Slave Latency (ms) (Default: 0)",
             "value": "0"
           },
           "ota": {
             "regex": "^[a-zA-Z0-9_.]*$",
-            "name": "Over the Air Updating",
+            "name": "Over the Air Updating (Default: OTA)",
             "value": "OTA",
             "prefix": "#define BLE_",
             "input": "Combo",
@@ -76,7 +76,7 @@
           },
           "pairing": {
             "regex": "^[a-zA-Z0-9_.]*$",
-            "name": "Pairing",
+            "name": "Pairing (Default: NONE)",
             "value": "BLE_PAIRING_NONE",
             "prefix": "#define ",
             "input": "Combo",
@@ -90,7 +90,7 @@
             "regex": "^[0-9]*$",
             "input": "TextField",
             "prefix": "#define BLE_INTERVAL_FINE_TIMER ",
-            "name": "Interval Timer Length (ms)",
+            "name": "Interval Timer Length (ms) (Default: 1000)",
             "value": "1000"
           },
           "maxInterval": {
@@ -122,6 +122,13 @@
             "prefix": "#define BLE_LOCAL_NAME \"",
             "input": "TextField",
             "suffix": "\""
+          },
+          "advPowerLevel": {
+            "name": "Advertising TX Power Level (dbm) (Default: 4)",
+            "input": "TextField",
+            "prefix": "#define ADV_BLE_TX_POWER_LEVEL ",
+            "value": "4",
+            "regex": "^-?[0-9]d{0,2}(.d*)?$"
           }
         },
         "name": "Bluetooth Low Energy",
@@ -131,7 +138,7 @@
         "values": {
           "external_osc": {
             "regex": "^[a-zA-Z0-9_.]*$",
-            "name": "External Oscillator",
+            "name": "External Oscillator (Default: INTERNAL)",
             "value": "INTERNAL_OSC",
             "prefix": "#define AIR_POWER_",
             "input": "Combo",
@@ -148,7 +155,7 @@
         "values": {
           "buad": {
             "regex": "^[a-zA-Z0-9_.]*$",
-            "name": "ADC Sample Frequency",
+            "name": "ADC Sample Frequency (Default: LOW)",
             "value": "ADC_SAMPLE_FREQUENCY_LOW",
             "prefix": "#define AIR_ADC_SAMPLE_FREQUENCY ",
             "input": "Combo",
@@ -162,7 +169,7 @@
           },
           "pwmClockSource": {
             "regex": "^[a-zA-Z0-9_.]*$",
-            "name": "PWM Clock Source",
+            "name": "PWM Clock Source (Default: PMU)",
             "value": "PMU_CLK",
             "prefix": "#define AIR_PWM_CLOCK_SOURCE ",
             "input": "Combo",
@@ -179,7 +186,7 @@
         "values": {
           "rtsPin": {
             "regex": "^[a-zA-Z0-9_.]*$",
-            "name": "RTS Pin",
+            "name": "RTS Pin (Default: 1)",
             "value": "1",
             "prefix": "#define AIR_UART_RTS_PIN ",
             "input": "Combo",
@@ -189,7 +196,7 @@
           },
           "buad": {
             "regex": "^[a-zA-Z0-9_.]*$",
-            "name": "Baudrate",
+            "name": "Baudrate (Default: 115200)",
             "value": "AIR_UART_BAUD_115200",
             "prefix": "#define ",
             "input": "Combo",
@@ -203,19 +210,19 @@
             "regex": "^[0-9]*$",
             "input": "TextField",
             "prefix": "#define AIR_UART_RX_CIRCULAR_BUFFER_SIZE ",
-            "name": "RX Circular Buffer size",
+            "name": "RX Circular Buffer size (Default: 128)",
             "value": "128"
           },
           "txBuffer": {
             "regex": "^[0-9]*$",
             "input": "TextField",
             "prefix": "#define AIR_UART_TX_CIRCULAR_BUFFER_SIZE ",
-            "name": "TX Circular Buffer size",
+            "name": "TX Circular Buffer size (Default: 128)",
             "value": "128"
           },
           "txPin": {
             "regex": "^[a-zA-Z0-9_.]*$",
-            "name": "TX Pin",
+            "name": "TX Pin (Default: 32)",
             "value": "32",
             "prefix": "#define AIR_UART_TX_PIN ",
             "input": "Combo",
@@ -225,7 +232,7 @@
           },
           "rxPin": {
             "regex": "^[a-zA-Z0-9_.]*$",
-            "name": "RX Pin",
+            "name": "RX Pin (Default: 33)",
             "value": "33",
             "prefix": "#define AIR_UART_RX_PIN ",
             "input": "Combo",
@@ -235,7 +242,7 @@
           },
           "ctsPin": {
             "regex": "^[a-zA-Z0-9_.]*$",
-            "name": "CTS Pin",
+            "name": "CTS Pin (Default: 3)",
             "value": "3",
             "prefix": "#define AIR_UART_CTS_PIN ",
             "input": "Combo",
@@ -251,7 +258,7 @@
         "values": {
           "speed": {
             "regex": "^[a-zA-Z0-9_.]*$",
-            "name": "SPI Speed",
+            "name": "SPI Speed (Default: 1000000)",
             "value": "1000000",
             "prefix": "#define AIR_SPI_SPEED ",
             "input": "Combo",
@@ -262,7 +269,7 @@
           },
           "mode": {
             "regex": "^[a-zA-Z0-9_.]*$",
-            "name": "SPI Mode",
+            "name": "SPI Mode (Default: SPI_MODE_3)",
             "value": "SPI_MODE_3",
             "prefix": "#define AIR_SPI_MODE ",
             "input": "Combo",
@@ -281,7 +288,7 @@
         "values": {
           "pin": {
             "regex": "^[a-zA-Z0-9_.]*$",
-            "name": "Buzzer Pin",
+            "name": "Buzzer Pin (Default: 14)",
             "value": "14",
             "prefix": "#define BUZZER_PWM_PIN ",
             "input": "Combo",
@@ -298,7 +305,7 @@
       }
     },
     "meta": {
-      "version": "1.5.0",
+      "version": "2.0.1",
       "layoutGrid": false,
       "layoutSnapping": false,
       "layoutSnappingSize": 10,
@@ -325,7 +332,8 @@
       "name": "ADC Example"
     },
     "type": "Header",
-    "currentLayoutName": "Default"
+    "currentLayoutName": "Default",
+    "currentCloudLayoutName": "Default"
   },
   "layouts": {
     "Default": {
@@ -364,7 +372,18 @@
       "name": "Default (768x1024)"
     }
   },
-  "cloudLayouts": {},
+  "cloudLayouts": {
+    "Default": {
+      "name": "Default (600x400)",
+      "width": 600,
+      "height": 400,
+      "orientation": "landscape",
+      "devicename": ".*",
+      "platform": "",
+      "version": ".*",
+      "elements": {}
+    }
+  },
   "elements": {
     "readADCButton": {
       "type": "Function",
@@ -374,7 +393,9 @@
         "length": "128",
         "returnType": "int",
         "elementType": "element",
-        "inputType": "void"
+        "inputType": "void",
+        "airID": 0,
+        "elementPanel": "designer"
       },
       "triggers": {
         "valueReturned": [
@@ -468,7 +489,9 @@
         "value": "500",
         "gap": "2",
         "visible": true,
-        "elementType": "element"
+        "elementType": "element",
+        "airID": 1,
+        "elementPanel": "designer"
       },
       "triggers": {},
       "zindex": 2,
@@ -484,7 +507,9 @@
         "elementType": "element",
         "enabled": true,
         "value": false,
-        "label": "Read ADC"
+        "label": "Read ADC",
+        "airID": 2,
+        "elementPanel": "designer"
       },
       "triggers": {
         "onTrigger": [
@@ -540,7 +565,9 @@
         "elementType": "element",
         "runEvery": "100",
         "runOnStart": false,
-        "runIn": "100"
+        "runIn": "100",
+        "airID": 3,
+        "elementPanel": "designer"
       },
       "triggers": {
         "task": [
@@ -573,7 +600,9 @@
         "background": "transparent",
         "aspectLock": true,
         "rotation": "0",
-        "elementType": "element"
+        "elementType": "element",
+        "airID": 4,
+        "elementPanel": "designer"
       },
       "triggers": {},
       "zindex": 5,
@@ -590,7 +619,9 @@
         "enabled": true,
         "label": "-----",
         "visible": true,
-        "font": "24px Monospace"
+        "font": "24px Monospace",
+        "airID": 5,
+        "elementPanel": "designer"
       },
       "triggers": {},
       "zindex": 6,
@@ -602,7 +633,9 @@
     "Condition8": {
       "type": "Condition",
       "properties": {
-        "elementType": "element"
+        "elementType": "element",
+        "airID": 6,
+        "elementPanel": "designer"
       },
       "triggers": {
         "conditionTrue": [
