@@ -20,13 +20,13 @@ function loadGrid() {
         /* Executes after data is loaded and rendered */
         grid.find(".command-info").on("click", function(e)
         {
-            //appwin.doInfoWin("Description", $(this).data("row-id"), "large");
+            bootbox.alert($(this).data("row-id"));
             
         }).end().find(".command-open").on("click", function(e)
         {
             var rowId = $(this).data("row-id");
-    
-    
+            location.href = "https://atmosphere.anaren.com/developer#import&"+rowId;
+
         });
     });
 }
