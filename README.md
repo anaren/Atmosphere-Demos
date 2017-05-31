@@ -42,10 +42,10 @@ Please commit work in progress to the "devel" branch until updates are approved 
 ### Project File QA
 
 * Unless stated otherwise in the project description, all projects in the "official" directories should meet the following criteria.
-..* Load and build across the major browser and OS environements in the IDE.
-..* Be successfully programmed with the Atmosphere Programmer if applicable.
-..* Mobile Application tested on Android and iOS if applicable.
-..* Cloud provisioning and connectivity tested and confirmed if applicable.
+  * Load and build across the major browser and OS environements in the IDE.
+  * Be successfully programmed with the Atmosphere Programmer if applicable.
+  * Mobile Application tested on Android and iOS if applicable.
+  * Cloud provisioning and connectivity tested and confirmed if applicable.
 
 
 ### Compiling alldemos.json
