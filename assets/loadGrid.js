@@ -1,7 +1,9 @@
 var projectDemoList;
 
-$.get("devdemos.json", function(data) {
-    projectDemoList = JSON.parse(data);
+$.getJSON("devdemos.json", function(data) {
+    //projectDemoList = JSON.parse(data);
+    projectDemoList = data;
+    console.log(projectDemoList);
     loadGrid();
 });
 
