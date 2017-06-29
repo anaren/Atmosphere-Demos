@@ -1,0 +1,762 @@
+{
+  "header": {
+    "data": {
+      "order": [
+        "Globals",
+        "Interval",
+        "Connected",
+        "Disconnected",
+        "Setup"
+      ],
+      "Globals": {
+        "name": "Globals",
+        "func": "#include \"callbacks.h\"",
+        "code": "\n#define COIL_0_PIN 14\n#define COIL_1_PIN 26\n#define COIL_2_PIN 27\n#define COIL_3_PIN 28\n\n#define COIL_0_BIT 1 << 0\n#define COIL_1_BIT 1 << 1\n#define COIL_2_BIT 1 << 2\n#define COIL_3_BIT 1 << 3\n\nbool running = false;\nbool forward = true;\nint delay = 1;\nint timer = 1;\n",
+        "close": "//END"
+      },
+      "Interval": {
+        "name": "Interval",
+        "func": "\nvoid interval() {",
+        "code": "    if(running){\n        if(!timer--){\n            static unsigned char coilState = 3;\n            AIR_GPIO_Write(COIL_0_PIN, coilState & COIL_0_BIT);\n            AIR_GPIO_Write(COIL_1_PIN, coilState & COIL_1_BIT);\n            AIR_GPIO_Write(COIL_2_PIN, coilState & COIL_2_BIT);\n            AIR_GPIO_Write(COIL_3_PIN, coilState & COIL_3_BIT);\n            coilState = ((coilState << (forward?1:3))|(coilState >> (forward?3:1))) & 0xf;\n            timer = delay;\n        }\n    }",
+        "close": "}"
+      },
+      "Connected": {
+        "name": "Connected",
+        "func": "\nvoid connected() {",
+        "code": "",
+        "close": "}"
+      },
+      "Disconnected": {
+        "name": "Disconnected",
+        "func": "\nvoid disconnected() {",
+        "code": "",
+        "close": "}"
+      },
+      "Setup": {
+        "name": "Setup",
+        "func": "\nvoid setup() {",
+        "code": "\tAIR_GPIO_Init();\n\tAIR_POWER_Init();\n\tAIR_POWER_SetMode(AIR_POWER_SLEEP);\n\t\n\tAIR_GPIO_SetMode(COIL_0_PIN, AIR_GPIO_OUTPUT_PUSH_PULL);\n\tAIR_GPIO_SetMode(COIL_1_PIN, AIR_GPIO_OUTPUT_PUSH_PULL);\n\tAIR_GPIO_SetMode(COIL_2_PIN, AIR_GPIO_OUTPUT_PUSH_PULL);\n\tAIR_GPIO_SetMode(COIL_3_PIN, AIR_GPIO_OUTPUT_PUSH_PULL);",
+        "close": "}"
+      }
+    },
+    "boardConfiguration": {
+      "ble": {
+        "name": "Bluetooth Low Energy",
+        "file": "ble_config.h",
+        "values": {
+          "localName": {
+            "name": "Local Name",
+            "input": "TextField",
+            "prefix": "#define BLE_LOCAL_NAME \"",
+            "value": "ble_test",
+            "suffix": "\"",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "version": {
+            "name": "Version",
+            "input": "TextField",
+            "prefix": "#define BLE_VERSION \"",
+            "value": "1.00",
+            "suffix": "\"",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "ota": {
+            "name": "Over the Air Updating (Default: OTA)",
+            "input": "Combo",
+            "prefix": "#define BLE_",
+            "options": [
+              "OTA",
+              "NO_OTA"
+            ],
+            "value": "OTA",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "pairing": {
+            "name": "Pairing (Default: NONE)",
+            "input": "Combo",
+            "prefix": "#define ",
+            "options": [
+              "BLE_PAIRING_NONE",
+              "BLE_PAIRING_PASSKEY"
+            ],
+            "value": "BLE_PAIRING_NONE",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "txPowerLevel": {
+            "name": "TX Power Level (dbm) (Default: 4)",
+            "input": "TextField",
+            "prefix": "#define BLE_TX_POWER_LEVEL ",
+            "value": "4",
+            "regex": "^-?[0-9]d{0,2}(.d*)?$"
+          },
+          "advPowerLevel": {
+            "name": "Advertising TX Power Level (dbm) (Default: 4)",
+            "input": "TextField",
+            "prefix": "#define ADV_BLE_TX_POWER_LEVEL ",
+            "value": "4",
+            "regex": "^-?[0-9]d{0,2}(.d*)?$"
+          },
+          "intervalFineTimer": {
+            "name": "Interval Timer Length (ms) (Default: 1000)",
+            "input": "Combo",
+            "prefix": "#define BLE_INTERVAL_FINE_TIMER ",
+            "options": [
+              "12.5",
+              "25",
+              "50",
+              "62.5",
+              "75",
+              "87.5",
+              "100",
+              "125",
+              "137.5",
+              "162.5",
+              "200",
+              "250",
+              "325",
+              "500",
+              "1000"
+            ],
+            "value": "12.5",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "minInterval": {
+            "name": "BLE Min Interval (ms) (Default: 20)",
+            "input": "TextField",
+            "prefix": "#define BLE_INTERVAL_MIN ",
+            "value": "20",
+            "regex": "^[0-9]*$"
+          },
+          "maxInterval": {
+            "name": "BLE Max Interval (ms) (Default: 40)",
+            "input": "TextField",
+            "prefix": "#define BLE_INTERVAL_MAX ",
+            "value": "40",
+            "regex": "^[0-9]*$"
+          },
+          "slaveLatency": {
+            "name": "BLE Slave Latency (ms) (Default: 0)",
+            "input": "TextField",
+            "prefix": "#define BLE_SLAVE_LATENCY ",
+            "value": "0",
+            "regex": "^[0-9]*$"
+          },
+          "timeout": {
+            "name": "BLE Connection Timeout (ms) (Default: 700)",
+            "input": "TextField",
+            "prefix": "#define BLE_CONNECTION_TIMEOUT ",
+            "value": "700",
+            "regex": "^[0-9]*$"
+          }
+        }
+      },
+      "power": {
+        "name": "Power Driver",
+        "file": "power_config.h",
+        "values": {
+          "external_osc": {
+            "name": "External Oscillator (Default: INTERNAL)",
+            "input": "Combo",
+            "prefix": "#define AIR_POWER_",
+            "options": [
+              "EXTERNAL_32KHZ_OSC",
+              "INTERNAL_OSC"
+            ],
+            "value": "INTERNAL_OSC",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          }
+        }
+      },
+      "gpio": {
+        "name": "GPIO Driver",
+        "file": "gpio_config.h",
+        "values": {
+          "buad": {
+            "name": "ADC Sample Frequency (Default: LOW)",
+            "input": "Combo",
+            "prefix": "#define AIR_ADC_SAMPLE_FREQUENCY ",
+            "options": [
+              "ADC_SAMPLE_FREQUENCY_LOW",
+              "ADC_SAMPLE_FREQUENCY_MEDIUM_LOW",
+              "ADC_SAMPLE_FREQUENCY_MEDIUM",
+              "ADC_SAMPLE_FREQUENCY_MEDIUM_HIGH",
+              "ADC_SAMPLE_FREQUENCY_HIGH"
+            ],
+            "value": "ADC_SAMPLE_FREQUENCY_LOW",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "pwmClockSource": {
+            "name": "PWM Clock Source (Default: PMU)",
+            "input": "Combo",
+            "prefix": "#define AIR_PWM_CLOCK_SOURCE ",
+            "options": [
+              "PMU_CLK",
+              "LHL_CLK"
+            ],
+            "value": "PMU_CLK",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          }
+        }
+      },
+      "uart": {
+        "name": "UART Driver",
+        "file": "uart_config.h",
+        "values": {
+          "rxBuffer": {
+            "name": "RX Circular Buffer size (Default: 128)",
+            "input": "TextField",
+            "prefix": "#define AIR_UART_RX_CIRCULAR_BUFFER_SIZE ",
+            "value": "128",
+            "regex": "^[0-9]*$"
+          },
+          "txBuffer": {
+            "name": "TX Circular Buffer size (Default: 128)",
+            "input": "TextField",
+            "prefix": "#define AIR_UART_TX_CIRCULAR_BUFFER_SIZE ",
+            "value": "128",
+            "regex": "^[0-9]*$"
+          },
+          "buad": {
+            "name": "Baudrate (Default: 115200)",
+            "input": "Combo",
+            "prefix": "#define ",
+            "options": [
+              "AIR_UART_BAUD_460800",
+              "AIR_UART_BAUD_230400",
+              "AIR_UART_BAUD_115200",
+              "AIR_UART_BAUD_57600",
+              "AIR_UART_BAUD_38400",
+              "AIR_UART_BAUD_19200",
+              "AIR_UART_BAUD_9600"
+            ],
+            "value": "AIR_UART_BAUD_115200",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "txPin": {
+            "name": "TX Pin (Default: 32)",
+            "input": "Combo",
+            "prefix": "#define AIR_UART_TX_PIN ",
+            "options": [
+              "32"
+            ],
+            "value": "32",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "rxPin": {
+            "name": "RX Pin (Default: 33)",
+            "input": "Combo",
+            "prefix": "#define AIR_UART_RX_PIN ",
+            "options": [
+              "33"
+            ],
+            "value": "33",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "rtsPin": {
+            "name": "RTS Pin (Default: 1)",
+            "input": "Combo",
+            "prefix": "#define AIR_UART_RTS_PIN ",
+            "options": [
+              "1"
+            ],
+            "value": "1",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "ctsPin": {
+            "name": "CTS Pin (Default: 3)",
+            "input": "Combo",
+            "prefix": "#define AIR_UART_CTS_PIN ",
+            "options": [
+              "3"
+            ],
+            "value": "3",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          }
+        }
+      },
+      "spi": {
+        "name": "SPI Driver",
+        "file": "spi_config.h",
+        "values": {
+          "speed": {
+            "name": "SPI Speed (Default: 1000000)",
+            "input": "Combo",
+            "prefix": "#define AIR_SPI_SPEED ",
+            "options": [
+              "1000000",
+              "500000"
+            ],
+            "value": "1000000",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "mode": {
+            "name": "SPI Mode (Default: SPI_MODE_3)",
+            "input": "Combo",
+            "prefix": "#define AIR_SPI_MODE ",
+            "options": [
+              "SPI_MODE_0",
+              "SPI_MODE_1",
+              "SPI_MODE_2",
+              "SPI_MODE_3"
+            ],
+            "value": "SPI_MODE_3",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          }
+        }
+      },
+      "buzzer": {
+        "name": "Buzzer Driver",
+        "file": "buzzer_config.h",
+        "values": {
+          "pin": {
+            "name": "Buzzer Pin (Default: 14)",
+            "input": "Combo",
+            "prefix": "#define BUZZER_PWM_PIN ",
+            "options": [
+              "13",
+              "14",
+              "26",
+              "27"
+            ],
+            "value": "14",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          }
+        }
+      }
+    },
+    "meta": {
+      "version": "2.0.1",
+      "layoutGrid": false,
+      "layoutSnapping": true,
+      "layoutSnappingSize": 10,
+      "cloudLayoutGrid": false,
+      "cloudLayoutSnapping": false,
+      "cloudLayoutSnappingSize": 10,
+      "language": "en",
+      "enableTooltips": true,
+      "enableAutoSave": true,
+      "enableBuildSave": true,
+      "description": null,
+      "project_uuid": null,
+      "tokensEnabled": false,
+      "codeAssist": false,
+      "highlightLine": false,
+      "editorTheme": "Default",
+      "editorFontSize": 12,
+      "customEmbeddedElementLibraries": {},
+      "theme": {},
+      "projectType": "bcm20737",
+      "name": "Stepper Motor Driver Interval"
+    },
+    "type": "Header",
+    "currentLayoutName": "Default",
+    "currentCloudLayoutName": "Default"
+  },
+  "layouts": {
+    "Default": {
+      "name": "Default (768x1024)",
+      "width": 768,
+      "height": 1024,
+      "orientation": "portrait",
+      "devicename": ".*",
+      "platform": "",
+      "version": ".*",
+      "elements": {
+        "DelaySetting": {
+          "x": 26,
+          "y": 33,
+          "width": 114,
+          "height": 46
+        },
+        "StartButton": {
+          "x": 26,
+          "y": 153,
+          "width": 114,
+          "height": 46
+        },
+        "StopButton": {
+          "x": 154,
+          "y": 153,
+          "width": 114,
+          "height": 46
+        },
+        "SetDelayButton": {
+          "x": 154,
+          "y": 33,
+          "width": 114,
+          "height": 46
+        },
+        "BackwardButton": {
+          "x": 154,
+          "y": 93,
+          "width": 114,
+          "height": 46
+        },
+        "ForwardButton": {
+          "x": 26,
+          "y": 93,
+          "width": 114,
+          "height": 46
+        }
+      }
+    }
+  },
+  "cloudLayouts": {
+    "Default": {
+      "name": "Default (600x400)",
+      "width": 600,
+      "height": 400,
+      "orientation": "landscape",
+      "devicename": ".*",
+      "platform": "",
+      "version": ".*",
+      "elements": {}
+    }
+  },
+  "elements": {
+    "DelaySetting": {
+      "type": "TextField",
+      "properties": {
+        "value": "1",
+        "enabled": true,
+        "visible": true,
+        "airID": 0,
+        "elementPanel": "designer",
+        "elementType": "element",
+        "airName": "DelaySetting"
+      },
+      "triggers": {
+        "onTrigger": [
+          {
+            "sourceTrigger": "onTrigger",
+            "sourceValue": "getValue",
+            "targetValue": "execute",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "Math.abs(parseInt(value))"
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": [
+                "value"
+              ]
+            },
+            "targetName": "SetDelay"
+          },
+          {
+            "sourceTrigger": "onTrigger",
+            "sourceValue": "getValue",
+            "targetValue": "setValue",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "Math.abs(parseInt(value))"
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": [
+                "value"
+              ]
+            },
+            "targetName": "DelaySetting"
+          }
+        ]
+      },
+      "zindex": 0,
+      "designer": {
+        "x": 236,
+        "y": 69
+      }
+    },
+    "StartButton": {
+      "type": "Button",
+      "properties": {
+        "label": "Start",
+        "enabled": true,
+        "visible": true,
+        "border": "plain",
+        "topColor": "rgb(250, 250, 250)",
+        "bottomColor": "rgb(234, 234, 234)",
+        "pressedTopColor": "rgb(255, 255, 255)",
+        "pressedBottomColor": "rgb(255, 255, 255)",
+        "overTopColor": "rgb(234, 234, 234)",
+        "overBottomColor": "rgb(214, 214, 214)",
+        "disabledTopColor": "rgb(211, 211, 211)",
+        "disabledBottomColor": "rgb(211, 211, 211)",
+        "airID": 1,
+        "elementPanel": "designer",
+        "elementType": "element",
+        "airName": "StartButton"
+      },
+      "triggers": {
+        "mousePressed": [
+          {
+            "sourceTrigger": "mousePressed",
+            "sourceValue": "Static",
+            "targetValue": "execute",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "true"
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": []
+            },
+            "targetName": "SetRunning"
+          }
+        ]
+      },
+      "zindex": 1,
+      "designer": {
+        "x": 20,
+        "y": 203
+      }
+    },
+    "StopButton": {
+      "type": "Button",
+      "properties": {
+        "label": "Stop",
+        "enabled": true,
+        "visible": true,
+        "border": "plain",
+        "topColor": "rgb(250, 250, 250)",
+        "bottomColor": "rgb(234, 234, 234)",
+        "pressedTopColor": "rgb(255, 255, 255)",
+        "pressedBottomColor": "rgb(255, 255, 255)",
+        "overTopColor": "rgb(234, 234, 234)",
+        "overBottomColor": "rgb(214, 214, 214)",
+        "disabledTopColor": "rgb(211, 211, 211)",
+        "disabledBottomColor": "rgb(211, 211, 211)",
+        "airID": 2,
+        "elementPanel": "designer",
+        "elementType": "element",
+        "airName": "StopButton"
+      },
+      "triggers": {
+        "mousePressed": [
+          {
+            "sourceTrigger": "mousePressed",
+            "sourceValue": "Static",
+            "targetValue": "execute",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "false"
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": []
+            },
+            "targetName": "SetRunning"
+          }
+        ]
+      },
+      "zindex": 2,
+      "designer": {
+        "x": 21,
+        "y": 318
+      }
+    },
+    "SetDelayButton": {
+      "type": "Button",
+      "properties": {
+        "label": "Set Delay",
+        "enabled": true,
+        "visible": true,
+        "border": "plain",
+        "topColor": "rgb(250, 250, 250)",
+        "bottomColor": "rgb(234, 234, 234)",
+        "pressedTopColor": "rgb(255, 255, 255)",
+        "pressedBottomColor": "rgb(255, 255, 255)",
+        "overTopColor": "rgb(234, 234, 234)",
+        "overBottomColor": "rgb(214, 214, 214)",
+        "disabledTopColor": "rgb(211, 211, 211)",
+        "disabledBottomColor": "rgb(211, 211, 211)",
+        "airID": 3,
+        "elementPanel": "designer",
+        "elementType": "element",
+        "airName": "SetDelayButton"
+      },
+      "triggers": {
+        "mousePressed": [
+          {
+            "sourceTrigger": "mousePressed",
+            "sourceValue": "Static",
+            "targetValue": "trigger",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {},
+              "targetOrder": [],
+              "sourceOrder": []
+            },
+            "targetName": "DelaySetting"
+          }
+        ]
+      },
+      "zindex": 3,
+      "designer": {
+        "x": 27,
+        "y": 69
+      }
+    },
+    "SetDelay": {
+      "type": "Function",
+      "properties": {
+        "code": "\ttimer = delay = data;",
+        "length": "128",
+        "inputType": "int",
+        "returnType": "void",
+        "permission": "public",
+        "airID": 4,
+        "elementPanel": "designer",
+        "elementType": "element",
+        "airName": "SetDelay"
+      },
+      "triggers": {},
+      "zindex": 4,
+      "designer": {
+        "x": 422,
+        "y": 69
+      }
+    },
+    "SetRunning": {
+      "type": "Function",
+      "properties": {
+        "code": "\trunning = data;",
+        "length": "128",
+        "inputType": "bool",
+        "returnType": "void",
+        "permission": "public",
+        "airID": 5,
+        "elementPanel": "designer",
+        "elementType": "element",
+        "airName": "SetRunning"
+      },
+      "triggers": {},
+      "zindex": 5,
+      "designer": {
+        "x": 239,
+        "y": 254
+      }
+    },
+    "BackwardButton": {
+      "type": "Button",
+      "properties": {
+        "label": "Backward",
+        "enabled": true,
+        "visible": true,
+        "border": "plain",
+        "topColor": "rgb(250, 250, 250)",
+        "bottomColor": "rgb(234, 234, 234)",
+        "pressedTopColor": "rgb(255, 255, 255)",
+        "pressedBottomColor": "rgb(255, 255, 255)",
+        "overTopColor": "rgb(234, 234, 234)",
+        "overBottomColor": "rgb(214, 214, 214)",
+        "disabledTopColor": "rgb(211, 211, 211)",
+        "disabledBottomColor": "rgb(211, 211, 211)",
+        "airID": 6,
+        "elementPanel": "designer",
+        "elementType": "element",
+        "airName": "BackwardButton"
+      },
+      "triggers": {
+        "mousePressed": [
+          {
+            "sourceTrigger": "mousePressed",
+            "sourceValue": "Static",
+            "targetValue": "execute",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "false"
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": []
+            },
+            "targetName": "SetForward"
+          }
+        ]
+      },
+      "zindex": 6,
+      "designer": {
+        "x": 17,
+        "y": 519
+      }
+    },
+    "ForwardButton": {
+      "type": "Button",
+      "properties": {
+        "label": "Forward",
+        "enabled": true,
+        "visible": true,
+        "border": "plain",
+        "topColor": "rgb(250, 250, 250)",
+        "bottomColor": "rgb(234, 234, 234)",
+        "pressedTopColor": "rgb(255, 255, 255)",
+        "pressedBottomColor": "rgb(255, 255, 255)",
+        "overTopColor": "rgb(234, 234, 234)",
+        "overBottomColor": "rgb(214, 214, 214)",
+        "disabledTopColor": "rgb(211, 211, 211)",
+        "disabledBottomColor": "rgb(211, 211, 211)",
+        "airID": 7,
+        "elementPanel": "designer",
+        "elementType": "element",
+        "airName": "ForwardButton"
+      },
+      "triggers": {
+        "mousePressed": [
+          {
+            "sourceTrigger": "mousePressed",
+            "sourceValue": "Static",
+            "targetValue": "execute",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "true"
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": []
+            },
+            "targetName": "SetForward"
+          }
+        ]
+      },
+      "zindex": 7,
+      "designer": {
+        "x": 19,
+        "y": 407
+      }
+    },
+    "SetForward": {
+      "type": "Function",
+      "properties": {
+        "code": "    forward = data;",
+        "length": "128",
+        "inputType": "bool",
+        "returnType": "void",
+        "permission": "public",
+        "airID": 8,
+        "elementPanel": "designer",
+        "elementType": "element",
+        "airName": "SetForward"
+      },
+      "triggers": {},
+      "zindex": 8,
+      "designer": {
+        "x": 240,
+        "y": 463
+      }
+    }
+  },
+  "cloudElements": {}
+}
