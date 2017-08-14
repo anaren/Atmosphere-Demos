@@ -69,7 +69,7 @@
           },
           "intervalFineTimer": {
             "name": "Interval Timer Length (ms)",
-            "input": "TextField",
+            "input": "Combo",
             "prefix": "#define BLE_INTERVAL_FINE_TIMER ",
             "value": "25",
             "regex": "^[0-9]*$"
@@ -189,6 +189,32 @@
               "LHL_CLK"
             ],
             "value": "PMU_CLK",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "baud": {
+            "name": "ADC Sample Frequency (Default: LOW)",
+            "input": "Combo",
+            "prefix": "#define AIR_ADC_SAMPLE_FREQUENCY ",
+            "options": [
+              "ADC_SAMPLE_FREQUENCY_LOW",
+              "ADC_SAMPLE_FREQUENCY_MEDIUM_LOW",
+              "ADC_SAMPLE_FREQUENCY_MEDIUM",
+              "ADC_SAMPLE_FREQUENCY_MEDIUM_HIGH",
+              "ADC_SAMPLE_FREQUENCY_HIGH"
+            ],
+            "value": "ADC_SAMPLE_FREQUENCY_LOW",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "inputRange": {
+            "name": "ADC Input Range (Default: ADC_RANGE_0_3P6V)",
+            "input": "Combo",
+            "prefix": "#define AIR_ADC_INPUT_RANGE ",
+            "options": [
+              "ADC_RANGE_0_1P2V",
+              "ADC_RANGE_0_2P4V",
+              "ADC_RANGE_0_3P6V"
+            ],
+            "value": "ADC_RANGE_0_3P6V",
             "regex": "^[a-zA-Z0-9_.]*$"
           }
         }
@@ -462,7 +488,8 @@
         "bg1": "#DCEBF9",
         "bg2": "#DCEBF9"
       },
-      "projectType": "bcm920737",
+      "projectType": "bcm20737",
+      "displayName": "Anaren A20737",
       "name": "atmo_led_io"
     },
     "type": "Header",

@@ -69,7 +69,7 @@
           },
           "intervalFineTimer": {
             "name": "Interval Timer Length (ms)",
-            "input": "TextField",
+            "input": "Combo",
             "prefix": "#define BLE_INTERVAL_FINE_TIMER ",
             "value": "1000",
             "regex": "^[0-9]*$"
@@ -85,6 +85,52 @@
             ],
             "value": "BLE_PAIRING_NONE",
             "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "ota": {
+            "name": "Over the Air Updating (Default: OTA)",
+            "input": "Combo",
+            "prefix": "#define BLE_",
+            "options": [
+              "OTA",
+              "NO_OTA"
+            ],
+            "value": "OTA",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "advPowerLevel": {
+            "name": "Advertising TX Power Level (dbm) (Default: 4)",
+            "input": "TextField",
+            "prefix": "#define ADV_BLE_TX_POWER_LEVEL ",
+            "value": "4",
+            "regex": "^-?[0-9]d{0,2}(.d*)?$"
+          },
+          "minInterval": {
+            "name": "BLE Min Interval (ms) (Default: 20)",
+            "input": "TextField",
+            "prefix": "#define BLE_INTERVAL_MIN ",
+            "value": "20",
+            "regex": "^[0-9]*$"
+          },
+          "maxInterval": {
+            "name": "BLE Max Interval (ms) (Default: 40)",
+            "input": "TextField",
+            "prefix": "#define BLE_INTERVAL_MAX ",
+            "value": "40",
+            "regex": "^[0-9]*$"
+          },
+          "slaveLatency": {
+            "name": "BLE Slave Latency (ms) (Default: 0)",
+            "input": "TextField",
+            "prefix": "#define BLE_SLAVE_LATENCY ",
+            "value": "0",
+            "regex": "^[0-9]*$"
+          },
+          "timeout": {
+            "name": "BLE Connection Timeout (ms) (Default: 700)",
+            "input": "TextField",
+            "prefix": "#define BLE_CONNECTION_TIMEOUT ",
+            "value": "700",
+            "regex": "^[0-9]*$"
           }
         }
       },
@@ -121,6 +167,43 @@
               "ADC_SAMPLE_FREQUENCY_HIGH"
             ],
             "value": "ADC_SAMPLE_FREQUENCY_LOW",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "baud": {
+            "name": "ADC Sample Frequency (Default: LOW)",
+            "input": "Combo",
+            "prefix": "#define AIR_ADC_SAMPLE_FREQUENCY ",
+            "options": [
+              "ADC_SAMPLE_FREQUENCY_LOW",
+              "ADC_SAMPLE_FREQUENCY_MEDIUM_LOW",
+              "ADC_SAMPLE_FREQUENCY_MEDIUM",
+              "ADC_SAMPLE_FREQUENCY_MEDIUM_HIGH",
+              "ADC_SAMPLE_FREQUENCY_HIGH"
+            ],
+            "value": "ADC_SAMPLE_FREQUENCY_LOW",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "inputRange": {
+            "name": "ADC Input Range (Default: ADC_RANGE_0_3P6V)",
+            "input": "Combo",
+            "prefix": "#define AIR_ADC_INPUT_RANGE ",
+            "options": [
+              "ADC_RANGE_0_1P2V",
+              "ADC_RANGE_0_2P4V",
+              "ADC_RANGE_0_3P6V"
+            ],
+            "value": "ADC_RANGE_0_3P6V",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "pwmClockSource": {
+            "name": "PWM Clock Source (Default: PMU)",
+            "input": "Combo",
+            "prefix": "#define AIR_PWM_CLOCK_SOURCE ",
+            "options": [
+              "PMU_CLK",
+              "LHL_CLK"
+            ],
+            "value": "PMU_CLK",
             "regex": "^[a-zA-Z0-9_.]*$"
           }
         }
@@ -196,6 +279,55 @@
             "regex": "^[a-zA-Z0-9_.]*$"
           }
         }
+      },
+      "spi": {
+        "name": "SPI Driver",
+        "file": "spi_config.h",
+        "values": {
+          "speed": {
+            "name": "SPI Speed (Default: 1000000)",
+            "input": "Combo",
+            "prefix": "#define AIR_SPI_SPEED ",
+            "options": [
+              "1000000",
+              "500000"
+            ],
+            "value": "1000000",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "mode": {
+            "name": "SPI Mode (Default: SPI_MODE_3)",
+            "input": "Combo",
+            "prefix": "#define AIR_SPI_MODE ",
+            "options": [
+              "SPI_MODE_0",
+              "SPI_MODE_1",
+              "SPI_MODE_2",
+              "SPI_MODE_3"
+            ],
+            "value": "SPI_MODE_3",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          }
+        }
+      },
+      "buzzer": {
+        "name": "Buzzer Driver",
+        "file": "buzzer_config.h",
+        "values": {
+          "pin": {
+            "name": "Buzzer Pin (Default: 14)",
+            "input": "Combo",
+            "prefix": "#define BUZZER_PWM_PIN ",
+            "options": [
+              "13",
+              "14",
+              "26",
+              "27"
+            ],
+            "value": "14",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          }
+        }
       }
     },
     "meta": {
@@ -222,7 +354,8 @@
         "bg1": "#DCEBF9",
         "bg2": "#DCEBF9"
       },
-      "projectType": "bcm920737",
+      "projectType": "bcm20737",
+      "displayName": "Anaren A20737",
       "name": "NotifyTest"
     },
     "type": "Header",
@@ -287,7 +420,9 @@
         "inputType": "json",
         "returnType": "json",
         "permission": "public",
-        "elementType": "element"
+        "elementType": "element",
+        "airID": 0,
+        "elementPanel": "designer"
       },
       "triggers": {
         "notified": [
@@ -325,7 +460,9 @@
         "visible": true,
         "font": "14px Arial",
         "color": "Black",
-        "elementType": "element"
+        "elementType": "element",
+        "airID": 1,
+        "elementPanel": "designer"
       },
       "triggers": {},
       "zindex": 2,
@@ -342,7 +479,9 @@
         "visible": true,
         "font": "14px Arial",
         "color": "Black",
-        "elementType": "element"
+        "elementType": "element",
+        "airID": 2,
+        "elementPanel": "designer"
       },
       "triggers": {},
       "zindex": 3,
@@ -359,7 +498,9 @@
         "visible": true,
         "font": "14px Arial",
         "color": "Black",
-        "elementType": "element"
+        "elementType": "element",
+        "airID": 3,
+        "elementPanel": "designer"
       },
       "triggers": {},
       "zindex": 4,
@@ -376,7 +517,9 @@
         "visible": true,
         "font": "14px Arial",
         "color": "Black",
-        "elementType": "element"
+        "elementType": "element",
+        "airID": 4,
+        "elementPanel": "designer"
       },
       "triggers": {},
       "zindex": 5,

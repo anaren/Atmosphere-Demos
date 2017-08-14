@@ -69,7 +69,7 @@
           },
           "intervalFineTimer": {
             "name": "Interval Timer Length (ms)",
-            "input": "TextField",
+            "input": "Combo",
             "prefix": "#define BLE_INTERVAL_FINE_TIMER ",
             "value": "1000",
             "regex": "^[0-9]*$"
@@ -95,6 +95,112 @@
               "BLE_POWERSAVE"
             ],
             "value": "BLE_POWERSAVE_OFF",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "ota": {
+            "name": "Over the Air Updating (Default: OTA)",
+            "input": "Combo",
+            "prefix": "#define BLE_",
+            "options": [
+              "OTA",
+              "NO_OTA"
+            ],
+            "value": "OTA",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "advPowerLevel": {
+            "name": "Advertising TX Power Level (dbm) (Default: 4)",
+            "input": "TextField",
+            "prefix": "#define ADV_BLE_TX_POWER_LEVEL ",
+            "value": "4",
+            "regex": "^-?[0-9]d{0,2}(.d*)?$"
+          },
+          "minInterval": {
+            "name": "BLE Min Interval (ms) (Default: 20)",
+            "input": "TextField",
+            "prefix": "#define BLE_INTERVAL_MIN ",
+            "value": "20",
+            "regex": "^[0-9]*$"
+          },
+          "maxInterval": {
+            "name": "BLE Max Interval (ms) (Default: 40)",
+            "input": "TextField",
+            "prefix": "#define BLE_INTERVAL_MAX ",
+            "value": "40",
+            "regex": "^[0-9]*$"
+          },
+          "slaveLatency": {
+            "name": "BLE Slave Latency (ms) (Default: 0)",
+            "input": "TextField",
+            "prefix": "#define BLE_SLAVE_LATENCY ",
+            "value": "0",
+            "regex": "^[0-9]*$"
+          },
+          "timeout": {
+            "name": "BLE Connection Timeout (ms) (Default: 700)",
+            "input": "TextField",
+            "prefix": "#define BLE_CONNECTION_TIMEOUT ",
+            "value": "700",
+            "regex": "^[0-9]*$"
+          }
+        }
+      },
+      "power": {
+        "name": "Power Driver",
+        "file": "power_config.h",
+        "values": {
+          "external_osc": {
+            "name": "External Oscillator (Default: INTERNAL)",
+            "input": "Combo",
+            "prefix": "#define AIR_POWER_",
+            "options": [
+              "EXTERNAL_32KHZ_OSC",
+              "INTERNAL_OSC"
+            ],
+            "value": "INTERNAL_OSC",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          }
+        }
+      },
+      "gpio": {
+        "name": "GPIO Driver",
+        "file": "gpio_config.h",
+        "values": {
+          "baud": {
+            "name": "ADC Sample Frequency (Default: LOW)",
+            "input": "Combo",
+            "prefix": "#define AIR_ADC_SAMPLE_FREQUENCY ",
+            "options": [
+              "ADC_SAMPLE_FREQUENCY_LOW",
+              "ADC_SAMPLE_FREQUENCY_MEDIUM_LOW",
+              "ADC_SAMPLE_FREQUENCY_MEDIUM",
+              "ADC_SAMPLE_FREQUENCY_MEDIUM_HIGH",
+              "ADC_SAMPLE_FREQUENCY_HIGH"
+            ],
+            "value": "ADC_SAMPLE_FREQUENCY_LOW",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "inputRange": {
+            "name": "ADC Input Range (Default: ADC_RANGE_0_3P6V)",
+            "input": "Combo",
+            "prefix": "#define AIR_ADC_INPUT_RANGE ",
+            "options": [
+              "ADC_RANGE_0_1P2V",
+              "ADC_RANGE_0_2P4V",
+              "ADC_RANGE_0_3P6V"
+            ],
+            "value": "ADC_RANGE_0_3P6V",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "pwmClockSource": {
+            "name": "PWM Clock Source (Default: PMU)",
+            "input": "Combo",
+            "prefix": "#define AIR_PWM_CLOCK_SOURCE ",
+            "options": [
+              "PMU_CLK",
+              "LHL_CLK"
+            ],
+            "value": "PMU_CLK",
             "regex": "^[a-zA-Z0-9_.]*$"
           }
         }
@@ -170,6 +276,55 @@
             "regex": "^[a-zA-Z0-9_.]*$"
           }
         }
+      },
+      "spi": {
+        "name": "SPI Driver",
+        "file": "spi_config.h",
+        "values": {
+          "speed": {
+            "name": "SPI Speed (Default: 1000000)",
+            "input": "Combo",
+            "prefix": "#define AIR_SPI_SPEED ",
+            "options": [
+              "1000000",
+              "500000"
+            ],
+            "value": "1000000",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "mode": {
+            "name": "SPI Mode (Default: SPI_MODE_3)",
+            "input": "Combo",
+            "prefix": "#define AIR_SPI_MODE ",
+            "options": [
+              "SPI_MODE_0",
+              "SPI_MODE_1",
+              "SPI_MODE_2",
+              "SPI_MODE_3"
+            ],
+            "value": "SPI_MODE_3",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          }
+        }
+      },
+      "buzzer": {
+        "name": "Buzzer Driver",
+        "file": "buzzer_config.h",
+        "values": {
+          "pin": {
+            "name": "Buzzer Pin (Default: 14)",
+            "input": "Combo",
+            "prefix": "#define BUZZER_PWM_PIN ",
+            "options": [
+              "13",
+              "14",
+              "26",
+              "27"
+            ],
+            "value": "14",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          }
+        }
       }
     },
     "meta": {
@@ -177,6 +332,9 @@
       "layoutGrid": false,
       "layoutSnapping": false,
       "layoutSnappingSize": 10,
+      "cloudLayoutGrid": false,
+      "cloudLayoutSnapping": false,
+      "cloudLayoutSnappingSize": 10,
       "language": "en",
       "enableTooltips": true,
       "enableAutoSave": true,
@@ -187,11 +345,16 @@
       "codeAssist": false,
       "highlightLine": false,
       "editorTheme": "Default",
-      "projectType": "bcm920737",
+      "editorFontSize": 12,
+      "customEmbeddedElementLibraries": {},
+      "theme": {},
+      "projectType": "bcm20737",
+      "displayName": "Anaren A20737",
       "name": "ScannerExample"
     },
     "type": "Header",
-    "currentLayoutName": "Default"
+    "currentLayoutName": "Default",
+    "currentCloudLayoutName": "Default"
   },
   "layouts": {
     "Default": {
@@ -230,10 +393,26 @@
       }
     }
   },
+  "cloudLayouts": {
+    "Default": {
+      "name": "Default (600x400)",
+      "width": 600,
+      "height": 400,
+      "orientation": "landscape",
+      "devicename": ".*",
+      "platform": "",
+      "version": ".*",
+      "elements": {}
+    }
+  },
   "elements": {
     "Scanner1": {
       "type": "Scanner",
-      "properties": {},
+      "properties": {
+        "airID": 0,
+        "elementPanel": "designer",
+        "elementType": "element"
+      },
       "triggers": {
         "scanningStarted": [
           {
@@ -305,7 +484,10 @@
         "enabled": true,
         "visible": true,
         "font": "14px Arial",
-        "color": "Black"
+        "color": "Black",
+        "airID": 1,
+        "elementPanel": "designer",
+        "elementType": "element"
       },
       "triggers": {},
       "zindex": 2,
@@ -319,7 +501,19 @@
       "properties": {
         "label": "Start Scanning",
         "enabled": true,
-        "visible": true
+        "visible": true,
+        "border": "plain",
+        "topColor": "rgb(250, 250, 250)",
+        "bottomColor": "rgb(234, 234, 234)",
+        "pressedTopColor": "rgb(255, 255, 255)",
+        "pressedBottomColor": "rgb(255, 255, 255)",
+        "overTopColor": "rgb(234, 234, 234)",
+        "overBottomColor": "rgb(214, 214, 214)",
+        "disabledTopColor": "rgb(211, 211, 211)",
+        "disabledBottomColor": "rgb(211, 211, 211)",
+        "airID": 2,
+        "elementPanel": "designer",
+        "elementType": "element"
       },
       "triggers": {
         "mousePressed": [
@@ -348,7 +542,19 @@
       "properties": {
         "label": "Stop Scanning",
         "enabled": true,
-        "visible": true
+        "visible": true,
+        "border": "plain",
+        "topColor": "rgb(250, 250, 250)",
+        "bottomColor": "rgb(234, 234, 234)",
+        "pressedTopColor": "rgb(255, 255, 255)",
+        "pressedBottomColor": "rgb(255, 255, 255)",
+        "overTopColor": "rgb(234, 234, 234)",
+        "overBottomColor": "rgb(214, 214, 214)",
+        "disabledTopColor": "rgb(211, 211, 211)",
+        "disabledBottomColor": "rgb(211, 211, 211)",
+        "airID": 3,
+        "elementPanel": "designer",
+        "elementType": "element"
       },
       "triggers": {
         "mousePressed": [
@@ -375,7 +581,10 @@
     "Expression": {
       "type": "Expression",
       "properties": {
-        "expression": "values"
+        "expression": "values",
+        "airID": 4,
+        "elementPanel": "designer",
+        "elementType": "element"
       },
       "triggers": {
         "evaluated": [
@@ -412,7 +621,10 @@
         "enabled": true,
         "visible": true,
         "font": "14px Arial",
-        "color": "Black"
+        "color": "Black",
+        "airID": 5,
+        "elementPanel": "designer",
+        "elementType": "element"
       },
       "triggers": {},
       "zindex": 6,
@@ -421,5 +633,6 @@
         "y": 162
       }
     }
-  }
+  },
+  "cloudElements": {}
 }
