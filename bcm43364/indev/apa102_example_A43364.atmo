@@ -65,6 +65,56 @@
             "prefix": "#define CLOUD_CMD_INTERVAL_FINE_TIMER ",
             "value": "1000",
             "regex": "^[0-9]*$"
+          },
+          "softAPChannel": {
+            "name": "SoftAP Broadcast Channel",
+            "input": "Combo",
+            "prefix": "#define WIFI_SOFTAP_CHANNEL ",
+            "options": [
+              "1",
+              "2",
+              "3",
+              "4",
+              "5",
+              "6",
+              "7",
+              "8",
+              "9",
+              "10",
+              "11"
+            ],
+            "value": "6",
+            "regex": "^[0-9]*$"
+          },
+          "wakeBtnFactoryReset": {
+            "name": "Use Wake Button For Factory Reset (Default Not Enabled)",
+            "input": "Combo",
+            "prefix": "#define WAKE_BUTTON_FACTORY_RESET_",
+            "options": [
+              "NOT_ENABLED",
+              "ENABLED"
+            ],
+            "value": "NOT_ENABLED",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "localSecurityEnabled": {
+            "name": "Local Security Enabled (Default Not Enabled)",
+            "input": "Combo",
+            "prefix": "#define WIFI_LOCAL_SECURITY_",
+            "options": [
+              "NOT_ENABLED",
+              "ENABLED"
+            ],
+            "value": "NOT_ENABLED",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "localSecurityPassword": {
+            "name": "Local Security Password (Default admin)",
+            "input": "PassTextField",
+            "prefix": "#define WIFI_LOCAL_SECURITY_PASSWORD \"",
+            "value": "admin",
+            "suffix": "\"",
+            "regex": "^([a-zA-Z0-9_.]){8,}$"
           }
         }
       },
@@ -201,6 +251,7 @@
       },
       "theme": {},
       "projectType": "bcm43364",
+      "displayName": "Anaren A43364",
       "name": "LEDWIFI"
     },
     "type": "Header",
