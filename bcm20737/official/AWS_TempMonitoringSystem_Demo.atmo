@@ -1,0 +1,2337 @@
+{
+  "header": {
+    "data": {
+      "order": [
+        "Globals",
+        "Interval",
+        "Connected",
+        "Disconnected",
+        "Setup"
+      ],
+      "Globals": {
+        "name": "Globals",
+        "func": "#include \"callbacks.h\"",
+        "code": "#include \"grove_lcdrgb/grove_lcdrgb.h\"\n#include \"tmp006/tmp006.h\"\n",
+        "close": "//END"
+      },
+      "Interval": {
+        "name": "Interval",
+        "func": "\nvoid interval() {",
+        "code": "",
+        "close": "}"
+      },
+      "Connected": {
+        "name": "Connected",
+        "func": "\nvoid connected() {",
+        "code": "",
+        "close": "}"
+      },
+      "Disconnected": {
+        "name": "Disconnected",
+        "func": "\nvoid disconnected() {",
+        "code": "",
+        "close": "}"
+      },
+      "Setup": {
+        "name": "Setup",
+        "func": "\nvoid setup() {",
+        "code": "\tAIR_GPIO_Init();\n\tAIR_POWER_Init();\n\tAIR_UART_Init();\n\tAIR_I2C_Init();\n\tAIR_SPI_Init();\n\tAIR_POWER_SetMode(AIR_POWER_NOSLEEP);\n\tTMP006_SetDataReadyEnable(0, 1);\n\t//Init 16 col 2 row\n\tGROVE_LCDRGB_Init(16,2,GROVE_LCDRGB_LCD_5x8DOTS);\n\tGROVE_LCDRGB_SetRGB(0, 0, 255);\n",
+        "close": "}"
+      }
+    },
+    "boardConfiguration": {
+      "ble": {
+        "name": "Bluetooth Low Energy",
+        "file": "ble_config.h",
+        "values": {
+          "localName": {
+            "name": "Local Name",
+            "input": "TextField",
+            "prefix": "#define BLE_LOCAL_NAME \"",
+            "value": "ble_test",
+            "suffix": "\"",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "version": {
+            "name": "Version",
+            "input": "TextField",
+            "prefix": "#define BLE_VERSION \"",
+            "value": "1.00",
+            "suffix": "\"",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "ota": {
+            "name": "Over the Air Updating (Default: OTA)",
+            "input": "Combo",
+            "prefix": "#define BLE_",
+            "options": [
+              "OTA",
+              "NO_OTA"
+            ],
+            "value": "OTA",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "pairing": {
+            "name": "Pairing (Default: NONE)",
+            "input": "Combo",
+            "prefix": "#define ",
+            "options": [
+              "BLE_PAIRING_NONE",
+              "BLE_PAIRING_PASSKEY"
+            ],
+            "value": "BLE_PAIRING_NONE",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "txPowerLevel": {
+            "name": "TX Power Level (dbm) (Default: 4)",
+            "input": "TextField",
+            "prefix": "#define BLE_TX_POWER_LEVEL ",
+            "value": "4",
+            "regex": "^-?[0-9]d{0,2}(.d*)?$"
+          },
+          "advPowerLevel": {
+            "name": "Advertising TX Power Level (dbm) (Default: 4)",
+            "input": "TextField",
+            "prefix": "#define ADV_BLE_TX_POWER_LEVEL ",
+            "value": "4",
+            "regex": "^-?[0-9]d{0,2}(.d*)?$"
+          },
+          "intervalFineTimer": {
+            "name": "Interval Timer Length (ms) (Default: 1000)",
+            "input": "Combo",
+            "prefix": "#define BLE_INTERVAL_FINE_TIMER ",
+            "options": [
+              "12.5",
+              "25",
+              "50",
+              "62.5",
+              "75",
+              "87.5",
+              "100",
+              "125",
+              "137.5",
+              "162.5",
+              "200",
+              "250",
+              "325",
+              "500",
+              "1000"
+            ],
+            "value": "1000",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "minInterval": {
+            "name": "BLE Min Interval (ms) (Default: 20)",
+            "input": "TextField",
+            "prefix": "#define BLE_INTERVAL_MIN ",
+            "value": "20",
+            "regex": "^[0-9]*$"
+          },
+          "maxInterval": {
+            "name": "BLE Max Interval (ms) (Default: 40)",
+            "input": "TextField",
+            "prefix": "#define BLE_INTERVAL_MAX ",
+            "value": "40",
+            "regex": "^[0-9]*$"
+          },
+          "slaveLatency": {
+            "name": "BLE Slave Latency (ms) (Default: 0)",
+            "input": "TextField",
+            "prefix": "#define BLE_SLAVE_LATENCY ",
+            "value": "0",
+            "regex": "^[0-9]*$"
+          },
+          "timeout": {
+            "name": "BLE Connection Timeout (ms) (Default: 700)",
+            "input": "TextField",
+            "prefix": "#define BLE_CONNECTION_TIMEOUT ",
+            "value": "700",
+            "regex": "^[0-9]*$"
+          }
+        }
+      },
+      "power": {
+        "name": "Power Driver",
+        "file": "power_config.h",
+        "values": {
+          "external_osc": {
+            "name": "External Oscillator (Default: INTERNAL)",
+            "input": "Combo",
+            "prefix": "#define AIR_POWER_",
+            "options": [
+              "EXTERNAL_32KHZ_OSC",
+              "INTERNAL_OSC"
+            ],
+            "value": "INTERNAL_OSC",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          }
+        }
+      },
+      "gpio": {
+        "name": "GPIO Driver",
+        "file": "gpio_config.h",
+        "values": {
+          "baud": {
+            "name": "ADC Sample Frequency (Default: LOW)",
+            "input": "Combo",
+            "prefix": "#define AIR_ADC_SAMPLE_FREQUENCY ",
+            "options": [
+              "ADC_SAMPLE_FREQUENCY_LOW",
+              "ADC_SAMPLE_FREQUENCY_MEDIUM_LOW",
+              "ADC_SAMPLE_FREQUENCY_MEDIUM",
+              "ADC_SAMPLE_FREQUENCY_MEDIUM_HIGH",
+              "ADC_SAMPLE_FREQUENCY_HIGH"
+            ],
+            "value": "ADC_SAMPLE_FREQUENCY_LOW",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "inputRange": {
+            "name": "ADC Input Range (Default: ADC_RANGE_0_3P6V)",
+            "input": "Combo",
+            "prefix": "#define AIR_ADC_INPUT_RANGE ",
+            "options": [
+              "ADC_RANGE_0_1P2V",
+              "ADC_RANGE_0_2P4V",
+              "ADC_RANGE_0_3P6V"
+            ],
+            "value": "ADC_RANGE_0_3P6V",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "pwmClockSource": {
+            "name": "PWM Clock Source (Default: PMU)",
+            "input": "Combo",
+            "prefix": "#define AIR_PWM_CLOCK_SOURCE ",
+            "options": [
+              "PMU_CLK",
+              "LHL_CLK"
+            ],
+            "value": "PMU_CLK",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          }
+        }
+      },
+      "uart": {
+        "name": "UART Driver",
+        "file": "uart_config.h",
+        "values": {
+          "rxBuffer": {
+            "name": "RX Circular Buffer size (Default: 128)",
+            "input": "TextField",
+            "prefix": "#define AIR_UART_RX_CIRCULAR_BUFFER_SIZE ",
+            "value": "128",
+            "regex": "^[0-9]*$"
+          },
+          "txBuffer": {
+            "name": "TX Circular Buffer size (Default: 128)",
+            "input": "TextField",
+            "prefix": "#define AIR_UART_TX_CIRCULAR_BUFFER_SIZE ",
+            "value": "128",
+            "regex": "^[0-9]*$"
+          },
+          "buad": {
+            "name": "Baudrate (Default: 115200)",
+            "input": "Combo",
+            "prefix": "#define ",
+            "options": [
+              "AIR_UART_BAUD_460800",
+              "AIR_UART_BAUD_230400",
+              "AIR_UART_BAUD_115200",
+              "AIR_UART_BAUD_57600",
+              "AIR_UART_BAUD_38400",
+              "AIR_UART_BAUD_19200",
+              "AIR_UART_BAUD_9600"
+            ],
+            "value": "AIR_UART_BAUD_115200",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "txPin": {
+            "name": "TX Pin (Default: 32)",
+            "input": "Combo",
+            "prefix": "#define AIR_UART_TX_PIN ",
+            "options": [
+              "32"
+            ],
+            "value": "32",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "rxPin": {
+            "name": "RX Pin (Default: 33)",
+            "input": "Combo",
+            "prefix": "#define AIR_UART_RX_PIN ",
+            "options": [
+              "33"
+            ],
+            "value": "33",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "rtsPin": {
+            "name": "RTS Pin (Default: 1)",
+            "input": "Combo",
+            "prefix": "#define AIR_UART_RTS_PIN ",
+            "options": [
+              "1"
+            ],
+            "value": "1",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "ctsPin": {
+            "name": "CTS Pin (Default: 3)",
+            "input": "Combo",
+            "prefix": "#define AIR_UART_CTS_PIN ",
+            "options": [
+              "3"
+            ],
+            "value": "3",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          }
+        }
+      },
+      "spi": {
+        "name": "SPI Driver",
+        "file": "spi_config.h",
+        "values": {
+          "speed": {
+            "name": "SPI Speed (Default: 1000000)",
+            "input": "Combo",
+            "prefix": "#define AIR_SPI_SPEED ",
+            "options": [
+              "1000000",
+              "500000"
+            ],
+            "value": "1000000",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          },
+          "mode": {
+            "name": "SPI Mode (Default: SPI_MODE_3)",
+            "input": "Combo",
+            "prefix": "#define AIR_SPI_MODE ",
+            "options": [
+              "SPI_MODE_0",
+              "SPI_MODE_1",
+              "SPI_MODE_2",
+              "SPI_MODE_3"
+            ],
+            "value": "SPI_MODE_3",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          }
+        }
+      },
+      "buzzer": {
+        "name": "Buzzer Driver",
+        "file": "buzzer_config.h",
+        "values": {
+          "pin": {
+            "name": "Buzzer Pin (Default: 14)",
+            "input": "Combo",
+            "prefix": "#define BUZZER_PWM_PIN ",
+            "options": [
+              "13",
+              "14",
+              "26",
+              "27"
+            ],
+            "value": "14",
+            "regex": "^[a-zA-Z0-9_.]*$"
+          }
+        }
+      },
+      "grove_lcdrgb": {
+        "name": "Grove LCD RGB Driver"
+      }
+    },
+    "meta": {
+      "version": "2.1.1_va744d49",
+      "layoutGrid": false,
+      "layoutSnapping": false,
+      "layoutSnappingSize": 10,
+      "cloudLayoutGrid": false,
+      "cloudLayoutSnapping": false,
+      "cloudLayoutSnappingSize": 10,
+      "language": "en",
+      "enableTooltips": true,
+      "enableAutoSave": true,
+      "enableBuildSave": false,
+      "description": null,
+      "project_uuid": null,
+      "tokensEnabled": false,
+      "codeAssist": false,
+      "highlightLine": false,
+      "editorTheme": "Default",
+      "editorFontSize": 12,
+      "customEmbeddedElementLibraries": {
+        "tmp006": {
+          "files": {
+            "common": {
+              "headers": {
+                "tmp006.h": "// Copyright (c) 2014, Anaren Inc.\r\n// All rights reserved.\r\n// \r\n// Redistribution and use in source and binary forms, with or without\r\n// modification, are permitted provided that the following conditions are met:\r\n// \r\n// 1. Redistributions of source code must retain the above copyright notice, this\r\n//    list of conditions and the following disclaimer. \r\n// 2. Redistributions in binary form must reproduce the above copyright notice,\r\n//    this list of conditions and the following disclaimer in the documentation\r\n//    and/or other materials provided with the distribution.\r\n// \r\n// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS \"AS IS\" AND\r\n// ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED\r\n// WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE\r\n// DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR\r\n// ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES\r\n// (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;\r\n// LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND\r\n// ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT\r\n// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS\r\n// SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.\r\n// \r\n// The views and conclusions contained in the software and documentation are those\r\n// of the authors and should not be interpreted as representing official policies, \r\n// either expressed or implied, of the FreeBSD Project.\r\n\r\n#ifndef TMP006_H\r\n#define TMP006_H\r\n\r\n#include \"../i2c/i2c.h\"\r\n#include \"tmp006_config.h\"\r\n#include <stdint.h>\r\n#include <stdbool.h>\r\n\r\n//------------------------------------------------------------------------------\r\n/**\r\n *  Defines, enumerations, and structure definitions\r\n */\r\n\r\n#define TMP006_SLAVE_BASE_ADDR      0x40\r\n\r\n#define TMP006_VOBJECT_REG_ADDR     0x00\r\n#define TMP006_TAMBIENT_REG_ADDR    0x01\r\n#define TMP006_CONFIG_REG_ADDR      0x02\r\n#define TMP006_MFG_ID_REG_ADDR      0xFE\r\n#define TMP006_DEVICE_ID_REG_ADDR   0xFF\r\n\r\n#define TMP006_CONFIG_REG_RST       0x8000\r\n#define TMP006_CONFIG_REG_MOD       0x7000\r\n#define TMP006_CONFIG_REG_MOD3      0x4000\r\n#define TMP006_CONFIG_REG_MOD2      0x2000\r\n#define TMP006_CONFIG_REG_MOD1      0x1000\r\n#define TMP006_CONFIG_REG_CR        0x0E00\r\n#define TMP006_CONFIG_REG_CR3       0x0800\r\n#define TMP006_CONFIG_REG_CR2       0x0400\r\n#define TMP006_CONFIG_REG_CR1       0x0200\r\n#define TMP006_CONFIG_REG_EN        0x0100\r\n#define TMP006_CONFIG_REG_DRDY      0x0080\r\n// \r\n/**\r\n *  eTMP006Mode - type indicating the operating mode of the TMP006 device.  The\r\n *  TMP006 offers two modes, Power-Down and Continuous Conversion.  When\r\n *  ultra-low power consumption is important, the application should place the\r\n *  device in Power-Down when temperature measurements are not required.  While\r\n *  in Continuous Conversion mode, the device automatically enters a low-power\r\n *  state between samples.  However, this low-power state draws significantly\r\n *  more current than when in Power-Down (240uA compared to 0.5uA typ).\r\n */\r\nenum eTMP006Mode\r\n{\r\n  TMP006_PowerDown             = 0x0000,\r\n  TMP006_ContinuousConversion  = 0x7000\r\n};\r\n\r\n/**\r\n *  eTMP006Rate - type indicating the number of conversions per second performed\r\n *  by the TMP006.  Slower conversion rates result in more accurate measuremnts\r\n *  compared to the higher rates.  The default is one conversion every second.\r\n *  See the TMP006 datasheet for more information regarding the effect\r\n *  conversion rate has on accuracy of the result.\r\n */\r\nenum eTMP006Rate\r\n{\r\n  FourConvPerSecond     = 0x0000,\r\n  TwoConvPerSecond      = 0x0200,\r\n  OneConvPerSecond      = 0x0400,\r\n  HalfConvPerSecond     = 0x0600,\r\n  QuarterConvPerSecond  = 0x0800\r\n};\r\n\r\n\r\n/** \r\nWrite a 16-bit value to a device register.  All of the TMP006 registers are\r\nread-only except for the Configuration Register.  This function does not do any\r\nform of error checking, so trying to write to one of the read-only registers may\r\nresult in undesireable behavior.\r\n@param id device ID (0 to 7) on i2c bus\r\n@param addr device register address\r\n@param data data to be written to the specified register address\r\n*/\r\nvoid TMP006_WriteReg(uint8_t id, uint8_t addr, uint16_t data);\r\n\r\n/** \r\nRead a 16-bit value from a device register.\r\n@param id device ID (0 to 7) on i2c bus\r\n@param addr device register address\r\n@return data read from the specified register address\r\n*/\r\nuint16_t TMP006_ReadReg(uint8_t id, uint8_t addr);\r\n\r\n/**\r\nIssue a software reset to the sensor.\r\n@param id device ID (0 to 7) on i2c bus\r\n@note This is a self-clearing operation.  There is no need for software to clear\r\nthe reset condition.\r\n*/\r\nvoid TMP006_SoftwareReset(uint8_t id);\r\n\r\n/**\r\nSelect the device operating mode.  Refer to eTMP006Mode definition for details\r\nregarding the allowed states.\r\n@param id device ID (0 to 7) on i2c bus\r\n@param mode specifies the device mode of operation\r\n*/\r\nvoid TMP006_SetOperatingMode(uint8_t id, enum eTMP006Mode mode);\r\n\r\n/**\r\nRead the currently selected operating mode.  Refer to eTMP006Mode definition for\r\ndetails regarding the available states.\r\n@param id device ID (0 to 7) on i2c bus\r\n@return device mode of operation\r\n*/\r\nenum eTMP006Mode TMP006_GetOperatingMode(uint8_t id);\r\n\r\n/**\r\nSelect the device conversion rate.  Refer to eTMP006Rate definition for details\r\nregarding the allowed rates.\r\n@param id device ID (0 to 7) on i2c bus\r\n@param rate specifies the conversion rate\r\n*/\r\nvoid TMP006_SetConversionRate(uint8_t id, enum eTMP006Rate rate);\r\n\r\n/**\r\nRead the currently selected conversion rate.  Refer to eTMP006Rate definition\r\nfor details regarding the available rates.\r\n@param id device ID (0 to 7) on i2c bus\r\n@return device conversion rate\r\n*/\r\nenum eTMP006Rate TMP006_GetConversionRate(uint8_t id);\r\n\r\n/**\r\nEnable/disable the device DRDY output pin.\r\n@param id device ID (0 to 7) on i2c bus\r\n@param en true enables the pin output, false disables the output\r\n*/\r\nvoid TMP006_SetDataReadyEnable(uint8_t id, bool en);\r\n\r\n/**\r\nRead the state of the DRDY enable bit in the Configuration register.\r\n@param id device ID (0 to 7) on i2c bus\r\n@return true when the DRDY is enabled, otherwise false\r\n*/\r\nbool TMP006_GetDataReadyEnable(uint8_t id);\r\n\r\n/**\r\nClear the DRDY ready status bit in the Configuration register.\r\n@param id device ID (0 to 7) on i2c bus\r\n*/\r\nvoid TMP006_ClearDataReadyStatus(uint8_t id);\r\n\r\n/**\r\nRead the state of the DRDY status bit in the Configuration register.  The DRDY\r\nstatus bit is automatically cleared after reading either the device Temperature\r\nregister or Sensor Voltage register.  The TMP006GetAmbientTemperature() and\r\nTMP006GetObjectTemperature() functions access these registers, so calling either\r\nwill clear the DRDY status bit.  The DRDY status bit can also be cleared by\r\nwriting to the Configuration register or calling TMP006ClearDataReadyStatus().\r\n@param id device ID (0 to 7) on i2c bus\r\n@return true when conversion results are ready to read, otherwise false\r\n*/\r\nbool TMP006_GetDataReadyStatus(uint8_t id);\r\n\r\n/**\r\nRead the ambient (die) temperature.  When set to Continuous Conversion mode, the\r\ndevice periodically performs temperature conversions at a predefined rate.  This\r\nfunction calculates the temperature using only the most recent conversion value.\r\n@param id device ID (0 to 7) on i2c bus\r\n@return temperature of the TMP006 die in Celsius\r\n*/\r\nfloat TMP006_GetAmbientTemperature(uint8_t id);\r\n\r\n/**\r\nRead the temperature of an object.  When set to Continuous Conversion mode, the\r\ndevice periodically performs temperature conversions at a predefined rate.  This\r\nfunction calulates the object temperature using only the most recent conversion\r\nvalues for die temperature and sensor voltage.\r\n@param id device ID (0 to 7) on i2c bus\r\n@return temperature of an object in Celsius\r\n*/\r\nfloat TMP006_GetObjectTemperature(uint8_t id);\r\n\r\n/**\r\nRead the temperature of an object.  When set to Continuous Conversion mode, the\r\ndevice periodically performs temperature conversions at a predefined rate.  This\r\nfunction calulates the object temperature using the most recent conversion value\r\nfor sensor voltage as well as the four most recent conversion values for die\r\ntemperature. This function assumes the size of tDie buffer is 4 float values and\r\nthat the application does not modify any of these values.  The application is\r\nresponsible only for providing the memory location.  The reason for this\r\napproach, as opposed to defining the buffer in the driver itself, is so the\r\napplication can control which sensors on the bus use the transient correction\r\ntechnique.  If not all sensors on the i2c bus use this method, then memory\r\nutilization is reduced.\r\n@param id device ID (0 to 7) on i2c bus\r\n@param tDie pointer to array of 4 tDie values\r\n@return temperature of an object in Celsius\r\n*/\r\nfloat TMP006_GetObjectTemperatureWithTransientCorrection(uint8_t id, float *tDie);\r\n\r\n/**\r\nRead the Manufacturer ID register.\r\n@param id device ID (0 to 7) on i2c bus\r\n@return contents of the Manufacturer ID register.  Value always = 0x5449.\r\n*/\r\nuint16_t TMP006_GetMfgId(uint8_t id);\r\n\r\n/**\r\nRead the Device ID register.\r\n@param id device ID (0 to 7) on i2c bus\r\n@return contents of the Device ID register.  Value always = 0x0067.\r\n*/\r\nuint16_t TMP006_GetDeviceId(uint8_t id);\r\n\r\n\r\n#endif  /* TMP006_H */\r\n"
+              },
+              "objects": {
+                "tmp006_common.c": "/**\r\n *  ----------------------------------------------------------------------------\r\n *  Copyright (c) 2014, Anaren Microwave, Inc.\r\n *\r\n *  For more information on licensing, please see Anaren Microwave, Inc's\r\n *  end user software licensing agreement: EULA.txt.\r\n *\r\n *  ----------------------------------------------------------------------------\r\n *\r\n *  tmp006.c - driver interface for the Texas Instruments TMP006 Infrared\r\n *  Thermopile Sensor.  The TMP006 allows for up to 8 devices on a single i2c\r\n *  bus, therefore each function accepts a bus identifier in the range 0 - 7 to\r\n *  select which device is currently being accessed.  This ID is added to the\r\n *  device's base address of 0x40 to determine the final i2c address.\r\n *\r\n *  @version    1.0.01\r\n *  @date       26 Sep 2014\r\n *  @author     Anaren, air@anaren.com\r\n *\r\n *  assumptions\r\n *  ===========\r\n *  - The i2c driver provides the proper signaling sequences for read & write\r\n *    operations.\r\n *  - The i2c driver meets the timing requirements specified in the TMP006\r\n *    datasheet.\r\n *\r\n *  file dependency\r\n *  ===============\r\n *  i2c.h : defines the i2c read & write interfaces.\r\n *\tmath.h : floating point calculations.\r\n *\tfp_math.h : floating point calculations using fixed point math.  Use when math.h not implemented.\r\n *\r\n *  revision history\r\n *  ================\r\n *  ver 1.0.00 : 18 Jul 2014\r\n *  - initial release\r\n *  ver 1.0.01 : 24 Sep 2014\r\n *  - added support for doing floating point calculations using fixed point math\r\n */\r\n#include \"tmp006.h\"\r\n\r\n#ifdef AIR_FLOATING_POINT_NOT_AVAILABLE\r\n#include \"../fp_math/fp_math.h\"\r\n#else\r\n#include <math.h>\r\n#define fp_pow powf\r\n#define fp_sqrt sqrtf\r\n#endif\r\n\r\n// -----------------------------------------------------------------------------\r\n/**\r\n *  Global data\r\n */\r\n\r\n// -----------------------------------------------------------------------------\r\n/**\r\n *  Private interface\r\n */\r\n\r\n/**\r\nCalculate temperature of an object based on tdie and vobj\r\n@param tDie temperature of the die in Kelvin\r\n@param vObj object voltage converted first by multiplying 1.5625e-7\r\n@return temperature of an object in Celsius\r\n@see TMP006 datasheet and application note\r\n@note from TI TMP006 BoosterPack sample code\r\n*/\r\nstatic float TMP006_CalculateTemperature(const float *tDie, const float *vObj)\r\n{\r\n  const float S0 = 6.0E-14;\r\n  const float a1 = 1.75E-3;\r\n  const float a2 = -1.678E-5;\r\n  const float b0 = -2.94E-5;\r\n  const float b1 = -5.7E-7;\r\n  const float b2 = 4.63E-9;\r\n  const float c2 = 13.4;\r\n  const float Tref = 298.15;\r\n\r\n#ifdef AIR_FLOATING_POINT_NOT_AVAILABLE\r\n  float S = S0*((float)1.0 + a1*(*tDie - Tref) + a2*fp_pow((*tDie - Tref),2));\r\n  float Vos = b0 + b1*(*tDie - Tref) + b2*fp_pow((*tDie - Tref),2);\r\n  float fObj = (*vObj - Vos) + c2*fp_pow((*vObj - Vos),2);\r\n  float Tobj = fp_sqrt(fp_sqrt(fp_pow(*tDie,4) + (fObj/S)));\r\n#else\r\n  float S = S0*((float)1.0 + a1*(*tDie - Tref) + a2*pow((*tDie - Tref),2));\r\n  float Vos = b0 + b1*(*tDie - Tref) + b2*pow((*tDie - Tref),2);\r\n  float fObj = (*vObj - Vos) + c2*pow((*vObj - Vos),2);\r\n  float Tobj = sqrt(sqrt(pow(*tDie,4) + (fObj/S)));\r\n#endif\r\n\r\n  return (Tobj - (float)273.15);\r\n}\r\n\r\n// -----------------------------------------------------------------------------\r\n/**\r\n *  Public interface\r\n */\r\n\r\nvoid TMP006_WriteReg(uint8_t id, uint8_t addr, uint16_t data)\r\n{\r\n  uint8_t writeBytes[3];\r\n\r\n  writeBytes[0] = addr;\r\n  writeBytes[1] = data >> 8;\r\n  writeBytes[2] = data & 0xFF;\r\n  AIR_I2C_Write(TMP006_SLAVE_BASE_ADDR + id, writeBytes, 3);\r\n}\r\n\r\nuint16_t TMP006_ReadReg(uint8_t id, uint8_t addr)\r\n{\r\n  uint8_t writeBytes[1] = {0};\r\n  uint8_t readBytes[2] = {0};\r\n  uint16_t readData = 0;\r\n\r\n  writeBytes[0] = addr;\r\n  AIR_I2C_ComboRead(TMP006_SLAVE_BASE_ADDR + id, writeBytes, 1, readBytes, 2);\r\n  readData = (unsigned int)readBytes[0] << 8;\r\n  readData |= readBytes[1];\r\n  return readData;\r\n}\r\n\r\nvoid TMP006_SoftwareReset(uint8_t id)\r\n{\r\n  TMP006_WriteReg(id, TMP006_CONFIG_REG_ADDR, TMP006_CONFIG_REG_RST);\r\n}\r\n\r\nvoid TMP006_SetOperatingMode(uint8_t id, enum eTMP006Mode mode)\r\n{\r\n  uint16_t data = TMP006_ReadReg(id, TMP006_CONFIG_REG_ADDR);\r\n\r\n  data &= ~TMP006_CONFIG_REG_MOD;\r\n  data |= (uint16_t)mode;\r\n  TMP006_WriteReg(id, TMP006_CONFIG_REG_ADDR, data);\r\n}\r\n\r\nenum eTMP006Mode TMP006_GetOperatingMode(uint8_t id)\r\n{\r\n  return (enum eTMP006Mode)(TMP006_ReadReg(id, TMP006_CONFIG_REG_ADDR) & TMP006_CONFIG_REG_MOD);\r\n}\r\n\r\nvoid TMP006_SetConversionRate(uint8_t id, enum eTMP006Rate rate)\r\n{\r\n  uint16_t data = TMP006_ReadReg(id, TMP006_CONFIG_REG_ADDR);\r\n\r\n  data &= ~TMP006_CONFIG_REG_CR;\r\n  data |= (uint16_t)rate;\r\n  TMP006_WriteReg(id, TMP006_CONFIG_REG_ADDR, data);\r\n}\r\n\r\nenum eTMP006Rate TMP006_GetConversionRate(uint8_t id)\r\n{\r\n  return (enum eTMP006Rate)(TMP006_ReadReg(id, TMP006_CONFIG_REG_ADDR) & TMP006_CONFIG_REG_CR);\r\n}\r\n\r\nvoid TMP006_SetDataReadyEnable(uint8_t id, bool en)\r\n{\r\n  uint16_t data = TMP006_ReadReg(id, TMP006_CONFIG_REG_ADDR);\r\n\r\n  data &= ~TMP006_CONFIG_REG_EN;\r\n  if (en) data |= TMP006_CONFIG_REG_EN;\r\n  TMP006_WriteReg(id, TMP006_CONFIG_REG_ADDR, data);\r\n}\r\n\r\nbool TMP006_GetDataReadyEnable(uint8_t id)\r\n{\r\n  return (TMP006_ReadReg(id, TMP006_CONFIG_REG_ADDR) & TMP006_CONFIG_REG_EN) ? true : false;\r\n}\r\n\r\nvoid TMP006_ClearDataReadyStatus(uint8_t id)\r\n{\r\n  uint16_t data = TMP006_ReadReg(id, TMP006_CONFIG_REG_ADDR);\r\n\r\n  data &= ~TMP006_CONFIG_REG_DRDY;\r\n  TMP006_WriteReg(id, TMP006_CONFIG_REG_ADDR, data);\r\n}\r\n\r\nbool TMP006_GetDataReadyStatus(uint8_t id)\r\n{\r\n  return (TMP006_ReadReg(id, TMP006_CONFIG_REG_ADDR) & TMP006_CONFIG_REG_DRDY) ? true : false;\r\n}\r\n\r\nfloat TMP006_GetAmbientTemperature(uint8_t id)\r\n{\r\n  int16_t tDieRaw = (int16_t)TMP006_ReadReg(id, TMP006_TAMBIENT_REG_ADDR);\r\n\r\n  return (((float)(tDieRaw >> 2)) * (float)0.03125);\r\n}\r\n\r\nfloat TMP006_GetObjectTemperature(uint8_t id)\r\n{\r\n  float tDie = TMP006_GetAmbientTemperature(id) + (float)273.15;\r\n  int16_t vObjRaw = (int16_t)TMP006_ReadReg(id, TMP006_VOBJECT_REG_ADDR);\r\n  float vObj = ((float)(vObjRaw)) * (float)156.25E-9;\r\n\r\n  return TMP006_CalculateTemperature(&tDie, &vObj);\r\n}\r\n\r\nfloat TMP006_GetObjectTemperatureWithTransientCorrection(uint8_t id, float *tDie)\r\n{\r\n  int16_t vObjRaw = (int16_t)TMP006_ReadReg(id, TMP006_VOBJECT_REG_ADDR);\r\n  float tSlope;\r\n  float vObjCorr;\r\n\r\n  tDie[0] = tDie[1];\r\n  tDie[1] = tDie[2];\r\n  tDie[2] = tDie[3];\r\n  tDie[3] = TMP006_GetAmbientTemperature(id) + (float)273.15;\r\n  tSlope = (tDie[0] != 0.0) ? -((float)0.3*tDie[0])-((float)0.1*tDie[1])+((float)0.1*tDie[2])+((float)0.3*tDie[3]) : 0.0;\r\n  vObjCorr = (((float)(vObjRaw)) * (float)156.25E-9) + (tSlope * (float)2.96E-4);\r\n\r\n  return TMP006_CalculateTemperature(&tDie[3], &vObjCorr);\r\n}\r\n\r\nuint16_t TMP006_GetMfgId(uint8_t id)\r\n{\r\n  return TMP006_ReadReg(id, TMP006_MFG_ID_REG_ADDR);\r\n}\r\n\r\nuint16_t TMP006_GetDeviceId(uint8_t id)\r\n{\r\n  return TMP006_ReadReg(id, TMP006_DEVICE_ID_REG_ADDR);\r\n}\r\n\r\n"
+              },
+              "other": {
+                "tmp006_config.h": " \n"
+              }
+            }
+          },
+          "code": {
+            "setup": "\tTMP006_SetDataReadyEnable(0, 1);",
+            "global": "",
+            "connected": " \n",
+            "interval": " \n"
+          },
+          "description": "World's first single-chip digital IR MEMS temperature sensor\nEnables contactless temperature measurement in portable and consumer electronic applications\n\nDeveloped through TI's expertise in MEMS technology, the TMP006 is the first of a new class of ultra-small, low power, and low cost passive infrared temperature sensors. It has 90% lower power consumption and is more than 95% smaller than existing solutions, making contactless temperature measurement possible in completely new markets and applications.",
+          "language": {
+            "en": {
+              "label": "TMP006 Driver"
+            }
+          },
+          "changelog": {
+            "1.1.0": "Switch to using standard types and some clean ups.",
+            "1.0.0": "Initial release"
+          },
+          "name": "tmp006",
+          "author": "Anaren Inc.",
+          "links": {
+            "Datasheet": "http://www.ti.com/product/TMP006/datasheet",
+            "Wiki Page": "https://atmosphere.anaren.com/wiki/TMP006_Driver",
+            "Product Page": "http://www.ti.com/product/TMP006"
+          },
+          "label": "TMP006 Driver",
+          "elements": {
+            "objectTemperature": {
+              "code": "    float value;\n    \n    /**\n    Read the temperature of an object.  When set to Continuous Conversion mode, the\n    device periodically performs temperature conversions at a predefined rate.  This\n    function calulates the object temperature using only the most recent conversion\n    values for die temperature and sensor voltage.\n    @param id device ID (0 to 7) on i2c bus\n    @return temperature of an object in Celsius\n    */\n    value = TMP006_GetObjectTemperature(0);\n    \n    return value;",
+              "language": {
+                "en": {
+                  "label": "Object Temperature"
+                }
+              },
+              "label": "Object Temperature",
+              "returnType": "float",
+              "inputType": "void",
+              "icon": "data:image/png;base64,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\nAAAASUVORK5CYII=\n"
+            },
+            "ambientTemperature": {
+              "code": "    float value;\n    \n    /**\n    Read the ambient (die) temperature.  When set to Continuous Conversion mode, the\n    device periodically performs temperature conversions at a predefined rate.  This\n    function calulates the temperature using only the most recent conversion value.\n    @param id device ID (0 to 7) on i2c bus\n    @return temperature of the TMP006 die in Celsius\n    */\n    value = TMP006_GetAmbientTemperature(0);\n    \n    return value; \n",
+              "language": {
+                "en": {
+                  "label": "Ambient Temperature"
+                }
+              },
+              "label": "Ambient Temperature",
+              "returnType": "float",
+              "inputType": "void",
+              "icon": "data:image/png;base64,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\nG9O7fHNV8qAAAAAASUVORK5CYII=\n"
+            }
+          },
+          "version": "1.1.0",
+          "signature": "",
+          "type": "Embedded Library",
+          "categories": [
+            "Temperature",
+            "Sensor"
+          ],
+          "manufacturer": "Texas Instruments"
+        },
+        "grove_lcdrgb": {
+          "files": {
+            "common": {
+              "headers": {
+                "grove_lcdrgb.h": "#ifndef __GROVE_LCDRGB_H__\n#define __GROVE_LCDRGB_H__\n\n#include <stdint.h>\n\n// Device I2C Arress\n#define GROVE_LCDRGB_LCD_ADDRESS     (0x7c>>1)\n#define GROVE_LCDRGB_RGB_ADDRESS     (0xc4>>1)\n\n// color define\n#define GROVE_LCDRGB_WHITE           0\n#define GROVE_LCDRGB_RED             1\n#define GROVE_LCDRGB_GREEN           2\n#define GROVE_LCDRGB_BLUE            3\n\n#define GROVE_LCDRGB_REG_RED         0x04        // pwm2\n#define GROVE_LCDRGB_REG_GREEN       0x03        // pwm1\n#define GROVE_LCDRGB_REG_BLUE        0x02        // pwm0\n\n#define GROVE_LCDRGB_REG_MODE1       0x00\n#define GROVE_LCDRGB_REG_MODE2       0x01\n#define GROVE_LCDRGB_REG_OUTPUT      0x08\n\n// commands\n#define GROVE_LCDRGB_LCD_CLEARDISPLAY 0x01\n#define GROVE_LCDRGB_LCD_RETURNHOME 0x02\n#define GROVE_LCDRGB_LCD_ENTRYMODESET 0x04\n#define GROVE_LCDRGB_LCD_DISPLAYCONTROL 0x08\n#define GROVE_LCDRGB_LCD_CURSORSHIFT 0x10\n#define GROVE_LCDRGB_LCD_FUNCTIONSET 0x20\n#define GROVE_LCDRGB_LCD_SETCGRAMADDR 0x40\n#define GROVE_LCDRGB_LCD_SETDDRAMADDR 0x80\n\n// flags for display entry mode\n#define GROVE_LCDRGB_LCD_ENTRYRIGHT 0x00\n#define GROVE_LCDRGB_LCD_ENTRYLEFT 0x02\n#define GROVE_LCDRGB_LCD_ENTRYSHIFTINCREMENT 0x01\n#define GROVE_LCDRGB_LCD_ENTRYSHIFTDECREMENT 0x00\n\n// flags for display on/off control\n#define GROVE_LCDRGB_LCD_DISPLAYON 0x04\n#define GROVE_LCDRGB_LCD_DISPLAYOFF 0x00\n#define GROVE_LCDRGB_LCD_CURSORON 0x02\n#define GROVE_LCDRGB_LCD_CURSOROFF 0x00\n#define GROVE_LCDRGB_LCD_BLINKON 0x01\n#define GROVE_LCDRGB_LCD_BLINKOFF 0x00\n\n// flags for display/cursor shift\n#define GROVE_LCDRGB_LCD_DISPLAYMOVE 0x08\n#define GROVE_LCDRGB_LCD_CURSORMOVE 0x00\n#define GROVE_LCDRGB_LCD_MOVERIGHT 0x04\n#define GROVE_LCDRGB_LCD_MOVELEFT 0x00\n\n// flags for function set\n#define GROVE_LCDRGB_LCD_8BITMODE 0x10\n#define GROVE_LCDRGB_LCD_4BITMODE 0x00\n#define GROVE_LCDRGB_LCD_2LINE 0x08\n#define GROVE_LCDRGB_LCD_1LINE 0x00\n#define GROVE_LCDRGB_LCD_5x10DOTS 0x04\n#define GROVE_LCDRGB_LCD_5x8DOTS 0x00\n\n\nvoid GROVE_LCDRGB_Init(uint8_t cols, uint8_t lines, uint8_t dotsize);\nvoid GROVE_LCDRGB_Clear();\nvoid GROVE_LCDRGB_Home();\nvoid GROVE_LCDRGB_SetCursor(uint8_t col, uint8_t row);\n\n// Turn the display on/off (quickly)\nvoid GROVE_LCDRGB_NoDisplay();\nvoid GROVE_LCDRGB_Display();\n// Turns the underline cursor on/off\nvoid GROVE_LCDRGB_NoCursor();\nvoid GROVE_LCDRGB_Cursor();\n\n// Turn on and off the blinking cursor\nvoid GROVE_LCDRGB_NoBlink();\nvoid GROVE_LCDRGB_Blink();\n// These commands scroll the display without changing the RAM\nvoid GROVE_LCDRGB_ScrollDisplayLeft(void);\nvoid GROVE_LCDRGB_ScrollDisplayRight(void);\n\n// This is for text that flows Left to Right\nvoid GROVE_LCDRGB_LeftToRight(void);\n// This is for text that flows Right to Left\nvoid GROVE_LCDRGB_RightToLeft(void);\n\n// This will 'right justify' text from the cursor\nvoid GROVE_LCDRGB_AutoScroll(void);\n// This will 'left justify' text from the cursor\nvoid GROVE_LCDRGB_NoAutoScroll(void);\n// Allows us to fill the first 8 CGRAM locations\n// with custom characters\nvoid GROVE_LCDRGB_CreateChar(uint8_t location, uint8_t charmap[]);\n/*********** mid level commands, for sending data/cmds */\n\n// send command\nvoid GROVE_LCDRGB_Command(uint8_t value);\n// send data\nvoid GROVE_LCDRGB_Write(uint8_t value);\nvoid GROVE_LCDRGB_Print(char *str);\nvoid GROVE_LCDRGB_SetRGB(uint8_t r, uint8_t g, uint8_t b);\nvoid GROVE_LCDRGB_SetRGB_R(uint8_t r);\nvoid GROVE_LCDRGB_SetRGB_G(uint8_t g);\nvoid GROVE_LCDRGB_SetRGB_B(uint8_t b);\nvoid GROVE_LCDRGB_SetPWM(uint8_t color, uint8_t pwm);\n\n#endif\n\n"
+              },
+              "objects": {
+                "grove_lcdrgb.c": "#include \"grove_lcdrgb.h\"\n#include \"../i2c/i2c.h\"\n#include \"../generic/generic.h\"\n\n\nstatic uint8_t _displaycontrol;\nstatic uint8_t _displaymode;\n\nvoid i2c_send_byte(uint8_t dta)\n{\n\tAIR_I2C_Write(GROVE_LCDRGB_LCD_ADDRESS,&dta,1);\n}\n\nvoid i2c_send_byteS(uint8_t *dta, uint8_t len)\n{\n\tAIR_I2C_Write(GROVE_LCDRGB_LCD_ADDRESS,dta,len);\n}\n\nvoid rgb_lcd_set_reg(uint8_t addr, uint8_t data)\n{\n\tuint8_t dta[] = {addr, data};\n\tAIR_I2C_Write(GROVE_LCDRGB_RGB_ADDRESS,dta,2);\n}\n\nvoid GROVE_LCDRGB_Init(uint8_t cols, uint8_t lines, uint8_t dotsize)\n{\n\tuint8_t _displayfunction = 0;\n\n\tif (lines > 1) {\n\t\t_displayfunction |= GROVE_LCDRGB_LCD_2LINE;\n\t}\n\n\t// for some 1 line displays you can select a 10 pixel high font\n\tif ((dotsize != 0) && (lines == 1)) {\n\t\t_displayfunction |= GROVE_LCDRGB_LCD_5x10DOTS;\n\t}\n\n\t// SEE PAGE 45/46 FOR INITIALIZATION SPECIFICATION!\n\t// according to datasheet, we need at least 40ms after power rises above 2.7V\n\t// before sending commands. Arduino can turn on way befer 4.5V so we'll wait 50\n\t// If this is required for a particular platform we would recommend they put it in their setup before starting.\n// \tAIR_GENERIC_UDelay(5000000);\n\n\n\t// this is according to the hitachi HD44780 datasheet\n\t// page 45 figure 23\n\n\t// Send function set rgb_lcd_command sequence\n\tGROVE_LCDRGB_Command(GROVE_LCDRGB_LCD_FUNCTIONSET | _displayfunction);\n\tAIR_GENERIC_UDelay(4500);\n\n\t// second try\n\tGROVE_LCDRGB_Command(GROVE_LCDRGB_LCD_FUNCTIONSET | _displayfunction);\n\tAIR_GENERIC_UDelay(150);\n\n\t// third go\n\tGROVE_LCDRGB_Command(GROVE_LCDRGB_LCD_FUNCTIONSET | _displayfunction);\n\n\n\t// finally, set # lines, font size, etc.\n\tGROVE_LCDRGB_Command(GROVE_LCDRGB_LCD_FUNCTIONSET | _displayfunction);\n\n\t// turn the rgb_lcd_display on with no cursor or blinking default\n\t_displaycontrol = GROVE_LCDRGB_LCD_DISPLAYON | GROVE_LCDRGB_LCD_CURSOROFF | GROVE_LCDRGB_LCD_BLINKOFF;\n\tGROVE_LCDRGB_Display();\n\n\t// GROVE_LCDRGB_Clear it off\n\tGROVE_LCDRGB_Clear();\n\n\t// Initialize to default text direction (for romance languages)\n\t_displaymode = GROVE_LCDRGB_LCD_ENTRYLEFT | GROVE_LCDRGB_LCD_ENTRYSHIFTDECREMENT;\n\t// set the entry mode\n\tGROVE_LCDRGB_Command(GROVE_LCDRGB_LCD_ENTRYMODESET | _displaymode);\n\n\n\t// backlight init\n\trgb_lcd_set_reg(0, 0);\n\trgb_lcd_set_reg(1, 0);\n\trgb_lcd_set_reg(0x08, 0xAA);\t // all led control by pwm\n\n\tGROVE_LCDRGB_SetCursor(0, 0);\n\n}\n\n/********** high level commands, for the user! */\nvoid GROVE_LCDRGB_Clear()\n{\n\tGROVE_LCDRGB_Command(GROVE_LCDRGB_LCD_CLEARDISPLAY);\t\t// rgb_lcd_clear rgb_lcd_display, set cursor position to zero\n\tAIR_GENERIC_UDelay(2000);\n}\n\nvoid GROVE_LCDRGB_Home()\n{\n\tGROVE_LCDRGB_Command(GROVE_LCDRGB_LCD_RETURNHOME);\t\t// set cursor position to zero\n\tAIR_GENERIC_UDelay(2000);\n}\n\nvoid GROVE_LCDRGB_SetCursor(uint8_t col, uint8_t row)\n{\n\tcol = (row == 0 ? col|0x80 : col|0xc0);\n\tuint8_t dta[2] = {0x80, col};\n\ti2c_send_byteS(dta, 2);\n}\n\n// Turn the rgb_lcd_display on/off (quickly)\nvoid GROVE_LCDRGB_NoDisplay()\n{\n\t_displaycontrol &= ~GROVE_LCDRGB_LCD_DISPLAYON;\n\tGROVE_LCDRGB_Command(GROVE_LCDRGB_LCD_DISPLAYCONTROL | _displaycontrol);\n}\n\nvoid GROVE_LCDRGB_Display() {\n\t_displaycontrol |= GROVE_LCDRGB_LCD_DISPLAYON;\n\tGROVE_LCDRGB_Command(GROVE_LCDRGB_LCD_DISPLAYCONTROL | _displaycontrol);\n}\n\n// Turns the underline cursor on/off\nvoid GROVE_LCDRGB_NoCursor()\n{\n\t_displaycontrol &= ~GROVE_LCDRGB_LCD_CURSORON;\n\tGROVE_LCDRGB_Command(GROVE_LCDRGB_LCD_DISPLAYCONTROL | _displaycontrol);\n}\n\nvoid GROVE_LCDRGB_Cursor() {\n\t_displaycontrol |= GROVE_LCDRGB_LCD_CURSORON;\n\tGROVE_LCDRGB_Command(GROVE_LCDRGB_LCD_DISPLAYCONTROL | _displaycontrol);\n}\n\n// Turn on and off the blinking cursor\nvoid GROVE_LCDRGB_NoBlink()\n{\n\t_displaycontrol &= ~GROVE_LCDRGB_LCD_BLINKON;\n\tGROVE_LCDRGB_Command(GROVE_LCDRGB_LCD_DISPLAYCONTROL | _displaycontrol);\n}\n\nvoid GROVE_LCDRGB_Blink()\n{\n\t_displaycontrol |= GROVE_LCDRGB_LCD_BLINKON;\n\tGROVE_LCDRGB_Command(GROVE_LCDRGB_LCD_DISPLAYCONTROL | _displaycontrol);\n}\n\n// These commands scroll the rgb_lcd_display without changing the RAM\nvoid GROVE_LCDRGB_ScrollDisplayLeft(void)\n{\n\tGROVE_LCDRGB_Command(GROVE_LCDRGB_LCD_CURSORSHIFT | GROVE_LCDRGB_LCD_DISPLAYMOVE | GROVE_LCDRGB_LCD_MOVELEFT);\n}\nvoid GROVE_LCDRGB_ScrollDisplayRight(void)\n{\n\tGROVE_LCDRGB_Command(GROVE_LCDRGB_LCD_CURSORSHIFT | GROVE_LCDRGB_LCD_DISPLAYMOVE | GROVE_LCDRGB_LCD_MOVERIGHT);\n}\n\n// This is for text that flows Left to Right\nvoid GROVE_LCDRGB_LeftToRight(void)\n{\n\t_displaymode |= GROVE_LCDRGB_LCD_ENTRYLEFT;\n\tGROVE_LCDRGB_Command(GROVE_LCDRGB_LCD_ENTRYMODESET | _displaymode);\n}\n\n// This is for text that flows Right to Left\nvoid GROVE_LCDRGB_RightToLeft(void)\n{\n\t_displaymode &= ~GROVE_LCDRGB_LCD_ENTRYLEFT;\n\tGROVE_LCDRGB_Command(GROVE_LCDRGB_LCD_ENTRYMODESET | _displaymode);\n}\n\n// This will 'right justify' text from the cursor\nvoid GROVE_LCDRGB_AutoScroll(void)\n{\n\t_displaymode |= GROVE_LCDRGB_LCD_ENTRYSHIFTINCREMENT;\n\tGROVE_LCDRGB_Command(GROVE_LCDRGB_LCD_ENTRYMODESET | _displaymode);\n}\n\n// This will 'left justify' text from the cursor\nvoid GROVE_LCDRGB_NoAutoScroll(void)\n{\n\t_displaymode &= ~GROVE_LCDRGB_LCD_ENTRYSHIFTINCREMENT;\n\tGROVE_LCDRGB_Command(GROVE_LCDRGB_LCD_ENTRYMODESET | _displaymode);\n}\n\n// Allows us to fill the first 8 CGRAM locations\n// with custom characters\nvoid GROVE_LCDRGB_CreateChar(uint8_t location, uint8_t charmap[])\n{\n\n\tlocation &= 0x7; // we only have 8 locations 0-7\n\tGROVE_LCDRGB_Command(GROVE_LCDRGB_LCD_SETCGRAMADDR | (location << 3));\n\n\n\tuint8_t dta[9];\n\tdta[0] = 0x40;\n\tint i;\n\tfor(i=0; i<8; i++)\n\t{\n\t\tdta[i+1] = charmap[i];\n\t}\n\ti2c_send_byteS(dta, 9);\n}\n\n/*********** mid level commands, for sending data/cmds */\n\n// send rgb_lcd_command\nvoid GROVE_LCDRGB_Command(uint8_t value)\n{\n\tuint8_t dta[2] = {0x80, value};\n\ti2c_send_byteS(dta, 2);\n}\n\n// send data\nvoid GROVE_LCDRGB_Write(uint8_t value)\n{\n\tuint8_t dta[2] = {0x40, value};\n\ti2c_send_byteS(dta, 2);\n}\n\nvoid GROVE_LCDRGB_Print(char *str)\n{\n\twhile(*str)\n\t{\n\t\tGROVE_LCDRGB_Write(*str);\n\t\tstr++;\n\t}\n}\n\nvoid GROVE_LCDRGB_SetRGB(uint8_t r, uint8_t g, uint8_t b)\n{\n\trgb_lcd_set_reg(GROVE_LCDRGB_REG_RED, r);\n\trgb_lcd_set_reg(GROVE_LCDRGB_REG_GREEN, g);\n\trgb_lcd_set_reg(GROVE_LCDRGB_REG_BLUE, b);\n}\n\nvoid GROVE_LCDRGB_SetRGB_R(uint8_t r)\n{\n\trgb_lcd_set_reg(GROVE_LCDRGB_REG_RED, r);\n}\n\nvoid GROVE_LCDRGB_SetRGB_G(uint8_t g)\n{\n\trgb_lcd_set_reg(GROVE_LCDRGB_REG_GREEN, g);\n}\n\nvoid GROVE_LCDRGB_SetRGB_B(uint8_t b)\n{\n\trgb_lcd_set_reg(GROVE_LCDRGB_REG_BLUE, b);\n}\n\nvoid GROVE_LCDRGB_SetPWM(uint8_t color, uint8_t pwm)\n{\n\trgb_lcd_set_reg(color, pwm);\n}\n\nconst uint8_t color_define[4][3] =\n{\n\t{255, 255, 255},\t\t\t// white\n\t{255, 0, 0},\t\t\t\t// red\n\t{0, 255, 0},\t\t\t\t// green\n\t{0, 0, 255},\t\t\t\t// blue\n};\n\nvoid rgb_lcd_setColor(uint8_t color)\n{\n\tif(color > 3)return ;\n\tGROVE_LCDRGB_SetRGB(color_define[color][0], color_define[color][1], color_define[color][2]);\n}\n"
+              },
+              "other": {
+                "grove_lcdrgb_config.h": ""
+              }
+            }
+          },
+          "elements": {
+            "displayOn": {
+              "code": "\t//Turn display on quickly\n\tGROVE_LCDRGB_Display();",
+              "language": {
+                "en": {
+                  "label": "Turn display on quickly"
+                }
+              },
+              "label": "Turn display on quickly",
+              "returnType": "void",
+              "inputType": "void",
+              "icon": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEYAAAArCAYAAADFRP4AAAAABGdBTUEAALGPC/xhBQAAACBjSFJN\nAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAABmJLR0QA/wD/AP+gvaeTAAAA\nCXBIWXMAAC4jAAAuIwF4pT92AAAAB3RJTUUH4AYCCgME3g6eBQAAB2hJREFUaN7tmWtwlFcZx3/n\n3Vt2N5sbuZCGYmgQCZGSgoNoph1tgQq2M2qdjqPWoaPgdapW7YfOdNR6Ge1UoekHP+ClHW+jFltn\n6CCCUu0NHZA4Qzq0pGlIgADJhpiQZJPdfY8fnifJsuwmYZKFjfDM7Oy+5z3nPOf5n/9zOWcNzRss\n1yVdYt6rvYKLxFqwLhiTWx3GgHGm7JY/wFhLVbiUD93URHW4DJsDHhsDg2MjPN/xT471dU65AXkD\nTNAX4Lvr7qc6XEb3UF/O9BSVhrjjxlvY9rftnBzsyQpOfgBjXWoKK1gcqeT0UJTNtWuxOaCMx3E4\neOYYcTdBY3kdJwfOgvHkMTCA1zgk3SSVwRJuCC/ImZ6a8AI6Bs/i9/imXs/VBiRVrAGmIYq1Flc7\nOcZguLxAPVMe5hUw08nA2DA/bd3D6/1dADSW17Gl/k6CXv+c63JmP8WVk5e7Wzk9FGVrw2Y+vWIT\nR6Md/Kf3zZzomlfAjCRGqQgW867KZaytegfF/jCjyXhOdM0rV/I53ouCZsDrw+t4GHMTnBvux2IJ\neHxUFBRjZlkkzitgatKyVX3pYgp9QZ5oeZYjPW04xsHrOHz2nXfxnoX11w4wXRd6ON5/iruXrAOg\nte8EY26C1mgHjzVtpTRQyDNtL7K/8/CsgZlXMSZpXZLWnXx2kyTdJI4xFPtDhH0FhLwB3DkoDucV\nYyL+ECcv9LK38xCutfTEBlhbsJxFhRV4HKlgSwKFVIVLry1gmqobOHWhl1e6XwPg9kWNbLxxDe+r\nWTVRy9xWs5L3Vq+4toAJeQNsqd94SXsBkwVewOMjME25PxPJqxhjLMy8aM+t5AljDGPJBF7HS8fg\nGY73n5oBPDbrXNnEMYb2gW4iviDDidg8AMYYui700NLbxprKZfy7p23Ko6GdMN9c1Gph2nFFvhBD\niRiHzh2f8hbP5M+dryXiC3Fbzc1UhUoy3uAZY3CtS0kgzEOr76U6peAbSYyxvWUXb5w/icfxCEw2\nfTwMxkd46dRRuoeiU93gXXLn6wLtQO+VB8YwGB/m+faXM6MGAaAh6AsGvnzLPZQVFF3UIej1szBU\nyvYju+gd7nOB14F+MpHIeNJBqQJqU/umA/MqsAXohsu86JgjcHAyereLm1gcKSja83jT1tr7lq/H\nYxzibjJ1JPctX8/bIlVsO7Aj3t7X+RAe336mDxcWWAz8ClidDZjDQBsAD+y78rhkk+YNgBlKuAn3\nmTdf5M+dh2y2q08Xy8DYsItxRoDYtHY0bwA4BrROBUySfBXHEx2Jjz64r/3VENa1gDPpD9YFjD5b\nvP4Ejqf1MjVchHQmmnmApTRvCABjQBcwJIqp1T4dgA+4GShH/PkEsAgoUSU9wFnVUYf4+xke2De+\nSwXaPgicBm5SfSdSdBngLST2DWPMXryBVTpni66rAHGFqH5uAPzAuVntQwbUFgC/Bv4KHAB+rgZ7\ngMeBH+livgHs0b6/BGqAbwJ/B/YBfwE2KXC/B7am6VoD7AeagRDwMPA0UAxUAr8DvpSykwHge6pz\nN/CkjqsD9gKPqD2PAj/Td3MGzHhbmYLyKHAH8BVtLwLCuruf10XeDTwB9CFs6QYeVIMeVqBLJhYq\nbAFoUBDqgYgCuVI/a9Tg/SnArAPuV0C+DXwE2IiwqlR/V6ueYmaZPJwp2juBn+hubAIqEEqjABUi\nLvQK8AdgRMf9F9gF/EmNq0oZlyqrgEP6rg5h6Blgs36O69zjcisQB34D/BZx1fcjTE4CS4F3Z9E1\nZ8CkylE1roLJorMLyV6fA+7KsDs+hClxJG6kvw8hTHkJiQsrkXi0G7gX+CDwLHA+ZcwShJVRYED7\nL0HiicQgYY2POThwzQSYAVUWThlzFviWPv8C+Jj+TgJv17aPAy8ggTUdmAokJh1Ggu1Kbf8j4sZ+\nBWlcDBBEWBlXPcO6Jo8CcQBo1HmvCDABXcho2kJ3A59AKP0dxB1c7V+i4DwCxDIAs0SNiirI9Wp4\nK/AG8Brj9ZSIVUD8CoTR36Oq0wMc0efVzIE7zQSYpUiqjWYw8B/AD5BdatC2VuCjwNcQNmTSUY+4\n507gk0i6rVTDRvQ7vaY6rYBHEFcsRwL9uKv2IK4ZJIeMsUhwbQLuBA4iOzv+J2oZ8AEkjkTUiFjK\n+3ja4qz2W4i4UaOCthNJy8UIiy41aLJy/RcS9G9FMlQNcoRJ6HsXSRSZGHrZku0ckUDixoeRQmkH\nk66URNixEynOFupOHQY+Q+bdSiButwk5pJYjGecxYBmSelfoPDbLHC8gNdKPdQ2tiDtXan8HKfpa\ncwGMQTLB15FdjCEptV0V/1D7HQS2IemxD3gOofKTCJXHUuaMIm4V0fmHtP0t/e4CvohU0y7wfQUy\n3ZXOA18A7kGSwXNIeh9FaqoWJFF8VXVNfRM1jaTfx+zQifPrEJlLkYLTAE8Bn9LWWF7d+eaTpANT\ny3i9Mlm6///KpI1FyOFzQtJdKYYcADu5KhdVV0UskhHXw8T/MJdcbRYgh8JrXq7HmCxyHZgs8j8L\n2DUsWS1ESgAAACV0RVh0ZGF0ZTpjcmVhdGUAMjAxNi0wNi0wN1QxMToyNDoyNy0wNDowMKcKmtgA\nAAAldEVYdGRhdGU6bW9kaWZ5ADIwMTYtMDYtMDJUMTA6MDM6MDQtMDQ6MDC45ZmvAAAAGXRFWHRT\nb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAABJRU5ErkJggg==\n"
+            },
+            "setText": {
+              "code": "    //Write data (string) to display\n    GROVE_LCDRGB_Print(data);",
+              "language": {
+                "en": {
+                  "label": "Set Display Text"
+                }
+              },
+              "label": "Set Display Text",
+              "returnType": "void",
+              "inputType": "string",
+              "icon": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEYAAAArCAYAAADFRP4AAAAABGdBTUEAALGPC/xhBQAAACBjSFJN\nAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAABmJLR0QA/wD/AP+gvaeTAAAA\nCXBIWXMAAC4jAAAuIwF4pT92AAAAB3RJTUUH4AYCCw8ejhtCRAAABd1JREFUaN7t2nts3lUdx/HX\n7/e0Xft07dZWuna1Y5cok+lkEMU4g4lbTdCYEDUzXiAQFaOJEEnEhPiXdw1xS9VEjVET9Q8vCF4Q\ndcjUIXiZMGRL5jrr2Lp1o1vBdWtLL7+ff5xfaffwPL0k9Omj2eef9nc553vO+/e9nHPaSHdX6pIK\nNVq11CO4SGlKmhBFi2sjiojiWV+rHDBpalV9kxvWb9Ve3yxdBD+OIobGRtx/9C8ODR6b9QNUDJi6\n6mU+87pbtNc3678wuGh2GpvytnVucetDO/UNDZSEUxlg0kTH8susaWh18sJZb1n7WukiuEwujv35\n1CHjyYSrXrJB37nTRLkKBoOqKDaZTGqtW2l1fcui2emob3F06LSaXPXs41lqIDOVRsgcZU/fE/rO\nD0ixYUW7re2bXhwb83wvnud7Zdfq+mZ7Tz7pkf6D2vJNZbdfUR4zU1c0dXpjx2ZxFNuwYnXZ7Ves\nxwQt4npmDlU4mKXTJTAlVLE55tTwoF899Ve5KLatc4vWupVltV+xYPJVtdY3tomjWL5qWdntVyyY\nxpq8K5o65aLI8uq6stuvWDCPDfT4zVP75OLYK1vWeVXLurLar1gwacpNr+jKfi//kVFFgYlS0mzR\nfk3ry5Z0LBUCJjI2OaEqrnJ06JSeZ0/MY0+TluyrlOIo0nuuX0N1neGJ0f8BMFHk+PkB+88ccU3r\nyz02cGTWNW/6/PSji+6mzNmusTrvwsSofU/3zHqKF1XOmW+qoTrvuo7NVuVXFj3Bi6JIkiZWLqt3\n59U7tM84nhiZGLNz/z0OP9MnF+cCprSwPUPjIx4+cUD/hbOzneC94Mw3QS/OlB9MZGh82P29fypO\njWXYVFddt+z2Le/QXNt40Qt1VTXa8k12Pn6PM8ODCf6JZxVzoihXCGUV1s58txDMo7gZ/ZZkBxcR\nF43uRDKxpqG28YG7t35w7Y0bt8tFsfFkcmZLN27c7vKGVW7ds2u8d/DYnXLVD5o7XaRYg+/j6lJg\n/o4j4Lbd5edSSt1diC5MJBPJT/6116+P7UtLlfBE6tzYcCKKRzA65zy6u+AQDs4GZlKlKs6dHRl/\n7o7dvY82SJN0VoeuqknEuYMLtHAR6UIwU9bqdXe9GvUCyVNCDC7Pno/jGVw2o92YkJ/G0Io20wVk\nBAN4qekd/X9QYzqv1WJ91r4mey+a8XzY7Q/+rFzfoRBMmg3w83hfdr0XH8JOvAGjOImf4sOY2sj0\n4p04jh34ZNZ/ir/hm/gqpo7lf5jZeg3eKrjx13Ef3oypkjOI92JfuaAUAzOJLbgpm8gvsRLDaMaT\n+KzgAf04jF14HF80Xc1+jvP4cjbRbqzO+robf0QfrsS7sRVvyqB/C7/AlzCBu9BTTijFwKQZgFoc\nyCYAecGt+/E7wb1hKIN2HKHO3rab7q5j2fWYkMz3C2GX4gk8lLU/IyS+D2BdBuQfQmkeFEL2Dxgr\ndzGIi1wfFnLKx/H6Amit2b2rzF0GoxL3NuJaXJ5N/sfoQhN+VNbZLxBMDz6NDvwgG3QihNl1Qm75\nClaY/59pppTDJ4QQvTm794gQQv8WvKciVAhm6it/B+8XqsOnhDCIhUT8LtwhVJWFLgInhRzzdnwv\nu3etkMDXYmm31DNUKhwS3ItNQkitF7zjaSHmk3n1/kKlQvnfm103CxVsjxBaO5S5+pRSocckQvWY\nivnlQgIcy57nhRBrM112F6qWrH2DEJpXCmX6t7gBnRYeoi+6im0it+JrwoKsU/Ccw9mzbfi94Dnv\nEapSWmIiaZFnsZC/7sr67cAJofoNC8uE6/HtWfpdEjA5PICPYLNQhu8TdqmfQ7vplexZPCck0/4i\nfZ/GR00n1ANCWa7OAB0TvOYb2Ud4GLdkoFJ8Ifs5sRRgCs9jduFjqKxN5GIqbCIjfFfwWBi99JfI\nEioEs1bYOE6R/P/W9BwbhaLzvApDaRS7hfhfun81KK9SYTuyXVi3UeRosxZvW+qRVoIu5ZgSugSm\nhP4L4Yata6syy4AAAAAldEVYdGRhdGU6Y3JlYXRlADIwMTYtMDYtMDdUMTE6MjQ6MzUtMDQ6MDD8\nP4tvAAAAJXRFWHRkYXRlOm1vZGlmeQAyMDE2LTA2LTAyVDExOjE1OjMwLTA0OjAw0yPMXQAAABl0\nRVh0U29mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAAASUVORK5CYII=\n"
+            },
+            "clearDisplay": {
+              "code": "\t//Clear display\n\tGROVE_LCDRGB_Clear();\n",
+              "language": {
+                "en": {
+                  "label": "Clear the display"
+                }
+              },
+              "label": "Clear the display",
+              "returnType": "void",
+              "inputType": "void",
+              "icon": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEYAAAArCAYAAADFRP4AAAAABGdBTUEAALGPC/xhBQAAACBjSFJN\nAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAABmJLR0QA/wD/AP+gvaeTAAAA\nCXBIWXMAAC4jAAAuIwF4pT92AAAAB3RJTUUH4AYCCS4yM9jvKgAACIdJREFUaN7tmn9wVFcVxz/3\nvf292ZAEkhBifrRAkhLagYBApbYzGhSoncF2ZND+GLWU1upYRUT/sqO1045WaaPV0RlnqNPROhYd\nRrFUaAGhUAEpw69CgCQEkvBrQ5NlN5vdt+/6x70Ju9vNJo0EFofzz5t979x7z/mec77n3jsraFog\nuSnpEnVcbwtSREqQNggxtmsIAcLIqpY7wEhJqb+QJbfOp8xfhByDPBYCQrE+NrT9m6Pd7VkDkDPA\neJ1ufjzvK5T5i+gKd4/ZOvmFPj5dMZMVb6/hTOjCkODkBjDSpjyvmMpACZ3hIIur5yDHIGVMw+Dd\ns0eJ2xYzJkzmTO85EGYOAwM4hEHCTlDiLWCSf/yYrVPuH09b6Bwu05ndnusNSLJIAehESUgbAIHA\nGCLdbWkPqGNoMrUHx115l7LGCG3JKWAEgpht8YfmLWzrOICUkvqiKh6s/RSmYVLozhvUPRxs43dH\nNhKx+nGZDlbU30t76Dx/a30XiSTg8rGifjFTC8pHZUtOAWMIQUtvJwcutrK8fhEOw2SCZxzbOg7Q\nEwvz1WkLB3V/f2wzdYWVNJRMwUDgdbh47fhWHqlrpMgdYHvnIf7YvIUfzHnoxgcGIJawcBkOPl5S\ni8tU5u06e4TL8b5BHQlErRh1hRXMLqkBoCscREpJQ/FUijwBuiLd7Og8NGo7cg4Y0zDxOT0pXdRl\nOFLIUgAu08nFaA+d4SAAlp1ACEFHOEjMjtMdDeE2ndjS5mzkEglp4zIcWLbFSLaPOQWMlJICl5+J\nxYUpxFmeN4FxLn+KblWghLXv/5O/nnwHl+lkef0ifA43z+x+FY/DxaVoiPsn38XrJ7azvmUnQggK\n3HncPel2TMMc1pacAkYIQXd/iFO951lacw+mBudU6Dzd0RCfTdJt6enia7ffxycnTUdKSU8sQjge\n5Sfzl1PsLeAfp3az59wxIlY/35pxP7WFFZjC4GCwlTOXL9xYwIDKmoRtpfRVW9qDbRjUp4S08Ts8\n5Dm9AJqDJPkuP36nB5/DTcJOgFQdKt/lA1QLH0nLzi1gJPgcbuIywcb2PTiEyUR/IX6Hh329x3mz\nfS8J22ZKwSSKPAH2nm+mL9GPQFAZKKEyUIpDl0m+y09Z3gSiVgz3MJu5nAfGxuaWcWXcVlTJjs5D\nSGDyuDI+Vz2PYLSXnV1HAHCbTh6dtpDXmreys+sILsNBdX4p35+9jDyHB4C5pbXMLJ48mFk3NDAS\nMBA0VjTQWNGQ8m15/aIP6a9q+MKQc7lM57Db/mxijHrkGIiQA/Bcf8mRjBHEEhYOw0Fb6CzHP+gY\nATxyyLmGErWz7iLg9BKxojcAMEJw+vIF9l88waySGvZdOJF1EyYH3RcpbyUMOy7f6SNsRdl7/njW\nWzyRO3e+koDTx93ld1DqK8h4gyeEwJY2BW4/qxuWUpZ0PdFnxVizfx3Nl85gGqaCSaaPh1C8jx0d\nh+gKB7Pd4H3oztcGWoCL1x4YQSgeYUPLO5lRAzdQ73V63U/NfIAiT36KgtfhYqKvkDXvreNipNsG\njgEfkCmJhJkOSilQnaybDswu4MtAF4zoSHHVwcHIWN02tlUZ8OS/8cL8x6ofrmvEFAZxO5E8kofr\nGqkKlLJiy4vxlu721ZjOzQxPFxKoBF4FBlth+qD/ACcA+Oama4/LUNK0ABBhy7bs109uZ2P7XjnU\n1aeNpDcWsRFGHxAd1o+mBQBHgcPZgEmQq2KYwb54/8pNLbsCSFtmTWiHy8YwD3/EFVKQTgfmOpTP\nCERFPQKsv1ZLDlV/42hacCeKhN8DbkVlUwtgArcBBVr3faAHuAMIAqeAj6HILA40A5e0rhOYDviB\ns0nz1QNtQBSYC3iB3VqvCojpecJa97ReC6AQqEGRbTEquM1AGYpUDwHWR6WGdGCkfvcssEA79h3g\n8zpiKwEP8HNgCnAOWK0N/TPwJvAksAz4rgbkIPCEdqQA+A1QBPQBPwLeBn4F/FCD9oQet0aD+xSq\nu+zT+r8GnudK9izU45cD5cC9wAPa1hLg0dFkTPoOxwamAZ8BvgG8oCPqRbVLdER8wG+BxcBOoE7r\nTda6Hg3Ik8As4BNJY93Ac8A67fR4PaYQWAKsBRYBfwfyUA3h68A8YI4enxzQ6Rrk6cBbOlPuAe4E\nNgLW1QJmKtCvHVsLvEHmM5VLAyBQ6b1Hg1OGyrx+oFU//WljLwEbUKleodeNoUr3Lu18SM/djyqz\nWIZ53KjM3QTU6vX2A6v0nFuAUXXYTA77tREDh4lMfVECj6PKZwYqY3ahOGCKjtJ04CUUN+3PMEev\nnmfA2QjwMxRfvIIqC0vP36RtOphm83gUr7ylQfYBf0Fly79QPDYqyQRMDJWq2c7sArUhehy1GaxB\npb0XRcwDUo/inaMZ5vDo9WN6PgPYATyIyqIVSUHYr3+fSLO5CpgA5GuAqrTuGR2oUe/HMrXrU9rB\nMmA2KmrJ57OB52nUpqhWO7JEG9mmDTuI6mhzUZGMpAVkFirDBnbZhgZ3N7ANVdLtep6ntR0T0wJa\no+18SD9rUJliacBHLenAmNqQY8AvUIT4U1R3WoQqnfWo8nhMO92K6jhLUZ3si6j2LYGtwJdQhL43\naY3v6Si/wpV0LwBe1t/nocqnJM0+qb+vQnWfEhRJrwR+iSq7Hf8LIEMBI4DLqBa9DBX5dUAHcEB/\nP4lqpVUaoHZUK21HEXUPqo1v1WA8jSJS9PNZ7VArsFk7+zyq+wRRHeU54E+oUtyJItLk8cWorAgD\nR1Bk/jKKr3qAZ8hcviOW9GuHF4FvA6OrTXXuuCK5dN7KbrNAdeBH9Nur/FezGwGIEUpO3fnmkqQD\nU83AviK9LP4f5YqP+cCk5E/pHBNF7SLbydWT9tUXCdwCNKJ285CBYzzAfdfb0lyQmxwzhNwEZgj5\nL+62t6fU4cVgAAAAJXRFWHRkYXRlOmNyZWF0ZQAyMDE2LTA2LTA3VDExOjI0OjE5LTA0OjAwebrm\nZgAAACV0RVh0ZGF0ZTptb2RpZnkAMjAxNi0wNi0wMlQwOTo0Njo1MC0wNDowMEgg4IAAAAAZdEVY\ndFNvZnR3YXJlAEFkb2JlIEltYWdlUmVhZHlxyWU8AAAAAElFTkSuQmCC\n"
+            },
+            "displayOff": {
+              "code": "\t//Turn display off quickly\n\tGROVE_LCDRGB_NoDisplay();",
+              "language": {
+                "en": {
+                  "label": "Turn display off quickly"
+                }
+              },
+              "label": "Turn display off quickly",
+              "returnType": "void",
+              "inputType": "void",
+              "icon": "data:image/png;base64,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\n"
+            }
+          },
+          "type": "Embedded Library",
+          "description": "This module is based around a 16x2 character LCD that communicates over an I2C bus, and also features a RGB backlight.",
+          "language": {
+            "en": {
+              "label": "Grove LCD RGB Driver"
+            }
+          },
+          "author": "Anaren Inc.",
+          "name": "grove_lcdrgb",
+          "links": {
+            "Datasheet": "https://",
+            "Wiki Page": "http://www.seeedstudio.com/wiki/Grove_-_LCD_RGB_Backlight",
+            "Product Page": "https://"
+          },
+          "label": "Grove LCD RGB Driver",
+          "code": {
+            "setup": "\t//Init 16 col 2 row\n\tGROVE_LCDRGB_Init(16,2,GROVE_LCDRGB_LCD_5x8DOTS);\n\tGROVE_LCDRGB_SetRGB(0, 0, 255);\n",
+            "global": "",
+            "connected": " \n",
+            "interval": " \n"
+          },
+          "version": "1.0.0",
+          "signature": "",
+          "config": {},
+          "categories": [
+            "Display",
+            "LCD",
+            "RGB",
+            "New"
+          ],
+          "manufacturer": "Seeed Studio"
+        }
+      },
+      "theme": {},
+      "projectType": "bcm20737",
+      "displayName": "Anaren A20737",
+      "name": "AWS TempMonitoringSystem Demo"
+    },
+    "type": "Header",
+    "currentLayoutName": "Default",
+    "currentCloudLayoutName": "Default"
+  },
+  "layouts": {
+    "Default": {
+      "name": "Default (768x1024)",
+      "width": 768,
+      "height": 1024,
+      "orientation": "portrait",
+      "devicename": ".*",
+      "platform": "",
+      "version": ".*",
+      "elements": {
+        "saveToS3Button": {
+          "x": 96,
+          "y": 178,
+          "width": 155,
+          "height": 28
+        },
+        "s3BackupInput": {
+          "x": 97,
+          "y": 140,
+          "width": 154,
+          "height": 24
+        },
+        "getFromDynamoButton": {
+          "x": 94,
+          "y": 272,
+          "width": 234,
+          "height": 29
+        },
+        "latestDynamoReading": {
+          "x": 95,
+          "y": 228,
+          "width": 230,
+          "height": 30
+        },
+        "saveConfigurationButton": {
+          "x": 93,
+          "y": 457,
+          "width": 231,
+          "height": 27
+        },
+        "lowThresholdInput": {
+          "x": 229,
+          "y": 408,
+          "width": 93,
+          "height": 22
+        },
+        "highThresholdInput": {
+          "x": 91,
+          "y": 409,
+          "width": 91,
+          "height": 23
+        },
+        "phoneNumberInput": {
+          "x": 96,
+          "y": 343,
+          "width": 226,
+          "height": 25
+        },
+        "liveData": {
+          "x": 268,
+          "y": 140,
+          "width": 64,
+          "height": 65
+        },
+        "atmosphereLogo": {
+          "x": 7,
+          "y": 7,
+          "width": 329,
+          "height": 55
+        },
+        "awsLogo": {
+          "x": 9,
+          "y": 73,
+          "width": 108,
+          "height": 45
+        },
+        "temperatureMonitoringSystemLabel": {
+          "x": 137,
+          "y": 78,
+          "width": 198,
+          "height": 35
+        },
+        "s3Logo": {
+          "x": 14,
+          "y": 145,
+          "width": 27,
+          "height": 33
+        },
+        "dynamoDBLogo": {
+          "x": 15,
+          "y": 230,
+          "width": 28,
+          "height": 32
+        },
+        "highThresholdLabel": {
+          "x": 118,
+          "y": 383,
+          "width": 37,
+          "height": 18
+        },
+        "lowThresholdLabel": {
+          "x": 259,
+          "y": 383,
+          "width": 34,
+          "height": 17
+        },
+        "sqsLogo": {
+          "x": 20,
+          "y": 366,
+          "width": 47,
+          "height": 57
+        },
+        "snsLogo": {
+          "x": 19,
+          "y": 480,
+          "width": 49,
+          "height": 49
+        },
+        "lambdaLogo1": {
+          "x": 51,
+          "y": 172,
+          "width": 27,
+          "height": 33
+        },
+        "lambdaLogo2": {
+          "x": 51,
+          "y": 267,
+          "width": 28,
+          "height": 34
+        },
+        "sendTextButton": {
+          "x": 94,
+          "y": 508,
+          "width": 226,
+          "height": 25
+        }
+      }
+    }
+  },
+  "cloudLayouts": {
+    "Default": {
+      "name": "Default (600x400)",
+      "width": 600,
+      "height": 400,
+      "orientation": "landscape",
+      "devicename": ".*",
+      "platform": "",
+      "version": ".*",
+      "elements": {}
+    }
+  },
+  "elements": {
+    "saveToS3Button": {
+      "type": "Button",
+      "properties": {
+        "label": "Backup to S3 via Lambda",
+        "enabled": true,
+        "visible": true,
+        "border": "plain",
+        "topColor": "rgb(250, 250, 250)",
+        "bottomColor": "rgb(234, 234, 234)",
+        "pressedTopColor": "rgb(255, 255, 255)",
+        "pressedBottomColor": "rgb(255, 255, 255)",
+        "overTopColor": "rgb(234, 234, 234)",
+        "overBottomColor": "rgb(214, 214, 214)",
+        "disabledTopColor": "rgb(211, 211, 211)",
+        "disabledBottomColor": "rgb(211, 211, 211)",
+        "airID": 0,
+        "elementPanel": "designer",
+        "elementType": "element",
+        "airName": "saveToS3Button"
+      },
+      "triggers": {
+        "mousePressed": [
+          {
+            "sourceTrigger": "mousePressed",
+            "sourceValue": "Static",
+            "targetValue": "trigger",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {},
+              "targetOrder": [],
+              "sourceOrder": []
+            },
+            "targetName": "s3BackupInput"
+          }
+        ]
+      },
+      "zindex": 1,
+      "designer": {
+        "x": 97,
+        "y": 129
+      }
+    },
+    "s3BackupInput": {
+      "type": "TextField",
+      "properties": {
+        "value": "",
+        "enabled": true,
+        "visible": true,
+        "airID": 1,
+        "elementPanel": "designer",
+        "elementType": "element",
+        "airName": "s3BackupInput"
+      },
+      "triggers": {
+        "onTrigger": [
+          {
+            "sourceTrigger": "onTrigger",
+            "sourceValue": "getValue",
+            "targetValue": "sendEvent",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "value"
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": [
+                "value"
+              ]
+            },
+            "targetName": "s3SaveEvent"
+          }
+        ]
+      },
+      "zindex": 2,
+      "designer": {
+        "x": 232,
+        "y": 131
+      }
+    },
+    "s3SaveEvent": {
+      "type": "MobileCloudEvent",
+      "properties": {
+        "linked": true,
+        "airType": "MobileCloudEvent",
+        "airID": 2,
+        "elementPanel": "designer",
+        "elementType": "element",
+        "linkedFrom": 2,
+        "airName": "s3SaveEvent"
+      },
+      "triggers": {},
+      "zindex": 3,
+      "designer": {
+        "x": 380,
+        "y": 134
+      }
+    },
+    "getFromDynamoButton": {
+      "type": "Button",
+      "properties": {
+        "label": "Get Latest Data from DynamoDB",
+        "enabled": true,
+        "visible": true,
+        "border": "plain",
+        "topColor": "rgb(250, 250, 250)",
+        "bottomColor": "rgb(234, 234, 234)",
+        "pressedTopColor": "rgb(255, 255, 255)",
+        "pressedBottomColor": "rgb(255, 255, 255)",
+        "overTopColor": "rgb(234, 234, 234)",
+        "overBottomColor": "rgb(214, 214, 214)",
+        "disabledTopColor": "rgb(211, 211, 211)",
+        "disabledBottomColor": "rgb(211, 211, 211)",
+        "airID": 3,
+        "elementPanel": "designer",
+        "elementType": "element",
+        "airName": "getFromDynamoButton"
+      },
+      "triggers": {
+        "mousePressed": [
+          {
+            "sourceTrigger": "mousePressed",
+            "sourceValue": "Static",
+            "targetValue": "sendEvent",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": ""
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": []
+            },
+            "targetName": "dynamoLatest"
+          }
+        ]
+      },
+      "zindex": 4,
+      "designer": {
+        "x": 114,
+        "y": 261
+      }
+    },
+    "dynamoLatest": {
+      "type": "MobileCloudEvent",
+      "properties": {
+        "linked": true,
+        "airType": "MobileCloudEvent",
+        "airID": 4,
+        "elementPanel": "designer",
+        "elementType": "element",
+        "linkedFrom": 4,
+        "airName": "dynamoLatest"
+      },
+      "triggers": {},
+      "zindex": 5,
+      "designer": {
+        "x": 239,
+        "y": 261
+      }
+    },
+    "sendDynamoLatest": {
+      "type": "MobileCloudCommand",
+      "properties": {
+        "interval": "1000",
+        "linked": true,
+        "airType": "MobileCloudCommand",
+        "airID": 5,
+        "elementPanel": "designer",
+        "elementType": "element",
+        "linkedFrom": 5,
+        "airName": "sendDynamoLatest"
+      },
+      "triggers": {
+        "valueReturned": [
+          {
+            "sourceTrigger": "valueReturned",
+            "sourceValue": "getValue",
+            "targetValue": "setValue",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "parseFloat(value.reading).toFixed(2);"
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": [
+                "value"
+              ]
+            },
+            "targetName": "latestDynamoReading"
+          },
+          {
+            "sourceTrigger": "valueReturned",
+            "sourceValue": "getValue",
+            "targetValue": "execute",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "\"DynamoDB: \" + parseInt(value.reading) + \" °C\""
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": [
+                "value"
+              ]
+            },
+            "targetName": "lcdSetTextValue"
+          }
+        ]
+      },
+      "zindex": 6,
+      "designer": {
+        "x": 441,
+        "y": 242
+      }
+    },
+    "latestDynamoReading": {
+      "type": "TextField",
+      "properties": {
+        "value": "",
+        "enabled": true,
+        "visible": true,
+        "airID": 6,
+        "elementPanel": "designer",
+        "elementType": "element",
+        "airName": "latestDynamoReading"
+      },
+      "triggers": {},
+      "zindex": 7,
+      "designer": {
+        "x": 583,
+        "y": 298
+      }
+    },
+    "saveConfigurationButton": {
+      "type": "Button",
+      "properties": {
+        "label": "Save Configuration",
+        "enabled": true,
+        "visible": true,
+        "border": "plain",
+        "topColor": "rgb(250, 250, 250)",
+        "bottomColor": "rgb(234, 234, 234)",
+        "pressedTopColor": "rgb(255, 255, 255)",
+        "pressedBottomColor": "rgb(255, 255, 255)",
+        "overTopColor": "rgb(234, 234, 234)",
+        "overBottomColor": "rgb(214, 214, 214)",
+        "disabledTopColor": "rgb(211, 211, 211)",
+        "disabledBottomColor": "rgb(211, 211, 211)",
+        "airID": 7,
+        "elementPanel": "designer",
+        "elementType": "element",
+        "airName": "saveConfigurationButton"
+      },
+      "triggers": {
+        "mousePressed": [
+          {
+            "sourceTrigger": "mousePressed",
+            "sourceValue": "Static",
+            "targetValue": "trigger",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {},
+              "targetOrder": [],
+              "sourceOrder": []
+            },
+            "targetName": "highThresholdInput"
+          },
+          {
+            "sourceTrigger": "mousePressed",
+            "sourceValue": "Static",
+            "targetValue": "trigger",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {},
+              "targetOrder": [],
+              "sourceOrder": []
+            },
+            "targetName": "lowThresholdInput"
+          },
+          {
+            "sourceTrigger": "mousePressed",
+            "sourceValue": "Static",
+            "targetValue": "trigger",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {},
+              "targetOrder": [],
+              "sourceOrder": []
+            },
+            "targetName": "phoneNumberInput"
+          }
+        ]
+      },
+      "zindex": 8,
+      "designer": {
+        "x": 124,
+        "y": 453
+      }
+    },
+    "lowThresholdInput": {
+      "type": "TextField",
+      "properties": {
+        "value": "",
+        "enabled": true,
+        "visible": true,
+        "airID": 8,
+        "elementPanel": "designer",
+        "elementType": "element",
+        "airName": "lowThresholdInput"
+      },
+      "triggers": {
+        "onTrigger": [
+          {
+            "sourceTrigger": "onTrigger",
+            "sourceValue": "getValue",
+            "targetValue": "addValues",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "values": "{\"lowThreshold\":value}"
+              },
+              "targetOrder": [
+                "values"
+              ],
+              "sourceOrder": [
+                "value"
+              ]
+            },
+            "targetName": "configCombine"
+          }
+        ]
+      },
+      "zindex": 9,
+      "designer": {
+        "x": 268,
+        "y": 453
+      }
+    },
+    "highThresholdInput": {
+      "type": "TextField",
+      "properties": {
+        "value": "",
+        "enabled": true,
+        "visible": true,
+        "airID": 9,
+        "elementPanel": "designer",
+        "elementType": "element",
+        "airName": "highThresholdInput"
+      },
+      "triggers": {
+        "onTrigger": [
+          {
+            "sourceTrigger": "onTrigger",
+            "sourceValue": "getValue",
+            "targetValue": "addValues",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "values": "{\"highThreshold\":value}"
+              },
+              "targetOrder": [
+                "values"
+              ],
+              "sourceOrder": [
+                "value"
+              ]
+            },
+            "targetName": "configCombine"
+          }
+        ]
+      },
+      "zindex": 10,
+      "designer": {
+        "x": 257,
+        "y": 359
+      }
+    },
+    "phoneNumberInput": {
+      "type": "TextField",
+      "properties": {
+        "value": "+1",
+        "enabled": true,
+        "visible": true,
+        "airID": 10,
+        "elementPanel": "designer",
+        "elementType": "element",
+        "airName": "phoneNumberInput"
+      },
+      "triggers": {
+        "onTrigger": [
+          {
+            "sourceTrigger": "onTrigger",
+            "sourceValue": "getValue",
+            "targetValue": "evaluate",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "values": "{\"smsNumber\": value}"
+              },
+              "targetOrder": [
+                "values"
+              ],
+              "sourceOrder": [
+                "value"
+              ]
+            },
+            "targetName": "configCombine"
+          }
+        ]
+      },
+      "zindex": 11,
+      "designer": {
+        "x": 256,
+        "y": 552
+      }
+    },
+    "configCombine": {
+      "type": "Expression",
+      "properties": {
+        "expression": "(function () {\n\nreturn values;\n\n})();",
+        "airID": 11,
+        "elementPanel": "designer",
+        "elementType": "element",
+        "airName": "configCombine"
+      },
+      "triggers": {
+        "evaluated": [
+          {
+            "sourceTrigger": "evaluated",
+            "sourceValue": "getValue",
+            "targetValue": "run",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "runIn": "2000",
+                "runEvery": "4000"
+              },
+              "targetOrder": [
+                "runIn",
+                "runEvery"
+              ],
+              "sourceOrder": [
+                "value"
+              ]
+            },
+            "targetName": "afterConfigSave"
+          },
+          {
+            "sourceTrigger": "evaluated",
+            "sourceValue": "getValue",
+            "targetValue": "sendEvent",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "value"
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": [
+                "value"
+              ]
+            },
+            "targetName": "saveConfiguration"
+          }
+        ]
+      },
+      "zindex": 12,
+      "designer": {
+        "x": 439,
+        "y": 460
+      }
+    },
+    "afterConfigSave": {
+      "type": "Task",
+      "properties": {
+        "runOnStart": false,
+        "runIn": "6000",
+        "runEvery": "4000",
+        "airID": 12,
+        "elementPanel": "designer",
+        "elementType": "element",
+        "airName": "afterConfigSave"
+      },
+      "triggers": {
+        "task": [
+          {
+            "sourceTrigger": "task",
+            "sourceValue": "Static",
+            "targetValue": "execute",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": ""
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": []
+            },
+            "targetName": "sensorReading"
+          }
+        ]
+      },
+      "zindex": 13,
+      "designer": {
+        "x": 573,
+        "y": 462
+      }
+    },
+    "sensorReading": {
+      "type": "tmp006_objectTemperature",
+      "properties": {
+        "code": "    \n    float value;\n    \n    /**\n        Read the temperature of an object.  When set to Continuous Conversion mode, the\n        device periodically performs temperature conversions at a predefined rate.  This\n        function calulates the object temperature using only the most recent conversion\n        values for die temperature and sensor voltage.\n        @param id device ID (0 to 7) on i2c bus\n        @return temperature of an object in Celsius\n    */\n    \n    value = TMP006_GetObjectTemperature(0);\n    return value;",
+        "length": "128",
+        "inputType": "void",
+        "returnType": "float",
+        "permission": "public",
+        "airID": 13,
+        "elementPanel": "designer",
+        "elementType": "element",
+        "airName": "sensorReading"
+      },
+      "triggers": {
+        "valueReturned": [
+          {
+            "sourceTrigger": "valueReturned",
+            "sourceValue": "getValue",
+            "targetValue": "setValue",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "value.toFixed(2);"
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": [
+                "value"
+              ]
+            },
+            "targetName": "liveData"
+          },
+          {
+            "sourceTrigger": "valueReturned",
+            "sourceValue": "getValue",
+            "targetValue": "sendEvent",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "value"
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": [
+                "value"
+              ]
+            },
+            "targetName": "temperatureUpload"
+          }
+        ]
+      },
+      "zindex": 14,
+      "designer": {
+        "x": 685,
+        "y": 462.5
+      }
+    },
+    "liveData": {
+      "type": "Label",
+      "properties": {
+        "label": "Live",
+        "enabled": true,
+        "visible": true,
+        "font": "14px Arial",
+        "color": "Black",
+        "airID": 14,
+        "elementPanel": "designer",
+        "elementType": "element",
+        "airName": "liveData"
+      },
+      "triggers": {},
+      "zindex": 15,
+      "designer": {
+        "x": 821,
+        "y": 542
+      }
+    },
+    "temperatureUpload": {
+      "type": "MobileCloudEvent",
+      "properties": {
+        "linked": true,
+        "airType": "MobileCloudEvent",
+        "airID": 15,
+        "elementPanel": "designer",
+        "elementType": "element",
+        "linkedFrom": 15,
+        "airName": "temperatureUpload"
+      },
+      "triggers": {},
+      "zindex": 16,
+      "designer": {
+        "x": 820,
+        "y": 406.5
+      }
+    },
+    "saveConfiguration": {
+      "type": "MobileCloudEvent",
+      "properties": {
+        "linked": true,
+        "airType": "MobileCloudEvent",
+        "airID": 16,
+        "elementPanel": "designer",
+        "elementType": "element",
+        "linkedFrom": 16,
+        "airName": "saveConfiguration"
+      },
+      "triggers": {},
+      "zindex": 17,
+      "designer": {
+        "x": 572,
+        "y": 581.5
+      }
+    },
+    "atmosphereLogo": {
+      "type": "ImagePan",
+      "properties": {
+        "image": "data:image/png;base64,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",
+        "aspectLock": true,
+        "enabled": true,
+        "visible": true,
+        "rotation": "0",
+        "background": "transparent",
+        "airID": 40,
+        "elementPanel": "designer",
+        "elementType": "element",
+        "airName": "atmosphereLogo"
+      },
+      "triggers": {},
+      "zindex": 18,
+      "designer": {
+        "x": 985,
+        "y": 19
+      }
+    },
+    "awsLogo": {
+      "type": "ImagePan",
+      "properties": {
+        "image": "data:image/png;base64,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",
+        "aspectLock": true,
+        "enabled": true,
+        "visible": true,
+        "rotation": "0",
+        "background": "transparent",
+        "airID": 41,
+        "elementPanel": "designer",
+        "elementType": "element",
+        "airName": "awsLogo"
+      },
+      "triggers": {},
+      "zindex": 19,
+      "designer": {
+        "x": 1082,
+        "y": 19
+      }
+    },
+    "temperatureMonitoringSystemLabel": {
+      "type": "Label",
+      "properties": {
+        "label": "Temperature\nMonitoring System Demo",
+        "enabled": true,
+        "visible": true,
+        "font": "14px Arial",
+        "color": "Black",
+        "airID": 42,
+        "elementPanel": "designer",
+        "elementType": "element",
+        "airName": "temperatureMonitoringSystemLabel"
+      },
+      "triggers": {},
+      "zindex": 20,
+      "designer": {
+        "x": 1083,
+        "y": 178
+      }
+    },
+    "s3Logo": {
+      "type": "ImagePan",
+      "properties": {
+        "image": "data:image/png;base64,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u3v74XtXLh98vLf/wtdBUBHMXDC7T1/8uN+ri4vhjZVL4drS0pGvvfD3CC6CSt2DOY5zjUYa3EhwEVQEc4oEF0FFMAUXQUUwq0VwEVTBFEzBRVARTMEVXEFlBu5vb4eP7t6zEDUKbry+4/VOOXilFICgAggqgKACIKgAggogqACCCoCgAggqgKACIKgAggogqACCCoCgAggqgKACCCoAggogqACCCoCgAggqgKACCCoAggogqACCCiCoAAgqgKACCCoAggogqACCCiCoAAgqgKACCCoAggogqACCCiCoAAgqgKACCCqAoAIgqACCCiCoAAgqgKACCCqAoAIgqACCCiCoAIIKgKACCCqAoAIgqACCCiCoAIIKgKACCCqAoAIIKgCCCiCoAIIKgKACCCqAoAIIKgCCCiCoAIIKgKACCCqAoAIIKgCCCiCoAIIKUENNS1Aery4uhj/75mvhy2fPwpPkiOfu052wu78fujsHZ8onf/3F85PdZy9cxwgqU7LUbKbHy+R/MdOz4BYumLt7L36MoFJQrYWFw2l2UHDvb2+nH9//qnfufcxoDtczt66CKajULbgtYRg1mP5HhKAyUBba44Jb5buuHipBUJmpc43GYWivLS0d+XqRn1zJvgdP5iGoVCK4/VGbZHCn+XeDoFI4J+1QOJwe++52x1C/7OEGwURQYUBw+3coxCd+/vGXv7JAFJ5XSgEIKoCgAggqAIIKIKgAggogqAAIKoCgAggqAIIKIKgAggogqAAIKoCgAggqgKACIKgAggogqDArS6uvhWvt1y0EheefkaYw5hYWQvPS74TmldUwf2klzC9fTM+Xkq99s/dnHty7Gx51H4YHn90NdzufhP+792nY2d62eAgq9RVD2XxlJTQuXAznrl4L88nlGNSTrFxdTY/2d/4ghLcOPheDGkP76S9/cRDb5HI8QFCp7NQZ4xkjGmM6SQuLi2G1fT098rKwPvr1Q9Msgkr5ps7sbvowU+e0ZNNsqjfNxgn2cbebTrOHDx+YZhFUznrqnO9Nm/Nx8ryyWorv/WLrlfTon2bjBJs9NhsDa5pFUJm4/N30OHU2li+kn6ua9CGD8GJk+6fZbKIFQeVE2d30xoULh4971tmgaTZOsI9/3T14MqzzCzceBNXUufLCs+0MMc22j06z6RTbe8jANCuoVHTqjHfT03CaOqc+zabbuY6ZZmNo04cPTLOCSjmmzuzJofyz7RRvmu1/cUK8bJoVVM5Idjc9mzrPensSwxn04oRsmvXiBEFlyu4nv3T//VtLYfViK6ysXE5f395cXLQwFZC9OOHqtd8Nu599Gp4lMd17+CD8052fpdc7gsoUxMfg8o/DxUknhnX1W9fT84LAlsrznZ3DgMbz3v8/sCiCylnJ7hr+20//WWAFFEFFYAUUQUVgEVAEVWAFVkARVGYU2JUrq+mzznGzOl/bf/woCefdJKBJRB8+EFAElZMDm8ley37tW6/XMrD5gMZz/BgElZGkr+LZehj+a+tntQisgCKoCKyAIqgIrIAiqFCKwAoogkrlAxt3EaS7Ca5O9u0E47Pu2Tam+Cy8gCKoVD6wmbjvNb8PdtjA5gMaz3FfKAgqtRTftq7zn/+eHqcJrIAiqDBmYL93+bKAIqgwicD+0dMnFoPCa1gCAEEFEFQAQQVAUAEEFUBQAQQVAEEFEFQAQQXggNfyF99Wcmwmx0cff/GolZz/zpLUx43fvvg397e3u8nFt5JjPTnWrIqgMkJA47n9wYfd7Avvvnlj3fLUy2vLy50f3vlpvD38qHcbaPXCKrCCyjHy8dy0HAzywzsfd3txzQd2rS+yCKqAwoiB3ewd+XsyAiuoldPtC+iWJWEGke0PbP8E27JK0wtq1zJMTCccPAYqoBQpsFu92+V7AjvdAaqZLPZfJAt8M/ngneRoW5OhA5qfQDuWhBIGtt0XWB0YvgO3k9//jWZvgTeS04awnmirbwIVUKoQ2Hg73ugd/YFdC3YSnBjS/F3+/MIK69GA5idQD49Qx8DaqnVCSI8NqrAexnNLQOGwB8dt1cpPsOt1D+nAoNYorPnpc9OvDgwf2F5k10N1t2qdGNJTBbViYc22MP1cQGHikd0Mx++FfSOUdyfBqUM6VFBLGlZ7QKE4gS3TVq2hQzpSUAse1k4uoFsCCoUK7Mv2wmYTbFEaMlJIxwpqQcLaCfaAQtkDm02w7XB2e2HHDulEgjrjsG71TaACCtUJbPx93ghH98JmE+w0tmpNLKQTDeqUwmoPKAhsNsFOci/sxEM6laCOGdbDePYmUAEFsqZM4m0LpxbSqQb1lGHNT5+bbjLAkIHdDKd728Kph3QmQe0P6z/88R/eDJ6BB6bTmSOBbc41WklvfjSr72Gm74f6Vz/+1w1XOzCzwN75eKb/Tf/qKYCgAggqgKACIKgAggogqACCCoCgAggqgKACIKgAggogqACCCoCgAggqgKACCCoAggogqACCCoCgAggqgKACCCoAggogqACCCiCoAAgqgKACCCoAggogqACCCiCoAAgqgKACCCozs5Uct5Ojaykqr9u7rrcsRXnMWYLyeffNG63kdCs53k6OVh1+5h9cb9cppO8nx3vtDz70P05BRVgFVUgFFWEVVCFFUKl6WCsYVCEVVIRVUIUUQRXWUoe1AkEVUkFFWAVVSBFUKhXWEgZVSAUVYRVUIUVQqXRYSxBUIUVQKUdYCxxUIUVQKVdYCxhUIUVQKWdYCxRUIUVQKXdYCxDUTnL8vZAiqJQ+rGcY1BjS20lEN9wSEFQqEdYzCKqQIqhUM6wzDKqQIqhUO6wzCKqQIqjUI6xTDKqQIqjUK6xTCKqQIqjUM6wTDKqQIqjUO6wTCKqQIqgI65hBFVIEFWEdM6hCiqAirGMGVUgRVIR1zKAKKYIKpwnrgKAKKYIKw4T1mKAKKYIKo4Q1F1QhRVBhnLAmQe0KKUX3GwEGAJR9STVHYDEbAAAAAElFTkSuQmCC",
+        "aspectLock": true,
+        "enabled": true,
+        "visible": true,
+        "rotation": "0",
+        "background": "transparent",
+        "airID": 44,
+        "elementPanel": "designer",
+        "elementType": "element",
+        "airName": "s3Logo"
+      },
+      "triggers": {},
+      "zindex": 21,
+      "designer": {
+        "x": 987,
+        "y": 99
+      }
+    },
+    "dynamoDBLogo": {
+      "type": "ImagePan",
+      "properties": {
+        "image": "data:image/png;base64,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",
+        "aspectLock": true,
+        "enabled": true,
+        "visible": true,
+        "rotation": "0",
+        "background": "transparent",
+        "airID": 45,
+        "elementPanel": "designer",
+        "elementType": "element",
+        "airName": "dynamoDBLogo"
+      },
+      "triggers": {},
+      "zindex": 22,
+      "designer": {
+        "x": 1182,
+        "y": 17
+      }
+    },
+    "highThresholdLabel": {
+      "type": "Label",
+      "properties": {
+        "label": "HIGH",
+        "enabled": true,
+        "visible": true,
+        "font": "14px Arial",
+        "color": "Black",
+        "airID": 46,
+        "elementPanel": "designer",
+        "elementType": "element",
+        "airName": "highThresholdLabel"
+      },
+      "triggers": {},
+      "zindex": 23,
+      "designer": {
+        "x": 979,
+        "y": 178
+      }
+    },
+    "lowThresholdLabel": {
+      "type": "Label",
+      "properties": {
+        "label": "LOW",
+        "enabled": true,
+        "visible": true,
+        "font": "14px Arial",
+        "color": "Black",
+        "airID": 47,
+        "elementPanel": "designer",
+        "elementType": "element",
+        "airName": "lowThresholdLabel"
+      },
+      "triggers": {},
+      "zindex": 24,
+      "designer": {
+        "x": 1183,
+        "y": 181
+      }
+    },
+    "sqsLogo": {
+      "type": "ImagePan",
+      "properties": {
+        "image": "data:image/png;base64,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",
+        "aspectLock": true,
+        "enabled": true,
+        "visible": true,
+        "rotation": "0",
+        "background": "transparent",
+        "airID": 48,
+        "elementPanel": "designer",
+        "elementType": "element",
+        "airName": "sqsLogo"
+      },
+      "triggers": {},
+      "zindex": 25,
+      "designer": {
+        "x": 1083,
+        "y": 96
+      }
+    },
+    "snsLogo": {
+      "type": "ImagePan",
+      "properties": {
+        "image": "data:image/png;base64,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",
+        "aspectLock": true,
+        "enabled": true,
+        "visible": true,
+        "rotation": "0",
+        "background": "transparent",
+        "airID": 49,
+        "elementPanel": "designer",
+        "elementType": "element",
+        "airName": "snsLogo"
+      },
+      "triggers": {},
+      "zindex": 26,
+      "designer": {
+        "x": 1184,
+        "y": 98
+      }
+    },
+    "lambdaLogo1": {
+      "type": "ImagePan",
+      "properties": {
+        "image": "data:image/png;base64,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",
+        "aspectLock": true,
+        "enabled": true,
+        "visible": true,
+        "rotation": "0",
+        "background": "transparent",
+        "airID": 50,
+        "elementPanel": "designer",
+        "elementType": "element",
+        "airName": "lambdaLogo1"
+      },
+      "triggers": {},
+      "zindex": 27,
+      "designer": {
+        "x": 882,
+        "y": 19
+      }
+    },
+    "lambdaLogo2": {
+      "type": "ImagePan",
+      "properties": {
+        "image": "data:image/png;base64,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",
+        "aspectLock": true,
+        "enabled": true,
+        "visible": true,
+        "rotation": "0",
+        "background": "transparent",
+        "airID": 51,
+        "elementPanel": "designer",
+        "elementType": "element",
+        "airName": "lambdaLogo2"
+      },
+      "triggers": {},
+      "zindex": 28,
+      "designer": {
+        "x": 883,
+        "y": 98
+      }
+    },
+    "sendSMSEvent": {
+      "type": "MobileCloudEvent",
+      "properties": {
+        "linked": true,
+        "airType": "MobileCloudEvent",
+        "airID": 53,
+        "elementPanel": "designer",
+        "elementType": "element",
+        "linkedFrom": 53,
+        "airName": "sendSMSEvent"
+      },
+      "triggers": {},
+      "zindex": 29,
+      "designer": {
+        "x": 240,
+        "y": 23
+      }
+    },
+    "sendTextButton": {
+      "type": "Button",
+      "properties": {
+        "label": "Send Text Alert via SNS",
+        "enabled": true,
+        "visible": true,
+        "border": "plain",
+        "topColor": "rgb(250, 250, 250)",
+        "bottomColor": "rgb(234, 234, 234)",
+        "pressedTopColor": "rgb(255, 255, 255)",
+        "pressedBottomColor": "rgb(255, 255, 255)",
+        "overTopColor": "rgb(234, 234, 234)",
+        "overBottomColor": "rgb(214, 214, 214)",
+        "disabledTopColor": "rgb(211, 211, 211)",
+        "disabledBottomColor": "rgb(211, 211, 211)",
+        "airID": 52,
+        "elementPanel": "designer",
+        "elementType": "element",
+        "airName": "sendTextButton"
+      },
+      "triggers": {
+        "mousePressed": [
+          {
+            "sourceTrigger": "mousePressed",
+            "sourceValue": "Static",
+            "targetValue": "sendEvent",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": ""
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": []
+            },
+            "targetName": "sendSMSEvent"
+          }
+        ]
+      },
+      "zindex": 30,
+      "designer": {
+        "x": 102,
+        "y": 24
+      }
+    },
+    "lcdSetTextValue": {
+      "type": "grove_lcdrgb_setText",
+      "properties": {
+        "code": "    //Write data (string) to display\n    GROVE_LCDRGB_Clear();\n    GROVE_LCDRGB_Print(data);",
+        "length": "128",
+        "inputType": "string",
+        "returnType": "void",
+        "permission": "public",
+        "airID": 57,
+        "elementPanel": "designer",
+        "elementType": "element",
+        "airName": "lcdSetTextValue"
+      },
+      "triggers": {},
+      "zindex": 57,
+      "designer": {
+        "x": 587,
+        "y": 200
+      }
+    }
+  },
+  "cloudElements": {
+    "s3SaveEvent": {
+      "type": "CloudEvent",
+      "properties": {
+        "airID": 2,
+        "elementPanel": "cloudview",
+        "elementType": "cloudElement",
+        "linkedTo": 2,
+        "airName": "s3SaveEvent"
+      },
+      "triggers": {
+        "receivedData": [
+          {
+            "sourceTrigger": "receivedData",
+            "sourceValue": "getValue",
+            "targetValue": "invoke",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "functionName": "[lambdaBackupTableFunctionName]",
+                "data": "{\"objectName\": value}"
+              },
+              "targetOrder": [
+                "functionName",
+                "data"
+              ],
+              "sourceOrder": [
+                "value"
+              ]
+            },
+            "targetName": "CloudAWSLambda24"
+          }
+        ]
+      },
+      "zindex": 2,
+      "designer": {
+        "x": 61,
+        "y": 439
+      }
+    },
+    "dynamoLatest": {
+      "type": "CloudEvent",
+      "properties": {
+        "airID": 4,
+        "elementPanel": "cloudview",
+        "elementType": "cloudElement",
+        "linkedTo": 4,
+        "airName": "dynamoLatest"
+      },
+      "triggers": {
+        "receivedData": [
+          {
+            "sourceTrigger": "receivedData",
+            "sourceValue": "getValue",
+            "targetValue": "getItem",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "tableName": "[tempMonitoringTableName]",
+                "key": "{\"temperature\": \"latest\"}"
+              },
+              "targetOrder": [
+                "tableName",
+                "key"
+              ],
+              "sourceOrder": [
+                "value"
+              ]
+            },
+            "targetName": "CloudAWSDynamoDB23"
+          }
+        ]
+      },
+      "zindex": 4,
+      "designer": {
+        "x": 54,
+        "y": 359
+      }
+    },
+    "sendDynamoLatest": {
+      "type": "CloudCommand",
+      "properties": {
+        "airID": 5,
+        "elementPanel": "cloudview",
+        "elementType": "cloudElement",
+        "linkedTo": 5,
+        "airName": "sendDynamoLatest"
+      },
+      "triggers": {},
+      "zindex": 5,
+      "designer": {
+        "x": 332,
+        "y": 352
+      }
+    },
+    "temperatureUpload": {
+      "type": "CloudEvent",
+      "properties": {
+        "airID": 15,
+        "elementPanel": "cloudview",
+        "elementType": "cloudElement",
+        "linkedTo": 15,
+        "airName": "temperatureUpload"
+      },
+      "triggers": {
+        "receivedData": [
+          {
+            "sourceTrigger": "receivedData",
+            "sourceValue": "getValue",
+            "targetValue": "putItem",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "tableName": "[tempMonitoringTableName]",
+                "item": "{\n\t\"temperature\": \"latest\",\n\t\"reading\": value.toString(),\n\t\"_timestamp\": new Date().toISOString()\n}"
+              },
+              "targetOrder": [
+                "tableName",
+                "item"
+              ],
+              "sourceOrder": [
+                "value"
+              ]
+            },
+            "targetName": "CloudAWSDynamoDB19"
+          },
+          {
+            "sourceTrigger": "receivedData",
+            "sourceValue": "getValue",
+            "targetValue": "putItem",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "tableName": "[tempMonitoringTableName]",
+                "item": "{\n    \"temperature\": value.toString(),\n    \"reading\": value.toString(),\n    \"_timestamp\": new Date().toISOString()\n}"
+              },
+              "targetOrder": [
+                "tableName",
+                "item"
+              ],
+              "sourceOrder": [
+                "value"
+              ]
+            },
+            "targetName": "CloudAWSDynamoDB18"
+          },
+          {
+            "sourceTrigger": "receivedData",
+            "sourceValue": "getValue",
+            "targetValue": "addData",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "value"
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": [
+                "value"
+              ]
+            },
+            "targetName": "atmosphereBackup"
+          },
+          {
+            "sourceTrigger": "receivedData",
+            "sourceValue": "getValue",
+            "targetValue": "evaluate",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "values": "{\"temperature\": value}"
+              },
+              "targetOrder": [
+                "values"
+              ],
+              "sourceOrder": [
+                "value"
+              ]
+            },
+            "targetName": "cloudCombination0"
+          }
+        ]
+      },
+      "zindex": 15,
+      "designer": {
+        "x": 64,
+        "y": 206.5
+      }
+    },
+    "saveConfiguration": {
+      "type": "CloudEvent",
+      "properties": {
+        "airID": 16,
+        "elementPanel": "cloudview",
+        "elementType": "cloudElement",
+        "linkedTo": 16,
+        "airName": "saveConfiguration"
+      },
+      "triggers": {
+        "receivedData": [
+          {
+            "sourceTrigger": "receivedData",
+            "sourceValue": "getValue",
+            "targetValue": "putItem",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "tableName": "[tempMonitoringTableName]",
+                "item": "{\n\t\"temperature\": \"configuration\",\n\t\"configuration\": value\n}"
+              },
+              "targetOrder": [
+                "tableName",
+                "item"
+              ],
+              "sourceOrder": [
+                "value"
+              ]
+            },
+            "targetName": "CloudAWSDynamoDB25"
+          }
+        ]
+      },
+      "zindex": 16,
+      "designer": {
+        "x": 61,
+        "y": 530.5
+      }
+    },
+    "atmosphereBackup": {
+      "type": "CloudStorage",
+      "properties": {
+        "airID": 17,
+        "elementPanel": "cloudview",
+        "elementType": "cloudElement",
+        "airName": "atmosphereBackup"
+      },
+      "triggers": {},
+      "zindex": 17,
+      "designer": {
+        "x": 455,
+        "y": 127
+      }
+    },
+    "CloudAWSDynamoDB18": {
+      "type": "CloudAWSDynamoDB",
+      "properties": {
+        "region": "us-east-1",
+        "externalId": "[ExternalID]",
+        "roleArn": "[RoleARN]",
+        "airID": 18,
+        "elementPanel": "cloudview",
+        "elementType": "cloudElement"
+      },
+      "triggers": {
+        "success": [
+          {
+            "sourceTrigger": "success",
+            "sourceValue": "Static",
+            "targetValue": "getItem",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "tableName": "[tempMonitoringTableName]",
+                "key": "{\"temperature\": \"latest\"}"
+              },
+              "targetOrder": [
+                "tableName",
+                "key"
+              ],
+              "sourceOrder": []
+            },
+            "targetName": "CloudAWSDynamoDB23"
+          }
+        ]
+      },
+      "zindex": 18,
+      "designer": {
+        "x": 196,
+        "y": 258.5
+      }
+    },
+    "CloudAWSDynamoDB19": {
+      "type": "CloudAWSDynamoDB",
+      "properties": {
+        "region": "us-east-1",
+        "externalId": "[ExternalID]",
+        "roleArn": "[RoleARN]",
+        "airID": 19,
+        "elementPanel": "cloudview",
+        "elementType": "cloudElement"
+      },
+      "triggers": {},
+      "zindex": 19,
+      "designer": {
+        "x": 287,
+        "y": 1.5
+      }
+    },
+    "cloudCombination0": {
+      "type": "Expression",
+      "properties": {
+        "expression": "(function () {\n\nreturn values;\n\n})();",
+        "airID": 20,
+        "elementPanel": "cloudview",
+        "elementType": "cloudElement",
+        "airName": "cloudCombination0"
+      },
+      "triggers": {
+        "evaluated": [
+          {
+            "sourceTrigger": "evaluated",
+            "sourceValue": "getValues",
+            "targetValue": "invoke",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "functionName": "[lambdaComputeMessageFunctionName]",
+                "data": "values"
+              },
+              "targetOrder": [
+                "functionName",
+                "data"
+              ],
+              "sourceOrder": [
+                "values"
+              ]
+            },
+            "targetName": "CloudAWSLambda21"
+          }
+        ]
+      },
+      "zindex": 20,
+      "designer": {
+        "x": 419,
+        "y": 201.5
+      }
+    },
+    "CloudAWSLambda21": {
+      "type": "CloudAWSLambda",
+      "properties": {
+        "region": "us-east-1",
+        "externalId": "[ExternalID]",
+        "roleArn": "[RoleARN]",
+        "airID": 21,
+        "elementPanel": "cloudview",
+        "elementType": "cloudElement"
+      },
+      "triggers": {
+        "success": [
+          {
+            "sourceTrigger": "success",
+            "sourceValue": "getValue",
+            "targetValue": "evaluate",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "values": "JSON.parse(value);"
+              },
+              "targetOrder": [
+                "values"
+              ],
+              "sourceOrder": [
+                "value"
+              ]
+            },
+            "targetName": "cloudCombination1"
+          }
+        ]
+      },
+      "zindex": 21,
+      "designer": {
+        "x": 559,
+        "y": 203.5
+      }
+    },
+    "CloudAWSDynamoDB23": {
+      "type": "CloudAWSDynamoDB",
+      "properties": {
+        "region": "us-east-1",
+        "externalId": "[ExternalID]",
+        "roleArn": "[RoleARN]",
+        "airID": 23,
+        "elementPanel": "cloudview",
+        "elementType": "cloudElement"
+      },
+      "triggers": {
+        "success": [
+          {
+            "sourceTrigger": "success",
+            "sourceValue": "getValue",
+            "targetValue": "sendCommand",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "value": "value"
+              },
+              "targetOrder": [
+                "value"
+              ],
+              "sourceOrder": [
+                "value"
+              ]
+            },
+            "targetName": "sendDynamoLatest"
+          }
+        ]
+      },
+      "zindex": 23,
+      "designer": {
+        "x": 194,
+        "y": 354.5
+      }
+    },
+    "CloudAWSLambda24": {
+      "type": "CloudAWSLambda",
+      "properties": {
+        "region": "us-east-1",
+        "externalId": "[ExternalID]",
+        "roleArn": "[RoleARN]",
+        "airID": 24,
+        "elementPanel": "cloudview",
+        "elementType": "cloudElement"
+      },
+      "triggers": {},
+      "zindex": 24,
+      "designer": {
+        "x": 197,
+        "y": 436.5
+      }
+    },
+    "CloudAWSDynamoDB25": {
+      "type": "CloudAWSDynamoDB",
+      "properties": {
+        "region": "us-east-1",
+        "externalId": "[ExternalID]",
+        "roleArn": "[RoleARN]",
+        "airID": 25,
+        "elementPanel": "cloudview",
+        "elementType": "cloudElement"
+      },
+      "triggers": {},
+      "zindex": 25,
+      "designer": {
+        "x": 197,
+        "y": 529.5
+      }
+    },
+    "cloudCombination1": {
+      "type": "Expression",
+      "properties": {
+        "expression": "(function () {\n\nreturn values;\n\n})();",
+        "airID": 30,
+        "elementPanel": "cloudview",
+        "elementType": "cloudElement",
+        "airName": "cloudCombination1"
+      },
+      "triggers": {
+        "evaluated": [
+          {
+            "sourceTrigger": "evaluated",
+            "sourceValue": "getValues",
+            "targetValue": "sendMessage",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "messageBody": "JSON.stringify(values)"
+              },
+              "targetOrder": [
+                "messageBody"
+              ],
+              "sourceOrder": [
+                "values"
+              ]
+            },
+            "targetName": "awsSQS1"
+          }
+        ]
+      },
+      "zindex": 30,
+      "designer": {
+        "x": 741,
+        "y": 205
+      }
+    },
+    "CloudAWSSQS35": {
+      "type": "CloudAWSSQS",
+      "properties": {
+        "region": "us-east-1",
+        "externalId": "[ExternalID]",
+        "queueURL": "[sqsQueueUrl]",
+        "roleArn": "[RoleARN]",
+        "airID": 35,
+        "elementPanel": "cloudview",
+        "elementType": "cloudElement"
+      },
+      "triggers": {
+        "success": [
+          {
+            "sourceTrigger": "success",
+            "sourceValue": "getValue",
+            "targetValue": "evaluate",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "values": "JSON.parse(value);"
+              },
+              "targetOrder": [
+                "values"
+              ],
+              "sourceOrder": [
+                "value"
+              ]
+            },
+            "targetName": "cloudCombination2"
+          }
+        ]
+      },
+      "zindex": 35,
+      "designer": {
+        "x": 660,
+        "y": 463
+      }
+    },
+    "CloudAWSSNS36": {
+      "type": "CloudAWSSNS",
+      "properties": {
+        "region": "us-west-2",
+        "externalId": "[ExternalID]",
+        "roleArn": "[RoleARN]",
+        "airID": 36,
+        "elementPanel": "cloudview",
+        "elementType": "cloudElement"
+      },
+      "triggers": {
+        "success": [
+          {
+            "sourceTrigger": "success",
+            "sourceValue": "getValue",
+            "targetValue": "purgeQueue",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {},
+              "targetOrder": [],
+              "sourceOrder": [
+                "value"
+              ]
+            },
+            "targetName": "CloudAWSSQS39"
+          }
+        ]
+      },
+      "zindex": 36,
+      "designer": {
+        "x": 922,
+        "y": 462
+      }
+    },
+    "awsSQS1": {
+      "type": "CloudAWSSQS",
+      "properties": {
+        "region": "us-east-1",
+        "externalId": "[ExternalID]",
+        "queueURL": "[sqsQueueUrl]",
+        "roleArn": "[RoleARN]",
+        "airID": 37,
+        "elementPanel": "cloudview",
+        "elementType": "cloudElement",
+        "airName": "awsSQS1"
+      },
+      "triggers": {},
+      "zindex": 37,
+      "designer": {
+        "x": 890,
+        "y": 203
+      }
+    },
+    "cloudCombination2": {
+      "type": "Expression",
+      "properties": {
+        "expression": "(function () {\n\nreturn values;\n\n})();",
+        "airID": 38,
+        "elementPanel": "cloudview",
+        "elementType": "cloudElement",
+        "airName": "cloudCombination2"
+      },
+      "triggers": {
+        "evaluated": [
+          {
+            "sourceTrigger": "evaluated",
+            "sourceValue": "getValues",
+            "targetValue": "sendSMS",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {
+                "message": "values.message",
+                "smsNumber": "values.smsNumber"
+              },
+              "targetOrder": [
+                "message",
+                "smsNumber"
+              ],
+              "sourceOrder": [
+                "values"
+              ]
+            },
+            "targetName": "CloudAWSSNS36"
+          }
+        ]
+      },
+      "zindex": 38,
+      "designer": {
+        "x": 784,
+        "y": 461
+      }
+    },
+    "CloudAWSSQS39": {
+      "type": "CloudAWSSQS",
+      "properties": {
+        "region": "us-east-1",
+        "externalId": "[ExternalID]",
+        "queueURL": "[sqsQueueUrl]",
+        "roleArn": "[RoleARN]",
+        "airID": 39,
+        "elementPanel": "cloudview",
+        "elementType": "cloudElement"
+      },
+      "triggers": {},
+      "zindex": 39,
+      "designer": {
+        "x": 1054,
+        "y": 462
+      }
+    },
+    "sendSMSEvent": {
+      "type": "CloudEvent",
+      "properties": {
+        "airID": 53,
+        "elementPanel": "cloudview",
+        "elementType": "cloudElement",
+        "linkedTo": 53,
+        "airName": "sendSMSEvent"
+      },
+      "triggers": {
+        "receivedData": [
+          {
+            "sourceTrigger": "receivedData",
+            "sourceValue": "getValue",
+            "targetValue": "receiveMessage",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {},
+              "targetOrder": [],
+              "sourceOrder": [
+                "value"
+              ]
+            },
+            "targetName": "CloudAWSSQS35"
+          }
+        ]
+      },
+      "zindex": 53,
+      "designer": {
+        "x": 493,
+        "y": 431
+      }
+    },
+    "CloudSchedule58": {
+      "type": "CloudSchedule",
+      "properties": {
+        "minute": "null",
+        "hour": "null",
+        "dayOfWeek": "null",
+        "airID": 58,
+        "elementPanel": "cloudview",
+        "elementType": "cloudElement"
+      },
+      "triggers": {
+        "scheduled": [
+          {
+            "sourceTrigger": "scheduled",
+            "sourceValue": "Static",
+            "targetValue": "receiveMessage",
+            "sourceStaticValue": "",
+            "arguments": {
+              "mapping": {},
+              "targetOrder": [],
+              "sourceOrder": []
+            },
+            "targetName": "CloudAWSSQS35"
+          }
+        ]
+      },
+      "zindex": 58,
+      "designer": {
+        "x": 504,
+        "y": 549.5
+      }
+    }
+  }
+}
