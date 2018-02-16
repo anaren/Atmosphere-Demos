@@ -15,7 +15,7 @@ var gulp = require('gulp');
 var jsonConcat = require('gulp-json-concat');
 
 
-var demoUrl = "https://atmosphere.anaren.com/demos/"
+var demoUrl = "https://app.atmosphereiot.com/demos/";
     
 var projectTypes = ["bcm20737", "bcm43364", "intelCurie"];
 
